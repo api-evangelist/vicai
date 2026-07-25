@@ -1,0 +1,452 @@
+openapi: 3.1.0
+info:
+  version: v10.40.4
+  contact: {}
+  title: Vic.ai Accounts VAT Codes API
+  description: "## Introduction\n\nThe Vic.ai API provides a seamless connection between your Enterprise Resource\nPlanning (ERP) system and the Vic.ai product suite.\n\nThe API is designed to offer three main areas of functionality:\n\n- **Syncing master data:** This refers to the data in your ERP that Vic.ai\n  interacts with. You are required to supply and update this data in Vic.ai, and\n  you also have the option to verify the copy of the masterdata in Vic.ai.\n\n- **Syncing training data:** We need historical data to train your AI model. To\n  that end, the API provides endpoints to sync historical invoices into Vic.ai\n  and to confirm their presence.\n\n- **Subscribing to and receiving webhooks:** Webhooks enable users or automated\n  tasks to interact with your ERP through various actions in the Vic.ai product\n  suite, such as posting an invoice, payment or purchase order or requesting\n  synchronization. You will receive a notification via a webhook when these\n  actions occur.\n\n\nFor US-based integrations, please use the following base API URL:\n\n```\nhttps://api.us.vic.ai\n```\n\nFor integrations based in Norway, use the following base API URL:\n\n```\nhttps://api.no.vic.ai\n```\n\nAll paths mentioned in this documentation should use one of these URLs as the\nbase.\n\nExample:\n\n```bash\ncurl https://api.us.vic.ai/v0/healthCheck \\\n    -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\"\n```\n\n## Getting Started\n\nTo begin interacting with the Vic.ai API, you will need the following\ncredentials:\n\n* A Vic.ai client ID\n* A Vic.ai client secret.\n\nThese can be provided to you securely by a Vic.ai representative\n[upon request](https://www.vic.ai/book-a-demo).\n\n**Please note:** These credentials are essentially the keys to your ERP\nintegration. If they fall into the wrong hands, unauthorized parties could\nimpersonate you, gain access to sensitive data, and potentially perform\nmalicious actions. Therefore, it's crucial to keep these credentials safe at all\ntimes to protect your application's integrity and your clients' data.\n\n### Limitations\n\nThe Vic.ai API has the following limitations:\n\n**Rate Limiting:** The API is rate-limited to 500 requests per 10-second time\nframe. If you exceed this limit, you will receive a `429 Too Many Requests`\nresponse. The limit is per Oauth client ID. If you continue to receive `429`s,\nplease contact support with a request id from the response headers.\n"
+servers:
+- url: https://api.no.stage.vic.ai
+  description: staging server, NO
+- url: https://api.us.vic.ai
+  description: production server, US
+- url: https://api.no.vic.ai
+  description: production server, NO
+security:
+- BearerAuth: []
+tags:
+- name: VAT Codes
+  description: 'In some regions, VAT codes are part of your *ERP* **Masterdata**, that
+
+    represent timeboxed VAT codes and VAT values that Vic.ai can automatically
+
+    assign to invoice line items.
+
+    '
+paths:
+  /v0/vatCodes:
+    get:
+      description: 'Use this request to query all the VAT code data that are stored in
+
+        Vic.ai.
+
+        '
+      summary: List all VAT codes
+      operationId: listVatCodes
+      tags:
+      - VAT Codes
+      parameters:
+      - $ref: '#/components/parameters/PagingLimit'
+      - $ref: '#/components/parameters/PagingCursor'
+      - $ref: '#/components/parameters/SinceFilter'
+      - $ref: '#/components/parameters/SortOrder'
+      - $ref: '#/components/parameters/VatCodeFilter'
+      - $ref: '#/components/parameters/UseSystemDefaultExternal'
+      responses:
+        '200':
+          $ref: '#/components/responses/VatCodesResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+  /v0/vatCodes/synchronize:
+    post:
+      description: 'Tells the ERP to synchronize the Vat Code resource. If the ERP is using
+
+        the API, the call will be sent via the normal webhook methods. If the
+
+        ERP is not using this API then this will call the native integration''s
+
+        synchronize functionality.
+
+        '
+      summary: Synchronize Vat Codes
+      operationId: synchronizeVatCodes
+      tags:
+      - VAT Codes
+      responses:
+        '204':
+          $ref: '#/components/responses/SynchronizeVatCodesResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+  /v0/vatCodes/{id}:
+    get:
+      description: 'Use this request to get data for a single VAT code that is stored in
+
+        Vic.ai
+
+        '
+      summary: Info for a specific VAT code
+      operationId: getVatCode
+      tags:
+      - VAT Codes
+      parameters:
+      - $ref: '#/components/parameters/PathId'
+      - $ref: '#/components/parameters/UseSystemDefaultExternal'
+      responses:
+        '200':
+          $ref: '#/components/responses/VatCodeResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+    put:
+      description: 'Use this request to *upsert* VAT code into Vic.ai.
+
+        The request body should contain the VAT code object as JSON.
+
+        If the VAT code is known by Vic.ai, the id supplied will be used to
+
+        resolve the VAT code and perform an update of the data, otherwise, a new
+
+        VAT code will be inserted.
+
+        '
+      summary: Upserts a VAT code
+      operationId: upsertVatCode
+      tags:
+      - VAT Codes
+      parameters:
+      - $ref: '#/components/parameters/PathId'
+      - $ref: '#/components/parameters/UseSystemDefaultExternal'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VatCodeUpsert'
+      responses:
+        '201':
+          $ref: '#/components/responses/VatCodeUpsertedResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+    delete:
+      description: 'Use this request to delete data for a single VAT code that is stored in
+
+        Vic.ai
+
+        '
+      summary: Deletes a VAT code
+      operationId: deleteVatCode
+      tags:
+      - VAT Codes
+      parameters:
+      - $ref: '#/components/parameters/PathId'
+      - $ref: '#/components/parameters/UseSystemDefaultExternal'
+      responses:
+        '201':
+          $ref: '#/components/responses/VatCodeDeletedResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+components:
+  parameters:
+    SinceFilter:
+      name: since
+      in: query
+      description: 'Datetime value for incremental updates.
+
+        **NOTE**: For external datetimes, the expected format is not in UTC. for
+
+        vic-internal datetimes (see `SinceIsExternal`) the format is UTC.
+
+        '
+      required: false
+      schema:
+        type: string
+        format: date-time
+    SortOrder:
+      name: sortOrder
+      in: query
+      description: what sort order should be used for queries
+      required: false
+      schema:
+        type: string
+        enum:
+        - ASCENDING
+        - DESCENDING
+        default: ASCENDING
+    PagingLimit:
+      name: limit
+      in: query
+      description: How many items to return at one time (max 100) (default 100)
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+    VatCodeFilter:
+      name: vatCode
+      in: query
+      description: selects the VAT code which is to be displayed
+      required: false
+      schema:
+        type: string
+    UseSystemDefaultExternal:
+      name: useSystem
+      in: query
+      description: 'Which system to use for id or updatedAt filters.
+
+        '
+      required: false
+      schema:
+        type: string
+        enum:
+        - INTERNAL
+        - EXTERNAL
+        - internal
+        - external
+        default: EXTERNAL
+    PagingCursor:
+      name: cursor
+      in: query
+      description: Which item to start from. See [Pagination](#section/Pagination) for more information.
+      required: false
+      schema:
+        type: string
+    PathId:
+      name: id
+      in: path
+      required: true
+      description: The id of the database entry
+      schema:
+        type: string
+  schemas:
+    InternalId:
+      description: The internal id Vic uses for the record.
+      type: string
+      example: '47'
+      readOnly: true
+    ExternalId:
+      description: 'The external id set by the ERP system. It does not have to be a UUID and
+
+        can be any non empty string desired.
+
+        '
+      type: string
+      example: 21b31bc7-1267-4335-893c-d7fe4706a238
+      maxLength: 255
+    VatCodes:
+      type: array
+      items:
+        $ref: '#/components/schemas/VatCode'
+    VatCode:
+      type: object
+      required:
+      - internalId
+      - internalUpdatedAt
+      - code
+      - description
+      properties:
+        internalId:
+          $ref: '#/components/schemas/InternalId'
+        internalUpdatedAt:
+          type: string
+          description: The date time in UTC when the record was updated at.
+          format: date-time
+        externalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+        externalUpdatedAt:
+          type: string
+          format: date-time
+          description: 'The date time when the invoice was updated in the ERP system. This
+
+            does not have UTC normalization.
+
+            '
+        code:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          maxLength: 255
+        activeStartingAt:
+          type: string
+          format: date-time
+        activeEndingAt:
+          type: string
+          format: date-time
+        rate:
+          type: number
+        remoteData:
+          type: object
+        defaultInvoiceCreditAccount:
+          type: string
+          maxLength: 255
+        vatCreditAccount:
+          type: string
+          maxLength: 255
+        vatDebitAccount:
+          type: string
+          maxLength: 255
+    Error:
+      description: 'generic error message in JSON format.  Note the ''code'' field should
+
+        match the HTTP status code of the wrapping HTTP request.
+
+        '
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          minimum: 100
+          maximum: 599
+        message:
+          $ref: '#/components/schemas/ErrorString'
+    ErrorString:
+      type: string
+      maxLength: 255
+    VatCodeUpsert:
+      type: object
+      required:
+      - externalUpdatedAt
+      properties:
+        code:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          maxLength: 255
+        externalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+        externalUpdatedAt:
+          type: string
+          format: date-time
+          description: 'The date time when the invoice was updated in the ERP system. This
+
+            does not have UTC normalization.
+
+            '
+        activeStartingAt:
+          type: string
+          format: date-time
+        activeEndingAt:
+          type: string
+          format: date-time
+        rate:
+          type: number
+        remoteData:
+          type: object
+        defaultInvoiceCreditAccount:
+          type: string
+          maxLength: 255
+        vatCreditAccount:
+          type: string
+          maxLength: 255
+        vatDebitAccount:
+          type: string
+          maxLength: 255
+  responses:
+    ErrorResponse:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TooManyRequestsResponse:
+      description: HTTP call rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    VatCodesResponse:
+      description: An array of VAT codes
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VatCodes'
+    VatCodeDeletedResponse:
+      description: Vat code deleted successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VatCode'
+    SynchronizeVatCodesResponse:
+      description: 'A request to synchronize the vat codes was acknowledged and is in the
+
+        process of being ran.
+
+        '
+    VatCodeUpsertedResponse:
+      description: Vat code upserted successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VatCode'
+    VatCodeResponse:
+      description: A single VAT code.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VatCode'
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-tagGroups:
+- name: Integration
+  tags:
+  - Authentication
+  - Pagination
+  - Webhooks
+  - Webhook Subscriptions
+  - Webhook Events
+  - Synchronizing
+  - Status
+- name: Master Data
+  tags:
+  - Accounts
+  - Dimensions
+  - Vendors
+  - Vendor Groups
+  - Vendor Tags
+  - Tags
+  - Tax Codes
+  - VAT Codes
+  - Payment Terms
+- name: Organization & Access
+  tags:
+  - Partners
+  - Organizations
+  - Companies
+  - Users
+- name: Invoices & Bills
+  tags:
+  - Invoices
+  - Bills
+  - Attachments
+  - Invoice Approval Flows
+  - Invoice Posting Guide
+  - Training Invoices
+- name: Purchase Orders
+  tags:
+  - Purchase Orders
+  - Purchase Order Line Items
+  - Purchase Order Matching Guide
+- name: Payments
+  tags:
+  - Payment Batches
+  - Payment Confirmations
+  - Credit Confirmations
+- name: Reporting
+  tags:
+  - CSV Reports
+- name: Reference
+  tags:
+  - Changelog

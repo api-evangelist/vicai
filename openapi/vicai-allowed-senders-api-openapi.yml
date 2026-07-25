@@ -1,0 +1,320 @@
+openapi: 3.1.0
+info:
+  version: v10.40.4
+  contact: {}
+  title: Vic.ai Accounts Allowed Senders API
+  description: "## Introduction\n\nThe Vic.ai API provides a seamless connection between your Enterprise Resource\nPlanning (ERP) system and the Vic.ai product suite.\n\nThe API is designed to offer three main areas of functionality:\n\n- **Syncing master data:** This refers to the data in your ERP that Vic.ai\n  interacts with. You are required to supply and update this data in Vic.ai, and\n  you also have the option to verify the copy of the masterdata in Vic.ai.\n\n- **Syncing training data:** We need historical data to train your AI model. To\n  that end, the API provides endpoints to sync historical invoices into Vic.ai\n  and to confirm their presence.\n\n- **Subscribing to and receiving webhooks:** Webhooks enable users or automated\n  tasks to interact with your ERP through various actions in the Vic.ai product\n  suite, such as posting an invoice, payment or purchase order or requesting\n  synchronization. You will receive a notification via a webhook when these\n  actions occur.\n\n\nFor US-based integrations, please use the following base API URL:\n\n```\nhttps://api.us.vic.ai\n```\n\nFor integrations based in Norway, use the following base API URL:\n\n```\nhttps://api.no.vic.ai\n```\n\nAll paths mentioned in this documentation should use one of these URLs as the\nbase.\n\nExample:\n\n```bash\ncurl https://api.us.vic.ai/v0/healthCheck \\\n    -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\"\n```\n\n## Getting Started\n\nTo begin interacting with the Vic.ai API, you will need the following\ncredentials:\n\n* A Vic.ai client ID\n* A Vic.ai client secret.\n\nThese can be provided to you securely by a Vic.ai representative\n[upon request](https://www.vic.ai/book-a-demo).\n\n**Please note:** These credentials are essentially the keys to your ERP\nintegration. If they fall into the wrong hands, unauthorized parties could\nimpersonate you, gain access to sensitive data, and potentially perform\nmalicious actions. Therefore, it's crucial to keep these credentials safe at all\ntimes to protect your application's integrity and your clients' data.\n\n### Limitations\n\nThe Vic.ai API has the following limitations:\n\n**Rate Limiting:** The API is rate-limited to 500 requests per 10-second time\nframe. If you exceed this limit, you will receive a `429 Too Many Requests`\nresponse. The limit is per Oauth client ID. If you continue to receive `429`s,\nplease contact support with a request id from the response headers.\n"
+servers:
+- url: https://api.no.stage.vic.ai
+  description: staging server, NO
+- url: https://api.us.vic.ai
+  description: production server, US
+- url: https://api.no.vic.ai
+  description: production server, NO
+security:
+- BearerAuth: []
+tags:
+- name: Allowed Senders
+  description: 'Restricts which sender addresses an email endpoint will accept. Each
+
+    entry is either an `exact` match (full email address) or a `domain`
+
+    match (everything from that domain). When the restriction is active
+
+    and an inbound email''s sender does not match any entry, the email is
+
+    rejected and not processed.
+
+    '
+paths:
+  /v2/email_endpoints/{email_endpoint_id}/allowed_senders:
+    get:
+      description: Lists the allowed sender entries for an email endpoint.
+      summary: List allowed senders
+      operationId: listEmailEndpointAllowedSendersV2
+      tags:
+      - Allowed Senders
+      parameters:
+      - name: email_endpoint_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - $ref: '#/components/parameters/PaginationV2'
+      responses:
+        '200':
+          description: A page of allowed sender entries for the endpoint.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllowedSendersResponseV2'
+        '403':
+          $ref: '#/components/responses/ErrorResponseV2'
+        '404':
+          $ref: '#/components/responses/ErrorResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+    post:
+      description: 'Adds one or more allowed sender entries to an email endpoint.
+
+        Up to 20 entries per request. Duplicate `(match_type,
+
+        sender_pattern)` pairs within a request are rejected.
+
+        '
+      summary: Add allowed senders
+      operationId: createEmailEndpointAllowedSendersV2
+      tags:
+      - Allowed Senders
+      parameters:
+      - name: email_endpoint_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AllowedSendersCreateRequestV2'
+      responses:
+        '201':
+          description: The created allowed sender entries.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllowedSendersCreateResponseV2'
+        '403':
+          $ref: '#/components/responses/ErrorResponseV2'
+        '404':
+          $ref: '#/components/responses/ErrorResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/email_endpoints/{email_endpoint_id}/allowed_senders/{id}:
+    delete:
+      description: Removes a single allowed sender entry.
+      summary: Remove allowed sender
+      operationId: deleteEmailEndpointAllowedSenderV2
+      tags:
+      - Allowed Senders
+      parameters:
+      - name: email_endpoint_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: The allowed sender entry has been removed.
+        '403':
+          $ref: '#/components/responses/ErrorResponseV2'
+        '404':
+          $ref: '#/components/responses/ErrorResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+components:
+  schemas:
+    AllowedSenderV2:
+      type: object
+      required:
+      - id
+      - match_type
+      - sender_pattern
+      - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        match_type:
+          type: string
+          enum:
+          - exact
+          - domain
+          description: '`exact` matches the full sender email address. `domain`
+
+            matches everything after the `@`.
+
+            '
+        sender_pattern:
+          type: string
+          description: 'For `exact` entries, a full email address (e.g.
+
+            `ap@vendor.com`). For `domain` entries, just the domain
+
+            (e.g. `vendor.com`). Pattern matching is case-insensitive.
+
+            '
+        created_at:
+          type: string
+          format: date-time
+    PaginationMetaV2:
+      type: object
+      properties:
+        cursor:
+          description: 'The cursor to the next page of data. If it is null, that means there
+
+            is no more data to fetch.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
+    AllowedSendersCreateRequestV2:
+      type: object
+      required:
+      - allowed_senders
+      properties:
+        allowed_senders:
+          type: array
+          minItems: 1
+          maxItems: 20
+          items:
+            type: object
+            required:
+            - match_type
+            - sender_pattern
+            properties:
+              match_type:
+                type: string
+                enum:
+                - exact
+                - domain
+              sender_pattern:
+                type: string
+    AllowedSendersResponseV2:
+      type: object
+      required:
+      - meta
+      - data
+      properties:
+        meta:
+          type: object
+          required:
+          - page
+          properties:
+            page:
+              $ref: '#/components/schemas/PaginationMetaV2'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AllowedSenderV2'
+    PaginationV2:
+      type: object
+      properties:
+        size:
+          type: integer
+          description: The page size.
+          maximum: 50
+          minimum: 1
+        cursor:
+          type: string
+          description: The cursor to use to get the next page of results.
+    AllowedSendersCreateResponseV2:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AllowedSenderV2'
+    ErrorV2:
+      type: object
+      required:
+      - message
+      properties:
+        field:
+          description: 'The field that the error occurred on. This field may not always be
+
+            present.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
+        message:
+          description: A description of the error.
+          type: string
+  parameters:
+    PaginationV2:
+      name: page
+      in: query
+      schema:
+        $ref: '#/components/schemas/PaginationV2'
+  responses:
+    ErrorResponseV2:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ErrorV2'
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-tagGroups:
+- name: Integration
+  tags:
+  - Authentication
+  - Pagination
+  - Webhooks
+  - Webhook Subscriptions
+  - Webhook Events
+  - Synchronizing
+  - Status
+- name: Master Data
+  tags:
+  - Accounts
+  - Dimensions
+  - Vendors
+  - Vendor Groups
+  - Vendor Tags
+  - Tags
+  - Tax Codes
+  - VAT Codes
+  - Payment Terms
+- name: Organization & Access
+  tags:
+  - Partners
+  - Organizations
+  - Companies
+  - Users
+- name: Invoices & Bills
+  tags:
+  - Invoices
+  - Bills
+  - Attachments
+  - Invoice Approval Flows
+  - Invoice Posting Guide
+  - Training Invoices
+- name: Purchase Orders
+  tags:
+  - Purchase Orders
+  - Purchase Order Line Items
+  - Purchase Order Matching Guide
+- name: Payments
+  tags:
+  - Payment Batches
+  - Payment Confirmations
+  - Credit Confirmations
+- name: Reporting
+  tags:
+  - CSV Reports
+- name: Reference
+  tags:
+  - Changelog

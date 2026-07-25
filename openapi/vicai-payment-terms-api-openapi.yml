@@ -1,0 +1,560 @@
+openapi: 3.1.0
+info:
+  version: v10.40.4
+  contact: {}
+  title: Vic.ai Accounts Payment Terms API
+  description: "## Introduction\n\nThe Vic.ai API provides a seamless connection between your Enterprise Resource\nPlanning (ERP) system and the Vic.ai product suite.\n\nThe API is designed to offer three main areas of functionality:\n\n- **Syncing master data:** This refers to the data in your ERP that Vic.ai\n  interacts with. You are required to supply and update this data in Vic.ai, and\n  you also have the option to verify the copy of the masterdata in Vic.ai.\n\n- **Syncing training data:** We need historical data to train your AI model. To\n  that end, the API provides endpoints to sync historical invoices into Vic.ai\n  and to confirm their presence.\n\n- **Subscribing to and receiving webhooks:** Webhooks enable users or automated\n  tasks to interact with your ERP through various actions in the Vic.ai product\n  suite, such as posting an invoice, payment or purchase order or requesting\n  synchronization. You will receive a notification via a webhook when these\n  actions occur.\n\n\nFor US-based integrations, please use the following base API URL:\n\n```\nhttps://api.us.vic.ai\n```\n\nFor integrations based in Norway, use the following base API URL:\n\n```\nhttps://api.no.vic.ai\n```\n\nAll paths mentioned in this documentation should use one of these URLs as the\nbase.\n\nExample:\n\n```bash\ncurl https://api.us.vic.ai/v0/healthCheck \\\n    -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\"\n```\n\n## Getting Started\n\nTo begin interacting with the Vic.ai API, you will need the following\ncredentials:\n\n* A Vic.ai client ID\n* A Vic.ai client secret.\n\nThese can be provided to you securely by a Vic.ai representative\n[upon request](https://www.vic.ai/book-a-demo).\n\n**Please note:** These credentials are essentially the keys to your ERP\nintegration. If they fall into the wrong hands, unauthorized parties could\nimpersonate you, gain access to sensitive data, and potentially perform\nmalicious actions. Therefore, it's crucial to keep these credentials safe at all\ntimes to protect your application's integrity and your clients' data.\n\n### Limitations\n\nThe Vic.ai API has the following limitations:\n\n**Rate Limiting:** The API is rate-limited to 500 requests per 10-second time\nframe. If you exceed this limit, you will receive a `429 Too Many Requests`\nresponse. The limit is per Oauth client ID. If you continue to receive `429`s,\nplease contact support with a request id from the response headers.\n"
+servers:
+- url: https://api.no.stage.vic.ai
+  description: staging server, NO
+- url: https://api.us.vic.ai
+  description: production server, US
+- url: https://api.no.vic.ai
+  description: production server, NO
+security:
+- BearerAuth: []
+tags:
+- name: Payment Terms
+  description: 'Payment terms are part of your *ERP* **Masterdata**, and represent
+
+    payment terms that Vic.ai can automatically assign to invoices. Some
+
+    vendors may have a default payment term, and some invoices may have a
+
+    specific payment term. In either case, Vic.ai can automatically assign
+
+    payment terms to invoices.
+
+    '
+paths:
+  /v0/paymentTerms:
+    get:
+      description: 'Get a list of payment terms.
+
+        '
+      summary: Get a list of payment terms
+      operationId: listPaymentTerms
+      tags:
+      - Payment Terms
+      responses:
+        '200':
+          $ref: '#/components/responses/PaymentTermListResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+    post:
+      description: 'Create a new payment term.
+
+        '
+      summary: Create a new payment term
+      operationId: createPaymentTerm
+      tags:
+      - Payment Terms
+      requestBody:
+        $ref: '#/components/requestBodies/CreatePaymentTermRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/PaymentTermResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntityResponse'
+  /v0/paymentTerms/synchronize:
+    post:
+      description: 'Tells the ERP to synchronize the Payment Terms resource. If the ERP is
+
+        using the API, the call will be sent via the normal webhook methods. If
+
+        the ERP is not using this API then this will call the native
+
+        integration''s synchronize functionality.
+
+        '
+      summary: Synchronize Payment Terms
+      operationId: synchronizePaymentTerms
+      tags:
+      - Payment Terms
+      responses:
+        '204':
+          $ref: '#/components/responses/SynchronizePaymentTermsResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+  /v0/paymentTerms/{id}:
+    get:
+      description: 'Get a payment term.
+
+        The `id` in the path can be either the Payment Term''s internal ID or its
+
+        external ID when `useSystem=external` is included in the query string.
+
+        '
+      summary: Get a payment term
+      operationId: getPaymentTerm
+      tags:
+      - Payment Terms
+      parameters:
+      - $ref: '#/components/parameters/PathId'
+      - $ref: '#/components/parameters/UseSystemDefaultInternal'
+      responses:
+        '200':
+          $ref: '#/components/responses/PaymentTermResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+    put:
+      description: 'Update a payment term.
+
+        The `id` in the path can be either the Payment Term''s internal ID or its
+
+        external ID when `useSystem=external` is included in the request. The
+
+        Payment Term''s external ID can be updated by including `externalId={value}`
+
+        in the request body. If the `externalId` key is present without a value,
+
+        the Payment Term''s `externalId` **WILL** be cleared.
+
+        '
+      summary: Update a payment term
+      operationId: updatePaymentTerm
+      tags:
+      - Payment Terms
+      parameters:
+      - $ref: '#/components/parameters/PathId'
+      - $ref: '#/components/parameters/UseSystemDefaultInternal'
+      requestBody:
+        $ref: '#/components/requestBodies/UpdatePaymentTermRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/PaymentTermResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntityResponse'
+    delete:
+      description: 'Delete a payment term.
+
+        The `id` in the path can be either the Payment Term''s internal ID or its
+
+        external ID when `useSystem=external` is included in the query string.
+
+        '
+      summary: Delete a payment term
+      operationId: deletePaymentTerm
+      tags:
+      - Payment Terms
+      parameters:
+      - $ref: '#/components/parameters/PathId'
+      - $ref: '#/components/parameters/UseSystemDefaultInternal'
+      responses:
+        '204':
+          $ref: '#/components/responses/PaymentTermDeletedResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+components:
+  responses:
+    PaymentTermResponse:
+      description: A single payment term.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PaymentTerm'
+    PaymentTermDeletedResponse:
+      description: Payment term was successfully deleted.
+    PaymentTermListResponse:
+      description: A list of payment terms.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PaymentTerm'
+    ErrorResponse:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TooManyRequestsResponse:
+      description: HTTP call rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ResourceNotFoundResponse:
+      description: Resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UnprocessableEntityResponse:
+      description: Errors with the input are present.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    SynchronizePaymentTermsResponse:
+      description: 'A request to synchronize the payment terms was acknowledged and is in
+
+        the process of being ran.
+
+        '
+    ForbiddenResponse:
+      description: The request was forbidden.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    UpdatePaymentTerm:
+      type: object
+      required:
+      - name
+      - daysToPay
+      properties:
+        name:
+          oneOf:
+          - type: string
+            maxLength: 255
+            description: The name of the payment term
+          - type: 'null'
+        daysToPay:
+          type: integer
+          minimum: 0
+          description: The number of days the invoice should be paid in.
+        daysToPayCondition:
+          oneOf:
+          - $ref: '#/components/schemas/PaymentTermCondition'
+          - type: 'null'
+          description: These options are used in conjunction with `daysToPay` to calculate the due date.
+          default: issue_date
+        description:
+          oneOf:
+          - type: string
+            maxLength: 255
+            description: A description of the payment term.
+          - type: 'null'
+        discountDays:
+          oneOf:
+          - type: integer
+            minimum: 0
+            description: 'The number of days the invoice should be paid in to get a
+
+              discount.
+
+              '
+          - type: 'null'
+        discountDaysCondition:
+          oneOf:
+          - $ref: '#/components/schemas/PaymentTermCondition'
+          - type: 'null'
+          description: 'These options are used in conjunction with `discountDays` to calculate the discount date.
+
+            '
+          default: issue_date
+        discountPercentage:
+          oneOf:
+          - type: string
+            format: decimal
+            minimum: 0
+            description: 'The discount percentage if paid within the number of discount
+
+              days.
+
+              '
+          - type: 'null'
+        externalId:
+          description: The ID of the payment term in the ERP if it has one.
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+    PaymentTerm:
+      type: object
+      required:
+      - name
+      - daysToPay
+      properties:
+        id:
+          type: string
+          description: The payment term's id.
+        name:
+          type: string
+          maxLength: 255
+          description: The name of the payment term
+        daysToPay:
+          type: integer
+          minimum: 0
+          description: The number of days the invoice should be paid in.
+        daysToPayCondition:
+          oneOf:
+          - $ref: '#/components/schemas/PaymentTermCondition'
+          - type: 'null'
+          description: These options are used in conjunction with `daysToPay` to calculate the due date.
+          default: issue_date
+        description:
+          oneOf:
+          - type: string
+            maxLength: 255
+            description: A description of the payment term.
+          - type: 'null'
+        discountDays:
+          oneOf:
+          - type: integer
+            minimum: 0
+            description: 'The number of days the invoice should be paid in to get a
+
+              discount.
+
+              '
+          - type: 'null'
+        discountDaysCondition:
+          oneOf:
+          - $ref: '#/components/schemas/PaymentTermCondition'
+          - type: 'null'
+          description: 'These options are used in conjunction with `discountDays` to calculate the discount date.
+
+            '
+          default: issue_date
+        discountPercentage:
+          oneOf:
+          - type: string
+            format: decimal
+            minimum: 0
+            description: 'The discount percentage if paid within the number of discount
+
+              days.
+
+              '
+          - type: 'null'
+        externalId:
+          description: The ID of the payment term in the ERP if it has one.
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+    CreatePaymentTerm:
+      type: object
+      required:
+      - name
+      - daysToPay
+      properties:
+        name:
+          oneOf:
+          - type: string
+            maxLength: 255
+            description: The name of the payment term
+          - type: 'null'
+        daysToPay:
+          type: integer
+          minimum: 0
+          description: The number of days the invoice should be paid in.
+        daysToPayCondition:
+          oneOf:
+          - $ref: '#/components/schemas/PaymentTermCondition'
+          - type: 'null'
+          description: These options are used in conjunction with `daysToPay` to calculate the due date.
+          default: issue_date
+        description:
+          oneOf:
+          - type: string
+            maxLength: 255
+            description: A description of the payment term.
+          - type: 'null'
+        discountDays:
+          oneOf:
+          - type: integer
+            minimum: 0
+            description: 'The number of days the invoice should be paid in to get a
+
+              discount.
+
+              '
+          - type: 'null'
+        discountDaysCondition:
+          oneOf:
+          - $ref: '#/components/schemas/PaymentTermCondition'
+          - type: 'null'
+          description: 'These options are used in conjunction with `discountDays` to calculate the discount date.
+
+            '
+          default: issue_date
+        discountPercentage:
+          oneOf:
+          - type: string
+            format: decimal
+            description: 'The discount percentage if paid within the number of discount
+
+              days.
+
+              '
+            minimum: 0
+          - type: 'null'
+        externalId:
+          description: The ID of the payment term in the ERP if it has one.
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+    ExternalId:
+      description: 'The external id set by the ERP system. It does not have to be a UUID and
+
+        can be any non empty string desired.
+
+        '
+      type: string
+      example: 21b31bc7-1267-4335-893c-d7fe4706a238
+      maxLength: 255
+    ErrorString:
+      type: string
+      maxLength: 255
+    Error:
+      description: 'generic error message in JSON format.  Note the ''code'' field should
+
+        match the HTTP status code of the wrapping HTTP request.
+
+        '
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          minimum: 100
+          maximum: 599
+        message:
+          $ref: '#/components/schemas/ErrorString'
+    PaymentTermCondition:
+      type: string
+      enum:
+      - issue_date
+      - date_on_next_0_month
+      - date_on_next_1_month
+      - date_on_next_2_months
+      - date_on_next_3_months
+      - date_on_next_4_months
+      - date_on_next_5_months
+      - date_on_next_6_months
+      - after_end_of_month_of_issue_date
+      - from_issue_date_extending_to_end_of_month
+      description: '* `issue_date` - The due or discount date is calculated by adding the `daysToPay` or `discountDays` to the invoice issue date.
+
+        * `date_on_next_0_month` - The due or discount date is set to `daysToPay` or `discountDays` on the same the month as the invoice issue date.
+
+        * `date_on_next_1_month` - The due or discount date is set to `daysToPay` or `discountDays` on the following month from invoice issue date.
+
+        * `date_on_next_2_months` - The due or discount date is set to `daysToPay` or `discountDays` on two months after the invoice issue date.
+
+        * `date_on_next_3_months` - The due or discount date is set to `daysToPay` or `discountDays` on three months after the invoice issue date.
+
+        * `date_on_next_4_months` - The due or discount date is set to `daysToPay` or `discountDays` on four months after the invoice issue date.
+
+        * `date_on_next_5_months` - The due or discount date is set to `daysToPay` or `discountDays` on five months after the invoice issue date.
+
+        * `date_on_next_6_months` - The due or discount date is set to `daysToPay` or `discountDays` on six months after the invoice issue date.
+
+        * `after_end_of_month_of_issue_date` - The due or discount date is calculated by adding `daysToPay` or `discountDays` from the end of the month in which the invoice was issued.
+
+        * `from_issue_date_extending_to_end_of_month` - The due or discount date is set to the end of the month after adding `daysToPay` or `discountDays` to the invoice issue date.
+
+        '
+  requestBodies:
+    UpdatePaymentTermRequest:
+      description: Update a payment term.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdatePaymentTerm'
+    CreatePaymentTermRequest:
+      description: Create a payment term.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreatePaymentTerm'
+  parameters:
+    PathId:
+      name: id
+      in: path
+      required: true
+      description: The id of the database entry
+      schema:
+        type: string
+    UseSystemDefaultInternal:
+      name: useSystem
+      in: query
+      description: 'Which system to use for id or updatedAt filters.
+
+        '
+      required: false
+      schema:
+        type: string
+        enum:
+        - INTERNAL
+        - EXTERNAL
+        - internal
+        - external
+        default: INTERNAL
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-tagGroups:
+- name: Integration
+  tags:
+  - Authentication
+  - Pagination
+  - Webhooks
+  - Webhook Subscriptions
+  - Webhook Events
+  - Synchronizing
+  - Status
+- name: Master Data
+  tags:
+  - Accounts
+  - Dimensions
+  - Vendors
+  - Vendor Groups
+  - Vendor Tags
+  - Tags
+  - Tax Codes
+  - VAT Codes
+  - Payment Terms
+- name: Organization & Access
+  tags:
+  - Partners
+  - Organizations
+  - Companies
+  - Users
+- name: Invoices & Bills
+  tags:
+  - Invoices
+  - Bills
+  - Attachments
+  - Invoice Approval Flows
+  - Invoice Posting Guide
+  - Training Invoices
+- name: Purchase Orders
+  tags:
+  - Purchase Orders
+  - Purchase Order Line Items
+  - Purchase Order Matching Guide
+- name: Payments
+  tags:
+  - Payment Batches
+  - Payment Confirmations
+  - Credit Confirmations
+- name: Reporting
+  tags:
+  - CSV Reports
+- name: Reference
+  tags:
+  - Changelog

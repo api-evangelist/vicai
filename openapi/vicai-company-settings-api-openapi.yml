@@ -1,0 +1,530 @@
+openapi: 3.1.0
+info:
+  version: v10.40.4
+  contact: {}
+  title: Vic.ai Accounts Company Settings API
+  description: "## Introduction\n\nThe Vic.ai API provides a seamless connection between your Enterprise Resource\nPlanning (ERP) system and the Vic.ai product suite.\n\nThe API is designed to offer three main areas of functionality:\n\n- **Syncing master data:** This refers to the data in your ERP that Vic.ai\n  interacts with. You are required to supply and update this data in Vic.ai, and\n  you also have the option to verify the copy of the masterdata in Vic.ai.\n\n- **Syncing training data:** We need historical data to train your AI model. To\n  that end, the API provides endpoints to sync historical invoices into Vic.ai\n  and to confirm their presence.\n\n- **Subscribing to and receiving webhooks:** Webhooks enable users or automated\n  tasks to interact with your ERP through various actions in the Vic.ai product\n  suite, such as posting an invoice, payment or purchase order or requesting\n  synchronization. You will receive a notification via a webhook when these\n  actions occur.\n\n\nFor US-based integrations, please use the following base API URL:\n\n```\nhttps://api.us.vic.ai\n```\n\nFor integrations based in Norway, use the following base API URL:\n\n```\nhttps://api.no.vic.ai\n```\n\nAll paths mentioned in this documentation should use one of these URLs as the\nbase.\n\nExample:\n\n```bash\ncurl https://api.us.vic.ai/v0/healthCheck \\\n    -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\"\n```\n\n## Getting Started\n\nTo begin interacting with the Vic.ai API, you will need the following\ncredentials:\n\n* A Vic.ai client ID\n* A Vic.ai client secret.\n\nThese can be provided to you securely by a Vic.ai representative\n[upon request](https://www.vic.ai/book-a-demo).\n\n**Please note:** These credentials are essentially the keys to your ERP\nintegration. If they fall into the wrong hands, unauthorized parties could\nimpersonate you, gain access to sensitive data, and potentially perform\nmalicious actions. Therefore, it's crucial to keep these credentials safe at all\ntimes to protect your application's integrity and your clients' data.\n\n### Limitations\n\nThe Vic.ai API has the following limitations:\n\n**Rate Limiting:** The API is rate-limited to 500 requests per 10-second time\nframe. If you exceed this limit, you will receive a `429 Too Many Requests`\nresponse. The limit is per Oauth client ID. If you continue to receive `429`s,\nplease contact support with a request id from the response headers.\n"
+servers:
+- url: https://api.no.stage.vic.ai
+  description: staging server, NO
+- url: https://api.us.vic.ai
+  description: production server, US
+- url: https://api.no.vic.ai
+  description: production server, NO
+security:
+- BearerAuth: []
+tags:
+- name: Company Settings
+  description: 'Per-company configuration options that an integration partner
+
+    can read and tune programmatically rather than by asking
+
+    Vic.ai support. Requires partner authentication (obtain a
+
+    token via `POST /v0/token` with partner credentials); the
+
+    partner must have provisioned or been linked to the company.
+
+    The settings response is a flat map of field name to value;
+
+    PATCH applies a partial update and is atomic — either the full
+
+    update succeeds or no changes are persisted.
+
+    '
+paths:
+  /v2/companies/{company_id}/settings:
+    parameters:
+    - $ref: '#/components/parameters/CompanyId'
+    get:
+      description: 'Returns the company''s current configuration as a flat map. Every
+
+        available setting is present in the response with either the
+
+        company''s configured value or the default. Enum values are
+
+        returned as strings.
+
+
+        Requires partner authentication (obtain a token via
+
+        `POST /v0/token` with partner credentials); the partner must
+
+        have provisioned or been linked to the company.
+
+        '
+      summary: Get company settings
+      operationId: getCompanySettingsV2
+      tags:
+      - Company Settings
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      responses:
+        '200':
+          $ref: '#/components/responses/CompanySettingsResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+    patch:
+      description: 'Applies a partial settings update. The request body is a flat map
+
+        of setting name to value; only fields included in the body are
+
+        modified. Unknown field names and type-invalid values are
+
+        rejected with a 422 error listing every offending field.
+
+
+        Updates are atomic: either every change in the request is
+
+        applied, or none are. On success the full refreshed settings map
+
+        is returned.
+
+
+        Requires partner authentication (obtain a token via
+
+        `POST /v0/token` with partner credentials); the partner must
+
+        have provisioned or been linked to the company.
+
+        '
+      summary: Update company settings
+      operationId: updateCompanySettingsV2
+      tags:
+      - Company Settings
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateCompanySettingsRequestV2'
+      responses:
+        '200':
+          $ref: '#/components/responses/CompanySettingsResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+components:
+  responses:
+    CompanySettingsResponseV2:
+      description: The effective settings map for the company.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - data
+            properties:
+              data:
+                $ref: '#/components/schemas/CompanySettingsV2'
+    ErrorResponseV2:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ErrorV2'
+  requestBodies:
+    UpdateCompanySettingsRequestV2:
+      description: 'Partial update to the company settings map. Only fields
+
+        included in the body are modified.
+
+        '
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateCompanySettingsV2'
+  schemas:
+    CompanySettingsV2:
+      type: object
+      description: 'A company''s configuration options. Every available setting is
+
+        always present in the response. Enum values are returned as
+
+        strings; booleans as booleans. `null` means the field has no
+
+        configured value and the caller should treat it as "unset"
+
+        rather than "false".
+
+        '
+      required:
+      - backend_mode
+      - approval_flow_engine_enabled
+      - approval_flow_engine_user_edits_allowed
+      - invoice_automation_enabled
+      - invoice_automated_next_step
+      - invoice_approval_next_step
+      - po_invoice_automation_enabled
+      - po_invoice_automated_next_step
+      - po_invoice_approval_next_step
+      - purchase_order_matching
+      - purchase_order_matching_level
+      - purchase_order_require_matching_to_post
+      - aaf_ignores_po_invoice_items
+      - enable_posting
+      - tax_handling
+      - freight_handling
+      properties:
+        backend_mode:
+          description: 'Backend processing mode for the company. Production
+
+            companies should use `default`. Non-default values are
+
+            reserved for demo and sandbox environments and should not
+
+            be set on production companies.
+
+            '
+          type: string
+          enum:
+          - default
+          - stub
+        approval_flow_engine_enabled:
+          description: 'Master switch for the approval flow engine. Must be `true`
+
+            for automatically generated approval steps to be created on
+
+            the company''s invoices.
+
+            '
+          type: boolean
+        approval_flow_engine_user_edits_allowed:
+          description: 'Allow end users to edit automatically generated approval
+
+            steps on an individual invoice.
+
+            '
+          type: boolean
+        invoice_automation_enabled:
+          description: 'When `true` combined with `invoice_automated_next_step`,
+
+            non-PO invoices auto-advance once analysis finishes.
+
+            '
+          type: boolean
+        invoice_automated_next_step:
+          description: 'The next action to take automatically once analysis finishes
+
+            on a non-PO invoice. `null` disables auto-advancement.
+
+            '
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - start_approval
+            - post
+            - export
+            - submit
+        invoice_approval_next_step:
+          description: 'The next action to take automatically once approval completes
+
+            on a non-PO invoice. `null` disables auto-advancement.
+
+            '
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - post
+            - export
+            - submit
+        po_invoice_automation_enabled:
+          description: 'When `true` combined with `po_invoice_automated_next_step`,
+
+            PO-matched invoices auto-advance once analysis finishes.
+
+            '
+          type: boolean
+        po_invoice_automated_next_step:
+          description: 'The next action to take automatically once analysis finishes
+
+            on a PO-matched invoice. `null` disables auto-advancement.
+
+            '
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - start_approval
+            - post
+        po_invoice_approval_next_step:
+          description: 'The next action to take automatically once approval completes
+
+            on a PO-matched invoice, independent of
+
+            `invoice_approval_next_step` (which covers non-PO invoices).
+
+            `null` disables auto-advancement for PO-matched invoices.
+
+            '
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - post
+            - export
+            - submit
+        purchase_order_matching:
+          description: 'Purchase-order matching mode. `none` disables PO matching
+
+            entirely; `standard`, `implicit`, and `explicit` select
+
+            different matching strategies.
+
+            '
+          type: string
+          enum:
+          - none
+          - standard
+          - implicit
+          - explicit
+        purchase_order_matching_level:
+          description: 'Granularity of PO matching: `line` matches invoice lines
+
+            against PO lines; `document` groups lines at the PO level.
+
+            '
+          type: string
+          enum:
+          - document
+          - line
+        purchase_order_require_matching_to_post:
+          description: 'When `true`, an invoice cannot be posted until every item
+
+            line is matched to a PO line.
+
+            '
+          type: boolean
+        aaf_ignores_po_invoice_items:
+          description: 'When `true` (the default), approval flow rules evaluating
+
+            against an invoice''s total amount sum only expense lines,
+
+            excluding PO-matched item lines (which are covered by the
+
+            PO matching approval path instead). Set to `false` to have
+
+            those rules evaluate against the full invoice total
+
+            including PO-matched items.
+
+            '
+          type: boolean
+        enable_posting:
+          description: 'Gates the post-approval posting action in the UI and the
+
+            corresponding API endpoints. Defaults to `false` on new
+
+            companies so the ERP integration can be verified before
+
+            invoices are pushed out.
+
+            '
+          type: boolean
+        tax_handling:
+          description: 'How invoice tax is computed and allocated across lines.
+
+            '
+          type: string
+          enum:
+          - none
+          - tax_engine
+          - tax_codes
+          - tax_expense_line
+          - vat_for_po_invoices
+          - tax_allocation
+        freight_handling:
+          description: 'How freight charges are allocated across lines. `null`
+
+            disables automatic freight handling.
+
+            '
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - expense_line
+            - even_allocation
+            - weighted_allocation
+    UpdateCompanySettingsV2:
+      type: object
+      description: 'Partial update for company settings. All fields are optional; only
+
+        fields included in the body are modified. Shape and types mirror
+
+        `CompanySettingsV2`. Unknown fields and invalid values produce a
+
+        422 error listing every offending key.
+
+        '
+      properties:
+        backend_mode:
+          type: string
+          enum:
+          - default
+          - stub
+        approval_flow_engine_enabled:
+          type: boolean
+        approval_flow_engine_user_edits_allowed:
+          type: boolean
+        invoice_automation_enabled:
+          type: boolean
+        invoice_automated_next_step:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - start_approval
+            - post
+            - export
+            - submit
+        invoice_approval_next_step:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - post
+            - export
+            - submit
+        po_invoice_automation_enabled:
+          type: boolean
+        po_invoice_automated_next_step:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - start_approval
+            - post
+        po_invoice_approval_next_step:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - post
+            - export
+            - submit
+        purchase_order_matching:
+          type: string
+          enum:
+          - none
+          - standard
+          - implicit
+          - explicit
+        purchase_order_matching_level:
+          type: string
+          enum:
+          - document
+          - line
+        purchase_order_require_matching_to_post:
+          type: boolean
+        aaf_ignores_po_invoice_items:
+          type: boolean
+        enable_posting:
+          type: boolean
+        tax_handling:
+          type: string
+          enum:
+          - none
+          - tax_engine
+          - tax_codes
+          - tax_expense_line
+          - vat_for_po_invoices
+          - tax_allocation
+        freight_handling:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - expense_line
+            - even_allocation
+            - weighted_allocation
+    ErrorV2:
+      type: object
+      required:
+      - message
+      properties:
+        field:
+          description: 'The field that the error occurred on. This field may not always be
+
+            present.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
+        message:
+          description: A description of the error.
+          type: string
+  parameters:
+    CompanyId:
+      name: company_id
+      in: path
+      required: true
+      description: The ID of the company
+      schema:
+        type: string
+        format: uuid
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-tagGroups:
+- name: Integration
+  tags:
+  - Authentication
+  - Pagination
+  - Webhooks
+  - Webhook Subscriptions
+  - Webhook Events
+  - Synchronizing
+  - Status
+- name: Master Data
+  tags:
+  - Accounts
+  - Dimensions
+  - Vendors
+  - Vendor Groups
+  - Vendor Tags
+  - Tags
+  - Tax Codes
+  - VAT Codes
+  - Payment Terms
+- name: Organization & Access
+  tags:
+  - Partners
+  - Organizations
+  - Companies
+  - Users
+- name: Invoices & Bills
+  tags:
+  - Invoices
+  - Bills
+  - Attachments
+  - Invoice Approval Flows
+  - Invoice Posting Guide
+  - Training Invoices
+- name: Purchase Orders
+  tags:
+  - Purchase Orders
+  - Purchase Order Line Items
+  - Purchase Order Matching Guide
+- name: Payments
+  tags:
+  - Payment Batches
+  - Payment Confirmations
+  - Credit Confirmations
+- name: Reporting
+  tags:
+  - CSV Reports
+- name: Reference
+  tags:
+  - Changelog

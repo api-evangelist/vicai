@@ -1,0 +1,1282 @@
+openapi: 3.1.0
+info:
+  version: v10.40.4
+  contact: {}
+  title: Vic.ai Accounts Users API
+  description: "## Introduction\n\nThe Vic.ai API provides a seamless connection between your Enterprise Resource\nPlanning (ERP) system and the Vic.ai product suite.\n\nThe API is designed to offer three main areas of functionality:\n\n- **Syncing master data:** This refers to the data in your ERP that Vic.ai\n  interacts with. You are required to supply and update this data in Vic.ai, and\n  you also have the option to verify the copy of the masterdata in Vic.ai.\n\n- **Syncing training data:** We need historical data to train your AI model. To\n  that end, the API provides endpoints to sync historical invoices into Vic.ai\n  and to confirm their presence.\n\n- **Subscribing to and receiving webhooks:** Webhooks enable users or automated\n  tasks to interact with your ERP through various actions in the Vic.ai product\n  suite, such as posting an invoice, payment or purchase order or requesting\n  synchronization. You will receive a notification via a webhook when these\n  actions occur.\n\n\nFor US-based integrations, please use the following base API URL:\n\n```\nhttps://api.us.vic.ai\n```\n\nFor integrations based in Norway, use the following base API URL:\n\n```\nhttps://api.no.vic.ai\n```\n\nAll paths mentioned in this documentation should use one of these URLs as the\nbase.\n\nExample:\n\n```bash\ncurl https://api.us.vic.ai/v0/healthCheck \\\n    -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\"\n```\n\n## Getting Started\n\nTo begin interacting with the Vic.ai API, you will need the following\ncredentials:\n\n* A Vic.ai client ID\n* A Vic.ai client secret.\n\nThese can be provided to you securely by a Vic.ai representative\n[upon request](https://www.vic.ai/book-a-demo).\n\n**Please note:** These credentials are essentially the keys to your ERP\nintegration. If they fall into the wrong hands, unauthorized parties could\nimpersonate you, gain access to sensitive data, and potentially perform\nmalicious actions. Therefore, it's crucial to keep these credentials safe at all\ntimes to protect your application's integrity and your clients' data.\n\n### Limitations\n\nThe Vic.ai API has the following limitations:\n\n**Rate Limiting:** The API is rate-limited to 500 requests per 10-second time\nframe. If you exceed this limit, you will receive a `429 Too Many Requests`\nresponse. The limit is per Oauth client ID. If you continue to receive `429`s,\nplease contact support with a request id from the response headers.\n"
+servers:
+- url: https://api.no.stage.vic.ai
+  description: staging server, NO
+- url: https://api.us.vic.ai
+  description: production server, US
+- url: https://api.no.vic.ai
+  description: production server, NO
+security:
+- BearerAuth: []
+tags:
+- name: Users
+  description: 'Managing users in the Vic system. You are allowed to add and remove users from
+
+    companies and organizations along with managing some of their attributes.
+
+    However, you are not allowed edit a user''s `email`. This is currently a
+
+    limitation of the system.
+
+
+    If a user is already created and you wish to add it to a company or
+
+    organization, use the following operations to add them.
+
+
+    * `POST /v2/organizations/{organization_id}/users/attach`
+
+    * `POST /v2/companies/{company_id}/users/attach`
+
+    '
+paths:
+  /v2/organizations/{organization_id}/users:
+    get:
+      description: List users attached to an organization.
+      summary: List users attached to an organization
+      operationId: listOrganizationUsersV2
+      tags:
+      - Users
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: organization_id
+        description: The ID of the Organization.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: name
+        description: The name of the user. This is a case-insensitive match.
+        in: query
+        schema:
+          type: string
+      - name: name_contains
+        description: 'The name of the user contains the value specified. This is a
+
+          case-insensitive match.
+
+          '
+        in: query
+        schema:
+          type: string
+      - name: email
+        description: 'The user has the email address. This is a case-insensitive match.
+
+          '
+        in: query
+        schema:
+          type: string
+      - name: email_contains
+        description: 'The email of the user contains the value specified. This is a
+
+          case-insensitive match.
+
+          '
+        in: query
+        schema:
+          type: string
+      - $ref: '#/components/parameters/PaginationV2'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListOrganizationUsersResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+    post:
+      description: 'Create and attach a user to an organization. If the user already exists,
+
+        use the `attachUserToOrganizationV2` (`POST /v2/organizations/{organization_id}/users/attach`)
+
+        operation instead.
+
+        '
+      summary: Create and attach user to an organization
+      operationId: createOrganizationUserV2
+      tags:
+      - Users
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: organization_id
+        description: The ID of the organization.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CreateOrganizationUserRequestV2'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreateOrganizationUserResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/organizations/{organization_id}/users/attach:
+    post:
+      description: 'Attaches an existing user to an organization. You may provide the
+
+        `user_id` or `email`. If the user does not exist, you will need to use
+
+        the `createOrganizationUserV2` operation.
+
+        '
+      summary: Attach an existing user to an organization
+      operationId: attachUserToOrganizationV2
+      tags:
+      - Users
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: organization_id
+        description: The ID of the organization.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/AttachUserToOrganizationRequestV2'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreateOrganizationUserResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/organizations/{organization_id}/users/{user_id}:
+    delete:
+      description: 'Removes the user from the organization. **NOTE**: This will remove the
+
+        user from __ALL__ of the companies within the organization.
+
+        '
+      summary: Remove user from organization
+      operationId: removeUserFromOrganizationV2
+      tags:
+      - Users
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: organization_id
+        description: The ID of the organization.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: user_id
+        description: The ID of the user.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          $ref: '#/components/responses/RemoveUserFromOrganizationResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/companies/{company_id}/users:
+    get:
+      description: List or search for users attached to the company
+      summary: List or search for users attached to the company
+      operationId: listCompanyUsersV2
+      tags:
+      - Users
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: company_id
+        description: The ID of the company.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: name
+        description: The name of the user. This is a case-insensitive match.
+        in: query
+        schema:
+          type: string
+      - name: name_contains
+        description: 'The name of the user contains the value specified. This is a
+
+          case-insensitive match.
+
+          '
+        in: query
+        schema:
+          type: string
+      - name: email
+        description: 'The user has the email address. This is a case-insensitive match.
+
+          '
+        in: query
+        schema:
+          type: string
+      - name: email_contains
+        description: 'The email of the user contains the value specified. This is a
+
+          case-insensitive match.
+
+          '
+        in: query
+        schema:
+          type: string
+      - $ref: '#/components/parameters/PaginationV2'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListCompanyUsersResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+    post:
+      description: 'Create and attach a user to a company. If the user already exists, use
+
+        the `attachUserToCompanyV2` (`POST /v2/companies/{company_id}/users/attach`)
+
+        operation instead.
+
+        '
+      summary: Create and attach user to company
+      operationId: createCompanyUserV2
+      tags:
+      - Users
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: company_id
+        description: The ID of the company.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CreateCompanyUserRequestV2'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreateCompanyUserResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/companies/{company_id}/users/attach:
+    post:
+      description: 'Attaches an existing user to a company. You may provide the `user_id` or
+
+        `email`. If the user does not exist, you will need to use the
+
+        `createCompanyUserV2` operation.
+
+        '
+      summary: Attach an existing user to a company
+      operationId: attachUserToCompanyV2
+      tags:
+      - Users
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: company_id
+        description: The ID of the company.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/AttachUserToCompanyRequestV2'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreateCompanyUserResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/companies/{company_id}/users/{user_id}:
+    delete:
+      description: 'Removes the user from the company. This does not remove them from the
+
+        organization, even when the user is not attached to any companies within
+
+        the organization.
+
+        '
+      summary: Remove user from company
+      operationId: removeUserFromCompanyV2
+      tags:
+      - Users
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: company_id
+        description: The ID of the company.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: user_id
+        description: The ID of the user.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          $ref: '#/components/responses/RemoveUserFromCompanyResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/companies/{company_id}/users/{user_id}/roles:
+    get:
+      description: 'Returns the list of roles currently assigned to a user within a specific
+
+        company. Roles are company-scoped and determine what actions the user can
+
+        perform within that company.
+
+        '
+      summary: List a user's roles in a company
+      operationId: listCompanyUserRolesV2
+      tags:
+      - Users
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: company_id
+        description: The ID of the company.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: user_id
+        description: The ID of the user.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          $ref: '#/components/responses/CompanyUserRolesResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+    post:
+      description: 'Declaratively set the roles for a user within a company. The provided list
+
+        of roles replaces the user''s current roles entirely — roles included in the
+
+        list become active, and all others become inactive.
+
+
+        This operation is idempotent: assigning roles that are already active has
+
+        no effect on those roles.
+
+        '
+      summary: Update a user's roles in a company
+      operationId: updateCompanyUserRolesV2
+      tags:
+      - Users
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: company_id
+        description: The ID of the company.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: user_id
+        description: The ID of the user.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateCompanyUserRolesRequestV2'
+      responses:
+        '200':
+          $ref: '#/components/responses/CompanyUserRolesResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/companies/{company_id}/users/{user_id}/manager:
+    patch:
+      description: 'Set or clear the user''s manager. Provide `manager_id` to set the
+
+        manager, or `null` to clear it. The manager must be a user within the
+
+        same company.
+
+
+        A user has a single manager that applies across every company they
+
+        belong to. The company in the path scopes who may call this and which
+
+        users are eligible to be the manager, but the resulting relationship is
+
+        not company-specific: setting or clearing it here changes the user''s
+
+        manager everywhere they are a member, which can affect approval routing
+
+        in their other companies.
+
+
+        A manager who is not a member of the company reads as `manager: null`
+
+        in user responses. To protect that hidden assignment, passing
+
+        `manager_id: null` is rejected when the user''s current manager is not a
+
+        member of the company; assign a manager from within the company
+
+        instead, or clear the manager through a company the current manager
+
+        belongs to. An assignment to a deleted member of the company can
+
+        always be cleared.
+
+
+        A user cannot be their own manager, and two users cannot be each
+
+        other''s manager; such requests are rejected.
+
+        '
+      summary: Set or clear a user's manager in a company
+      operationId: updateCompanyUserManagerV2
+      tags:
+      - Users
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: company_id
+        description: The ID of the company.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: user_id
+        description: The ID of the user.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateCompanyUserManagerRequestV2'
+      responses:
+        '200':
+          $ref: '#/components/responses/UpdateCompanyUserManagerResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/users:
+    get:
+      description: 'List users accessible in the system. The users accessible will be those
+
+        that are attached to organizations that have granted access to your
+
+        client.
+
+        '
+      summary: List users
+      operationId: listUsersV2
+      tags:
+      - Users
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: name
+        description: The name of the user. This is a case-insensitive match.
+        in: query
+        schema:
+          type: string
+      - name: name_contains
+        description: 'The name of the user contains the value specified. This is a
+
+          case-insensitive match.
+
+          '
+        in: query
+        schema:
+          type: string
+      - name: email
+        description: 'The user has the email address. This is a case-insensitive match.
+
+          '
+        in: query
+        schema:
+          type: string
+      - name: email_contains
+        description: 'The email of the user contains the value specified. This is a
+
+          case-insensitive match.
+
+          '
+        in: query
+        schema:
+          type: string
+      - $ref: '#/components/parameters/PaginationV2'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListUsersResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/users/{user_id}:
+    get:
+      description: Get a user
+      summary: Get a user
+      operationId: getUserV2
+      tags:
+      - Users
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: user_id
+        description: The ID of the user.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          $ref: '#/components/responses/GetUserResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+    put:
+      description: 'Update a user with the data provided. If fields are omitted, they will
+
+        be considered `null` and will be cleared. If you do not wish to clear
+
+        these values, please provide everything.
+
+        <br />
+
+        <br />
+
+        **Note**: A user''s email is not allowed to be updated over the API. If a
+
+        user''s email must be changed, please use the Web UI or contact support
+
+        about this.
+
+        '
+      summary: Update a user
+      operationId: updateUserV2
+      tags:
+      - Users
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: user_id
+        description: The ID of the user.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateUserRequestV2'
+      responses:
+        '200':
+          $ref: '#/components/responses/UpdateUserResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+components:
+  schemas:
+    CompanyUserRoleV2:
+      type: string
+      enum:
+      - admin
+      - approver
+      - accountant
+      - analytics_user
+      - ar_admin
+      - ar_specialist
+      - card_admin
+      - card_user
+      - client
+      - controller
+      - payer
+      - po_mismatch_approver
+      - vendor_manager
+      - view_only
+    CreateUserV2:
+      type: object
+      required:
+      - name
+      - email
+      properties:
+        first_name:
+          type: string
+          description: The first name of the user.
+        last_name:
+          type: string
+          description: The last name of the user.
+        name:
+          type: string
+          description: The full preferred name of the user.
+        phone_number:
+          type: string
+          description: 'The phone number the user is connected with. This is not required to
+
+            be set. If provided, the phone number is validated.
+
+            '
+        email:
+          type: string
+          description: The User's email. Must be unique.
+        timezone:
+          $ref: '#/components/schemas/TimeZoneV2'
+        language:
+          $ref: '#/components/schemas/LanguageV2'
+        address:
+          $ref: '#/components/schemas/UserAddressV2'
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserMetadataEntryV2'
+        date_of_birth:
+          type: string
+          format: date
+          description: When the user was born.
+    UserMetadataEntryV2:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'The name of the metadata entry. The name **MUST** be only lower case
+
+            `a-z` and numbers `0-9`. The `_` character is allowed. The name
+
+            *MUST** be unique in the set.
+
+            '
+          pattern: ^[a-z0-9_]+$
+          example: job_title
+        type:
+          type: string
+          enum:
+          - string
+          - boolean
+          - integer
+          - date
+        value:
+          type: string
+          description: The value of the entry.
+          example: Senior Manager
+    AttachUserToCompanyV2:
+      type: object
+      properties:
+        user_id:
+          description: 'The User''s id. Both can be provided. `user_id` takes higher
+
+            precedence than `email`.
+
+            '
+          type: string
+          format: uuid
+        email:
+          description: 'The existing User''s email. Both can be provided. `user_id` takes
+
+            higher precedence than `email`.
+
+            '
+          type: string
+    ErrorV2:
+      type: object
+      required:
+      - message
+      properties:
+        field:
+          description: 'The field that the error occurred on. This field may not always be
+
+            present.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
+        message:
+          description: A description of the error.
+          type: string
+    AttachUserToOrganizationV2:
+      type: object
+      properties:
+        user_id:
+          description: 'The User''s id. Both can be provided. `user_id` takes higher
+
+            precedence than `email`.
+
+            '
+          type: string
+          format: uuid
+        email:
+          description: 'The existing User''s email. Both can be provided. `user_id` takes
+
+            higher precedence than `email`.
+
+            '
+          type: string
+        role:
+          description: 'Optional organization-level role to grant the user when attaching.
+
+            One of `user`, `admin`, `superadmin`, or `manager`. Defaults to
+
+            `user`. Ignored when the user is already attached to the
+
+            organization; an existing member keeps their current role.
+
+            '
+          type: string
+          enum:
+          - user
+          - admin
+          - superadmin
+          - manager
+          default: user
+    CompanyUserRolesV2:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: object
+          required:
+          - user_id
+          - company_id
+          - roles
+          properties:
+            user_id:
+              description: The ID of the user.
+              type: string
+              format: uuid
+            company_id:
+              description: The ID of the company.
+              type: string
+              format: uuid
+            roles:
+              description: The list of roles currently assigned to the user in this company.
+              type: array
+              items:
+                $ref: '#/components/schemas/CompanyUserRoleV2'
+    PaginationV2:
+      type: object
+      properties:
+        size:
+          type: integer
+          description: The page size.
+          maximum: 50
+          minimum: 1
+        cursor:
+          type: string
+          description: The cursor to use to get the next page of results.
+    CompanyUserMetaV2:
+      type: object
+      properties:
+        user_id:
+          description: The user the company is attached to.
+          type: string
+          format: uuid
+        company_id:
+          description: The company the user is attached to.
+          type: string
+          format: :uuid
+        created_at:
+          description: When the user was added to the company.
+          type: string
+          format: date-time
+        updated_at:
+          description: When the user's role was modified.
+          type: string
+          format: date-time
+    OrganizationUserMetaV2:
+      type: object
+      properties:
+        user_id:
+          description: The user the organization is attached to.
+          type: string
+          format: uuid
+        organization_id:
+          description: The organization the user is attached to.
+          type: string
+          format: :uuid
+        created_at:
+          description: When the user was added to the organization.
+          type: string
+          format: date-time
+        updated_at:
+          description: When the user's role was modified.
+          type: string
+          format: date-time
+    UserManagerV2:
+      description: A user's manager.
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          description: The manager's user ID.
+        name:
+          type: string
+          description: The manager's full preferred name.
+        email:
+          type: string
+          description: The manager's email.
+    PaginationMetaV2:
+      type: object
+      properties:
+        cursor:
+          description: 'The cursor to the next page of data. If it is null, that means there
+
+            is no more data to fetch.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
+    LanguageV2:
+      type: string
+      description: The two letter code for the language used.
+      example: en
+    CreateCompanyUserV2:
+      allOf:
+      - $ref: '#/components/schemas/CreateUserV2'
+      - type: object
+        properties:
+          manager_id:
+            description: 'The ID of the user to set as this user''s manager. The manager
+
+              must be a user within the same company. Omit to create the user
+
+              without a manager.
+
+              '
+            type: string
+            format: uuid
+    UserV2:
+      description: A User attached to an organization.
+      type: object
+      required:
+      - id
+      - name
+      - email
+      properties:
+        id:
+          type: string
+        legacy_id:
+          type:
+          - string
+          - 'null'
+          description: The Users's internal ID. This is a legacy field and will be removed in the future.
+          example: '12345'
+        first_name:
+          type: string
+          description: The first name of the user.
+        last_name:
+          type: string
+          description: The last name of the user.
+        name:
+          type: string
+          description: The full preferred name of the user.
+        phone_number:
+          type: string
+          description: 'The phone number the user is connected with. This is not required to
+
+            be set. If provided, the phone number is validated.
+
+            '
+        email:
+          type: string
+          description: The User's email. Must be unique.
+        status:
+          $ref: '#/components/schemas/UserStatusV2'
+        timezone:
+          $ref: '#/components/schemas/TimeZoneV2'
+        language:
+          $ref: '#/components/schemas/LanguageV2'
+        address:
+          $ref: '#/components/schemas/UserAddressV2'
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserMetadataEntryV2'
+        date_of_birth:
+          type: string
+          format: date
+          description: When the user was born.
+        manager:
+          description: 'The user''s manager (the user they are managed by), or `null` when
+
+            no manager is set or when the manager is outside the scope of the
+
+            request (for example, not a member of the requested company).
+
+            '
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/UserManagerV2'
+        created_at:
+          type: string
+          format: date-time
+          description: When the user was created in Vic.
+        updated_at:
+          type: string
+          format: date-time
+          description: When the user was last updated in Vic.
+    UserStatusV2:
+      type: string
+      description: The type of invoice item line.
+      enum:
+      - active
+      - out_of_office
+      default: active
+    UpdateCompanyUserRolesV2:
+      type: object
+      required:
+      - roles
+      properties:
+        roles:
+          description: 'The full list of roles to assign to the user. Roles included in this
+
+            list become active; all other roles become inactive. Use an empty
+
+            array to remove all roles.
+
+            '
+          type: array
+          items:
+            $ref: '#/components/schemas/CompanyUserRoleV2'
+    UpdateUserV2:
+      type: object
+      required:
+      - name
+      properties:
+        first_name:
+          type: string
+          description: The first name of the user.
+        last_name:
+          type: string
+          description: The last name of the user.
+        name:
+          type: string
+          description: The full preferred name of the user.
+        phone_number:
+          type: string
+          description: 'The phone number the user is connected with. This is not required to
+
+            be set. If provided, the phone number is validated.
+
+            '
+        timezone:
+          $ref: '#/components/schemas/TimeZoneV2'
+        language:
+          $ref: '#/components/schemas/LanguageV2'
+        address:
+          $ref: '#/components/schemas/UserAddressV2'
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserMetadataEntryV2'
+        date_of_birth:
+          type: string
+          format: date
+          description: When the user was born.
+    CountryCode:
+      description: 'The ISO-3166 country code. The acceptable values are Alpha-2 codes.
+
+        '
+      type: string
+      format: ISO-3166
+      maxLength: 2
+      example: US
+    UserAddressV2:
+      type: object
+      properties:
+        street_1:
+          type: string
+        street_2:
+          type: string
+        city:
+          type: string
+        postal_code:
+          type: string
+        country:
+          $ref: '#/components/schemas/CountryCode'
+    TimeZoneV2:
+      type: string
+      example: Etc/UTC
+  requestBodies:
+    UpdateCompanyUserManagerRequestV2:
+      description: Set or clear a user's manager.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - manager_id
+            properties:
+              manager_id:
+                description: 'The ID of the user to set as this user''s manager, or `null` to
+
+                  clear the manager. The manager must be a user within the same
+
+                  company. `null` is rejected when the user''s current manager is
+
+                  not a member of the company, so a hidden assignment cannot be
+
+                  cleared unknowingly.
+
+                  '
+                oneOf:
+                - type: string
+                  format: uuid
+                - type: 'null'
+    CreateCompanyUserRequestV2:
+      description: Create a user and attach it to a company.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateCompanyUserV2'
+    AttachUserToOrganizationRequestV2:
+      description: Attach an existing user to an organization.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AttachUserToOrganizationV2'
+    UpdateUserRequestV2:
+      description: 'Updates a user.
+
+        <br />
+
+        <br />
+
+        This is a full replacement operation. All fields unspecified will be
+
+        treated as if they were `null` and will be cleared on the user. When
+
+        updating a user, please provide all fields and their values.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateUserV2'
+    AttachUserToCompanyRequestV2:
+      description: Attach an existing user to a company.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AttachUserToCompanyV2'
+    UpdateCompanyUserRolesRequestV2:
+      description: Set the roles for a user within a company.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateCompanyUserRolesV2'
+    CreateOrganizationUserRequestV2:
+      description: Create a user and attach it to an organization.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateUserV2'
+  responses:
+    UpdateCompanyUserManagerResponseV2:
+      description: The user's manager was updated.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - data
+            properties:
+              data:
+                $ref: '#/components/schemas/UserV2'
+    CompanyUserRolesResponseV2:
+      description: The user's current roles within the company.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CompanyUserRolesV2'
+    CreateCompanyUserResponseV2:
+      description: User was created and attached to the company successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CompanyUserMetaV2'
+    ListUsersResponseV2:
+      description: A successful list of users
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginationMetaV2'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserV2'
+    ErrorResponseV2:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ErrorV2'
+    UpdateUserResponseV2:
+      description: User was updated successfully.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/UserV2'
+    CreateOrganizationUserResponseV2:
+      description: User was created and attached to the organization successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OrganizationUserMetaV2'
+    ListCompanyUsersResponseV2:
+      description: A successful list of users
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginationMetaV2'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserV2'
+    GetUserResponseV2:
+      description: A single user.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/UserV2'
+    RemoveUserFromCompanyResponseV2:
+      description: The user was removed from the company successfully.
+    RemoveUserFromOrganizationResponseV2:
+      description: 'The user was removed from the organization and companies successfully.
+
+        '
+    ListOrganizationUsersResponseV2:
+      description: A successful list of users attached to an organization.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginationMetaV2'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserV2'
+  parameters:
+    PaginationV2:
+      name: page
+      in: query
+      schema:
+        $ref: '#/components/schemas/PaginationV2'
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-tagGroups:
+- name: Integration
+  tags:
+  - Authentication
+  - Pagination
+  - Webhooks
+  - Webhook Subscriptions
+  - Webhook Events
+  - Synchronizing
+  - Status
+- name: Master Data
+  tags:
+  - Accounts
+  - Dimensions
+  - Vendors
+  - Vendor Groups
+  - Vendor Tags
+  - Tags
+  - Tax Codes
+  - VAT Codes
+  - Payment Terms
+- name: Organization & Access
+  tags:
+  - Partners
+  - Organizations
+  - Companies
+  - Users
+- name: Invoices & Bills
+  tags:
+  - Invoices
+  - Bills
+  - Attachments
+  - Invoice Approval Flows
+  - Invoice Posting Guide
+  - Training Invoices
+- name: Purchase Orders
+  tags:
+  - Purchase Orders
+  - Purchase Order Line Items
+  - Purchase Order Matching Guide
+- name: Payments
+  tags:
+  - Payment Batches
+  - Payment Confirmations
+  - Credit Confirmations
+- name: Reporting
+  tags:
+  - CSV Reports
+- name: Reference
+  tags:
+  - Changelog

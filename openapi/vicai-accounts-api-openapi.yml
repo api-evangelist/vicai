@@ -1,0 +1,432 @@
+openapi: 3.1.0
+info:
+  version: v10.40.4
+  contact: {}
+  title: Vic.ai Accounts API
+  description: "## Introduction\n\nThe Vic.ai API provides a seamless connection between your Enterprise Resource\nPlanning (ERP) system and the Vic.ai product suite.\n\nThe API is designed to offer three main areas of functionality:\n\n- **Syncing master data:** This refers to the data in your ERP that Vic.ai\n  interacts with. You are required to supply and update this data in Vic.ai, and\n  you also have the option to verify the copy of the masterdata in Vic.ai.\n\n- **Syncing training data:** We need historical data to train your AI model. To\n  that end, the API provides endpoints to sync historical invoices into Vic.ai\n  and to confirm their presence.\n\n- **Subscribing to and receiving webhooks:** Webhooks enable users or automated\n  tasks to interact with your ERP through various actions in the Vic.ai product\n  suite, such as posting an invoice, payment or purchase order or requesting\n  synchronization. You will receive a notification via a webhook when these\n  actions occur.\n\n\nFor US-based integrations, please use the following base API URL:\n\n```\nhttps://api.us.vic.ai\n```\n\nFor integrations based in Norway, use the following base API URL:\n\n```\nhttps://api.no.vic.ai\n```\n\nAll paths mentioned in this documentation should use one of these URLs as the\nbase.\n\nExample:\n\n```bash\ncurl https://api.us.vic.ai/v0/healthCheck \\\n    -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\"\n```\n\n## Getting Started\n\nTo begin interacting with the Vic.ai API, you will need the following\ncredentials:\n\n* A Vic.ai client ID\n* A Vic.ai client secret.\n\nThese can be provided to you securely by a Vic.ai representative\n[upon request](https://www.vic.ai/book-a-demo).\n\n**Please note:** These credentials are essentially the keys to your ERP\nintegration. If they fall into the wrong hands, unauthorized parties could\nimpersonate you, gain access to sensitive data, and potentially perform\nmalicious actions. Therefore, it's crucial to keep these credentials safe at all\ntimes to protect your application's integrity and your clients' data.\n\n### Limitations\n\nThe Vic.ai API has the following limitations:\n\n**Rate Limiting:** The API is rate-limited to 500 requests per 10-second time\nframe. If you exceed this limit, you will receive a `429 Too Many Requests`\nresponse. The limit is per Oauth client ID. If you continue to receive `429`s,\nplease contact support with a request id from the response headers.\n"
+servers:
+- url: https://api.no.stage.vic.ai
+  description: staging server, NO
+- url: https://api.us.vic.ai
+  description: production server, US
+- url: https://api.no.vic.ai
+  description: production server, NO
+security:
+- BearerAuth: []
+tags:
+- name: Accounts
+  description: 'GL (General Ledger) accounts are part of your *ERP* **Masterdata**. In
+
+    order to be associated with an invoice line item, key data about the
+
+    account must be stored in Vic.ai.  These operations allow querying and
+
+    manipulation of these GL account data.
+
+    '
+paths:
+  /v0/accounts:
+    get:
+      description: 'Use this request to query the GL account data that are stored in Vic.ai.
+
+        '
+      summary: List all accounts
+      operationId: listAccounts
+      tags:
+      - Accounts
+      parameters:
+      - $ref: '#/components/parameters/PagingLimit'
+      - $ref: '#/components/parameters/PagingCursor'
+      - $ref: '#/components/parameters/SinceFilter'
+      - $ref: '#/components/parameters/UseSystemDefaultExternal'
+      - $ref: '#/components/parameters/SortOrder'
+      responses:
+        '200':
+          $ref: '#/components/responses/AccountsResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+  /v0/accounts/synchronize:
+    post:
+      description: 'Tells the ERP to synchronize the Account resource. If the ERP is
+
+        using the API, the call will be sent via the normal webhook methods. If
+
+        the ERP is not using this API then this will call the native
+
+        integration''s synchronize functionality.
+
+        '
+      summary: Synchronize Accounts
+      operationId: synchronizeAccounts
+      tags:
+      - Accounts
+      responses:
+        '204':
+          $ref: '#/components/responses/SynchronizeAccountsResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+  /v0/accounts/{id}:
+    get:
+      description: 'Use this request to get data for a single GL account that is stored in
+
+        Vic.ai.
+
+        '
+      summary: Info for a specific account
+      operationId: getAccount
+      tags:
+      - Accounts
+      parameters:
+      - $ref: '#/components/parameters/PathId'
+      - $ref: '#/components/parameters/UseSystemDefaultExternal'
+      responses:
+        '200':
+          $ref: '#/components/responses/AccountResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+    put:
+      description: 'Use this request to *upsert* GL account data for one GL account into
+
+        Vic.ai.
+
+        If the account is known by Vic.ai, the externalId supplied will be used
+
+        to resolve the account and perform an update of the data, otherwise, a
+
+        new account will be inserted.
+
+        If the upsert action is part of a syncRequest, you should include the
+
+        syncRequest ID in the `X-Request-Id` header.
+
+        '
+      summary: Upserts an account
+      operationId: upsertAccount
+      tags:
+      - Accounts
+      parameters:
+      - $ref: '#/components/parameters/PathId'
+      - $ref: '#/components/parameters/UseSystemDefaultExternal'
+      - $ref: '#/components/parameters/RequestId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountUpsert'
+      responses:
+        '201':
+          $ref: '#/components/responses/AccountUpsertedResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+    delete:
+      description: 'Use this request to delete data for a single account that is stored in
+
+        Vic.ai
+
+        '
+      summary: Deletes an account
+      operationId: deleteAccount
+      tags:
+      - Accounts
+      parameters:
+      - $ref: '#/components/parameters/PathId'
+      - $ref: '#/components/parameters/UseSystemDefaultExternal'
+      responses:
+        '201':
+          $ref: '#/components/responses/AccountDeletedResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+components:
+  responses:
+    SynchronizeAccountsResponse:
+      description: 'A request to synchronize the GL Accounts was acknowledged and is in the
+
+        process of being ran.
+
+        '
+    AccountsResponse:
+      description: A paged array of accounts
+      headers:
+        x-next:
+          $ref: '#/components/headers/NextPageToken'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Accounts'
+    ErrorResponse:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TooManyRequestsResponse:
+      description: HTTP call rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    AccountResponse:
+      description: Shows the account.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Account'
+    AccountDeletedResponse:
+      description: Information for deleted account
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Account'
+    AccountUpsertedResponse:
+      description: Account was upserted successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Account'
+  parameters:
+    SinceFilter:
+      name: since
+      in: query
+      description: 'Datetime value for incremental updates.
+
+        **NOTE**: For external datetimes, the expected format is not in UTC. for
+
+        vic-internal datetimes (see `SinceIsExternal`) the format is UTC.
+
+        '
+      required: false
+      schema:
+        type: string
+        format: date-time
+    SortOrder:
+      name: sortOrder
+      in: query
+      description: what sort order should be used for queries
+      required: false
+      schema:
+        type: string
+        enum:
+        - ASCENDING
+        - DESCENDING
+        default: ASCENDING
+    PagingLimit:
+      name: limit
+      in: query
+      description: How many items to return at one time (max 100) (default 100)
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+    UseSystemDefaultExternal:
+      name: useSystem
+      in: query
+      description: 'Which system to use for id or updatedAt filters.
+
+        '
+      required: false
+      schema:
+        type: string
+        enum:
+        - INTERNAL
+        - EXTERNAL
+        - internal
+        - external
+        default: EXTERNAL
+    RequestId:
+      in: header
+      name: X-Request-Id
+      description: token to be able to correctly log associated requests
+      required: false
+      schema:
+        type: string
+        format: uuid
+    PagingCursor:
+      name: cursor
+      in: query
+      description: Which item to start from. See [Pagination](#section/Pagination) for more information.
+      required: false
+      schema:
+        type: string
+    PathId:
+      name: id
+      in: path
+      required: true
+      description: The id of the database entry
+      schema:
+        type: string
+  schemas:
+    InternalId:
+      description: The internal id Vic uses for the record.
+      type: string
+      example: '47'
+      readOnly: true
+    ExternalData:
+      description: A free form json object that is stored with the record.
+      type: object
+    Account:
+      type: object
+      required:
+      - number
+      - name
+      - internalId
+      - internalUpdatedAt
+      properties:
+        internalId:
+          $ref: '#/components/schemas/InternalId'
+        internalUpdatedAt:
+          type: string
+          description: Is in UTC.
+          format: date-time
+        externalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+        externalUpdatedAt:
+          type: string
+          format: date-time
+          description: Does not have UTC normalization.
+        number:
+          type: string
+          format: number
+        name:
+          type: string
+          maxLength: 255
+        externalData:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalData'
+          - type: 'null'
+    ExternalId:
+      description: 'The external id set by the ERP system. It does not have to be a UUID and
+
+        can be any non empty string desired.
+
+        '
+      type: string
+      example: 21b31bc7-1267-4335-893c-d7fe4706a238
+      maxLength: 255
+    Accounts:
+      type: array
+      items:
+        $ref: '#/components/schemas/Account'
+    ErrorString:
+      type: string
+      maxLength: 255
+    Error:
+      description: 'generic error message in JSON format.  Note the ''code'' field should
+
+        match the HTTP status code of the wrapping HTTP request.
+
+        '
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          minimum: 100
+          maximum: 599
+        message:
+          $ref: '#/components/schemas/ErrorString'
+    AccountUpsert:
+      type: object
+      required:
+      - number
+      - name
+      - externalUpdatedAt
+      properties:
+        externalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+        externalUpdatedAt:
+          type: string
+          format: date-time
+          description: Does not have UTC normalization.
+        number:
+          type: string
+          format: number
+        name:
+          type: string
+          maxLength: 255
+        externalData:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalData'
+          - type: 'null'
+  headers:
+    NextPageToken:
+      description: A link to the next page of responses
+      schema:
+        type: string
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-tagGroups:
+- name: Integration
+  tags:
+  - Authentication
+  - Pagination
+  - Webhooks
+  - Webhook Subscriptions
+  - Webhook Events
+  - Synchronizing
+  - Status
+- name: Master Data
+  tags:
+  - Accounts
+  - Dimensions
+  - Vendors
+  - Vendor Groups
+  - Vendor Tags
+  - Tags
+  - Tax Codes
+  - VAT Codes
+  - Payment Terms
+- name: Organization & Access
+  tags:
+  - Partners
+  - Organizations
+  - Companies
+  - Users
+- name: Invoices & Bills
+  tags:
+  - Invoices
+  - Bills
+  - Attachments
+  - Invoice Approval Flows
+  - Invoice Posting Guide
+  - Training Invoices
+- name: Purchase Orders
+  tags:
+  - Purchase Orders
+  - Purchase Order Line Items
+  - Purchase Order Matching Guide
+- name: Payments
+  tags:
+  - Payment Batches
+  - Payment Confirmations
+  - Credit Confirmations
+- name: Reporting
+  tags:
+  - CSV Reports
+- name: Reference
+  tags:
+  - Changelog

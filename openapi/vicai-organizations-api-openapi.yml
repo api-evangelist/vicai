@@ -1,0 +1,738 @@
+openapi: 3.1.0
+info:
+  version: v10.40.4
+  contact: {}
+  title: Vic.ai Accounts Organizations API
+  description: "## Introduction\n\nThe Vic.ai API provides a seamless connection between your Enterprise Resource\nPlanning (ERP) system and the Vic.ai product suite.\n\nThe API is designed to offer three main areas of functionality:\n\n- **Syncing master data:** This refers to the data in your ERP that Vic.ai\n  interacts with. You are required to supply and update this data in Vic.ai, and\n  you also have the option to verify the copy of the masterdata in Vic.ai.\n\n- **Syncing training data:** We need historical data to train your AI model. To\n  that end, the API provides endpoints to sync historical invoices into Vic.ai\n  and to confirm their presence.\n\n- **Subscribing to and receiving webhooks:** Webhooks enable users or automated\n  tasks to interact with your ERP through various actions in the Vic.ai product\n  suite, such as posting an invoice, payment or purchase order or requesting\n  synchronization. You will receive a notification via a webhook when these\n  actions occur.\n\n\nFor US-based integrations, please use the following base API URL:\n\n```\nhttps://api.us.vic.ai\n```\n\nFor integrations based in Norway, use the following base API URL:\n\n```\nhttps://api.no.vic.ai\n```\n\nAll paths mentioned in this documentation should use one of these URLs as the\nbase.\n\nExample:\n\n```bash\ncurl https://api.us.vic.ai/v0/healthCheck \\\n    -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\"\n```\n\n## Getting Started\n\nTo begin interacting with the Vic.ai API, you will need the following\ncredentials:\n\n* A Vic.ai client ID\n* A Vic.ai client secret.\n\nThese can be provided to you securely by a Vic.ai representative\n[upon request](https://www.vic.ai/book-a-demo).\n\n**Please note:** These credentials are essentially the keys to your ERP\nintegration. If they fall into the wrong hands, unauthorized parties could\nimpersonate you, gain access to sensitive data, and potentially perform\nmalicious actions. Therefore, it's crucial to keep these credentials safe at all\ntimes to protect your application's integrity and your clients' data.\n\n### Limitations\n\nThe Vic.ai API has the following limitations:\n\n**Rate Limiting:** The API is rate-limited to 500 requests per 10-second time\nframe. If you exceed this limit, you will receive a `429 Too Many Requests`\nresponse. The limit is per Oauth client ID. If you continue to receive `429`s,\nplease contact support with a request id from the response headers.\n"
+servers:
+- url: https://api.no.stage.vic.ai
+  description: staging server, NO
+- url: https://api.us.vic.ai
+  description: production server, US
+- url: https://api.no.vic.ai
+  description: production server, NO
+security:
+- BearerAuth: []
+tags:
+- name: Organizations
+  description: 'Organizations within the Vic system. The old name for this resource is
+
+    Account Firm. We are transitioning to the name of Organization.
+
+    '
+paths:
+  /v2/organizations:
+    get:
+      description: 'Search and list organizations accessible. Accepts both company-scoped
+
+        tokens and partner tokens (obtained via `POST /v0/token` with the
+
+        respective credentials). Partners see the organizations they created
+
+        via `POST /v2/organizations` or were granted access to.
+
+        '
+      summary: Search and list organizations accessible
+      operationId: listOrganizationsV2
+      tags:
+      - Organizations
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: name_contains
+        description: 'List organizations with names containing the value provided. This is
+
+          a case insensitive match.
+
+          '
+        in: query
+        schema:
+          type: string
+      - $ref: '#/components/parameters/PaginationV2'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListOrganizationsResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+    post:
+      description: 'Create a new organization. The organization is automatically linked to
+
+        the authenticated partner client. Requires partner authentication
+
+        (obtain a token via `POST /v0/token`).
+
+
+        This endpoint creates only the organization. Create the first company
+
+        under it as a separate step with
+
+        `POST /v2/organizations/{organization_id}/companies` — the partner
+
+        bootstrap path, which returns the new company''s company-scoped OAuth
+
+        client. (`POST /v2/companies` also creates companies, but it derives the
+
+        organization from the calling client''s existing primary company, so it
+
+        cannot bootstrap the very first company under a brand-new organization.)
+
+        '
+      summary: Create an organization
+      operationId: createOrganizationV2
+      tags:
+      - Organizations
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrganizationV2'
+      responses:
+        '201':
+          description: Organization created.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/OrganizationV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/organizations/{organization_id}:
+    get:
+      description: 'Get an organization. Accepts both company-scoped tokens and partner
+
+        tokens (obtained via `POST /v0/token` with the respective
+
+        credentials). The organization must be one the caller has access to —
+
+        for partners, one they created via `POST /v2/organizations` or were
+
+        granted access to. Useful for verifying an existing organization
+
+        before creating companies under it.
+
+        '
+      summary: Get an organization
+      operationId: getOrganizationV2
+      tags:
+      - Organizations
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: organization_id
+        description: The ID of the Organization.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          $ref: '#/components/responses/GetOrganizationResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/organizations/{organization_id}/users:
+    get:
+      description: List users attached to an organization.
+      summary: List users attached to an organization
+      operationId: listOrganizationUsersV2
+      tags:
+      - Organizations
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: organization_id
+        description: The ID of the Organization.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: name
+        description: The name of the user. This is a case-insensitive match.
+        in: query
+        schema:
+          type: string
+      - name: name_contains
+        description: 'The name of the user contains the value specified. This is a
+
+          case-insensitive match.
+
+          '
+        in: query
+        schema:
+          type: string
+      - name: email
+        description: 'The user has the email address. This is a case-insensitive match.
+
+          '
+        in: query
+        schema:
+          type: string
+      - name: email_contains
+        description: 'The email of the user contains the value specified. This is a
+
+          case-insensitive match.
+
+          '
+        in: query
+        schema:
+          type: string
+      - $ref: '#/components/parameters/PaginationV2'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListOrganizationUsersResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+    post:
+      description: 'Create and attach a user to an organization. If the user already exists,
+
+        use the `attachUserToOrganizationV2` (`POST /v2/organizations/{organization_id}/users/attach`)
+
+        operation instead.
+
+        '
+      summary: Create and attach user to an organization
+      operationId: createOrganizationUserV2
+      tags:
+      - Organizations
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: organization_id
+        description: The ID of the organization.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CreateOrganizationUserRequestV2'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreateOrganizationUserResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/organizations/{organization_id}/users/attach:
+    post:
+      description: 'Attaches an existing user to an organization. You may provide the
+
+        `user_id` or `email`. If the user does not exist, you will need to use
+
+        the `createOrganizationUserV2` operation.
+
+        '
+      summary: Attach an existing user to an organization
+      operationId: attachUserToOrganizationV2
+      tags:
+      - Organizations
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: organization_id
+        description: The ID of the organization.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/AttachUserToOrganizationRequestV2'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreateOrganizationUserResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/organizations/{organization_id}/users/{user_id}:
+    delete:
+      description: 'Removes the user from the organization. **NOTE**: This will remove the
+
+        user from __ALL__ of the companies within the organization.
+
+        '
+      summary: Remove user from organization
+      operationId: removeUserFromOrganizationV2
+      tags:
+      - Organizations
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: organization_id
+        description: The ID of the organization.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: user_id
+        description: The ID of the user.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          $ref: '#/components/responses/RemoveUserFromOrganizationResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+components:
+  schemas:
+    CreateUserV2:
+      type: object
+      required:
+      - name
+      - email
+      properties:
+        first_name:
+          type: string
+          description: The first name of the user.
+        last_name:
+          type: string
+          description: The last name of the user.
+        name:
+          type: string
+          description: The full preferred name of the user.
+        phone_number:
+          type: string
+          description: 'The phone number the user is connected with. This is not required to
+
+            be set. If provided, the phone number is validated.
+
+            '
+        email:
+          type: string
+          description: The User's email. Must be unique.
+        timezone:
+          $ref: '#/components/schemas/TimeZoneV2'
+        language:
+          $ref: '#/components/schemas/LanguageV2'
+        address:
+          $ref: '#/components/schemas/UserAddressV2'
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserMetadataEntryV2'
+        date_of_birth:
+          type: string
+          format: date
+          description: When the user was born.
+    UserMetadataEntryV2:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'The name of the metadata entry. The name **MUST** be only lower case
+
+            `a-z` and numbers `0-9`. The `_` character is allowed. The name
+
+            *MUST** be unique in the set.
+
+            '
+          pattern: ^[a-z0-9_]+$
+          example: job_title
+        type:
+          type: string
+          enum:
+          - string
+          - boolean
+          - integer
+          - date
+        value:
+          type: string
+          description: The value of the entry.
+          example: Senior Manager
+    ErrorV2:
+      type: object
+      required:
+      - message
+      properties:
+        field:
+          description: 'The field that the error occurred on. This field may not always be
+
+            present.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
+        message:
+          description: A description of the error.
+          type: string
+    CreateOrganizationV2:
+      type: object
+      required:
+      - name
+      - billing_timezone
+      properties:
+        name:
+          type: string
+          description: Display name for the organization.
+        billing_timezone:
+          type: string
+          description: IANA timezone identifier.
+          example: America/New_York
+        remote_id:
+          type: string
+          description: External identifier from the partner's system.
+    AttachUserToOrganizationV2:
+      type: object
+      properties:
+        user_id:
+          description: 'The User''s id. Both can be provided. `user_id` takes higher
+
+            precedence than `email`.
+
+            '
+          type: string
+          format: uuid
+        email:
+          description: 'The existing User''s email. Both can be provided. `user_id` takes
+
+            higher precedence than `email`.
+
+            '
+          type: string
+        role:
+          description: 'Optional organization-level role to grant the user when attaching.
+
+            One of `user`, `admin`, `superadmin`, or `manager`. Defaults to
+
+            `user`. Ignored when the user is already attached to the
+
+            organization; an existing member keeps their current role.
+
+            '
+          type: string
+          enum:
+          - user
+          - admin
+          - superadmin
+          - manager
+          default: user
+    PaginationV2:
+      type: object
+      properties:
+        size:
+          type: integer
+          description: The page size.
+          maximum: 50
+          minimum: 1
+        cursor:
+          type: string
+          description: The cursor to use to get the next page of results.
+    OrganizationUserMetaV2:
+      type: object
+      properties:
+        user_id:
+          description: The user the organization is attached to.
+          type: string
+          format: uuid
+        organization_id:
+          description: The organization the user is attached to.
+          type: string
+          format: :uuid
+        created_at:
+          description: When the user was added to the organization.
+          type: string
+          format: date-time
+        updated_at:
+          description: When the user's role was modified.
+          type: string
+          format: date-time
+    UserManagerV2:
+      description: A user's manager.
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          description: The manager's user ID.
+        name:
+          type: string
+          description: The manager's full preferred name.
+        email:
+          type: string
+          description: The manager's email.
+    PaginationMetaV2:
+      type: object
+      properties:
+        cursor:
+          description: 'The cursor to the next page of data. If it is null, that means there
+
+            is no more data to fetch.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
+    OrganizationV2:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    LanguageV2:
+      type: string
+      description: The two letter code for the language used.
+      example: en
+    UserV2:
+      description: A User attached to an organization.
+      type: object
+      required:
+      - id
+      - name
+      - email
+      properties:
+        id:
+          type: string
+        legacy_id:
+          type:
+          - string
+          - 'null'
+          description: The Users's internal ID. This is a legacy field and will be removed in the future.
+          example: '12345'
+        first_name:
+          type: string
+          description: The first name of the user.
+        last_name:
+          type: string
+          description: The last name of the user.
+        name:
+          type: string
+          description: The full preferred name of the user.
+        phone_number:
+          type: string
+          description: 'The phone number the user is connected with. This is not required to
+
+            be set. If provided, the phone number is validated.
+
+            '
+        email:
+          type: string
+          description: The User's email. Must be unique.
+        status:
+          $ref: '#/components/schemas/UserStatusV2'
+        timezone:
+          $ref: '#/components/schemas/TimeZoneV2'
+        language:
+          $ref: '#/components/schemas/LanguageV2'
+        address:
+          $ref: '#/components/schemas/UserAddressV2'
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserMetadataEntryV2'
+        date_of_birth:
+          type: string
+          format: date
+          description: When the user was born.
+        manager:
+          description: 'The user''s manager (the user they are managed by), or `null` when
+
+            no manager is set or when the manager is outside the scope of the
+
+            request (for example, not a member of the requested company).
+
+            '
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/UserManagerV2'
+        created_at:
+          type: string
+          format: date-time
+          description: When the user was created in Vic.
+        updated_at:
+          type: string
+          format: date-time
+          description: When the user was last updated in Vic.
+    UserStatusV2:
+      type: string
+      description: The type of invoice item line.
+      enum:
+      - active
+      - out_of_office
+      default: active
+    CountryCode:
+      description: 'The ISO-3166 country code. The acceptable values are Alpha-2 codes.
+
+        '
+      type: string
+      format: ISO-3166
+      maxLength: 2
+      example: US
+    UserAddressV2:
+      type: object
+      properties:
+        street_1:
+          type: string
+        street_2:
+          type: string
+        city:
+          type: string
+        postal_code:
+          type: string
+        country:
+          $ref: '#/components/schemas/CountryCode'
+    TimeZoneV2:
+      type: string
+      example: Etc/UTC
+  responses:
+    ListOrganizationsResponseV2:
+      description: A successful list of organizations
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginationMetaV2'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganizationV2'
+    ErrorResponseV2:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ErrorV2'
+    CreateOrganizationUserResponseV2:
+      description: User was created and attached to the organization successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OrganizationUserMetaV2'
+    GetOrganizationResponseV2:
+      description: A single organization.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/OrganizationV2'
+    RemoveUserFromOrganizationResponseV2:
+      description: 'The user was removed from the organization and companies successfully.
+
+        '
+    ListOrganizationUsersResponseV2:
+      description: A successful list of users attached to an organization.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginationMetaV2'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserV2'
+  requestBodies:
+    AttachUserToOrganizationRequestV2:
+      description: Attach an existing user to an organization.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AttachUserToOrganizationV2'
+    CreateOrganizationUserRequestV2:
+      description: Create a user and attach it to an organization.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateUserV2'
+  parameters:
+    PaginationV2:
+      name: page
+      in: query
+      schema:
+        $ref: '#/components/schemas/PaginationV2'
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-tagGroups:
+- name: Integration
+  tags:
+  - Authentication
+  - Pagination
+  - Webhooks
+  - Webhook Subscriptions
+  - Webhook Events
+  - Synchronizing
+  - Status
+- name: Master Data
+  tags:
+  - Accounts
+  - Dimensions
+  - Vendors
+  - Vendor Groups
+  - Vendor Tags
+  - Tags
+  - Tax Codes
+  - VAT Codes
+  - Payment Terms
+- name: Organization & Access
+  tags:
+  - Partners
+  - Organizations
+  - Companies
+  - Users
+- name: Invoices & Bills
+  tags:
+  - Invoices
+  - Bills
+  - Attachments
+  - Invoice Approval Flows
+  - Invoice Posting Guide
+  - Training Invoices
+- name: Purchase Orders
+  tags:
+  - Purchase Orders
+  - Purchase Order Line Items
+  - Purchase Order Matching Guide
+- name: Payments
+  tags:
+  - Payment Batches
+  - Payment Confirmations
+  - Credit Confirmations
+- name: Reporting
+  tags:
+  - CSV Reports
+- name: Reference
+  tags:
+  - Changelog

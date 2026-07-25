@@ -1,0 +1,995 @@
+openapi: 3.1.0
+info:
+  version: v10.40.4
+  contact: {}
+  title: Vic.ai Accounts Partners API
+  description: "## Introduction\n\nThe Vic.ai API provides a seamless connection between your Enterprise Resource\nPlanning (ERP) system and the Vic.ai product suite.\n\nThe API is designed to offer three main areas of functionality:\n\n- **Syncing master data:** This refers to the data in your ERP that Vic.ai\n  interacts with. You are required to supply and update this data in Vic.ai, and\n  you also have the option to verify the copy of the masterdata in Vic.ai.\n\n- **Syncing training data:** We need historical data to train your AI model. To\n  that end, the API provides endpoints to sync historical invoices into Vic.ai\n  and to confirm their presence.\n\n- **Subscribing to and receiving webhooks:** Webhooks enable users or automated\n  tasks to interact with your ERP through various actions in the Vic.ai product\n  suite, such as posting an invoice, payment or purchase order or requesting\n  synchronization. You will receive a notification via a webhook when these\n  actions occur.\n\n\nFor US-based integrations, please use the following base API URL:\n\n```\nhttps://api.us.vic.ai\n```\n\nFor integrations based in Norway, use the following base API URL:\n\n```\nhttps://api.no.vic.ai\n```\n\nAll paths mentioned in this documentation should use one of these URLs as the\nbase.\n\nExample:\n\n```bash\ncurl https://api.us.vic.ai/v0/healthCheck \\\n    -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\"\n```\n\n## Getting Started\n\nTo begin interacting with the Vic.ai API, you will need the following\ncredentials:\n\n* A Vic.ai client ID\n* A Vic.ai client secret.\n\nThese can be provided to you securely by a Vic.ai representative\n[upon request](https://www.vic.ai/book-a-demo).\n\n**Please note:** These credentials are essentially the keys to your ERP\nintegration. If they fall into the wrong hands, unauthorized parties could\nimpersonate you, gain access to sensitive data, and potentially perform\nmalicious actions. Therefore, it's crucial to keep these credentials safe at all\ntimes to protect your application's integrity and your clients' data.\n\n### Limitations\n\nThe Vic.ai API has the following limitations:\n\n**Rate Limiting:** The API is rate-limited to 500 requests per 10-second time\nframe. If you exceed this limit, you will receive a `429 Too Many Requests`\nresponse. The limit is per Oauth client ID. If you continue to receive `429`s,\nplease contact support with a request id from the response headers.\n"
+servers:
+- url: https://api.no.stage.vic.ai
+  description: staging server, NO
+- url: https://api.us.vic.ai
+  description: production server, US
+- url: https://api.no.vic.ai
+  description: production server, NO
+security:
+- BearerAuth: []
+tags:
+- name: Partners
+  description: 'Partner API for integration providers to provision new organizations
+
+    and companies. Requires partner-level credentials obtained from Vic.
+
+    '
+paths:
+  /v2/organizations:
+    get:
+      description: 'Search and list organizations accessible. Accepts both company-scoped
+
+        tokens and partner tokens (obtained via `POST /v0/token` with the
+
+        respective credentials). Partners see the organizations they created
+
+        via `POST /v2/organizations` or were granted access to.
+
+        '
+      summary: Search and list organizations accessible
+      operationId: listOrganizationsV2
+      tags:
+      - Partners
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: name_contains
+        description: 'List organizations with names containing the value provided. This is
+
+          a case insensitive match.
+
+          '
+        in: query
+        schema:
+          type: string
+      - $ref: '#/components/parameters/PaginationV2'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListOrganizationsResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+    post:
+      description: 'Create a new organization. The organization is automatically linked to
+
+        the authenticated partner client. Requires partner authentication
+
+        (obtain a token via `POST /v0/token`).
+
+
+        This endpoint creates only the organization. Create the first company
+
+        under it as a separate step with
+
+        `POST /v2/organizations/{organization_id}/companies` — the partner
+
+        bootstrap path, which returns the new company''s company-scoped OAuth
+
+        client. (`POST /v2/companies` also creates companies, but it derives the
+
+        organization from the calling client''s existing primary company, so it
+
+        cannot bootstrap the very first company under a brand-new organization.)
+
+        '
+      summary: Create an organization
+      operationId: createOrganizationV2
+      tags:
+      - Partners
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrganizationV2'
+      responses:
+        '201':
+          description: Organization created.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/OrganizationV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/organizations/{organization_id}:
+    get:
+      description: 'Get an organization. Accepts both company-scoped tokens and partner
+
+        tokens (obtained via `POST /v0/token` with the respective
+
+        credentials). The organization must be one the caller has access to —
+
+        for partners, one they created via `POST /v2/organizations` or were
+
+        granted access to. Useful for verifying an existing organization
+
+        before creating companies under it.
+
+        '
+      summary: Get an organization
+      operationId: getOrganizationV2
+      tags:
+      - Partners
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: organization_id
+        description: The ID of the Organization.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          $ref: '#/components/responses/GetOrganizationResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/organizations/{organization_id}/companies:
+    post:
+      description: 'Create a company under a specific organization, using partner
+
+        authentication. The company is created under the organization named in
+
+        the path — which must be one the authenticated partner client already
+
+        has access to (e.g. one it created via `POST /v2/organizations`) — and
+
+        any `organization_id` in the request body is ignored.
+
+
+        The response includes the new company''s company-scoped OAuth client so
+
+        the partner can bootstrap a company-level integration without a second
+
+        round-trip; the `client_secret` is returned only at creation time and
+
+        cannot be retrieved later.
+
+
+        Use this to create the first company under a newly-created organization,
+
+        where no company-scoped client exists yet to call `POST /v2/companies`.
+
+        '
+      summary: Create a company under an organization
+      operationId: createOrganizationCompanyV2
+      tags:
+      - Partners
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: organization_id
+        description: The ID of the organization to create the company under.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CreateCompanyRequestV2'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreateCompanyResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/companies/{company_id}/tags:
+    get:
+      description: 'List the tags assigned to a company. Requires partner authentication;
+
+        the company must belong to an organization the partner can access.
+
+        '
+      summary: List a company's tags
+      operationId: listCompanyTagsV2
+      tags:
+      - Partners
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: company_id
+        description: The ID (UUID) of the company.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: The company's tags.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CompanyTagV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+    post:
+      description: 'Assign a tag to a company, using partner authentication. The company
+
+        must belong to an organization the partner can access.
+
+
+        Tags are how Vic expresses **company grouping**: mark the parent company
+
+        of a group with the `group-leader` tag and a shared `group:<key>` tag,
+
+        and mark each member company with the same `group:<key>` tag. Assigning
+
+        a `group:`/`group-leader` tag also enables company groups on the
+
+        organization. Re-assigning an existing tag is idempotent.
+
+        '
+      summary: Assign a tag to a company
+      operationId: createCompanyTagV2
+      tags:
+      - Partners
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: company_id
+        description: The ID (UUID) of the company.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCompanyTagV2'
+      responses:
+        '201':
+          description: The assigned tag.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/CompanyTagV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/companies/{company_id}/settings:
+    parameters:
+    - $ref: '#/components/parameters/CompanyId'
+    get:
+      description: 'Returns the company''s current configuration as a flat map. Every
+
+        available setting is present in the response with either the
+
+        company''s configured value or the default. Enum values are
+
+        returned as strings.
+
+
+        Requires partner authentication (obtain a token via
+
+        `POST /v0/token` with partner credentials); the partner must
+
+        have provisioned or been linked to the company.
+
+        '
+      summary: Get company settings
+      operationId: getCompanySettingsV2
+      tags:
+      - Partners
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      responses:
+        '200':
+          $ref: '#/components/responses/CompanySettingsResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+    patch:
+      description: 'Applies a partial settings update. The request body is a flat map
+
+        of setting name to value; only fields included in the body are
+
+        modified. Unknown field names and type-invalid values are
+
+        rejected with a 422 error listing every offending field.
+
+
+        Updates are atomic: either every change in the request is
+
+        applied, or none are. On success the full refreshed settings map
+
+        is returned.
+
+
+        Requires partner authentication (obtain a token via
+
+        `POST /v0/token` with partner credentials); the partner must
+
+        have provisioned or been linked to the company.
+
+        '
+      summary: Update company settings
+      operationId: updateCompanySettingsV2
+      tags:
+      - Partners
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateCompanySettingsRequestV2'
+      responses:
+        '200':
+          $ref: '#/components/responses/CompanySettingsResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+components:
+  responses:
+    ListOrganizationsResponseV2:
+      description: A successful list of organizations
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginationMetaV2'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganizationV2'
+    CompanySettingsResponseV2:
+      description: The effective settings map for the company.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - data
+            properties:
+              data:
+                $ref: '#/components/schemas/CompanySettingsV2'
+    ErrorResponseV2:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ErrorV2'
+    CreateCompanyResponseV2:
+      description: 'A single newly-created company including a company-scoped OAuth
+
+        client. The `client_secret` is exposed only at creation time and
+
+        cannot be retrieved later.
+
+        '
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/CreatedCompanyV2'
+    GetOrganizationResponseV2:
+      description: A single organization.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/OrganizationV2'
+  parameters:
+    CompanyId:
+      name: company_id
+      in: path
+      required: true
+      description: The ID of the company
+      schema:
+        type: string
+        format: uuid
+    PaginationV2:
+      name: page
+      in: query
+      schema:
+        $ref: '#/components/schemas/PaginationV2'
+  schemas:
+    ErrorV2:
+      type: object
+      required:
+      - message
+      properties:
+        field:
+          description: 'The field that the error occurred on. This field may not always be
+
+            present.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
+        message:
+          description: A description of the error.
+          type: string
+    CreateCompanyV2:
+      type: object
+      required:
+      - name
+      - country_code
+      - billing_timezone
+      properties:
+        name:
+          type: string
+          description: The display name for the company.
+        country_code:
+          type: string
+          description: Two-letter ISO 3166-1 alpha-2 country code.
+          minLength: 2
+          maxLength: 2
+          example: US
+        billing_timezone:
+          type: string
+          description: IANA timezone identifier used for billing dates.
+          example: America/New_York
+        legal_name:
+          type: string
+          description: The legal entity name, if different from the display name.
+        doing_business_as:
+          type: string
+          description: Trade name or DBA.
+        remote_id:
+          type: string
+          description: An external identifier from the integration partner's system.
+        org_number:
+          type: string
+          description: Organization/registration number.
+        organization_id:
+          type: string
+          format: uuid
+          description: 'The organization (accounting firm) to place the company under.
+
+            Defaults to the OAuth client''s primary company organization.
+
+            Must be an organization the client already has access to.
+
+            '
+    CreateOrganizationV2:
+      type: object
+      required:
+      - name
+      - billing_timezone
+      properties:
+        name:
+          type: string
+          description: Display name for the organization.
+        billing_timezone:
+          type: string
+          description: IANA timezone identifier.
+          example: America/New_York
+        remote_id:
+          type: string
+          description: External identifier from the partner's system.
+    CompanySettingsV2:
+      type: object
+      description: 'A company''s configuration options. Every available setting is
+
+        always present in the response. Enum values are returned as
+
+        strings; booleans as booleans. `null` means the field has no
+
+        configured value and the caller should treat it as "unset"
+
+        rather than "false".
+
+        '
+      required:
+      - backend_mode
+      - approval_flow_engine_enabled
+      - approval_flow_engine_user_edits_allowed
+      - invoice_automation_enabled
+      - invoice_automated_next_step
+      - invoice_approval_next_step
+      - po_invoice_automation_enabled
+      - po_invoice_automated_next_step
+      - po_invoice_approval_next_step
+      - purchase_order_matching
+      - purchase_order_matching_level
+      - purchase_order_require_matching_to_post
+      - aaf_ignores_po_invoice_items
+      - enable_posting
+      - tax_handling
+      - freight_handling
+      properties:
+        backend_mode:
+          description: 'Backend processing mode for the company. Production
+
+            companies should use `default`. Non-default values are
+
+            reserved for demo and sandbox environments and should not
+
+            be set on production companies.
+
+            '
+          type: string
+          enum:
+          - default
+          - stub
+        approval_flow_engine_enabled:
+          description: 'Master switch for the approval flow engine. Must be `true`
+
+            for automatically generated approval steps to be created on
+
+            the company''s invoices.
+
+            '
+          type: boolean
+        approval_flow_engine_user_edits_allowed:
+          description: 'Allow end users to edit automatically generated approval
+
+            steps on an individual invoice.
+
+            '
+          type: boolean
+        invoice_automation_enabled:
+          description: 'When `true` combined with `invoice_automated_next_step`,
+
+            non-PO invoices auto-advance once analysis finishes.
+
+            '
+          type: boolean
+        invoice_automated_next_step:
+          description: 'The next action to take automatically once analysis finishes
+
+            on a non-PO invoice. `null` disables auto-advancement.
+
+            '
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - start_approval
+            - post
+            - export
+            - submit
+        invoice_approval_next_step:
+          description: 'The next action to take automatically once approval completes
+
+            on a non-PO invoice. `null` disables auto-advancement.
+
+            '
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - post
+            - export
+            - submit
+        po_invoice_automation_enabled:
+          description: 'When `true` combined with `po_invoice_automated_next_step`,
+
+            PO-matched invoices auto-advance once analysis finishes.
+
+            '
+          type: boolean
+        po_invoice_automated_next_step:
+          description: 'The next action to take automatically once analysis finishes
+
+            on a PO-matched invoice. `null` disables auto-advancement.
+
+            '
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - start_approval
+            - post
+        po_invoice_approval_next_step:
+          description: 'The next action to take automatically once approval completes
+
+            on a PO-matched invoice, independent of
+
+            `invoice_approval_next_step` (which covers non-PO invoices).
+
+            `null` disables auto-advancement for PO-matched invoices.
+
+            '
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - post
+            - export
+            - submit
+        purchase_order_matching:
+          description: 'Purchase-order matching mode. `none` disables PO matching
+
+            entirely; `standard`, `implicit`, and `explicit` select
+
+            different matching strategies.
+
+            '
+          type: string
+          enum:
+          - none
+          - standard
+          - implicit
+          - explicit
+        purchase_order_matching_level:
+          description: 'Granularity of PO matching: `line` matches invoice lines
+
+            against PO lines; `document` groups lines at the PO level.
+
+            '
+          type: string
+          enum:
+          - document
+          - line
+        purchase_order_require_matching_to_post:
+          description: 'When `true`, an invoice cannot be posted until every item
+
+            line is matched to a PO line.
+
+            '
+          type: boolean
+        aaf_ignores_po_invoice_items:
+          description: 'When `true` (the default), approval flow rules evaluating
+
+            against an invoice''s total amount sum only expense lines,
+
+            excluding PO-matched item lines (which are covered by the
+
+            PO matching approval path instead). Set to `false` to have
+
+            those rules evaluate against the full invoice total
+
+            including PO-matched items.
+
+            '
+          type: boolean
+        enable_posting:
+          description: 'Gates the post-approval posting action in the UI and the
+
+            corresponding API endpoints. Defaults to `false` on new
+
+            companies so the ERP integration can be verified before
+
+            invoices are pushed out.
+
+            '
+          type: boolean
+        tax_handling:
+          description: 'How invoice tax is computed and allocated across lines.
+
+            '
+          type: string
+          enum:
+          - none
+          - tax_engine
+          - tax_codes
+          - tax_expense_line
+          - vat_for_po_invoices
+          - tax_allocation
+        freight_handling:
+          description: 'How freight charges are allocated across lines. `null`
+
+            disables automatic freight handling.
+
+            '
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - expense_line
+            - even_allocation
+            - weighted_allocation
+    CreateCompanyTagV2:
+      type: object
+      required:
+      - tag
+      properties:
+        tag:
+          type: string
+          description: 'The tag to assign. For grouping, use `group-leader` on the parent
+
+            company and a shared `group:<key>` tag on the parent and every
+
+            member.
+
+            '
+          example: group:acme
+    PaginationV2:
+      type: object
+      properties:
+        size:
+          type: integer
+          description: The page size.
+          maximum: 50
+          minimum: 1
+        cursor:
+          type: string
+          description: The cursor to use to get the next page of results.
+    OrganizationV2:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    PaginationMetaV2:
+      type: object
+      properties:
+        cursor:
+          description: 'The cursor to the next page of data. If it is null, that means there
+
+            is no more data to fetch.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
+    CreatedCompanyV2:
+      type: object
+      description: 'Sparse company payload returned at company creation time (by
+
+        `POST /v2/companies` or `POST /v2/organizations/{organization_id}/companies`).
+
+        It carries the same identifier fields as `CompanyV2` plus a
+
+        company-scoped OAuth client; the `client_secret` is exposed only at
+
+        creation time and cannot be retrieved later.
+
+        '
+      required:
+      - id
+      - oauth_client
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        organization_id:
+          description: The organization (accounting firm) the company belongs to.
+          oneOf:
+          - type: 'null'
+          - type: string
+            format: uuid
+        remote_id:
+          description: The company's id in the ERP system if applicable.
+          oneOf:
+          - type: 'null'
+          - type: string
+        updated_at:
+          type: string
+          format: date-time
+        oauth_client:
+          type: object
+          description: 'Company-scoped OAuth client generated alongside the company.
+
+            Returned only on creation.
+
+            '
+          required:
+          - client_id
+          - client_secret
+          properties:
+            client_id:
+              type: string
+            client_secret:
+              type: string
+    CompanyTagV2:
+      type: object
+      required:
+      - tag
+      properties:
+        tag:
+          type: string
+          description: The tag value assigned to the company.
+          example: group:acme
+    UpdateCompanySettingsV2:
+      type: object
+      description: 'Partial update for company settings. All fields are optional; only
+
+        fields included in the body are modified. Shape and types mirror
+
+        `CompanySettingsV2`. Unknown fields and invalid values produce a
+
+        422 error listing every offending key.
+
+        '
+      properties:
+        backend_mode:
+          type: string
+          enum:
+          - default
+          - stub
+        approval_flow_engine_enabled:
+          type: boolean
+        approval_flow_engine_user_edits_allowed:
+          type: boolean
+        invoice_automation_enabled:
+          type: boolean
+        invoice_automated_next_step:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - start_approval
+            - post
+            - export
+            - submit
+        invoice_approval_next_step:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - post
+            - export
+            - submit
+        po_invoice_automation_enabled:
+          type: boolean
+        po_invoice_automated_next_step:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - start_approval
+            - post
+        po_invoice_approval_next_step:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - post
+            - export
+            - submit
+        purchase_order_matching:
+          type: string
+          enum:
+          - none
+          - standard
+          - implicit
+          - explicit
+        purchase_order_matching_level:
+          type: string
+          enum:
+          - document
+          - line
+        purchase_order_require_matching_to_post:
+          type: boolean
+        aaf_ignores_po_invoice_items:
+          type: boolean
+        enable_posting:
+          type: boolean
+        tax_handling:
+          type: string
+          enum:
+          - none
+          - tax_engine
+          - tax_codes
+          - tax_expense_line
+          - vat_for_po_invoices
+          - tax_allocation
+        freight_handling:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - expense_line
+            - even_allocation
+            - weighted_allocation
+  requestBodies:
+    CreateCompanyRequestV2:
+      description: Create a new company.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateCompanyV2'
+    UpdateCompanySettingsRequestV2:
+      description: 'Partial update to the company settings map. Only fields
+
+        included in the body are modified.
+
+        '
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateCompanySettingsV2'
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-tagGroups:
+- name: Integration
+  tags:
+  - Authentication
+  - Pagination
+  - Webhooks
+  - Webhook Subscriptions
+  - Webhook Events
+  - Synchronizing
+  - Status
+- name: Master Data
+  tags:
+  - Accounts
+  - Dimensions
+  - Vendors
+  - Vendor Groups
+  - Vendor Tags
+  - Tags
+  - Tax Codes
+  - VAT Codes
+  - Payment Terms
+- name: Organization & Access
+  tags:
+  - Partners
+  - Organizations
+  - Companies
+  - Users
+- name: Invoices & Bills
+  tags:
+  - Invoices
+  - Bills
+  - Attachments
+  - Invoice Approval Flows
+  - Invoice Posting Guide
+  - Training Invoices
+- name: Purchase Orders
+  tags:
+  - Purchase Orders
+  - Purchase Order Line Items
+  - Purchase Order Matching Guide
+- name: Payments
+  tags:
+  - Payment Batches
+  - Payment Confirmations
+  - Credit Confirmations
+- name: Reporting
+  tags:
+  - CSV Reports
+- name: Reference
+  tags:
+  - Changelog

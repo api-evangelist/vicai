@@ -1,0 +1,295 @@
+openapi: 3.1.0
+info:
+  version: v10.40.4
+  contact: {}
+  title: Vic.ai Accounts Synchronizing API
+  description: "## Introduction\n\nThe Vic.ai API provides a seamless connection between your Enterprise Resource\nPlanning (ERP) system and the Vic.ai product suite.\n\nThe API is designed to offer three main areas of functionality:\n\n- **Syncing master data:** This refers to the data in your ERP that Vic.ai\n  interacts with. You are required to supply and update this data in Vic.ai, and\n  you also have the option to verify the copy of the masterdata in Vic.ai.\n\n- **Syncing training data:** We need historical data to train your AI model. To\n  that end, the API provides endpoints to sync historical invoices into Vic.ai\n  and to confirm their presence.\n\n- **Subscribing to and receiving webhooks:** Webhooks enable users or automated\n  tasks to interact with your ERP through various actions in the Vic.ai product\n  suite, such as posting an invoice, payment or purchase order or requesting\n  synchronization. You will receive a notification via a webhook when these\n  actions occur.\n\n\nFor US-based integrations, please use the following base API URL:\n\n```\nhttps://api.us.vic.ai\n```\n\nFor integrations based in Norway, use the following base API URL:\n\n```\nhttps://api.no.vic.ai\n```\n\nAll paths mentioned in this documentation should use one of these URLs as the\nbase.\n\nExample:\n\n```bash\ncurl https://api.us.vic.ai/v0/healthCheck \\\n    -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\"\n```\n\n## Getting Started\n\nTo begin interacting with the Vic.ai API, you will need the following\ncredentials:\n\n* A Vic.ai client ID\n* A Vic.ai client secret.\n\nThese can be provided to you securely by a Vic.ai representative\n[upon request](https://www.vic.ai/book-a-demo).\n\n**Please note:** These credentials are essentially the keys to your ERP\nintegration. If they fall into the wrong hands, unauthorized parties could\nimpersonate you, gain access to sensitive data, and potentially perform\nmalicious actions. Therefore, it's crucial to keep these credentials safe at all\ntimes to protect your application's integrity and your clients' data.\n\n### Limitations\n\nThe Vic.ai API has the following limitations:\n\n**Rate Limiting:** The API is rate-limited to 500 requests per 10-second time\nframe. If you exceed this limit, you will receive a `429 Too Many Requests`\nresponse. The limit is per Oauth client ID. If you continue to receive `429`s,\nplease contact support with a request id from the response headers.\n"
+servers:
+- url: https://api.no.stage.vic.ai
+  description: staging server, NO
+- url: https://api.us.vic.ai
+  description: production server, US
+- url: https://api.no.vic.ai
+  description: production server, NO
+security:
+- BearerAuth: []
+tags:
+- name: Synchronizing
+  description: 'Synchronization is explicit and it is up to the integration to call each
+
+    resource in the order deemed appropriate.
+
+
+    When calling any synchronization functions. Care must be taken by the
+
+    integration to not get itself into ping-pong call loop. For instance, if an api
+
+    call synchronizes a resource, then the webhook handler __should not__ call a
+
+    different resource synchronize function.
+
+    '
+paths:
+  /v0/accounts/synchronize:
+    post:
+      description: 'Tells the ERP to synchronize the Account resource. If the ERP is
+
+        using the API, the call will be sent via the normal webhook methods. If
+
+        the ERP is not using this API then this will call the native
+
+        integration''s synchronize functionality.
+
+        '
+      summary: Synchronize Accounts
+      operationId: synchronizeAccounts
+      tags:
+      - Synchronizing
+      responses:
+        '204':
+          $ref: '#/components/responses/SynchronizeAccountsResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+  /v0/dimensions/synchronize:
+    post:
+      description: 'Tells the ERP to synchronize the Dimension resource. If the ERP is
+
+        using the API, the call will be sent via the normal webhook methods. If
+
+        the ERP is not using this API then this will call the native
+
+        integration''s synchronize functionality.
+
+        '
+      summary: Synchronize Dimensions
+      operationId: synchronizeDimensions
+      tags:
+      - Synchronizing
+      responses:
+        '204':
+          $ref: '#/components/responses/SynchronizeDimensionsResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+  /v0/vendors/synchronize:
+    post:
+      description: 'Tells the ERP to synchronize the Vendor resource. If the ERP is using
+
+        the API, the call will be sent via the normal webhook methods. If the
+
+        ERP is not using this API then this will call the native integration''s
+
+        synchronize functionality.
+
+        '
+      summary: Synchronize Vendors
+      operationId: synchronizeVendors
+      tags:
+      - Synchronizing
+      responses:
+        '204':
+          $ref: '#/components/responses/SynchronizeVendorsResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+  /v0/vatCodes/synchronize:
+    post:
+      description: 'Tells the ERP to synchronize the Vat Code resource. If the ERP is using
+
+        the API, the call will be sent via the normal webhook methods. If the
+
+        ERP is not using this API then this will call the native integration''s
+
+        synchronize functionality.
+
+        '
+      summary: Synchronize Vat Codes
+      operationId: synchronizeVatCodes
+      tags:
+      - Synchronizing
+      responses:
+        '204':
+          $ref: '#/components/responses/SynchronizeVatCodesResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+  /v0/purchaseOrders/synchronize:
+    post:
+      description: 'Tells the ERP to synchronize the Purchase Orders resource. If the ERP is
+
+        using the API, the call will be sent via the normal webhook methods. If
+
+        the ERP is not using this API then this will call the native
+
+        integration''s synchronize functionality.
+
+        '
+      summary: Synchronize Purchase Orders
+      operationId: synchronizePurchaseOrders
+      tags:
+      - Synchronizing
+      responses:
+        '204':
+          $ref: '#/components/responses/SynchronizePurchaseOrdersResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+  /v0/paymentTerms/synchronize:
+    post:
+      description: 'Tells the ERP to synchronize the Payment Terms resource. If the ERP is
+
+        using the API, the call will be sent via the normal webhook methods. If
+
+        the ERP is not using this API then this will call the native
+
+        integration''s synchronize functionality.
+
+        '
+      summary: Synchronize Payment Terms
+      operationId: synchronizePaymentTerms
+      tags:
+      - Synchronizing
+      responses:
+        '204':
+          $ref: '#/components/responses/SynchronizePaymentTermsResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+components:
+  responses:
+    SynchronizeAccountsResponse:
+      description: 'A request to synchronize the GL Accounts was acknowledged and is in the
+
+        process of being ran.
+
+        '
+    SynchronizeVatCodesResponse:
+      description: 'A request to synchronize the vat codes was acknowledged and is in the
+
+        process of being ran.
+
+        '
+    SynchronizeDimensionsResponse:
+      description: 'A request to synchronize the Dimensions was acknowledged and is in the
+
+        process of being ran.
+
+        '
+    ErrorResponse:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TooManyRequestsResponse:
+      description: HTTP call rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    SynchronizeVendorsResponse:
+      description: 'A request to synchronize the vendors was acknowledged and is in the
+
+        process of being ran.
+
+        '
+    SynchronizePaymentTermsResponse:
+      description: 'A request to synchronize the payment terms was acknowledged and is in
+
+        the process of being ran.
+
+        '
+    SynchronizePurchaseOrdersResponse:
+      description: 'A request to synchronize the purchase orders was acknowledged and is in
+
+        the process of being ran.
+
+        '
+  schemas:
+    ErrorString:
+      type: string
+      maxLength: 255
+    Error:
+      description: 'generic error message in JSON format.  Note the ''code'' field should
+
+        match the HTTP status code of the wrapping HTTP request.
+
+        '
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          minimum: 100
+          maximum: 599
+        message:
+          $ref: '#/components/schemas/ErrorString'
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-tagGroups:
+- name: Integration
+  tags:
+  - Authentication
+  - Pagination
+  - Webhooks
+  - Webhook Subscriptions
+  - Webhook Events
+  - Synchronizing
+  - Status
+- name: Master Data
+  tags:
+  - Accounts
+  - Dimensions
+  - Vendors
+  - Vendor Groups
+  - Vendor Tags
+  - Tags
+  - Tax Codes
+  - VAT Codes
+  - Payment Terms
+- name: Organization & Access
+  tags:
+  - Partners
+  - Organizations
+  - Companies
+  - Users
+- name: Invoices & Bills
+  tags:
+  - Invoices
+  - Bills
+  - Attachments
+  - Invoice Approval Flows
+  - Invoice Posting Guide
+  - Training Invoices
+- name: Purchase Orders
+  tags:
+  - Purchase Orders
+  - Purchase Order Line Items
+  - Purchase Order Matching Guide
+- name: Payments
+  tags:
+  - Payment Batches
+  - Payment Confirmations
+  - Credit Confirmations
+- name: Reporting
+  tags:
+  - CSV Reports
+- name: Reference
+  tags:
+  - Changelog

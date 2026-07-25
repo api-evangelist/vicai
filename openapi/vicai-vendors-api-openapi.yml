@@ -1,0 +1,1527 @@
+openapi: 3.1.0
+info:
+  version: v10.40.4
+  contact: {}
+  title: Vic.ai Accounts Vendors API
+  description: "## Introduction\n\nThe Vic.ai API provides a seamless connection between your Enterprise Resource\nPlanning (ERP) system and the Vic.ai product suite.\n\nThe API is designed to offer three main areas of functionality:\n\n- **Syncing master data:** This refers to the data in your ERP that Vic.ai\n  interacts with. You are required to supply and update this data in Vic.ai, and\n  you also have the option to verify the copy of the masterdata in Vic.ai.\n\n- **Syncing training data:** We need historical data to train your AI model. To\n  that end, the API provides endpoints to sync historical invoices into Vic.ai\n  and to confirm their presence.\n\n- **Subscribing to and receiving webhooks:** Webhooks enable users or automated\n  tasks to interact with your ERP through various actions in the Vic.ai product\n  suite, such as posting an invoice, payment or purchase order or requesting\n  synchronization. You will receive a notification via a webhook when these\n  actions occur.\n\n\nFor US-based integrations, please use the following base API URL:\n\n```\nhttps://api.us.vic.ai\n```\n\nFor integrations based in Norway, use the following base API URL:\n\n```\nhttps://api.no.vic.ai\n```\n\nAll paths mentioned in this documentation should use one of these URLs as the\nbase.\n\nExample:\n\n```bash\ncurl https://api.us.vic.ai/v0/healthCheck \\\n    -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\"\n```\n\n## Getting Started\n\nTo begin interacting with the Vic.ai API, you will need the following\ncredentials:\n\n* A Vic.ai client ID\n* A Vic.ai client secret.\n\nThese can be provided to you securely by a Vic.ai representative\n[upon request](https://www.vic.ai/book-a-demo).\n\n**Please note:** These credentials are essentially the keys to your ERP\nintegration. If they fall into the wrong hands, unauthorized parties could\nimpersonate you, gain access to sensitive data, and potentially perform\nmalicious actions. Therefore, it's crucial to keep these credentials safe at all\ntimes to protect your application's integrity and your clients' data.\n\n### Limitations\n\nThe Vic.ai API has the following limitations:\n\n**Rate Limiting:** The API is rate-limited to 500 requests per 10-second time\nframe. If you exceed this limit, you will receive a `429 Too Many Requests`\nresponse. The limit is per Oauth client ID. If you continue to receive `429`s,\nplease contact support with a request id from the response headers.\n"
+servers:
+- url: https://api.no.stage.vic.ai
+  description: staging server, NO
+- url: https://api.us.vic.ai
+  description: production server, US
+- url: https://api.no.vic.ai
+  description: production server, NO
+security:
+- BearerAuth: []
+tags:
+- name: Vendors
+  description: 'Vendors are part of your *ERP* **Masterdata**, and represent companies
+
+    that produce invoices.  In order to be associated with an invoice, key
+
+    data about the vendor must be stored in Vic.ai. These operations allow
+
+    querying and manipulation of the vendor data.
+
+    '
+paths:
+  /v0/vendors:
+    get:
+      description: Use this request to query the vendor data that are stored in Vic.ai.
+      summary: List all vendors
+      operationId: listVendors
+      tags:
+      - Vendors
+      parameters:
+      - $ref: '#/components/parameters/PagingLimit'
+      - $ref: '#/components/parameters/PagingCursor'
+      - $ref: '#/components/parameters/SinceFilter'
+      - $ref: '#/components/parameters/VendorConfirmedFilter'
+      - $ref: '#/components/parameters/VendorUnconfirmedFilter'
+      - $ref: '#/components/parameters/UseSystemDefaultExternal'
+      - $ref: '#/components/parameters/SortOrder'
+      - name: state
+        in: query
+        description: "Filter vendors by state.\n- `PENDING` - The vendor is not confirmed, has no errors, and was\n  not predicted. It is pending to be confirmed.\n- `ACTIVE` - The vendor is confirmed and has no errors.\n- `PREDICTED` - The vendor was predicted by Vic.\n- `ERRORED` - The vendor has errors set.\n"
+        required: false
+        schema:
+          $ref: '#/components/schemas/VendorStateFilter'
+      responses:
+        '200':
+          $ref: '#/components/responses/VendorsResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+  /v0/vendors/synchronize:
+    post:
+      description: 'Tells the ERP to synchronize the Vendor resource. If the ERP is using
+
+        the API, the call will be sent via the normal webhook methods. If the
+
+        ERP is not using this API then this will call the native integration''s
+
+        synchronize functionality.
+
+        '
+      summary: Synchronize Vendors
+      operationId: synchronizeVendors
+      tags:
+      - Vendors
+      responses:
+        '204':
+          $ref: '#/components/responses/SynchronizeVendorsResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+  /v0/vendors/{id}:
+    get:
+      description: 'Use this request to get data for a single vendor that is stored in Vic.ai.
+
+        '
+      summary: Info for a specific vendor
+      operationId: getVendor
+      tags:
+      - Vendors
+      parameters:
+      - $ref: '#/components/parameters/PathId'
+      - $ref: '#/components/parameters/UseSystemDefaultExternal'
+      responses:
+        '200':
+          $ref: '#/components/responses/VendorResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+    put:
+      description: 'Updates or inserts a vendor into the Vic.ai system.
+
+        All fields passed are set on the vendor. Most fields that are omitted
+
+        from the request body are considered to be null and will be set to
+
+        null; the exceptions that keep their current value when omitted are
+
+        called out in the individual field descriptions.
+
+        If the vendor is known by Vic.ai, the `externalId` supplied will be used
+
+        to resolve the vendor and perform an update of the data, otherwise, a
+
+        new vendor will be inserted.
+
+        If the upsert action is part of a `syncRequest`, you should include the
+
+        `syncRequest` ID in the `X-Request-Id` header.
+
+        '
+      summary: Upserts a vendor
+      operationId: upsertVendor
+      tags:
+      - Vendors
+      parameters:
+      - $ref: '#/components/parameters/PathId'
+      - $ref: '#/components/parameters/UseSystemDefaultExternal'
+      - $ref: '#/components/parameters/RequestId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VendorUpsert'
+      responses:
+        '200':
+          $ref: '#/components/responses/VendorUpdatedResponse'
+        '201':
+          $ref: '#/components/responses/VendorCreatedResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+    delete:
+      description: 'Use this request to delete data for a single vendor that is stored in
+
+        Vic.ai
+
+        '
+      summary: Deletes a vendor
+      operationId: deleteVendor
+      tags:
+      - Vendors
+      parameters:
+      - $ref: '#/components/parameters/PathId'
+      - $ref: '#/components/parameters/UseSystemDefaultExternal'
+      responses:
+        '201':
+          $ref: '#/components/responses/VendorDeletedResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+  /v0/vendors/{id}/errors:
+    post:
+      description: 'Use this post to report vendor update failure errors back to Vic.ai.
+
+        Strictly a response to the callbacks.
+
+        * The `X-Request-Id` header is required.
+
+        * The `id` MUST be a Vendor `internalId`.
+
+        '
+      summary: Completes the response callback cycle resulting from a 202
+      operationId: setVendorRemoteErrors
+      tags:
+      - Vendors
+      parameters:
+      - $ref: '#/components/parameters/PathId'
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/UseSystemDefaultExternal'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetVendorRemoteErrors'
+      responses:
+        '200':
+          $ref: '#/components/responses/VendorRemoteErrorsUpdatedResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+    delete:
+      summary: Clears errors on the Vendor.
+      description: Used to clear errors that have been fixed in the ERP system.
+      operationId: clearVendorRemoteErrors
+      tags:
+      - Vendors
+      parameters:
+      - $ref: '#/components/parameters/PathId'
+      - $ref: '#/components/parameters/RequestId'
+      - $ref: '#/components/parameters/UseSystemDefaultExternal'
+      responses:
+        '200':
+          $ref: '#/components/responses/VendorRemoteErrorsClearedResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+  /v0/vendors/{vendor_id}/tags/{tag_id}:
+    delete:
+      description: 'Use this endpoint to delete a vendor tag association by specifying both the vendor ID and tag ID.
+
+
+        Use `/v0/vendorTags/{id}` when you want to use the vendor tag''s ID instead of the vendor ID and tag ID.
+
+        '
+      summary: Delete a vendor tag by vendor ID and tag ID
+      operationId: deleteTagFromVendor
+      tags:
+      - Vendors
+      parameters:
+      - $ref: '#/components/parameters/VendorId'
+      - $ref: '#/components/parameters/TagId'
+      - $ref: '#/components/parameters/UseSystemDefaultExternal'
+      responses:
+        '204':
+          $ref: '#/components/responses/VendorTagDeletedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+  /v0/vendorGroups:
+    get:
+      description: List all vendor groups.
+      summary: List all vendor groups
+      operationId: listVendorGroups
+      tags:
+      - Vendors
+      parameters:
+      - $ref: '#/components/parameters/PagingLimit'
+      - $ref: '#/components/parameters/PagingCursor'
+      responses:
+        '200':
+          $ref: '#/components/responses/VendorGroupsResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+    post:
+      description: Create a vendor group.
+      summary: Create a vendor group
+      operationId: createVendorGroup
+      tags:
+      - Vendors
+      requestBody:
+        $ref: '#/components/requestBodies/CreateVendorGroupRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/VendorGroupResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+  /v0/vendorGroups/{id}:
+    put:
+      description: Update the vendor group.
+      summary: Update the vendor group
+      operationId: updateVendorGroup
+      tags:
+      - Vendors
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The id of the vendor group
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateVendorGroupRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/VendorGroupResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+    delete:
+      description: Delete vendor group.
+      summary: Delete vendor group
+      operationId: deleteVendorGroup
+      tags:
+      - Vendors
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The id of the vendor group
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          $ref: '#/components/responses/VendorGroupDeletedResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+  /v2/vendors/{id}:
+    get:
+      description: 'Retrieve a vendor by UUID from the Vic.ai system.
+
+
+        This endpoint returns detailed information about a specific vendor, including:
+
+        - Basic vendor information (name, email, phone, address)
+
+        - Banking information (ACH, IBAN, etc., excluding check payment methods)
+
+        - Tags associated with the vendor
+
+        - OFAC screening results
+
+        - Remote system data and errors
+
+        - Vendor state (pending, active, predicted, errored)
+
+
+        **Note**: This endpoint includes vendors regardless of their onboarding completion status.
+
+        '
+      summary: Get a vendor by UUID
+      operationId: getVendorV2
+      tags:
+      - Vendors
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The UUID of the vendor in Vic.ai.
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          $ref: '#/components/responses/VendorResponseV2'
+        '403':
+          $ref: '#/components/responses/ErrorResponseV2'
+        '404':
+          $ref: '#/components/responses/ErrorResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+    put:
+      description: 'Update a vendor''s information in the Vic.ai system.
+
+
+        This endpoint allows updating the following fields:
+
+        - `remote_id`: The external system''s identifier for this vendor
+
+        - `confirmed_at`: The datetime when the vendor was confirmed in the external system
+
+
+        At least one field must be provided in the request body.
+
+
+        **Note**: This endpoint supports vendors with onboarding status (draft, active, submitted, etc.)
+
+        '
+      summary: Update a vendor
+      operationId: updateVendorV2
+      tags:
+      - Vendors
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The UUID of the vendor in Vic.ai.
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateVendorV2'
+      responses:
+        '200':
+          $ref: '#/components/responses/VendorResponseV2'
+        '422':
+          $ref: '#/components/responses/ErrorResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+components:
+  schemas:
+    VendorManager:
+      type: object
+      description: 'Vic.ai user who manages a vendor.
+
+        When `email` is provided, it takes priority over `name`. If no user
+
+        exists with the `email` provided, then `name` will be used as a
+
+        fallback. If neither are found, the api will return an error.
+
+        '
+      properties:
+        email:
+          oneOf:
+          - $ref: '#/components/schemas/Email'
+          - type: 'null'
+        name:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+    Tag:
+      type: object
+      required:
+      - value
+      properties:
+        id:
+          type: string
+        value:
+          type: string
+          maxLength: 255
+    VendorV2:
+      type: object
+      description: Full vendor representation with all vendor information and metadata.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The id of the vendor in the Vic system.
+          example: 550e8400-e29b-41d4-a716-446655440000
+        legacy_id:
+          type: string
+          description: The legacy ID of the vendor. This is a legacy field and will be removed in the future.
+          example: '12345'
+        address_city:
+          type:
+          - string
+          - 'null'
+          description: The vendor's city.
+          example: New York
+        address_postal_code:
+          type:
+          - string
+          - 'null'
+          description: The vendor's postal code.
+          example: '10001'
+        address_street_1:
+          type:
+          - string
+          - 'null'
+          description: The vendor's primary street address.
+          example: 123 Main St
+        address_street_2:
+          type:
+          - string
+          - 'null'
+          description: The vendor's secondary street address.
+          example: Suite 100
+        address_state:
+          type:
+          - string
+          - 'null'
+          description: The vendor's state or region.
+          example: NY
+        banking_info:
+          type: array
+          description: Banking information for the vendor.
+          items:
+            type: object
+            properties:
+              id:
+                type:
+                - string
+                - 'null'
+                format: uuid
+                description: 'The UUID of the payment info record. Will be null for legacy
+
+                  payment info.
+
+                  '
+              kind:
+                type: string
+                enum:
+                - ach
+                - iban
+                - bban
+                - plusgiro
+                - bankgiro
+              account_number:
+                type:
+                - string
+                - 'null'
+              routing_number:
+                type:
+                - string
+                - 'null'
+              is_primary:
+                type: boolean
+          default: []
+        confirmed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the vendor was confirmed in the external system.
+          example: '2024-01-15T10:30:00Z'
+        country_code:
+          type:
+          - string
+          - 'null'
+          description: The vendor's ISO-3166 country code.
+          example: US
+        currency:
+          type:
+          - string
+          - 'null'
+          description: The vendor's currency code.
+          format: ISO-4217
+          example: USD
+        description:
+          type:
+          - string
+          - 'null'
+          description: Description of the vendor.
+          example: Office supplies vendor
+        doing_business_as:
+          type:
+          - string
+          - 'null'
+          description: The DBA (doing business as) name of the vendor.
+          example: Acme Supply Co
+        email:
+          type:
+          - string
+          - 'null'
+          description: The vendor's email address.
+          example: vendor@example.com
+        legal_name:
+          type:
+          - string
+          - 'null'
+          description: The legal name of the vendor.
+          example: Acme Corporation Inc.
+        remote_id:
+          type:
+          - string
+          - 'null'
+          description: The external ID of the vendor.
+          example: vendor-123
+        remote_data:
+          type:
+          - object
+          - 'null'
+          description: Additional data from the external system.
+          additionalProperties: true
+        remote_errors:
+          type:
+          - object
+          - 'null'
+          description: Errors from the external system.
+          additionalProperties: true
+        remote_updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the vendor was last updated in the external system.
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the vendor was last updated in Vic.ai.
+          example: '2024-01-15T10:30:00Z'
+        name:
+          type:
+          - string
+          - 'null'
+          description: The vendor's name.
+          example: Acme Corp
+        ofac_report:
+          oneOf:
+          - $ref: '#/components/schemas/VendorOfacReport'
+          - type: 'null'
+          description: The most recent OFAC screening report for this vendor
+        ofac_status:
+          oneOf:
+          - type: string
+            enum:
+            - in_progress
+            - cleared
+            - needs_review
+            - rejected
+          - type: 'null'
+          description: OFAC (Office of Foreign Assets Control) screening status
+          example: cleared
+        org_number:
+          type:
+          - string
+          - 'null'
+          description: The vendor's organization number.
+          example: '987654321'
+        payment_term_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          description: The id of the payment term.
+          example: 550e8400-e29b-41d4-a716-446655440000
+        phone:
+          type:
+          - string
+          - 'null'
+          description: The vendor's phone number.
+          example: +1-555-0100
+        po_matching_document_level:
+          type:
+          - boolean
+          - 'null'
+          description: Whether purchase order matching is at document level.
+          example: false
+        state:
+          type: string
+          description: The vendor's state in the system.
+          enum:
+          - pending
+          - active
+          - predicted
+          - errored
+          example: active
+        tax_id:
+          type:
+          - string
+          - 'null'
+          description: The vendor's tax ID.
+          example: 12-3456789
+        tax_id_type:
+          oneOf:
+          - type: string
+            enum:
+            - ssn
+            - ein
+            - other
+          - type: 'null'
+          description: The type of tax identifier (SSN, EIN, or other)
+          example: ein
+        track_1099:
+          type: boolean
+          description: Whether to track 1099 for this vendor.
+          default: false
+        vendor_group_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          description: The vendor group ID this vendor belongs to.
+          example: 550e8400-e29b-41d4-a716-446655440000
+        tags:
+          type: array
+          description: Tags associated with the vendor.
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              value:
+                type: string
+          default: []
+    VendorStateFilter:
+      type: string
+      description: "- `PENDING` - The vendor is not confirmed, has no errors, and was\n  not predicted. It is pending to be confirmed.\n- `ACTIVE` - The vendor is confirmed and has no errors.\n- `PREDICTED` - The vendor was predicted by Vic.\n- `ERRORED` - The vendor has errors set.\n"
+      enum:
+      - ACTIVE
+      - PENDING
+      - PREDICTED
+      - ERRORED
+    SetVendorRemoteErrors:
+      description: Data structure for setting a Vendor's remote errors.
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          items:
+            $ref: '#/components/schemas/VendorRemoteError'
+    InternalId:
+      description: The internal id Vic uses for the record.
+      type: string
+      example: '47'
+      readOnly: true
+    ErrorV2:
+      type: object
+      required:
+      - message
+      properties:
+        field:
+          description: 'The field that the error occurred on. This field may not always be
+
+            present.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
+        message:
+          description: A description of the error.
+          type: string
+    UpdateVendorV2:
+      type: object
+      description: Schema for updating vendor information in the V2 API.
+      properties:
+        remote_id:
+          type:
+          - string
+          - 'null'
+          description: The external system's identifier for this vendor.
+          maxLength: 255
+          example: vendor-ext-123
+        confirmed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The datetime when the vendor was confirmed in the external system.
+          example: '2024-01-15T10:30:00Z'
+    PaymentInfoTermUnit:
+      type: string
+      description: The payment term units supported.
+      enum:
+      - DAYS
+    UpdateVendorGroup:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: The name of the vendor group
+    Vendors:
+      type: array
+      items:
+        $ref: '#/components/schemas/Vendor'
+    ExternalData:
+      description: A free form json object that is stored with the record.
+      type: object
+    VendorGroups:
+      type: array
+      items:
+        $ref: '#/components/schemas/VendorGroup'
+    CreateVendorGroup:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: The name of the vendor group
+    ExternalId:
+      description: 'The external id set by the ERP system. It does not have to be a UUID and
+
+        can be any non empty string desired.
+
+        '
+      type: string
+      example: 21b31bc7-1267-4335-893c-d7fe4706a238
+      maxLength: 255
+    PaymentInfoMethod:
+      type: string
+      description: 'The payment method to be used.
+
+        Note: `BANKACCOUNT` is equivalent to `ACH` in the Web UI.
+
+        '
+      enum:
+      - BANKACCOUNT
+      - BANKGIRO
+      - PLUSGIRO
+      - IBAN
+      - BBAN
+    Email:
+      type: string
+      format: email
+      maxLength: 255
+    VendorRemoteError:
+      description: 'The remote error on a Vendor.
+
+        This is to describe any errors that have happened in the ERP system. If
+
+        the error that occurred does not pertain to a specific field, then the
+
+        `field` can be left null, or missing all together.
+
+        '
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          maxLength: 1024
+        field:
+          description: 'The field on the Vic.ai vendor that has the error.
+
+            If the error does not pertain to a specific field, then this will be
+
+            null.
+
+            Example: `{"field": "name"}` or `{"field": "externalUpdatedAt"}`
+
+            '
+          type: string
+          maxLength: 255
+    VendorGroup:
+      type: object
+      required:
+      - id
+      - name
+      properties:
+        id:
+          type: string
+          description: The id of the vendor group.
+        name:
+          type: string
+          description: The name of the vendor group
+    Currency:
+      description: The ISO-4217 currency code.
+      type: string
+      format: ISO-4217
+      maxLength: 3
+      example: USD
+    VendorTaxInfo:
+      type: object
+      properties:
+        taxId:
+          oneOf:
+          - type: string
+          - type: 'null'
+        taxIdType:
+          oneOf:
+          - type: string
+            enum:
+            - ssn
+            - ein
+            - other
+          - type: 'null'
+          description: The type of tax identifier (SSN, EIN, or other)
+        is1099vendor:
+          type: boolean
+        orgNumber:
+          oneOf:
+          - type: string
+          - type: 'null'
+    VendorState:
+      type: string
+      enum:
+      - CONFIRMED
+      - UNCONFIRMED
+    VendorOfacReport:
+      type: object
+      description: OFAC (Office of Foreign Assets Control) screening report for a vendor
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier for the OFAC report
+        high_risk_hits:
+          type: integer
+          description: Number of high-risk matches found
+        medium_risk_hits:
+          type: integer
+          description: Number of medium-risk matches found
+        low_risk_hits:
+          type: integer
+          description: Number of low-risk matches found
+        total_hits:
+          type: integer
+          description: Total number of matches found
+        risk_level:
+          type: string
+          enum:
+          - low
+          - medium
+          - high
+          description: Overall risk level assessment
+        matches:
+          type: array
+          description: 'Detailed match information from the external OFAC screening service. This field contains
+
+            raw data from the screening provider and its structure may vary or change based on the
+
+            provider''s implementation. Clients should treat this as informational data and avoid
+
+            building critical logic around its specific structure.
+
+            '
+          items:
+            type: object
+        created_at:
+          type: string
+          format: date-time
+          description: When the OFAC screening was performed
+    ErrorString:
+      type: string
+      maxLength: 255
+    Error:
+      description: 'generic error message in JSON format.  Note the ''code'' field should
+
+        match the HTTP status code of the wrapping HTTP request.
+
+        '
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          minimum: 100
+          maximum: 599
+        message:
+          $ref: '#/components/schemas/ErrorString'
+    PaymentInfo:
+      type: object
+      properties:
+        bankAccountNum:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        bankCode:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        paymentTerm:
+          oneOf:
+          - $ref: '#/components/schemas/PaymentInfoTerm'
+          - type: 'null'
+        bankGiro:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        plusGiro:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        bban:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        internationalBankAccount:
+          oneOf:
+          - $ref: '#/components/schemas/InternationalBankAccount'
+          - type: 'null'
+        defaultMethod:
+          $ref: '#/components/schemas/PaymentInfoMethod'
+    PaymentInfoTerm:
+      type: object
+      required:
+      - count
+      - unit
+      properties:
+        count:
+          type: integer
+          minimum: 1
+        unit:
+          $ref: '#/components/schemas/PaymentInfoTermUnit'
+    CountryCode:
+      description: 'The ISO-3166 country code. The acceptable values are Alpha-2 codes.
+
+        '
+      type: string
+      format: ISO-3166
+      maxLength: 2
+      example: US
+    InternationalBankAccount:
+      type: object
+      properties:
+        iban:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        bic:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+    Vendor:
+      type: object
+      required:
+      - internalId
+      - internalUpdatedAt
+      - name
+      - email
+      - phone
+      - addressStreet
+      - addressCity
+      - addressState
+      - addressPostalCode
+      - countryCode
+      properties:
+        internalId:
+          $ref: '#/components/schemas/InternalId'
+        internalUpdatedAt:
+          type: string
+          description: The date time in UTC when the record was updated at.
+          format: date-time
+        companyId:
+          type: string
+          description: The ID of the company that owns this vendor.
+          example: '12345'
+        externalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+        externalUpdatedAt:
+          type: string
+          format: date-time
+          description: 'The date time when the invoice was updated in the ERP system. This
+
+            does not have UTC normalization.
+
+            '
+        name:
+          type: string
+          maxLength: 255
+        email:
+          oneOf:
+          - $ref: '#/components/schemas/Email'
+          - type: 'null'
+        description:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        phone:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        addressStreet:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        addressCity:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        addressState:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        addressPostalCode:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        countryCode:
+          oneOf:
+          - $ref: '#/components/schemas/CountryCode'
+          - type: 'null'
+        currency:
+          $ref: '#/components/schemas/Currency'
+        confirmedAt:
+          oneOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+        state:
+          $ref: '#/components/schemas/VendorState'
+        taxInfo:
+          $ref: '#/components/schemas/VendorTaxInfo'
+        defaultPaymentInfo:
+          $ref: '#/components/schemas/PaymentInfo'
+        paymentTermId:
+          oneOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: The id of the `PaymentTerm` a vendor uses.
+        poMatchingDocumentLevel:
+          type: boolean
+          description: Whether a vendor Purchase Order matching is document level
+          default: false
+        vendorGroupId:
+          oneOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: The `VendorGroup` id the vendor is attached to.
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+        externalData:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalData'
+          - type: 'null'
+        errors:
+          description: The errors that occurred in the external ERP system.
+          items:
+            $ref: '#/components/schemas/VendorRemoteError'
+    VendorUpsert:
+      type: object
+      required:
+      - externalUpdatedAt
+      - name
+      properties:
+        externalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+        externalUpdatedAt:
+          type: string
+          format: date-time
+          description: 'The date time when the invoice was updated in the ERP system. This
+
+            does not have UTC normalization.
+
+            '
+        name:
+          type: string
+          maxLength: 255
+        email:
+          oneOf:
+          - $ref: '#/components/schemas/Email'
+          - type: 'null'
+        phone:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        addressStreet:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        addressCity:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        addressState:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        addressPostalCode:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        countryCode:
+          oneOf:
+          - $ref: '#/components/schemas/CountryCode'
+          - type: 'null'
+        currency:
+          $ref: '#/components/schemas/Currency'
+        confirmedAt:
+          oneOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+        state:
+          $ref: '#/components/schemas/VendorState'
+        taxInfo:
+          $ref: '#/components/schemas/VendorTaxInfo'
+        defaultPaymentInfo:
+          $ref: '#/components/schemas/PaymentInfo'
+        paymentTermId:
+          oneOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: The id of the `PaymentTerm` a vendor uses. When the field is omitted the vendor's current payment term is left unchanged. Pass `null` to detach the payment term from the vendor.
+        poMatchingDocumentLevel:
+          oneOf:
+          - type: boolean
+          - type: 'null'
+          description: Whether a vendor Purchase Order matching is document level. When the field is omitted the current setting is left unchanged. Pass `null` to reset the setting to `false`.
+        vendorGroupId:
+          oneOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: The `VendorGroup` id to attach the vendor to. When the field is omitted the vendor's current group is left unchanged. Pass `null` to detach the vendor from its group.
+        externalData:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalData'
+          - type: 'null'
+        managers:
+          type: array
+          items:
+            $ref: '#/components/schemas/VendorManager'
+        errors:
+          description: The errors that occurred in the external ERP system.
+          items:
+            $ref: '#/components/schemas/VendorRemoteError'
+  parameters:
+    SinceFilter:
+      name: since
+      in: query
+      description: 'Datetime value for incremental updates.
+
+        **NOTE**: For external datetimes, the expected format is not in UTC. for
+
+        vic-internal datetimes (see `SinceIsExternal`) the format is UTC.
+
+        '
+      required: false
+      schema:
+        type: string
+        format: date-time
+    VendorId:
+      name: vendor_id
+      in: path
+      required: true
+      description: The id of the vendor
+      schema:
+        type: string
+    SortOrder:
+      name: sortOrder
+      in: query
+      description: what sort order should be used for queries
+      required: false
+      schema:
+        type: string
+        enum:
+        - ASCENDING
+        - DESCENDING
+        default: ASCENDING
+    PagingLimit:
+      name: limit
+      in: query
+      description: How many items to return at one time (max 100) (default 100)
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+    VendorConfirmedFilter:
+      name: confirmed
+      in: query
+      description: selects if confirmed vendors are to be displayed.
+      required: false
+      schema:
+        type: boolean
+        default: true
+    UseSystemDefaultExternal:
+      name: useSystem
+      in: query
+      description: 'Which system to use for id or updatedAt filters.
+
+        '
+      required: false
+      schema:
+        type: string
+        enum:
+        - INTERNAL
+        - EXTERNAL
+        - internal
+        - external
+        default: EXTERNAL
+    TagId:
+      name: tag_id
+      in: path
+      required: true
+      description: The id of the tag
+      schema:
+        type: string
+        format: uuid
+    VendorUnconfirmedFilter:
+      name: unconfirmed
+      in: query
+      description: selects if unconfirmed vendors are to be displayed.
+      required: false
+      schema:
+        type: boolean
+        default: true
+    RequestId:
+      in: header
+      name: X-Request-Id
+      description: token to be able to correctly log associated requests
+      required: false
+      schema:
+        type: string
+        format: uuid
+    PagingCursor:
+      name: cursor
+      in: query
+      description: Which item to start from. See [Pagination](#section/Pagination) for more information.
+      required: false
+      schema:
+        type: string
+    PathId:
+      name: id
+      in: path
+      required: true
+      description: The id of the database entry
+      schema:
+        type: string
+  responses:
+    VendorTagDeletedResponse:
+      description: Vendor tag was successfully deleted.
+    VendorRemoteErrorsClearedResponse:
+      description: Vendor errors were successfully cleared.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Vendor'
+    VendorGroupDeletedResponse:
+      description: Vendor group was successfully deleted.
+    VendorResponse:
+      description: A single vendor.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Vendor'
+    VendorDeletedResponse:
+      description: Vendor was successfully deleted.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Vendor'
+    VendorGroupResponse:
+      description: List of vendor groups.
+      headers:
+        x-next:
+          $ref: '#/components/headers/NextPageToken'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VendorGroup'
+    VendorResponseV2:
+      description: Vendor information.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - data
+            properties:
+              data:
+                $ref: '#/components/schemas/VendorV2'
+    VendorCreatedResponse:
+      description: Vendor was successfully created.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Vendor'
+    ErrorResponse:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TooManyRequestsResponse:
+      description: HTTP call rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    VendorsResponse:
+      description: A paged array of vendors
+      headers:
+        x-next:
+          $ref: '#/components/headers/NextPageToken'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Vendors'
+    SynchronizeVendorsResponse:
+      description: 'A request to synchronize the vendors was acknowledged and is in the
+
+        process of being ran.
+
+        '
+    ErrorResponseV2:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ErrorV2'
+    ResourceNotFoundResponse:
+      description: Resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    VendorUpdatedResponse:
+      description: Vendor was successfully updated.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Vendor'
+    VendorRemoteErrorsUpdatedResponse:
+      description: Vendor errors were successfully updated.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Vendor'
+    VendorGroupsResponse:
+      description: List of vendor groups.
+      headers:
+        x-next:
+          $ref: '#/components/headers/NextPageToken'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VendorGroups'
+    ForbiddenResponse:
+      description: The request was forbidden.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  requestBodies:
+    UpdateVendorGroupRequest:
+      description: Update a vendor group.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateVendorGroup'
+    CreateVendorGroupRequest:
+      description: Create a vendor group.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateVendorGroup'
+  headers:
+    NextPageToken:
+      description: A link to the next page of responses
+      schema:
+        type: string
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-tagGroups:
+- name: Integration
+  tags:
+  - Authentication
+  - Pagination
+  - Webhooks
+  - Webhook Subscriptions
+  - Webhook Events
+  - Synchronizing
+  - Status
+- name: Master Data
+  tags:
+  - Accounts
+  - Dimensions
+  - Vendors
+  - Vendor Groups
+  - Vendor Tags
+  - Tags
+  - Tax Codes
+  - VAT Codes
+  - Payment Terms
+- name: Organization & Access
+  tags:
+  - Partners
+  - Organizations
+  - Companies
+  - Users
+- name: Invoices & Bills
+  tags:
+  - Invoices
+  - Bills
+  - Attachments
+  - Invoice Approval Flows
+  - Invoice Posting Guide
+  - Training Invoices
+- name: Purchase Orders
+  tags:
+  - Purchase Orders
+  - Purchase Order Line Items
+  - Purchase Order Matching Guide
+- name: Payments
+  tags:
+  - Payment Batches
+  - Payment Confirmations
+  - Credit Confirmations
+- name: Reporting
+  tags:
+  - CSV Reports
+- name: Reference
+  tags:
+  - Changelog

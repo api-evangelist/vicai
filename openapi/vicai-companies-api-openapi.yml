@@ -1,0 +1,2935 @@
+openapi: 3.1.0
+info:
+  version: v10.40.4
+  contact: {}
+  title: Vic.ai Accounts Companies API
+  description: "## Introduction\n\nThe Vic.ai API provides a seamless connection between your Enterprise Resource\nPlanning (ERP) system and the Vic.ai product suite.\n\nThe API is designed to offer three main areas of functionality:\n\n- **Syncing master data:** This refers to the data in your ERP that Vic.ai\n  interacts with. You are required to supply and update this data in Vic.ai, and\n  you also have the option to verify the copy of the masterdata in Vic.ai.\n\n- **Syncing training data:** We need historical data to train your AI model. To\n  that end, the API provides endpoints to sync historical invoices into Vic.ai\n  and to confirm their presence.\n\n- **Subscribing to and receiving webhooks:** Webhooks enable users or automated\n  tasks to interact with your ERP through various actions in the Vic.ai product\n  suite, such as posting an invoice, payment or purchase order or requesting\n  synchronization. You will receive a notification via a webhook when these\n  actions occur.\n\n\nFor US-based integrations, please use the following base API URL:\n\n```\nhttps://api.us.vic.ai\n```\n\nFor integrations based in Norway, use the following base API URL:\n\n```\nhttps://api.no.vic.ai\n```\n\nAll paths mentioned in this documentation should use one of these URLs as the\nbase.\n\nExample:\n\n```bash\ncurl https://api.us.vic.ai/v0/healthCheck \\\n    -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\"\n```\n\n## Getting Started\n\nTo begin interacting with the Vic.ai API, you will need the following\ncredentials:\n\n* A Vic.ai client ID\n* A Vic.ai client secret.\n\nThese can be provided to you securely by a Vic.ai representative\n[upon request](https://www.vic.ai/book-a-demo).\n\n**Please note:** These credentials are essentially the keys to your ERP\nintegration. If they fall into the wrong hands, unauthorized parties could\nimpersonate you, gain access to sensitive data, and potentially perform\nmalicious actions. Therefore, it's crucial to keep these credentials safe at all\ntimes to protect your application's integrity and your clients' data.\n\n### Limitations\n\nThe Vic.ai API has the following limitations:\n\n**Rate Limiting:** The API is rate-limited to 500 requests per 10-second time\nframe. If you exceed this limit, you will receive a `429 Too Many Requests`\nresponse. The limit is per Oauth client ID. If you continue to receive `429`s,\nplease contact support with a request id from the response headers.\n"
+servers:
+- url: https://api.no.stage.vic.ai
+  description: staging server, NO
+- url: https://api.us.vic.ai
+  description: production server, US
+- url: https://api.no.vic.ai
+  description: production server, NO
+security:
+- BearerAuth: []
+tags:
+- name: Companies
+  description: The companies in the Vic system.
+paths:
+  /v2/organizations/{organization_id}/companies:
+    post:
+      description: 'Create a company under a specific organization, using partner
+
+        authentication. The company is created under the organization named in
+
+        the path — which must be one the authenticated partner client already
+
+        has access to (e.g. one it created via `POST /v2/organizations`) — and
+
+        any `organization_id` in the request body is ignored.
+
+
+        The response includes the new company''s company-scoped OAuth client so
+
+        the partner can bootstrap a company-level integration without a second
+
+        round-trip; the `client_secret` is returned only at creation time and
+
+        cannot be retrieved later.
+
+
+        Use this to create the first company under a newly-created organization,
+
+        where no company-scoped client exists yet to call `POST /v2/companies`.
+
+        '
+      summary: Create a company under an organization
+      operationId: createOrganizationCompanyV2
+      tags:
+      - Companies
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: organization_id
+        description: The ID of the organization to create the company under.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CreateCompanyRequestV2'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreateCompanyResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/companies:
+    get:
+      description: Search and list companies accessible.
+      summary: Search and list companies accessible
+      operationId: listCompaniesV2
+      tags:
+      - Companies
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: name_contains
+        description: 'List companies with names containing the value provided. This is a
+
+          case insensitive match.
+
+          '
+        in: query
+        schema:
+          type: string
+      - name: remote_id
+        description: 'Filter by a companies remote ID.
+
+          '
+        in: query
+        schema:
+          type: string
+      - $ref: '#/components/parameters/PaginationV2'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListCompaniesResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+    post:
+      description: 'Create a new company and automatically grant the authenticated OAuth
+
+        client access to it. The company is created under the same organization
+
+        as the OAuth client''s primary company, unless `organization_id` is
+
+        provided (must be an organization the client already has access to).
+
+
+        After creation, use `POST /v2/companies/{company_id}/subscriptions` to
+
+        set up webhook subscriptions for the new company.
+
+        '
+      summary: Create a company
+      operationId: createCompanyV2
+      tags:
+      - Companies
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      requestBody:
+        $ref: '#/components/requestBodies/CreateCompanyRequestV2'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreateCompanyResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/companies/{company_id}/tags:
+    get:
+      description: 'List the tags assigned to a company. Requires partner authentication;
+
+        the company must belong to an organization the partner can access.
+
+        '
+      summary: List a company's tags
+      operationId: listCompanyTagsV2
+      tags:
+      - Companies
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: company_id
+        description: The ID (UUID) of the company.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: The company's tags.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CompanyTagV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+    post:
+      description: 'Assign a tag to a company, using partner authentication. The company
+
+        must belong to an organization the partner can access.
+
+
+        Tags are how Vic expresses **company grouping**: mark the parent company
+
+        of a group with the `group-leader` tag and a shared `group:<key>` tag,
+
+        and mark each member company with the same `group:<key>` tag. Assigning
+
+        a `group:`/`group-leader` tag also enables company groups on the
+
+        organization. Re-assigning an existing tag is idempotent.
+
+        '
+      summary: Assign a tag to a company
+      operationId: createCompanyTagV2
+      tags:
+      - Companies
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: company_id
+        description: The ID (UUID) of the company.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCompanyTagV2'
+      responses:
+        '201':
+          description: The assigned tag.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/CompanyTagV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/companies/{company_id}:
+    get:
+      description: Get a company.
+      summary: Get a company
+      operationId: getCompanyV2
+      tags:
+      - Companies
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: company_id
+        description: The ID of the company.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          $ref: '#/components/responses/GetCompanyResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/companies/{company_id}/users:
+    get:
+      description: List or search for users attached to the company
+      summary: List or search for users attached to the company
+      operationId: listCompanyUsersV2
+      tags:
+      - Companies
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: company_id
+        description: The ID of the company.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: name
+        description: The name of the user. This is a case-insensitive match.
+        in: query
+        schema:
+          type: string
+      - name: name_contains
+        description: 'The name of the user contains the value specified. This is a
+
+          case-insensitive match.
+
+          '
+        in: query
+        schema:
+          type: string
+      - name: email
+        description: 'The user has the email address. This is a case-insensitive match.
+
+          '
+        in: query
+        schema:
+          type: string
+      - name: email_contains
+        description: 'The email of the user contains the value specified. This is a
+
+          case-insensitive match.
+
+          '
+        in: query
+        schema:
+          type: string
+      - $ref: '#/components/parameters/PaginationV2'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListCompanyUsersResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+    post:
+      description: 'Create and attach a user to a company. If the user already exists, use
+
+        the `attachUserToCompanyV2` (`POST /v2/companies/{company_id}/users/attach`)
+
+        operation instead.
+
+        '
+      summary: Create and attach user to company
+      operationId: createCompanyUserV2
+      tags:
+      - Companies
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: company_id
+        description: The ID of the company.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/CreateCompanyUserRequestV2'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreateCompanyUserResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/companies/{company_id}/users/attach:
+    post:
+      description: 'Attaches an existing user to a company. You may provide the `user_id` or
+
+        `email`. If the user does not exist, you will need to use the
+
+        `createCompanyUserV2` operation.
+
+        '
+      summary: Attach an existing user to a company
+      operationId: attachUserToCompanyV2
+      tags:
+      - Companies
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: company_id
+        description: The ID of the company.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/AttachUserToCompanyRequestV2'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreateCompanyUserResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/companies/{company_id}/users/{user_id}:
+    delete:
+      description: 'Removes the user from the company. This does not remove them from the
+
+        organization, even when the user is not attached to any companies within
+
+        the organization.
+
+        '
+      summary: Remove user from company
+      operationId: removeUserFromCompanyV2
+      tags:
+      - Companies
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: company_id
+        description: The ID of the company.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: user_id
+        description: The ID of the user.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          $ref: '#/components/responses/RemoveUserFromCompanyResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/companies/{company_id}/users/{user_id}/roles:
+    get:
+      description: 'Returns the list of roles currently assigned to a user within a specific
+
+        company. Roles are company-scoped and determine what actions the user can
+
+        perform within that company.
+
+        '
+      summary: List a user's roles in a company
+      operationId: listCompanyUserRolesV2
+      tags:
+      - Companies
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: company_id
+        description: The ID of the company.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: user_id
+        description: The ID of the user.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          $ref: '#/components/responses/CompanyUserRolesResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+    post:
+      description: 'Declaratively set the roles for a user within a company. The provided list
+
+        of roles replaces the user''s current roles entirely — roles included in the
+
+        list become active, and all others become inactive.
+
+
+        This operation is idempotent: assigning roles that are already active has
+
+        no effect on those roles.
+
+        '
+      summary: Update a user's roles in a company
+      operationId: updateCompanyUserRolesV2
+      tags:
+      - Companies
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: company_id
+        description: The ID of the company.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: user_id
+        description: The ID of the user.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateCompanyUserRolesRequestV2'
+      responses:
+        '200':
+          $ref: '#/components/responses/CompanyUserRolesResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/companies/{company_id}/fields/{field_label}/options:
+    put:
+      description: 'Replaces or adds company-specific options for a `select` custom field.
+
+        When `replace` is `true`, the provided values become the full set of
+
+        company-specific options for the field. When `replace` is `false`, the
+
+        provided values are added to the existing company-specific options.
+
+
+        The field label is the stable field identifier, such as
+
+        `custom:department`. URL-encode the label when sending it as a path
+
+        parameter, for example `custom%3Adepartment`.
+
+        '
+      summary: Manage company custom field options
+      operationId: updateCompanyFieldOptionsV2
+      tags:
+      - Companies
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: company_id
+        description: The ID of the company.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: field_label
+        description: The custom field label, URL-encoded as a path segment.
+        in: path
+        required: true
+        schema:
+          type: string
+          example: custom%3Adepartment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyFieldOptionsUpdateRequestV2'
+      responses:
+        '200':
+          description: The resulting company-specific options for the field.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyFieldOptionsResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/companies/{company_id}/users/{user_id}/manager:
+    patch:
+      description: 'Set or clear the user''s manager. Provide `manager_id` to set the
+
+        manager, or `null` to clear it. The manager must be a user within the
+
+        same company.
+
+
+        A user has a single manager that applies across every company they
+
+        belong to. The company in the path scopes who may call this and which
+
+        users are eligible to be the manager, but the resulting relationship is
+
+        not company-specific: setting or clearing it here changes the user''s
+
+        manager everywhere they are a member, which can affect approval routing
+
+        in their other companies.
+
+
+        A manager who is not a member of the company reads as `manager: null`
+
+        in user responses. To protect that hidden assignment, passing
+
+        `manager_id: null` is rejected when the user''s current manager is not a
+
+        member of the company; assign a manager from within the company
+
+        instead, or clear the manager through a company the current manager
+
+        belongs to. An assignment to a deleted member of the company can
+
+        always be cleared.
+
+
+        A user cannot be their own manager, and two users cannot be each
+
+        other''s manager; such requests are rejected.
+
+        '
+      summary: Set or clear a user's manager in a company
+      operationId: updateCompanyUserManagerV2
+      tags:
+      - Companies
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: company_id
+        description: The ID of the company.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: user_id
+        description: The ID of the user.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateCompanyUserManagerRequestV2'
+      responses:
+        '200':
+          $ref: '#/components/responses/UpdateCompanyUserManagerResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/companies/{company_id}/invoice_approval_flows:
+    parameters:
+    - $ref: '#/components/parameters/CompanyId'
+    get:
+      description: 'Lists invoice approval flows for a company. Returns a paginated list of
+
+        approval flows with their selection rules and steps.
+
+        '
+      summary: List invoice approval flows
+      operationId: listInvoiceApprovalFlowsV2
+      tags:
+      - Companies
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - $ref: '#/components/parameters/PaginationV2'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListInvoiceApprovalFlowsResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+    post:
+      description: "## Creating a Flow with Selection Rules\n\nWhen you create an approval flow (see the main invoice approval flow endpoint documentation for the request/response contract), you can define the selection rules that determine which invoices will be routed through that flow and its steps. The sections below describe the structure and semantics for those selection rules so you can include them in the `InvoiceApprovalFlowInputV2` payload.\n\n**Request Body:** `InvoiceApprovalFlowInputV2`\n\n**Response:** `201 Created` with the created flow data\n\n## Invoice Approval Flow Structure\n\nAn approval flow consists of:\n1. **Flow properties** - Label, description, ordering, and behavior settings\n2. **Selection rules** - Criteria that determine which invoices match this flow\n3. **Steps** - Sequential approval steps with their own selection and approver rules\n\n### Complete Flow Example\n\n```json\n{\n  \"label\": \"High Value Invoices\",\n  \"description\": \"Approval flow for invoices over $10,000\",\n  \"index\": 0,\n  \"auto_initiate\": true,\n  \"selection_rules\": [\n    {\n      \"type\": \"invoice_total_amount\",\n      \"comparator\": \"gte\",\n      \"values_type\": \"decimal\",\n      \"type_id\": null,\n      \"values\": [\n        {\n          \"value_type\": \"single\",\n          \"value\": \"10000.00\",\n          \"value_name\": \"10000.00\",\n          \"index\": 0\n        }\n      ]\n    }\n  ],\n  \"steps\": [\n    {\n      \"index\": 0,\n      \"approvers_required\": \"any\",\n      \"skip_if_no_approvers\": false,\n      \"selection_rules\": [],\n      \"approver_selection_rules\": [\n        {\n          \"type\": \"ROLE\",\n          \"values\": [\n            {\n              \"value\": \"Finance Manager\",\n              \"value_name\": \"Finance Manager\"\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n```\n\n## Flow Properties\n\n### Required Fields\n\n- **`label`** (string, max 255 chars) - The label for the approval flow\n  - Example: `\"High Value Invoices\"`\n\n- **`description`** (string, max 255 chars) - A description of the approval flow\n  - Example: `\"Approval flow for invoices over $10,000\"`\n\n- **`index`** (integer, minimum 0) - The order index for this approval flow\n  - Flows are evaluated in order from lowest to highest index\n  - Example: `0`\n\n- **`auto_initiate`** (boolean) - Whether to automatically initiate this approval flow\n  - Example: `true`\n\n- **`selection_rules`** (array) - Selection rules that define when this flow applies\n  - See [Selection Rules](#selection-rules) section below\n\n### Optional Fields\n\n- **`steps`** (array) - The approval steps for this flow\n  - See [Approval Steps](#approval-steps) section below\n\n---\n\n## Selection Rules\n\nSelection rules determine which invoices match a particular flow or step based on various invoice attributes.\n\nSelection rules use the `InvoiceApprovalFlowSelectionRuleInputV2` schema with the following structure:\n\n```json\n{\n  \"type\": \"invoice_vendor_id\",\n  \"comparator\": \"eq\",\n  \"values_type\": \"list_of_values\",\n  \"type_id\": null,\n  \"values\": [\n    {\n      \"value_type\": \"single\",\n      \"value\": \"12345\",\n      \"value_name\": \"Acme Corp\",\n      \"index\": 0\n    }\n  ]\n}\n```\n\n### Important Note on Display Names\n\n**Always populate `value_name`, `start_value_name`, and `end_value_name` fields.** These fields are used to display human-readable names in the user interface. While the `value` fields contain IDs or raw values for matching logic, the display name fields ensure users see meaningful text rather than cryptic IDs or numbers.\n\n### Selection Rule Types\n\nThe following selection rule types are available for matching invoices to flows and steps.\n\n#### 1. Invoice Vendor ID (`invoice_vendor_id`)\n\nMatches invoices from specific vendors.\n\n**Supported Comparators:** `eq`, `in`\n\n**Values Type:** `list_of_values`\n\n**Type ID:** Not used (set to `null`)\n\n**Values Structure:**\n- `value`: Vendor ID (as string)\n- `value_name`: Vendor name - **Always populate this for UI display**\n- `value_type`: Always `\"single\"`\n\n**Example - Single Vendor (eq):**\n```json\n{\n  \"type\": \"invoice_vendor_id\",\n  \"comparator\": \"eq\",\n  \"values_type\": \"list_of_values\",\n  \"type_id\": null,\n  \"values\": [\n    {\n      \"value_type\": \"single\",\n      \"value\": \"12345\",\n      \"value_name\": \"Acme Corporation\",\n      \"index\": 0\n    }\n  ]\n}\n```\n\n**Example - Multiple Vendors (in):**\n```json\n{\n  \"type\": \"invoice_vendor_id\",\n  \"comparator\": \"in\",\n  \"values_type\": \"list_of_values\",\n  \"type_id\": null,\n  \"values\": [\n    {\n      \"value_type\": \"single\",\n      \"value\": \"12345\",\n      \"value_name\": \"Acme Corporation\",\n      \"index\": 0\n    },\n    {\n      \"value_type\": \"single\",\n      \"value\": \"67890\",\n      \"value_name\": \"Beta Industries\",\n      \"index\": 1\n    }\n  ]\n}\n```\n\n---\n\n#### 2. Invoice Vendor Tags (`invoice_vendor_tags`)\n\nMatches invoices from vendors that have specific tags.\n\n**Supported Comparators:** `in`\n\n**Values Type:** `list_of_values`\n\n**Type ID:** Not used (set to `null`)\n\n**Values Structure:**\n- `value`: Tag ID (as string)\n- `value_name`: Tag value - **Always populate this for UI display**\n- `value_type`: Always `\"single\"`\n\n**Example:**\n```json\n{\n  \"type\": \"invoice_vendor_tags\",\n  \"comparator\": \"in\",\n  \"values_type\": \"list_of_values\",\n  \"type_id\": null,\n  \"values\": [\n    {\n      \"value_type\": \"single\",\n      \"value\": \"100\",\n      \"value_name\": \"Preferred Vendor\",\n      \"index\": 0\n    },\n    {\n      \"value_type\": \"single\",\n      \"value\": \"101\",\n      \"value_name\": \"Critical Supplier\",\n      \"index\": 1\n    }\n  ]\n}\n```\n\n---\n\n#### 3. Invoice Total Amount (`invoice_total_amount`)\n\nMatches invoices based on the total amount of expense line items.\n\n**Supported Comparators:** `gt`, `gte`, `lt`, `lte`, `eq`\n\n**Values Type:** `decimal`\n\n**Type ID:** Not used (set to `null`)\n\n**Values Structure:**\n- `value`: Decimal amount (as string)\n- `value_name`: Amount formatted for display - **Should match `value` for consistency**\n- `value_type`: Always `\"single\"`\n- Only one value should be provided\n\n**Example - Greater Than or Equal:**\n```json\n{\n  \"type\": \"invoice_total_amount\",\n  \"comparator\": \"gte\",\n  \"values_type\": \"decimal\",\n  \"type_id\": null,\n  \"values\": [\n    {\n      \"value_type\": \"single\",\n      \"value\": \"10000.00\",\n      \"value_name\": \"10000.00\",\n      \"index\": 0\n    }\n  ]\n}\n```\n\n**Example - Less Than:**\n```json\n{\n  \"type\": \"invoice_total_amount\",\n  \"comparator\": \"lt\",\n  \"values_type\": \"decimal\",\n  \"type_id\": null,\n  \"values\": [\n    {\n      \"value_type\": \"single\",\n      \"value\": \"5000.00\",\n      \"value_name\": \"5000.00\",\n      \"index\": 0\n    }\n  ]\n}\n```\n\n---\n\n#### 4. Invoice PO Numbers (`invoice_po_numbers`)\n\nMatches invoices with purchase order numbers within numeric range(s).\n\n**Supported Comparators:** `between`\n\n**Values Type:** `positive_integer`\n\n**Type ID:** Not used (set to `null`)\n\n**Values Structure:**\n- `value_type`: Always `\"range\"`\n- `start_value`: Starting PO number (as string)\n- `start_value_name`: Starting PO number formatted for display - **Always populate for UI**\n- `end_value`: Ending PO number (as string)\n- `end_value_name`: Ending PO number formatted for display - **Always populate for UI**\n- Multiple ranges can be specified\n\n**Example - Single Range:**\n```json\n{\n  \"type\": \"invoice_po_numbers\",\n  \"comparator\": \"between\",\n  \"values_type\": \"positive_integer\",\n  \"type_id\": null,\n  \"values\": [\n    {\n      \"value_type\": \"range\",\n      \"start_value\": \"1000\",\n      \"start_value_name\": \"1000\",\n      \"end_value\": \"2000\",\n      \"end_value_name\": \"2000\",\n      \"index\": 0\n    }\n  ]\n}\n```\n\n**Example - Multiple Ranges:**\n```json\n{\n  \"type\": \"invoice_po_numbers\",\n  \"comparator\": \"between\",\n  \"values_type\": \"positive_integer\",\n  \"type_id\": null,\n  \"values\": [\n    {\n      \"value_type\": \"range\",\n      \"start_value\": \"1000\",\n      \"start_value_name\": \"1000\",\n      \"end_value\": \"2000\",\n      \"end_value_name\": \"2000\",\n      \"index\": 0\n    },\n    {\n      \"value_type\": \"range\",\n      \"start_value\": \"5000\",\n      \"start_value_name\": \"5000\",\n      \"end_value\": \"6000\",\n      \"end_value_name\": \"6000\",\n      \"index\": 1\n    }\n  ]\n}\n```\n\n---\n\n#### 5. Invoice Item Cost Account Number (`invoice_item_cost_account_number`)\n\nMatches invoices where any expense line item has a cost account matching the criteria.\n\n**Supported Comparators:** `eq`, `in`, `gt`, `gte`, `lt`, `lte`, `between`\n\n**Values Type:**\n- `list_of_values` for `eq`, `in`\n- `positive_integer` for `between`\n\n**Type ID:** Not used (set to `null`)\n\n**Values Structure for eq/in:**\n- `value`: Cost account number (as string)\n- `value_name`: Cost account display name - **Should include number and name** (e.g., \"1000 - Office Supplies\")\n- `value_type`: Always `\"single\"`\n\n**Example - Equals:**\n```json\n{\n  \"type\": \"invoice_item_cost_account_number\",\n  \"comparator\": \"eq\",\n  \"values_type\": \"list_of_values\",\n  \"type_id\": null,\n  \"values\": [\n    {\n      \"value_type\": \"single\",\n      \"value\": \"5000\",\n      \"value_name\": \"5000 - Office Expenses\",\n      \"index\": 0\n    }\n  ]\n}\n```\n\n**Example - In List:**\n```json\n{\n  \"type\": \"invoice_item_cost_account_number\",\n  \"comparator\": \"in\",\n  \"values_type\": \"list_of_values\",\n  \"type_id\": null,\n  \"values\": [\n    {\n      \"value_type\": \"single\",\n      \"value\": \"5000\",\n      \"value_name\": \"5000 - Office Expenses\",\n      \"index\": 0\n    },\n    {\n      \"value_type\": \"single\",\n      \"value\": \"6000\",\n      \"value_name\": \"6000 - Travel Expenses\",\n      \"index\": 1\n    }\n  ]\n}\n```\n\n**Example - Between Range:**\n```json\n{\n  \"type\": \"invoice_item_cost_account_number\",\n  \"comparator\": \"between\",\n  \"values_type\": \"positive_integer\",\n  \"type_id\": null,\n  \"values\": [\n    {\n      \"value_type\": \"range\",\n      \"start_value\": \"5000\",\n      \"start_value_name\": \"5000\",\n      \"end_value\": \"5999\",\n      \"end_value_name\": \"5999\",\n      \"index\": 0\n    }\n  ]\n}\n```\n\n---\n\n#### 6. Invoice Item Dimension Name (`invoice_item_dimension_name`)\n\nMatches invoices where any expense line item has a dimension of a specific type with matching values.\n\n**Supported Comparators:** `eq`, `in`\n\n**Values Type:** `list_of_values`\n\n**Type ID:** **REQUIRED** - Must contain the dimension type (from `dimension.type` field)\n- This is a lowercase string like `\"department\"`, `\"location\"`, `\"project\"`, etc.\n- The comparison is case-insensitive, so `dimension.type` can be `\"Department\"` or `\"DEPARTMENT\"` but `type_id` should be lowercase\n\n**Values Structure:**\n- `value`: **Dimension ID** (from `dimension.id`, as string)\n- `value_name`: **Dimension display name** (from `dimension.display_name`) - **Always populate for UI display**\n- `value_type`: Always `\"single\"`\n\n⚠️ **Important:**\n- The `value` field should contain the dimension **ID**, not the dimension name\n- The `value_name` field **must** contain the `display_name` for proper UI display\n- Never omit `value_name` - it's essential for users to understand what dimension they're selecting\n\n**Example - Equals Specific Department:**\n```json\n{\n  \"type\": \"invoice_item_dimension_name\",\n  \"comparator\": \"eq\",\n  \"values_type\": \"list_of_values\",\n  \"type_id\": \"department\",\n  \"values\": [\n    {\n      \"value_type\": \"single\",\n      \"value\": \"789\",\n      \"value_name\": \"Engineering\",\n      \"index\": 0\n    }\n  ]\n}\n```\n\n**Example - In Multiple Locations:**\n```json\n{\n  \"type\": \"invoice_item_dimension_name\",\n  \"comparator\": \"in\",\n  \"values_type\": \"list_of_values\",\n  \"type_id\": \"location\",\n  \"values\": [\n    {\n      \"value_type\": \"single\",\n      \"value\": \"456\",\n      \"value_name\": \"New York Office\",\n      \"index\": 0\n    },\n    {\n      \"value_type\": \"single\",\n      \"value\": \"457\",\n      \"value_name\": \"San Francisco Office\",\n      \"index\": 1\n    }\n  ]\n}\n```\n\n**Matching Logic:**\n- The dimension `type` field is compared case-insensitively to `type_id`\n- The dimension `id` OR `display_name` is checked against the rule values\n- For `:in` comparator, any match in the list passes\n- For `:eq` comparator, only one value should be provided\n\n---\n\n#### 7. Invoice Custom Field (`invoice_custom_field`)\n\nMatches invoices based on custom header field values.\n\n**Supported Comparators:** `eq`, `in`\n\n**Values Type:**\n- `string` for text fields with `:eq`\n- `list_of_values` for select fields with `:eq` or `:in`\n\n**Type ID:** **REQUIRED** - Must contain the field label (e.g., `\"custom:department\"`, `\"custom:project_code\"`)\n\n**Values Structure:**\n- `value`: Field value (as string)\n- `value_name`: Same as value (for display purposes)\n- `value_type`: Always `\"single\"`\n\n**Field Type Considerations:**\n- **Text fields:** Use `values_type: \"string\"` with `comparator: \"eq\"`\n- **Select fields:** Use `values_type: \"list_of_values\"` with `comparator: \"eq\"` or `\"in\"`\n\n**Example - Text Field (eq):**\n```json\n{\n  \"type\": \"invoice_custom_field\",\n  \"comparator\": \"eq\",\n  \"values_type\": \"string\",\n  \"type_id\": \"custom:repair_order\",\n  \"values\": [\n    {\n      \"value_type\": \"single\",\n      \"value\": \"RO-12345\",\n      \"value_name\": \"RO-12345\",\n      \"index\": 0\n    }\n  ]\n}\n```\n\n**Example - Select Field (eq):**\n```json\n{\n  \"type\": \"invoice_custom_field\",\n  \"comparator\": \"eq\",\n  \"values_type\": \"list_of_values\",\n  \"type_id\": \"custom:department\",\n  \"values\": [\n    {\n      \"value_type\": \"single\",\n      \"value\": \"Engineering\",\n      \"value_name\": \"Engineering\",\n      \"index\": 0\n    }\n  ]\n}\n```\n\n**Example - Select Field (in):**\n```json\n{\n  \"type\": \"invoice_custom_field\",\n  \"comparator\": \"in\",\n  \"values_type\": \"list_of_values\",\n  \"type_id\": \"custom:category\",\n  \"values\": [\n    {\n      \"value_type\": \"single\",\n      \"value\": \"Office Supplies\",\n      \"value_name\": \"Office Supplies\",\n      \"index\": 0\n    },\n    {\n      \"value_type\": \"single\",\n      \"value\": \"Office Equipment\",\n      \"value_name\": \"Office Equipment\",\n      \"index\": 1\n    }\n  ]\n}\n```\n\n**Matching Logic:**\n- Comparison is case-insensitive\n- For text fields, exact match after case normalization\n- For select fields, matches against predefined options\n\n---\n\n## Approval Steps\n\nApproval steps define the sequential approval process for a flow. Each step can have its own selection rules to determine when it applies, and approver selection rules to determine who should approve.\n\n### Step Structure\n\n```json\n{\n  \"id\": 123,\n  \"index\": 0,\n  \"approvers_required\": \"any\",\n  \"system_action\": null,\n  \"skip_if_no_approvers\": false,\n  \"selection_rules\": [],\n  \"approver_selection_rules\": [\n    {\n      \"type\": \"ROLE\",\n      \"values\": [\n        {\n          \"value\": \"Finance Manager\",\n          \"value_name\": \"Finance Manager\"\n        }\n      ]\n    }\n  ],\n  \"reminder_notifications\": [\n    {\n      \"delay_hours\": 24,\n      \"recipient_role\": \"manager\"\n    }\n  ]\n}\n```\n\n### Step Fields\n\n#### Optional Fields\n\n- **`id`** (integer or null) - The ID of an existing step to update\n  - If provided, the step will be updated in place\n  - If omitted, a new step will be created\n  - Example: `123`\n\n#### Required Fields\n\n- **`index`** (integer, minimum 0) - The order index for this step\n  - Steps are evaluated in order from lowest to highest index\n  - Example: `0`\n\n#### Optional Configuration Fields\n\n- **`approvers_required`** (string, default: `\"any\"`) - How many approvers are required\n  - `\"any\"` - Any one approver can approve this step\n  - `\"all\"` - All approvers must approve this step\n  - `\"system\"` - System automatically takes action (use with `system_action`)\n  - Example: `\"any\"`\n\n- **`system_action`** (string or null) - The system action to take (when `approvers_required` is `\"system\"`)\n  - `\"approve\"` - Automatically approve\n  - `\"reject\"` - Automatically reject\n  - `null` - No system action\n  - Example: `null`\n\n- **`skip_if_no_approvers`** (boolean, default: `false`) - Whether to skip this step if no approvers are found\n  - Example: `false`\n\n- **`selection_rules`** (array) - Selection rules that define when this step applies\n  - Uses the same format as flow selection rules (see [Selection Rules](#selection-rules) section)\n  - Example: `[]` (empty array means step always applies)\n\n- **`approver_selection_rules`** (array) - Rules that define who should approve at this step\n  - See [Approver Selection Rules](#approver-selection-rules) section below\n\n- **`reminder_notifications`** (array) - Reminder notifications to send if the step remains pending\n  - See [Reminder Notifications](#reminder-notifications) section below\n\n---\n\n## Reminder Notifications\n\nReminder notifications are scheduled emails sent when an approval step remains pending for a specified duration. They help ensure invoices don't get stuck waiting for approval.\n\n### Reminder Notification Structure\n\n```json\n{\n  \"delay_hours\": 24,\n  \"recipient_role\": \"manager\",\n  \"recipient_user_id\": null\n}\n```\n\n### Reminder Notification Fields\n\n- **`delay_hours`** (integer, required, minimum 0) - Hours after step activation before sending the reminder\n  - Use `0` to send immediately when the step becomes pending\n  - Example: `24` (send after 24 hours)\n\n- **`recipient_role`** (string, required) - The type of recipient for this reminder\n  - `\"user\"` - A specific user (requires `recipient_user_id`)\n  - `\"manager\"` - The manager(s) of the step's approver(s) - resolved at trigger time\n  - `\"managers_manager\"` - The manager's manager of the step's approver(s) - resolved at trigger time\n  - Example: `\"manager\"`\n\n- **`recipient_user_id`** (string or null, UUID format) - The UUID of the user who should receive the reminder\n  - Required when `recipient_role` is `\"user\"`\n  - Ignored when `recipient_role` is `\"manager\"` or `\"managers_manager\"`\n  - This is the user's `id` as returned by the V2 Users API\n  - Example: `\"550e8400-e29b-41d4-a716-446655440000\"`\n\n### Reminder Notification Examples\n\n#### Send to Manager After 24 Hours\n\n```json\n{\n  \"delay_hours\": 24,\n  \"recipient_role\": \"manager\"\n}\n```\n\n**Behavior:** 24 hours after the step becomes pending, an email will be sent to the manager(s) of the step's approver(s).\n\n#### Send to Specific User Immediately\n\n```json\n{\n  \"delay_hours\": 0,\n  \"recipient_role\": \"user\",\n  \"recipient_user_id\": \"550e8400-e29b-41d4-a716-446655440000\"\n}\n```\n\n**Behavior:** Immediately when the step becomes pending, an email will be sent to the specified user.\n\n#### Escalation Chain with Multiple Reminders\n\n```json\n{\n  \"reminder_notifications\": [\n    {\n      \"delay_hours\": 24,\n      \"recipient_role\": \"manager\"\n    },\n    {\n      \"delay_hours\": 48,\n      \"recipient_role\": \"managers_manager\"\n    }\n  ]\n}\n```\n\n**Behavior:**\n1. After 24 hours, the manager(s) of the approver(s) receive a reminder\n2. After 48 hours, the manager's manager receives a reminder\n\n### How Reminder Notifications Work\n\n1. **Scheduling:** When an approval step becomes active (status: pending), reminder jobs are scheduled based on the configured notifications\n2. **Trigger Time Resolution:** For `\"manager\"` and `\"managers_manager\"` recipient roles, the actual recipients are resolved at the time the reminder is triggered, not when configured\n3. **Cancellation:** When a step is approved, rejected, or skipped, any pending reminder jobs are automatically cancelled\n4. **Multiple Reminders:** You can configure multiple reminders per step with different delays and recipients\n\n### Use Cases\n\n1. **Escalation:** Send to manager after 24 hours, then manager's manager after 48 hours\n2. **Immediate Notification:** Use `delay_hours: 0` to notify someone immediately when approval is needed\n3. **Daily Reminders:** Configure multiple reminders at 24, 48, and 72 hours for persistent follow-up\n\n---\n\n## Approver Selection Rules\n\nApprover selection rules determine who should approve at a particular step. They use the `InvoiceApprovalFlowApproverSelectionRuleInputV2` schema.\n\nApprover selection rules work in conjunction with the `approvers_required` field to determine how many approvers from the selected group must approve:\n- When `approvers_required` is `\"any\"`, any one approver matching the rules can approve\n- When `approvers_required` is `\"all\"`, all approvers matching the rules must approve\n- When `approvers_required` is `\"system\"`, the system automatically takes action (no approvers needed)\n\n### Approver Rule Structure\n\n```json\n{\n  \"type\": \"ROLE\",\n  \"values\": [\n    {\n      \"value\": \"Finance Manager\",\n      \"value_name\": \"Finance Manager\"\n    },\n    {\n      \"value\": \"Controller\",\n      \"value_name\": \"Controller\"\n    }\n  ]\n}\n```\n\n### Approver Rule Fields\n\n- **`type`** (string, required, max 255 chars) - The type of approver selection rule\n  - **`\"ROLE\"`** and **`\"GROUP\"`**: These are specific types for organizations using certain accounting integrations. These types are only available when your integration supports roles and groups from the accounting system.\n  - **`\"USER\"`**: Selects specific individual users by their legacy ID\n  - **User metadata types**: You can also use user metadata types (see `UserMetadataEntryV2`). These are custom metadata fields configured for users in your system, allowing you to select approvers based on custom attributes.\n  - **Note:** Available types depend on your integration type. For more details on which types are available for your specific integration, please contact the implementation support team.\n  - Example: `\"ROLE\"` (for accounting integrations), or a user metadata type like `\"department\"` (if configured)\n\n- **`values`** (array of objects, required) - The values to match for this approver type\n  - Each value object has two required fields:\n    - **`value`** (string, required, max 255 chars) - The actual value used for matching\n    - **`value_name`** (string, required, max 255 chars) - The display name shown in the UI\n  - For `\"ROLE\"` (accounting integration specific): \n    - `value`: Role name from the accounting system (case-sensitive, must match exactly as configured)\n    - `value_name`: Role display name (typically the same as `value`, but can be customized for UI)\n  - For `\"GROUP\"` (accounting integration specific): \n    - `value`: Group name from the accounting system (case-sensitive, must match exactly as configured)\n    - `value_name`: Group display name (typically the same as `value`, but can be customized for UI)\n  - For `\"USER\"`: \n    - `value`: **Must be `User.legacy_id`** (the user's legacy ID, not email or username)\n    - `value_name`: User display name (typically the user's name or email for UI display)\n  - For **user metadata types** (see `UserMetadataEntryV2`):\n    - `value`: The metadata value (format depends on the metadata type)\n    - `value_name`: The display name for the metadata value (typically the same as `value`, but can be customized for UI)\n\n### How Approver Selection Works\n\n1. **Rule Evaluation:** The system evaluates all approver selection rules in the `approver_selection_rules` array\n2. **User Matching:** Users are matched based on their assigned roles, group memberships, or user identifiers\n3. **Approval Requirement:** The `approvers_required` field determines how many of the matched approvers must approve:\n   - `\"any\"`: One approval from any matched approver is sufficient\n   - `\"all\"`: All matched approvers must approve\n   - `\"system\"`: No human approvers needed, system takes action automatically\n4. **No Approvers Found:** If `skip_if_no_approvers` is `true` and no approvers match the rules, the step is skipped. If `false`, the step will wait indefinitely for an approver.\n\n### Multiple Approver Rules\n\nWhen multiple approver selection rules are defined in the `approver_selection_rules` array, the system uses **OR logic** - users matching ANY of the rules will be eligible approvers.\n\n**Important Constraint:** The `\"USER\"` type **cannot be mixed** with other types (`\"ROLE\"`, `\"GROUP\"`, etc.) in the same step. If you use `\"USER\"`, it must be the only approver selection rule in that step. Other types (`\"ROLE\"`, `\"GROUP\"`, etc.) can be combined together.\n\n**Example with Multiple Rules:**\n```json\n{\n  \"approvers_required\": \"any\",\n  \"approver_selection_rules\": [\n    {\n      \"type\": \"ROLE\",\n      \"values\": [\n        {\n          \"value\": \"Finance Manager\",\n          \"value_name\": \"Finance Manager\"\n        }\n      ]\n    },\n    {\n      \"type\": \"GROUP\",\n      \"values\": [\n        {\n          \"value\": \"Accounting Team\",\n          \"value_name\": \"Accounting Team\"\n        }\n      ]\n    }\n  ]\n}\n```\n\n**Behavior:** Any user who has the \"Finance Manager\" role OR is a member of the \"Accounting Team\" group can approve this step. Since `approvers_required` is `\"any\"`, only one approval is needed.\n\n### Approver Selection Rule Types\n\n#### 1. Role-Based Selection (`ROLE`)\n\nSelects approvers based on their assigned roles from the accounting system. **This type is only available for organizations using certain accounting integrations** that support roles.\n\n**Use Cases:**\n- Department managers for department-specific approvals\n- Finance roles for financial approvals\n- Executive roles for high-value invoice approvals\n\n**Example - Single Role:**\n```json\n{\n  \"type\": \"ROLE\",\n  \"values\": [\n    {\n      \"value\": \"Finance Manager\",\n      \"value_name\": \"Finance Manager\"\n    }\n  ]\n}\n```\n\n**Example - Multiple Roles (OR logic within values):**\n```json\n{\n  \"type\": \"ROLE\",\n  \"values\": [\n    {\n      \"value\": \"Finance Manager\",\n      \"value_name\": \"Finance Manager\"\n    },\n    {\n      \"value\": \"Controller\",\n      \"value_name\": \"Controller\"\n    },\n    {\n      \"value\": \"CFO\",\n      \"value_name\": \"CFO\"\n    }\n  ]\n}\n```\n\n**Behavior:** Users with any of these roles can approve. If `approvers_required` is `\"all\"`, users with all three roles would need to approve (unlikely), but typically you'd use `\"any\"` with multiple roles.\n\n**Complete Step Example:**\n```json\n{\n  \"index\": 0,\n  \"approvers_required\": \"any\",\n  \"skip_if_no_approvers\": false,\n  \"selection_rules\": [],\n  \"approver_selection_rules\": [\n    {\n      \"type\": \"ROLE\",\n      \"values\": [\n        {\n          \"value\": \"Finance Manager\",\n          \"value_name\": \"Finance Manager\"\n        }\n      ]\n    }\n  ]\n}\n```\n\n#### 2. Group-Based Selection (`GROUP`)\n\nSelects approvers based on their group memberships from the accounting system. **This type is only available for organizations using certain accounting integrations** that support groups. Useful when you want to route approvals to specific teams or departments.\n\n**Use Cases:**\n- Team-based approvals (e.g., \"Accounting Team\", \"Procurement Team\")\n- Department-wide approvals\n- Cross-functional approval groups\n\n**Example - Single Group:**\n```json\n{\n  \"type\": \"GROUP\",\n  \"values\": [\n    {\n      \"value\": \"Accounting Team\",\n      \"value_name\": \"Accounting Team\"\n    }\n  ]\n}\n```\n\n**Example - Multiple Groups:**\n```json\n{\n  \"type\": \"GROUP\",\n  \"values\": [\n    {\n      \"value\": \"Finance Department\",\n      \"value_name\": \"Finance Department\"\n    },\n    {\n      \"value\": \"Accounting Team\",\n      \"value_name\": \"Accounting Team\"\n    }\n  ]\n}\n```\n\n**Behavior:** Any user who is a member of any of these groups can approve.\n\n**Complete Step Example:**\n```json\n{\n  \"index\": 0,\n  \"approvers_required\": \"all\",\n  \"skip_if_no_approvers\": false,\n  \"selection_rules\": [],\n  \"approver_selection_rules\": [\n    {\n      \"type\": \"GROUP\",\n      \"values\": [\n        {\n          \"value\": \"Finance Department\",\n          \"value_name\": \"Finance Department\"\n        },\n        {\n          \"value\": \"Legal Department\",\n          \"value_name\": \"Legal Department\"\n        }\n      ]\n    }\n  ]\n}\n```\n\n**Behavior:** Since `approvers_required` is `\"all\"`, the system will look for users who are members of BOTH groups (if such users exist). More commonly, you'd use `\"any\"` with multiple groups to allow approval from either group.\n\n#### 3. User-Based Selection (`USER`)\n\nSelects specific individual users as approvers. **The `value` field must be `User.legacy_id`**, not email addresses or usernames.\n\n**Important:** The `\"USER\"` type **cannot be combined** with other approver selection rule types (`\"ROLE\"`, `\"GROUP\"`, etc.) in the same step. If you use `\"USER\"`, it must be the only approver selection rule in that step.\n\n**Use Cases:**\n- Direct assignment to specific individuals\n- Executive approvals for high-value items\n- Backup approvers when primary approvers are unavailable\n\n**Example - Single User:**\n```json\n{\n  \"type\": \"USER\",\n  \"values\": [\n    {\n      \"value\": \"legacy-id-12345\",\n      \"value_name\": \"John Doe\"\n    }\n  ]\n}\n```\n\n**Example - Multiple Users:**\n```json\n{\n  \"type\": \"USER\",\n  \"values\": [\n    {\n      \"value\": \"legacy-id-12345\",\n      \"value_name\": \"John Doe\"\n    },\n    {\n      \"value\": \"legacy-id-67890\",\n      \"value_name\": \"Jane Smith\"\n    },\n    {\n      \"value\": \"legacy-id-11111\",\n      \"value_name\": \"Bob Jones\"\n    }\n  ]\n}\n```\n\n**Behavior:** Only these specific users can approve. If `approvers_required` is `\"all\"`, all listed users must approve.\n\n**Complete Step Example:**\n```json\n{\n  \"index\": 0,\n  \"approvers_required\": \"all\",\n  \"skip_if_no_approvers\": false,\n  \"selection_rules\": [],\n  \"approver_selection_rules\": [\n    {\n      \"type\": \"USER\",\n      \"values\": [\n        {\n          \"value\": \"legacy-id-cfo-123\",\n          \"value_name\": \"CFO\"\n        },\n        {\n          \"value\": \"legacy-id-finance-dir-456\",\n          \"value_name\": \"Finance Director\"\n        }\n      ]\n    }\n  ]\n}\n```\n\n**Behavior:** Both the CFO and Finance Director must approve this step.\n\n### Combining Multiple Approver Rules\n\nYou can combine different approver rule types in a single step to create flexible approval workflows. **However, `\"USER\"` type cannot be combined with other types** - it must be used alone. Other types like `\"ROLE\"` and `\"GROUP\"` can be used together.\n\n**Example - Role OR Group:**\n```json\n{\n  \"index\": 0,\n  \"approvers_required\": \"any\",\n  \"skip_if_no_approvers\": false,\n  \"selection_rules\": [],\n  \"approver_selection_rules\": [\n    {\n      \"type\": \"ROLE\",\n      \"values\": [\n        {\n          \"value\": \"Finance Manager\",\n          \"value_name\": \"Finance Manager\"\n        }\n      ]\n    },\n    {\n      \"type\": \"GROUP\",\n      \"values\": [\n        {\n          \"value\": \"Accounting Team\",\n          \"value_name\": \"Accounting Team\"\n        }\n      ]\n    }\n  ]\n}\n```\n\n**Behavior:** Any user who has the \"Finance Manager\" role OR is a member of the \"Accounting Team\" group can approve. Since `approvers_required` is `\"any\"`, only one approval is needed.\n\n**Example - Multiple Roles with All Required:**\n```json\n{\n  \"index\": 1,\n  \"approvers_required\": \"all\",\n  \"skip_if_no_approvers\": false,\n  \"selection_rules\": [],\n  \"approver_selection_rules\": [\n    {\n      \"type\": \"ROLE\",\n      \"values\": [\n        {\n          \"value\": \"Finance Director\",\n          \"value_name\": \"Finance Director\"\n        }\n      ]\n    },\n    {\n      \"type\": \"ROLE\",\n      \"values\": [\n        {\n          \"value\": \"CFO\",\n          \"value_name\": \"CFO\"\n        }\n      ]\n    }\n  ]\n}\n```\n\n**Behavior:** This creates two separate approver pools. One user with \"Finance Director\" role AND one user with \"CFO\" role must both approve (they can be different people).\n\n**Example - Role and Group Combined:**\n```json\n{\n  \"index\": 2,\n  \"approvers_required\": \"any\",\n  \"skip_if_no_approvers\": false,\n  \"selection_rules\": [],\n  \"approver_selection_rules\": [\n    {\n      \"type\": \"ROLE\",\n      \"values\": [\n        {\n          \"value\": \"Finance Manager\",\n          \"value_name\": \"Finance Manager\"\n        },\n        {\n          \"value\": \"Controller\",\n          \"value_name\": \"Controller\"\n        }\n      ]\n    },\n    {\n      \"type\": \"GROUP\",\n      \"values\": [\n        {\n          \"value\": \"Accounting Team\",\n          \"value_name\": \"Accounting Team\"\n        }\n      ]\n    }\n  ]\n}\n```\n\n**Behavior:** Any user matching any of these criteria can approve:\n- Has \"Finance Manager\" or \"Controller\" role, OR\n- Is a member of \"Accounting Team\" group\n\n**Note:** `\"USER\"` type cannot be combined with `\"ROLE\"` or `\"GROUP\"` types. If you need to include specific users, create a separate step with only `\"USER\"` type approver rules.\n\n### Common Patterns and Examples\n\n#### Pattern 1: Department Manager Approval\n\nRequire approval from the department manager for department-specific invoices:\n\n```json\n{\n  \"index\": 0,\n  \"approvers_required\": \"any\",\n  \"skip_if_no_approvers\": false,\n  \"selection_rules\": [\n    {\n      \"type\": \"invoice_item_dimension_name\",\n      \"comparator\": \"eq\",\n      \"values_type\": \"list_of_values\",\n      \"type_id\": \"department\",\n      \"values\": [\n        {\n          \"value_type\": \"single\",\n          \"value\": \"789\",\n          \"value_name\": \"Engineering\",\n          \"index\": 0\n        }\n      ]\n    }\n  ],\n  \"approver_selection_rules\": [\n    {\n      \"type\": \"ROLE\",\n      \"values\": [\n        {\n          \"value\": \"Engineering Manager\",\n          \"value_name\": \"Engineering Manager\"\n        }\n      ]\n    }\n  ]\n}\n```\n\n#### Pattern 2: Dual Approval for High-Value Invoices\n\nRequire approval from both Finance Director and CFO for invoices over $50,000:\n\n```json\n{\n  \"index\": 1,\n  \"approvers_required\": \"all\",\n  \"skip_if_no_approvers\": false,\n  \"selection_rules\": [\n    {\n      \"type\": \"invoice_total_amount\",\n      \"comparator\": \"gte\",\n      \"values_type\": \"decimal\",\n      \"type_id\": null,\n      \"values\": [\n        {\n          \"value_type\": \"single\",\n          \"value\": \"50000.00\",\n          \"value_name\": \"50000.00\",\n          \"index\": 0\n        }\n      ]\n    }\n  ],\n  \"approver_selection_rules\": [\n    {\n      \"type\": \"ROLE\",\n      \"values\": [\n        {\n          \"value\": \"Finance Director\",\n          \"value_name\": \"Finance Director\"\n        }\n      ]\n    },\n    {\n      \"type\": \"ROLE\",\n      \"values\": [\n        {\n          \"value\": \"CFO\",\n          \"value_name\": \"CFO\"\n        }\n      ]\n    }\n  ]\n}\n```\n\n#### Pattern 3: Team-Based Approval\n\nAllow any member of a team to approve:\n\n```json\n{\n  \"index\": 0,\n  \"approvers_required\": \"any\",\n  \"skip_if_no_approvers\": false,\n  \"selection_rules\": [],\n  \"approver_selection_rules\": [\n    {\n      \"type\": \"GROUP\",\n      \"values\": [\n        {\n          \"value\": \"Procurement Team\",\n          \"value_name\": \"Procurement Team\"\n        }\n      ]\n    }\n  ]\n}\n```\n\n**Note:** If you need a backup approver, create a separate step with only `\"USER\"` type approver rules, since `\"USER\"` cannot be combined with other types.\n\n#### Pattern 4: Executive Escalation\n\nFor very high-value invoices, require approval from the CEO role:\n\n```json\n{\n  \"index\": 2,\n  \"approvers_required\": \"any\",\n  \"skip_if_no_approvers\": false,\n  \"selection_rules\": [\n    {\n      \"type\": \"invoice_total_amount\",\n      \"comparator\": \"gte\",\n      \"values_type\": \"decimal\",\n      \"type_id\": null,\n      \"values\": [\n        {\n          \"value_type\": \"single\",\n          \"value\": \"100000.00\",\n          \"value_name\": \"100000.00\",\n          \"index\": 0\n        }\n      ]\n    }\n  ],\n  \"approver_selection_rules\": [\n    {\n      \"type\": \"ROLE\",\n      \"values\": [\n        {\n          \"value\": \"CEO\",\n          \"value_name\": \"CEO\"\n        }\n      ]\n    }\n  ]\n}\n```\n\n**Note:** If you need to include a specific executive user, create a separate step with only `\"USER\"` type approver rules, since `\"USER\"` cannot be combined with `\"ROLE\"` or other types.\n\n### Important Considerations\n\n1. **Case Sensitivity:** Role and group names are case-sensitive and must match exactly as configured in your system\n2. **User IDs:** For `\"USER\"` type, the `value` field must be `User.legacy_id`, not email addresses or usernames\n3. **USER Type Constraint:** The `\"USER\"` type **cannot be combined** with other types (`\"ROLE\"`, `\"GROUP\"`, etc.) in the same step. It must be used alone. Other types can be combined together.\n4. **No Approvers Found:** If no users match the approver selection rules:\n   - If `skip_if_no_approvers` is `true`, the step is skipped\n   - If `skip_if_no_approvers` is `false`, the step will wait indefinitely until an approver is assigned\n5. **Multiple Rules:** Multiple approver selection rules use OR logic - users matching any rule are eligible (except `\"USER\"` which cannot be combined with others)\n6. **Approvers Required:** The `approvers_required` field works with the matched approvers:\n   - `\"any\"` with multiple rules: One approval from any matched approver\n   - `\"all\"` with multiple rules: One approval from each rule's matched approvers (if rules are separate)\n\n---\n\n## Implementation Notes\n\n### Case Sensitivity\n\nMost comparisons are **case-insensitive**:\n- Dimension type matching\n- Custom field value matching\n\n### Value Types\n\nThe `value_type` field in values array indicates the structure:\n- `\"single\"`: A single value with `value` and `value_name` fields\n- `\"range\"`: A range with `start_value` and `end_value` fields (used for `between` comparator)\n\n### Index Field\n\nThe `index` field in each value, step, and flow determines the order and should be sequential starting from 0.\n\n### Expense Line Filtering\n\nSome selection rules only evaluate expense line items:\n- `invoice_item_cost_account_number`\n- `invoice_item_dimension_name`\n\nIf the company configuration has `aaf_ignores_po_invoice_items: true`, then only invoice items with `line_type: \"expense\"` and `is_tax_only: false` are evaluated.\n\n### Multiple Rules (AND Logic)\n\nWhen multiple selection rules are defined on a flow or step, **ALL** rules must match (AND logic) for the invoice to match.\n\n---\n\n## Complete Example\n\nHere's a complete example of updating an approval flow with multiple rules and steps:\n\n```json\n{\n  \"label\": \"Regional High Value Invoices\",\n  \"description\": \"Multi-step approval for high-value invoices from specific vendors\",\n  \"index\": 0,\n  \"auto_initiate\": true,\n  \"selection_rules\": [\n    {\n      \"type\": \"invoice_total_amount\",\n      \"comparator\": \"gte\",\n      \"values_type\": \"decimal\",\n      \"type_id\": null,\n      \"values\": [\n        {\n          \"value_type\": \"single\",\n          \"value\": \"10000.00\",\n          \"value_name\": \"10000.00\",\n          \"index\": 0\n        }\n      ]\n    },\n    {\n      \"type\": \"invoice_vendor_tags\",\n      \"comparator\": \"in\",\n      \"values_type\": \"list_of_values\",\n      \"type_id\": null,\n      \"values\": [\n        {\n          \"value_type\": \"single\",\n          \"value\": \"100\",\n          \"value_name\": \"Preferred Vendor\",\n          \"index\": 0\n        }\n      ]\n    }\n  ],\n  \"steps\": [\n    {\n      \"index\": 0,\n      \"approvers_required\": \"any\",\n      \"skip_if_no_approvers\": false,\n      \"selection_rules\": [\n        {\n          \"type\": \"invoice_item_dimension_name\",\n          \"comparator\": \"eq\",\n          \"values_type\": \"list_of_values\",\n          \"type_id\": \"department\",\n          \"values\": [\n            {\n              \"value_type\": \"single\",\n              \"value\": \"789\",\n              \"value_name\": \"Engineering\",\n              \"index\": 0\n            }\n          ]\n        }\n      ],\n      \"approver_selection_rules\": [\n        {\n          \"type\": \"ROLE\",\n          \"values\": [\n            {\n              \"value\": \"Engineering Manager\",\n              \"value_name\": \"Engineering Manager\"\n            }\n          ]\n        }\n      ]\n    },\n    {\n      \"index\": 1,\n      \"approvers_required\": \"all\",\n      \"skip_if_no_approvers\": false,\n      \"selection_rules\": [],\n      \"approver_selection_rules\": [\n        {\n          \"type\": \"ROLE\",\n          \"values\": [\n            {\n              \"value\": \"Finance Director\",\n              \"value_name\": \"Finance Director\"\n            },\n            {\n              \"value\": \"CFO\",\n              \"value_name\": \"CFO\"\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n```\n\nThis example creates a flow that:\n1. Applies to invoices >= $10,000 from vendors tagged as \"Preferred Vendor\"\n2. First step requires approval from Engineering Manager (only for Engineering department invoices)\n3. Second step requires approval from both Finance Director AND CFO (for all invoices in this flow)\n\n---\n\n## Common Mistakes to Avoid\n\n1. **Dimension Rules:**\n   - ❌ Using dimension name in `value` field\n   - ✅ Use dimension ID in `value` field and displayName in `value_name`\n\n2. **Type ID:**\n   - ❌ Forgetting to set `type_id` for dimension or custom field rules\n   - ✅ Always set `type_id` for these rule types\n\n3. **Comparators:**\n   - ❌ Using unsupported comparator for a rule type\n   - ✅ Check supported comparators for each rule type above\n\n4. **Values Type:**\n   - ❌ Using wrong `values_type` for the comparator\n   - ✅ Use `positive_integer` for `between`, `decimal` for amount comparisons, `list_of_values` for `eq`/`in` with predefined options\n\n5. **Range Values:**\n   - ❌ Using `value` and `value_name` for `between` comparator\n   - ✅ Use `start_value` and `end_value` with `value_type: \"range\"`\n"
+      summary: Create an invoice approval flow
+      operationId: createInvoiceApprovalFlowV2
+      tags:
+      - Companies
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      requestBody:
+        $ref: '#/components/requestBodies/CreateInvoiceApprovalFlowRequestV2'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreateInvoiceApprovalFlowResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/companies/{company_id}/invoice_approval_flows/{id}:
+    parameters:
+    - $ref: '#/components/parameters/CompanyId'
+    get:
+      description: 'Returns the approval flow with the given ID if it exists and the OAuth client
+
+        has access to the company.
+
+        '
+      summary: Get an invoice approval flow
+      operationId: getInvoiceApprovalFlowV2
+      tags:
+      - Companies
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: 'The ID of the invoice approval flow. Can be either:
+
+          - An integer ID (the internal database ID)
+
+          - A `remote_id` (a string identifier used to look up the flow)
+
+
+          If the value is a valid integer, the system will first attempt to find the flow by its integer ID.
+
+          If not found or if the value is not a valid integer, it will attempt to find the flow by `remote_id`.
+
+          '
+        schema:
+          type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/GetInvoiceApprovalFlowResponseV2'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+    put:
+      description: 'Updates an existing approval flow with selection rules and steps.
+
+        The flow must belong to the company associated with the OAuth client.
+
+
+        The request body structure and selection rules are the same as the POST endpoint
+
+        for creating an approval flow. See the POST endpoint documentation for complete
+
+        details on flow structure, selection rules, steps, and approver selection rules.
+
+        '
+      summary: Update an invoice approval flow
+      operationId: updateInvoiceApprovalFlowV2
+      tags:
+      - Companies
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: 'The ID of the invoice approval flow. Can be either:
+
+          - An integer ID (the internal database ID)
+
+          - A `remote_id` (a string identifier used to look up the flow)
+
+
+          If the value is a valid integer, the system will first attempt to find the flow by its integer ID.
+
+          If not found or if the value is not a valid integer, it will attempt to find the flow by `remote_id`.
+
+
+          You can also provide an integer ID in the URL and update the `remote_id` field in the request body.
+
+          '
+        schema:
+          type: string
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateInvoiceApprovalFlowRequestV2'
+      responses:
+        '200':
+          $ref: '#/components/responses/UpdateInvoiceApprovalFlowResponseV2'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+    delete:
+      description: 'Deletes an invoice approval flow. Performs a soft delete by setting the
+
+        deleted_at timestamp. Returns 204 No Content on success.
+
+        '
+      summary: Delete an invoice approval flow
+      operationId: deleteInvoiceApprovalFlowV2
+      tags:
+      - Companies
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: 'The ID of the invoice approval flow. Can be either:
+
+          - An integer ID (the internal database ID)
+
+          - A `remote_id` (a string identifier used to look up the flow)
+
+
+          If the value is a valid integer, the system will first attempt to find the flow by its integer ID.
+
+          If not found or if the value is not a valid integer, it will attempt to find the flow by `remote_id`.
+
+          '
+        schema:
+          type: string
+      responses:
+        '204':
+          description: The invoice approval flow was deleted successfully.
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/companies/{company_id}/settings:
+    parameters:
+    - $ref: '#/components/parameters/CompanyId'
+    get:
+      description: 'Returns the company''s current configuration as a flat map. Every
+
+        available setting is present in the response with either the
+
+        company''s configured value or the default. Enum values are
+
+        returned as strings.
+
+
+        Requires partner authentication (obtain a token via
+
+        `POST /v0/token` with partner credentials); the partner must
+
+        have provisioned or been linked to the company.
+
+        '
+      summary: Get company settings
+      operationId: getCompanySettingsV2
+      tags:
+      - Companies
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      responses:
+        '200':
+          $ref: '#/components/responses/CompanySettingsResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+    patch:
+      description: 'Applies a partial settings update. The request body is a flat map
+
+        of setting name to value; only fields included in the body are
+
+        modified. Unknown field names and type-invalid values are
+
+        rejected with a 422 error listing every offending field.
+
+
+        Updates are atomic: either every change in the request is
+
+        applied, or none are. On success the full refreshed settings map
+
+        is returned.
+
+
+        Requires partner authentication (obtain a token via
+
+        `POST /v0/token` with partner credentials); the partner must
+
+        have provisioned or been linked to the company.
+
+        '
+      summary: Update company settings
+      operationId: updateCompanySettingsV2
+      tags:
+      - Companies
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateCompanySettingsRequestV2'
+      responses:
+        '200':
+          $ref: '#/components/responses/CompanySettingsResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/companies/{company_id}/webhook/events:
+    get:
+      description: 'Use this request to query the webhook events stored for a specific company.
+
+
+        An event is recorded only if, at the time it is generated, the company has a
+
+        subscription whose event types include it. Events generated before such a
+
+        subscription existed are not stored and cannot be retrieved here, so this
+
+        endpoint returns the events recorded for the company rather than a complete
+
+        history of all account activity.
+
+        '
+      summary: List webhook events by company
+      operationId: listCompanyWebhookEventsV2
+      tags:
+      - Companies
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      - name: Beta
+        position: after
+        color: orange
+      parameters:
+      - $ref: '#/components/parameters/CompanyId'
+      - $ref: '#/components/parameters/WebhookEventType'
+      - $ref: '#/components/parameters/WebhookEventTypes'
+      - $ref: '#/components/parameters/OccurredAfter'
+      - $ref: '#/components/parameters/OccurredBefore'
+      - $ref: '#/components/parameters/WebhookUndeliveredFilter'
+      - $ref: '#/components/parameters/PaginationV2'
+      responses:
+        '200':
+          $ref: '#/components/responses/WebhookEventsResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/companies/{company_id}/webhook/events/{event_id}:
+    get:
+      description: 'Use this request to get detailed information about a specific webhook event for a
+
+        company that is stored in Vic.ai. This includes delivery attempts, payload data, and status information.
+
+        '
+      summary: Get a webhook event by company
+      operationId: getCompanyWebhookEventV2
+      tags:
+      - Companies
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      - name: Beta
+        position: after
+        color: orange
+      parameters:
+      - $ref: '#/components/parameters/CompanyId'
+      - $ref: '#/components/parameters/WebhookEventId'
+      responses:
+        '200':
+          $ref: '#/components/responses/WebhookEventResponseV2'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+components:
+  schemas:
+    WebhookEventsListV2:
+      type: object
+      required:
+      - data
+      - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookEvent'
+          description: List of webhook events
+        meta:
+          type: object
+          required:
+          - page
+          properties:
+            page:
+              $ref: '#/components/schemas/PaginationMetaV2'
+    WebhookEvent:
+      type: object
+      required:
+      - id
+      - type
+      - version
+      - occurred_at
+      - body
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the webhook event
+        type:
+          type: string
+          description: The type of event that occurred
+          example: invoice_approved
+        version:
+          type: integer
+          description: Version of the event schema
+          example: 1
+        occurred_at:
+          type: string
+          format: date-time
+          description: When the event occurred
+        body:
+          type: object
+          description: Event-specific payload data
+    InvoiceApprovalFlowV2:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the approval flow.
+          example: '12345'
+        company_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          description: The ID of the company this approval flow belongs to.
+          example: 550e8400-e29b-41d4-a716-446655440000
+        index:
+          type:
+          - integer
+          - 'null'
+          description: The order index for this approval flow.
+          example: 0
+        label:
+          type:
+          - string
+          - 'null'
+          description: The label for the approval flow.
+          example: High Value Invoices
+        description:
+          type:
+          - string
+          - 'null'
+          description: A description of the approval flow.
+          example: Approval flow for invoices over $10,000
+        auto_initiate:
+          type:
+          - boolean
+          - 'null'
+          description: Whether to automatically initiate this approval flow.
+          example: true
+        remote_id:
+          type:
+          - string
+          - 'null'
+          description: Remote identifier for this flow from an external system.
+          example: ext-flow-001
+        selection_rules:
+          type: array
+          description: Selection rules that define when this flow applies to an invoice.
+          items:
+            $ref: '#/components/schemas/InvoiceApprovalFlowSelectionRuleV2'
+        steps:
+          type: array
+          description: The approval steps for this flow.
+          items:
+            $ref: '#/components/schemas/InvoiceApprovalFlowStepV2'
+    CompanyFieldOptionsUpdateRequestV2:
+      type: object
+      required:
+      - values
+      properties:
+        values:
+          type: array
+          minItems: 1
+          maxItems: 500
+          uniqueItems: true
+          description: 'Company-specific option values for the select field. Values are
+
+            trimmed before saving and must not be blank or duplicated within
+
+            the request. Duplicate checks are case-insensitive. The length
+
+            limit is enforced after trimming.
+
+            '
+          items:
+            type: string
+            maxLength: 255
+          example:
+          - Engineering
+          - Finance
+          - Operations
+        replace:
+          type: boolean
+          default: true
+          description: 'When `true`, the provided values replace the current
+
+            company-specific option set. When `false`, the provided values are
+
+            added to the current company-specific option set.
+
+            '
+    LanguageV2:
+      type: string
+      description: The two letter code for the language used.
+      example: en
+    InvoiceApprovalFlowApproverSelectionRuleV2:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the approver selection rule.
+          example: '321'
+        type:
+          type:
+          - string
+          - 'null'
+          description: The type of approver selection rule.
+          example: ROLE
+        list_order:
+          type:
+          - integer
+          - 'null'
+          description: The order of this rule in the list.
+          example: 0
+        values:
+          type: array
+          description: The values for the approver selection rule.
+          items:
+            $ref: '#/components/schemas/InvoiceApprovalFlowApproverSelectionRuleValueV2'
+    WebhookEventTypeName:
+      type: string
+      description: A webhook event type.
+      enum:
+      - invoicePost
+      - invoiceTransfer
+      - vendorNew
+      - syncRequest
+      - payment_batch_processed
+      - payment_status_updated
+      - credit_status_updated
+      - invoice_approved
+      - invoice_deleted
+      - invoice_restored
+      - invoice_post
+      - invoice_posted
+      - invoice_rejected
+      - invoice_submitted
+      - invoice_transfer
+      - invoice_updated
+      - purchase_order_created
+      - purchase_order_updated
+      - purchase_order_deleted
+      - vendor_created
+      - vendor_updated
+      - vendor_onboarding_form_completed
+      - ping
+    CreateCompanyUserV2:
+      allOf:
+      - $ref: '#/components/schemas/CreateUserV2'
+      - type: object
+        properties:
+          manager_id:
+            description: 'The ID of the user to set as this user''s manager. The manager
+
+              must be a user within the same company. Omit to create the user
+
+              without a manager.
+
+              '
+            type: string
+            format: uuid
+    InvoiceApprovalFlowStepReminderNotificationV2:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          description: The ID of the reminder notification.
+          example: 01912345-6789-7abc-def0-123456789abc
+        delay_hours:
+          type:
+          - integer
+          - 'null'
+          description: Hours after step activation before sending the reminder.
+          example: 24
+        recipient_role:
+          type:
+          - string
+          - 'null'
+          enum:
+          - user
+          - manager
+          - managers_manager
+          description: 'The type of recipient for this reminder:
+
+            - user: A specific user
+
+            - manager: The manager(s) of the step''s approver(s)
+
+            - managers_manager: The manager''s manager of the step''s approver(s)
+
+            '
+          example: manager
+        recipient_user_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          description: 'The UUID of the user who should receive the reminder.
+
+            Only present when recipient_role is ''user''.
+
+            '
+          example: 550e8400-e29b-41d4-a716-446655440000
+    ErrorString:
+      type: string
+      maxLength: 255
+    InvoiceApprovalFlowApproverSelectionRuleValueV2:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the approver selection rule value.
+          example: '654'
+        value:
+          type:
+          - string
+          - 'null'
+          description: The value for the approver.
+          example: accountant
+        value_name:
+          type:
+          - string
+          - 'null'
+          description: The display name for the approver.
+          example: Accountant
+        list_order:
+          type:
+          - integer
+          - 'null'
+          description: The order of this value in the list.
+          example: 0
+    UpdateCompanySettingsV2:
+      type: object
+      description: 'Partial update for company settings. All fields are optional; only
+
+        fields included in the body are modified. Shape and types mirror
+
+        `CompanySettingsV2`. Unknown fields and invalid values produce a
+
+        422 error listing every offending key.
+
+        '
+      properties:
+        backend_mode:
+          type: string
+          enum:
+          - default
+          - stub
+        approval_flow_engine_enabled:
+          type: boolean
+        approval_flow_engine_user_edits_allowed:
+          type: boolean
+        invoice_automation_enabled:
+          type: boolean
+        invoice_automated_next_step:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - start_approval
+            - post
+            - export
+            - submit
+        invoice_approval_next_step:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - post
+            - export
+            - submit
+        po_invoice_automation_enabled:
+          type: boolean
+        po_invoice_automated_next_step:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - start_approval
+            - post
+        po_invoice_approval_next_step:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - post
+            - export
+            - submit
+        purchase_order_matching:
+          type: string
+          enum:
+          - none
+          - standard
+          - implicit
+          - explicit
+        purchase_order_matching_level:
+          type: string
+          enum:
+          - document
+          - line
+        purchase_order_require_matching_to_post:
+          type: boolean
+        aaf_ignores_po_invoice_items:
+          type: boolean
+        enable_posting:
+          type: boolean
+        tax_handling:
+          type: string
+          enum:
+          - none
+          - tax_engine
+          - tax_codes
+          - tax_expense_line
+          - vat_for_po_invoices
+          - tax_allocation
+        freight_handling:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - expense_line
+            - even_allocation
+            - weighted_allocation
+    CountryCode:
+      description: 'The ISO-3166 country code. The acceptable values are Alpha-2 codes.
+
+        '
+      type: string
+      format: ISO-3166
+      maxLength: 2
+      example: US
+    InvoiceApprovalFlowStepInputV2:
+      type: object
+      required:
+      - index
+      properties:
+        id:
+          type:
+          - integer
+          - 'null'
+          description: 'The ID of an existing step to update. If provided, the step will be updated in place.
+
+            If omitted, a new step will be created.
+
+            '
+          example: 123
+        index:
+          type: integer
+          minimum: 0
+          description: The order index for this step.
+          example: 0
+        approvers_required:
+          type: string
+          enum:
+          - any
+          - all
+          - system
+          default: any
+          description: How many approvers are required for this step.
+          example: any
+        system_action:
+          type:
+          - string
+          - 'null'
+          enum:
+          - approve
+          - reject
+          description: The system action to take (if approvers_required is system).
+          example: approve
+        skip_if_no_approvers:
+          type: boolean
+          default: false
+          description: Whether to skip this step if no approvers are found.
+          example: false
+        remote_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+          description: Remote identifier for this step from an external system.
+          example: ext-step-001
+        selection_rules:
+          type: array
+          description: Selection rules that define when this step applies.
+          items:
+            $ref: '#/components/schemas/InvoiceApprovalFlowSelectionRuleInputV2'
+        approver_selection_rules:
+          type: array
+          description: Rules that define who should approve at this step.
+          items:
+            $ref: '#/components/schemas/InvoiceApprovalFlowApproverSelectionRuleInputV2'
+        reminder_notifications:
+          type: array
+          description: 'Reminder notifications to send if the step remains pending.
+
+            When an approval step becomes active (pending), reminder emails are scheduled
+
+            based on these configurations.
+
+            '
+          items:
+            $ref: '#/components/schemas/InvoiceApprovalFlowStepReminderNotificationInputV2'
+    AttachUserToCompanyV2:
+      type: object
+      properties:
+        user_id:
+          description: 'The User''s id. Both can be provided. `user_id` takes higher
+
+            precedence than `email`.
+
+            '
+          type: string
+          format: uuid
+        email:
+          description: 'The existing User''s email. Both can be provided. `user_id` takes
+
+            higher precedence than `email`.
+
+            '
+          type: string
+    CreateCompanyTagV2:
+      type: object
+      required:
+      - tag
+      properties:
+        tag:
+          type: string
+          description: 'The tag to assign. For grouping, use `group-leader` on the parent
+
+            company and a shared `group:<key>` tag on the parent and every
+
+            member.
+
+            '
+          example: group:acme
+    WebhookEventV2:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          $ref: '#/components/schemas/WebhookEvent'
+    CreatedCompanyV2:
+      type: object
+      description: 'Sparse company payload returned at company creation time (by
+
+        `POST /v2/companies` or `POST /v2/organizations/{organization_id}/companies`).
+
+        It carries the same identifier fields as `CompanyV2` plus a
+
+        company-scoped OAuth client; the `client_secret` is exposed only at
+
+        creation time and cannot be retrieved later.
+
+        '
+      required:
+      - id
+      - oauth_client
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        organization_id:
+          description: The organization (accounting firm) the company belongs to.
+          oneOf:
+          - type: 'null'
+          - type: string
+            format: uuid
+        remote_id:
+          description: The company's id in the ERP system if applicable.
+          oneOf:
+          - type: 'null'
+          - type: string
+        updated_at:
+          type: string
+          format: date-time
+        oauth_client:
+          type: object
+          description: 'Company-scoped OAuth client generated alongside the company.
+
+            Returned only on creation.
+
+            '
+          required:
+          - client_id
+          - client_secret
+          properties:
+            client_id:
+              type: string
+            client_secret:
+              type: string
+    InvoiceApprovalFlowSelectionRuleValueV2:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the value.
+          example: '456'
+        value_type:
+          type:
+          - string
+          - 'null'
+          enum:
+          - single
+          - range
+          description: Whether this is a single value or a range.
+          example: single
+        value:
+          type:
+          - string
+          - 'null'
+          description: 'The value (for single value_type).
+
+            This field is only returned when value_type is "single".
+
+            Not returned when value_type is "range".
+
+            '
+          example: '10000'
+        value_name:
+          type:
+          - string
+          - 'null'
+          description: 'The display name for the value (for single value_type).
+
+            This field is only returned when value_type is "single".
+
+            Not returned when value_type is "range".
+
+            '
+          example: Ten Thousand
+        start_value:
+          type:
+          - string
+          - 'null'
+          description: 'The start value (for range value_type).
+
+            This field is only returned when value_type is "range".
+
+            Not returned when value_type is "single".
+
+            '
+        start_value_name:
+          type:
+          - string
+          - 'null'
+          description: 'The display name for the start value (for range value_type).
+
+            This field is only returned when value_type is "range".
+
+            Not returned when value_type is "single".
+
+            '
+        end_value:
+          type:
+          - string
+          - 'null'
+          description: 'The end value (for range value_type).
+
+            This field is only returned when value_type is "range".
+
+            Not returned when value_type is "single".
+
+            '
+        end_value_name:
+          type:
+          - string
+          - 'null'
+          description: 'The display name for the end value (for range value_type).
+
+            This field is only returned when value_type is "range".
+
+            Not returned when value_type is "single".
+
+            '
+        index:
+          type:
+          - integer
+          - 'null'
+          description: The order index for this value.
+          example: 0
+    UserStatusV2:
+      type: string
+      description: The type of invoice item line.
+      enum:
+      - active
+      - out_of_office
+      default: active
+    CompanyTagV2:
+      type: object
+      required:
+      - tag
+      properties:
+        tag:
+          type: string
+          description: The tag value assigned to the company.
+          example: group:acme
+    CompanyV2:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          description: The stable UUID identifier for the company.
+          type: string
+          format: uuid
+        legacy_id:
+          description: 'A legacy numeric identifier for the company, rendered as a
+
+            string. Exposed so downstream systems that receive Vic.ai
+
+            webhooks — which still carry `companyId` as this numeric
+
+            identifier — can correlate webhook events back to the UUID
+
+            without keeping their own mapping table. Clients should
+
+            prefer `id` as the stable identifier for every other use.
+
+            '
+          type: string
+        name:
+          type: string
+        organization_id:
+          description: 'The organization (accounting firm) the company belongs to,
+
+            if any.
+
+            '
+          oneOf:
+          - type: 'null'
+          - type: string
+            format: uuid
+        remote_id:
+          description: The company's id in the ERP system if applicable.
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+    CompanyUserRoleV2:
+      type: string
+      enum:
+      - admin
+      - approver
+      - accountant
+      - analytics_user
+      - ar_admin
+      - ar_specialist
+      - card_admin
+      - card_user
+      - client
+      - controller
+      - payer
+      - po_mismatch_approver
+      - vendor_manager
+      - view_only
+    CreateUserV2:
+      type: object
+      required:
+      - name
+      - email
+      properties:
+        first_name:
+          type: string
+          description: The first name of the user.
+        last_name:
+          type: string
+          description: The last name of the user.
+        name:
+          type: string
+          description: The full preferred name of the user.
+        phone_number:
+          type: string
+          description: 'The phone number the user is connected with. This is not required to
+
+            be set. If provided, the phone number is validated.
+
+            '
+        email:
+          type: string
+          description: The User's email. Must be unique.
+        timezone:
+          $ref: '#/components/schemas/TimeZoneV2'
+        language:
+          $ref: '#/components/schemas/LanguageV2'
+        address:
+          $ref: '#/components/schemas/UserAddressV2'
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserMetadataEntryV2'
+        date_of_birth:
+          type: string
+          format: date
+          description: When the user was born.
+    ErrorV2:
+      type: object
+      required:
+      - message
+      properties:
+        field:
+          description: 'The field that the error occurred on. This field may not always be
+
+            present.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
+        message:
+          description: A description of the error.
+          type: string
+    InvoiceApprovalFlowStepReminderNotificationInputV2:
+      type: object
+      required:
+      - delay_hours
+      - recipient_role
+      properties:
+        delay_hours:
+          type: integer
+          minimum: 0
+          description: 'Hours after step activation before sending the reminder.
+
+            Use 0 to send immediately when the step becomes pending.
+
+            '
+          example: 24
+        recipient_role:
+          type: string
+          enum:
+          - user
+          - manager
+          - managers_manager
+          description: 'The type of recipient for this reminder:
+
+            - user: A specific user (requires recipient_user_id)
+
+            - manager: The manager(s) of the step''s approver(s) - resolved at trigger time
+
+            - managers_manager: The manager''s manager of the step''s approver(s) - resolved at trigger time
+
+            '
+          example: manager
+        recipient_user_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          description: 'The UUID of the user who should receive the reminder.
+
+            Required when recipient_role is ''user'', ignored otherwise.
+
+            '
+          example: 550e8400-e29b-41d4-a716-446655440000
+    InvoiceApprovalFlowSelectionRuleV2:
+      type: object
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: The ID of the selection rule.
+          example: '123'
+        type:
+          type:
+          - string
+          - 'null'
+          enum:
+          - invoice_vendor_id
+          - invoice_vendor_tags
+          - invoice_total_amount
+          - invoice_po_numbers
+          - invoice_item_cost_account_number
+          - invoice_item_dimension_name
+          - invoice_custom_field
+          - invoice_extra_line_field
+          description: The type of selection rule.
+          example: invoice_total_amount
+        comparator:
+          type:
+          - string
+          - 'null'
+          enum:
+          - eq
+          - gt
+          - gte
+          - lt
+          - lte
+          - in
+          - between
+          description: The comparator for the selection rule.
+          example: gte
+        values_type:
+          type:
+          - string
+          - 'null'
+          enum:
+          - positive_integer
+          - list_of_values
+          - decimal
+          - string
+          description: The type of values in the selection rule.
+          example: decimal
+        type_id:
+          type:
+          - string
+          - 'null'
+          description: Optional type ID for custom fields or dimensions.
+          example: null
+        index:
+          type:
+          - integer
+          - 'null'
+          description: The order index for this rule.
+          example: 0
+        values:
+          type: array
+          description: The values for the selection rule.
+          items:
+            $ref: '#/components/schemas/InvoiceApprovalFlowSelectionRuleValueV2'
+    PaginationV2:
+      type: object
+      properties:
+        size:
+          type: integer
+          description: The page size.
+          maximum: 50
+          minimum: 1
+        cursor:
+          type: string
+          description: The cursor to use to get the next page of results.
+    CompanyUserMetaV2:
+      type: object
+      properties:
+        user_id:
+          description: The user the company is attached to.
+          type: string
+          format: uuid
+        company_id:
+          description: The company the user is attached to.
+          type: string
+          format: :uuid
+        created_at:
+          description: When the user was added to the company.
+          type: string
+          format: date-time
+        updated_at:
+          description: When the user's role was modified.
+          type: string
+          format: date-time
+    InvoiceApprovalFlowSelectionRuleInputV2:
+      type: object
+      required:
+      - type
+      - comparator
+      - values_type
+      - values
+      properties:
+        type:
+          type: string
+          enum:
+          - invoice_vendor_id
+          - invoice_vendor_tags
+          - invoice_total_amount
+          - invoice_po_numbers
+          - invoice_item_cost_account_number
+          - invoice_item_dimension_name
+          - invoice_custom_field
+          - invoice_extra_line_field
+          description: The type of selection rule.
+          example: invoice_total_amount
+        comparator:
+          type: string
+          enum:
+          - eq
+          - gt
+          - gte
+          - lt
+          - lte
+          - in
+          - between
+          description: The comparator for the selection rule.
+          example: gte
+        values_type:
+          type: string
+          enum:
+          - positive_integer
+          - list_of_values
+          - decimal
+          - string
+          description: The type of values in the selection rule.
+          example: decimal
+        type_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+          description: Optional type ID for custom fields or dimensions.
+          example: null
+        values:
+          type: array
+          description: The values for the selection rule.
+          items:
+            $ref: '#/components/schemas/InvoiceApprovalFlowSelectionRuleValueInputV2'
+    UserV2:
+      description: A User attached to an organization.
+      type: object
+      required:
+      - id
+      - name
+      - email
+      properties:
+        id:
+          type: string
+        legacy_id:
+          type:
+          - string
+          - 'null'
+          description: The Users's internal ID. This is a legacy field and will be removed in the future.
+          example: '12345'
+        first_name:
+          type: string
+          description: The first name of the user.
+        last_name:
+          type: string
+          description: The last name of the user.
+        name:
+          type: string
+          description: The full preferred name of the user.
+        phone_number:
+          type: string
+          description: 'The phone number the user is connected with. This is not required to
+
+            be set. If provided, the phone number is validated.
+
+            '
+        email:
+          type: string
+          description: The User's email. Must be unique.
+        status:
+          $ref: '#/components/schemas/UserStatusV2'
+        timezone:
+          $ref: '#/components/schemas/TimeZoneV2'
+        language:
+          $ref: '#/components/schemas/LanguageV2'
+        address:
+          $ref: '#/components/schemas/UserAddressV2'
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserMetadataEntryV2'
+        date_of_birth:
+          type: string
+          format: date
+          description: When the user was born.
+        manager:
+          description: 'The user''s manager (the user they are managed by), or `null` when
+
+            no manager is set or when the manager is outside the scope of the
+
+            request (for example, not a member of the requested company).
+
+            '
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/UserManagerV2'
+        created_at:
+          type: string
+          format: date-time
+          description: When the user was created in Vic.
+        updated_at:
+          type: string
+          format: date-time
+          description: When the user was last updated in Vic.
+    InvoiceApprovalFlowStepV2:
+      type: object
+      properties:
+        id:
+          type:
+          - integer
+          - 'null'
+          description: The ID of the step.
+          example: 789
+        index:
+          type:
+          - integer
+          - 'null'
+          description: The order index for this step.
+          example: 0
+        approvers_required:
+          type:
+          - string
+          - 'null'
+          enum:
+          - any
+          - all
+          - system
+          description: 'How many approvers are required for this step.
+
+            Defaults to "any" if not specified when creating a step.
+
+            '
+          example: any
+        system_action:
+          type:
+          - string
+          - 'null'
+          enum:
+          - approve
+          - reject
+          description: The system action to take (if approvers_required is system).
+          example: approve
+        skip_if_no_approvers:
+          type:
+          - boolean
+          - 'null'
+          description: 'Whether to skip this step if no approvers are found.
+
+            Defaults to false if not specified when creating a step.
+
+            '
+          example: false
+        remote_id:
+          type:
+          - string
+          - 'null'
+          description: Remote identifier for this step from an external system.
+          example: ext-step-001
+        selection_rules:
+          type: array
+          description: Selection rules that define when this step applies.
+          items:
+            $ref: '#/components/schemas/InvoiceApprovalFlowSelectionRuleV2'
+        approver_selection_rules:
+          type: array
+          description: Rules that define who should approve at this step.
+          items:
+            $ref: '#/components/schemas/InvoiceApprovalFlowApproverSelectionRuleV2'
+        reminder_notifications:
+          type: array
+          description: 'Reminder notifications configured for this step.
+
+            These are sent when the step remains pending for the specified duration.
+
+            '
+          items:
+            $ref: '#/components/schemas/InvoiceApprovalFlowStepReminderNotificationV2'
+    UpdateCompanyUserRolesV2:
+      type: object
+      required:
+      - roles
+      properties:
+        roles:
+          description: 'The full list of roles to assign to the user. Roles included in this
+
+            list become active; all other roles become inactive. Use an empty
+
+            array to remove all roles.
+
+            '
+          type: array
+          items:
+            $ref: '#/components/schemas/CompanyUserRoleV2'
+    InvoiceApprovalFlowInputV2:
+      description: "## Creating a Flow with Selection Rules\n\nWhen you create an approval flow (see the main invoice approval flow endpoint documentation for the request/response contract), you can define the selection rules that determine which invoices will be routed through that flow and its steps. The sections below describe the structure and semantics for those selection rules so you can include them in the `InvoiceApprovalFlowInputV2` payload.\n\n**Request Body:** `InvoiceApprovalFlowInputV2`\n\n**Response:** `201 Created` with the created flow data\n\n## Invoice Approval Flow Structure\n\nAn approval flow consists of:\n1. **Flow properties** - Label, description, ordering, and behavior settings\n2. **Selection rules** - Criteria that determine which invoices match this flow\n3. **Steps** - Sequential approval steps with their own selection and approver rules\n\n### Complete Flow Example\n\n```json\n{\n  \"label\": \"High Value Invoices\",\n  \"description\": \"Approval flow for invoices over $10,000\",\n  \"index\": 0,\n  \"auto_initiate\": true,\n  \"selection_rules\": [\n    {\n      \"type\": \"invoice_total_amount\",\n      \"comparator\": \"gte\",\n      \"values_type\": \"decimal\",\n      \"type_id\": null,\n      \"values\": [\n        {\n          \"value_type\": \"single\",\n          \"value\": \"10000.00\",\n          \"value_name\": \"10000.00\",\n          \"index\": 0\n        }\n      ]\n    }\n  ],\n  \"steps\": [\n    {\n      \"index\": 0,\n      \"approvers_required\": \"any\",\n      \"skip_if_no_approvers\": false,\n      \"selection_rules\": [],\n      \"approver_selection_rules\": [\n        {\n          \"type\": \"ROLE\",\n          \"values\": [\n            {\n              \"value\": \"Finance Manager\",\n              \"value_name\": \"Finance Manager\"\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n```\n\n## Flow Properties\n\n### Required Fields\n\n- **`label`** (string, max 255 chars) - The label for the approval flow\n  - Example: `\"High Value Invoices\"`\n\n- **`description`** (string, max 255 chars) - A description of the approval flow\n  - Example: `\"Approval flow for invoices over $10,000\"`\n\n- **`index`** (integer, minimum 0) - The order index for this approval flow\n  - Flows are evaluated in order from lowest to highest index\n  - Example: `0`\n\n- **`auto_initiate`** (boolean) - Whether to automatically initiate this approval flow\n  - Example: `true`\n\n- **`selection_rules`** (array) - Selection rules that define when this flow applies\n  - See [Selection Rules](#selection-rules) section below\n\n### Optional Fields\n\n- **`steps`** (array) - The approval steps for this flow\n  - See [Approval Steps](#approval-steps) section below\n\n---\n\n## Selection Rules\n\nSelection rules determine which invoices match a particular flow or step based on various invoice attributes.\n\nSelection rules use the `InvoiceApprovalFlowSelectionRuleInputV2` schema with the following structure:\n\n```json\n{\n  \"type\": \"invoice_vendor_id\",\n  \"comparator\": \"eq\",\n  \"values_type\": \"list_of_values\",\n  \"type_id\": null,\n  \"values\": [\n    {\n      \"value_type\": \"single\",\n      \"value\": \"12345\",\n      \"value_name\": \"Acme Corp\",\n      \"index\": 0\n    }\n  ]\n}\n```\n\n### Important Note on Display Names\n\n**Always populate `value_name`, `start_value_name`, and `end_value_name` fields.** These fields are used to display human-readable names in the user interface. While the `value` fields contain IDs or raw values for matching logic, the display name fields ensure users see meaningful text rather than cryptic IDs or numbers.\n\n### Selection Rule Types\n\nThe following selection rule types are available for matching invoices to flows and steps.\n\n#### 1. Invoice Vendor ID (`invoice_vendor_id`)\n\nMatches invoices from specific vendors.\n\n**Supported Comparators:** `eq`, `in`\n\n**Values Type:** `list_of_values`\n\n**Type ID:** Not used (set to `null`)\n\n**Values Structure:**\n- `value`: Vendor ID (as string)\n- `value_name`: Vendor name - **Always populate this for UI display**\n- `value_type`: Always `\"single\"`\n\n**Example - Single Vendor (eq):**\n```json\n{\n  \"type\": \"invoice_vendor_id\",\n  \"comparator\": \"eq\",\n  \"values_type\": \"list_of_values\",\n  \"type_id\": null,\n  \"values\": [\n    {\n      \"value_type\": \"single\",\n      \"value\": \"12345\",\n      \"value_name\": \"Acme Corporation\",\n      \"index\": 0\n    }\n  ]\n}\n```\n\n**Example - Multiple Vendors (in):**\n```json\n{\n  \"type\": \"invoice_vendor_id\",\n  \"comparator\": \"in\",\n  \"values_type\": \"list_of_values\",\n  \"type_id\": null,\n  \"values\": [\n    {\n      \"value_type\": \"single\",\n      \"value\": \"12345\",\n      \"value_name\": \"Acme Corporation\",\n      \"index\": 0\n    },\n    {\n      \"value_type\": \"single\",\n      \"value\": \"67890\",\n      \"value_name\": \"Beta Industries\",\n      \"index\": 1\n    }\n  ]\n}\n```\n\n---\n\n#### 2. Invoice Vendor Tags (`invoice_vendor_tags`)\n\nMatches invoices from vendors that have specific tags.\n\n**Supported Comparators:** `in`\n\n**Values Type:** `list_of_values`\n\n**Type ID:** Not used (set to `null`)\n\n**Values Structure:**\n- `value`: Tag ID (as string)\n- `value_name`: Tag value - **Always populate this for UI display**\n- `value_type`: Always `\"single\"`\n\n**Example:**\n```json\n{\n  \"type\": \"invoice_vendor_tags\",\n  \"comparator\": \"in\",\n  \"values_type\": \"list_of_values\",\n  \"type_id\": null,\n  \"values\": [\n    {\n      \"value_type\": \"single\",\n      \"value\": \"100\",\n      \"value_name\": \"Preferred Vendor\",\n      \"index\": 0\n    },\n    {\n      \"value_type\": \"single\",\n      \"value\": \"101\",\n      \"value_name\": \"Critical Supplier\",\n      \"index\": 1\n    }\n  ]\n}\n```\n\n---\n\n#### 3. Invoice Total Amount (`invoice_total_amount`)\n\nMatches invoices based on the total amount of expense line items.\n\n**Supported Comparators:** `gt`, `gte`, `lt`, `lte`, `eq`\n\n**Values Type:** `decimal`\n\n**Type ID:** Not used (set to `null`)\n\n**Values Structure:**\n- `value`: Decimal amount (as string)\n- `value_name`: Amount formatted for display - **Should match `value` for consistency**\n- `value_type`: Always `\"single\"`\n- Only one value should be provided\n\n**Example - Greater Than or Equal:**\n```json\n{\n  \"type\": \"invoice_total_amount\",\n  \"comparator\": \"gte\",\n  \"values_type\": \"decimal\",\n  \"type_id\": null,\n  \"values\": [\n    {\n      \"value_type\": \"single\",\n      \"value\": \"10000.00\",\n      \"value_name\": \"10000.00\",\n      \"index\": 0\n    }\n  ]\n}\n```\n\n**Example - Less Than:**\n```json\n{\n  \"type\": \"invoice_total_amount\",\n  \"comparator\": \"lt\",\n  \"values_type\": \"decimal\",\n  \"type_id\": null,\n  \"values\": [\n    {\n      \"value_type\": \"single\",\n      \"value\": \"5000.00\",\n      \"value_name\": \"5000.00\",\n      \"index\": 0\n    }\n  ]\n}\n```\n\n---\n\n#### 4. Invoice PO Numbers (`invoice_po_numbers`)\n\nMatches invoices with purchase order numbers within numeric range(s).\n\n**Supported Comparators:** `between`\n\n**Values Type:** `positive_integer`\n\n**Type ID:** Not used (set to `null`)\n\n**Values Structure:**\n- `value_type`: Always `\"range\"`\n- `start_value`: Starting PO number (as string)\n- `start_value_name`: Starting PO number formatted for display - **Always populate for UI**\n- `end_value`: Ending PO number (as string)\n- `end_value_name`: Ending PO number formatted for display - **Always populate for UI**\n- Multiple ranges can be specified\n\n**Example - Single Range:**\n```json\n{\n  \"type\": \"invoice_po_numbers\",\n  \"comparator\": \"between\",\n  \"values_type\": \"positive_integer\",\n  \"type_id\": null,\n  \"values\": [\n    {\n      \"value_type\": \"range\",\n      \"start_value\": \"1000\",\n      \"start_value_name\": \"1000\",\n      \"end_value\": \"2000\",\n      \"end_value_name\": \"2000\",\n      \"index\": 0\n    }\n  ]\n}\n```\n\n**Example - Multiple Ranges:**\n```json\n{\n  \"type\": \"invoice_po_numbers\",\n  \"comparator\": \"between\",\n  \"values_type\": \"positive_integer\",\n  \"type_id\": null,\n  \"values\": [\n    {\n      \"value_type\": \"range\",\n      \"start_value\": \"1000\",\n      \"start_value_name\": \"1000\",\n      \"end_value\": \"2000\",\n      \"end_value_name\": \"2000\",\n      \"index\": 0\n    },\n    {\n      \"value_type\": \"range\",\n      \"start_value\": \"5000\",\n      \"start_value_name\": \"5000\",\n      \"end_value\": \"6000\",\n      \"end_value_name\": \"6000\",\n      \"index\": 1\n    }\n  ]\n}\n```\n\n---\n\n#### 5. Invoice Item Cost Account Number (`invoice_item_cost_account_number`)\n\nMatches invoices where any expense line item has a cost account matching the criteria.\n\n**Supported Comparators:** `eq`, `in`, `gt`, `gte`, `lt`, `lte`, `between`\n\n**Values Type:**\n- `list_of_values` for `eq`, `in`\n- `positive_integer` for `between`\n\n**Type ID:** Not used (set to `null`)\n\n**Values Structure for eq/in:**\n- `value`: Cost account number (as string)\n- `value_name`: Cost account display name - **Should include number and name** (e.g., \"1000 - Office Supplies\")\n- `value_type`: Always `\"single\"`\n\n**Example - Equals:**\n```json\n{\n  \"type\": \"invoice_item_cost_account_number\",\n  \"comparator\": \"eq\",\n  \"values_type\": \"list_of_values\",\n  \"type_id\": null,\n  \"values\": [\n    {\n      \"value_type\": \"single\",\n      \"value\": \"5000\",\n      \"value_name\": \"5000 - Office Expenses\",\n      \"index\": 0\n    }\n  ]\n}\n```\n\n**Example - In List:**\n```json\n{\n  \"type\": \"invoice_item_cost_account_number\",\n  \"comparator\": \"in\",\n  \"values_type\": \"list_of_values\",\n  \"type_id\": null,\n  \"values\": [\n    {\n      \"value_type\": \"single\",\n      \"value\": \"5000\",\n      \"value_name\": \"5000 - Office Expenses\",\n      \"index\": 0\n    },\n    {\n      \"value_type\": \"single\",\n      \"value\": \"6000\",\n      \"value_name\": \"6000 - Travel Expenses\",\n      \"index\": 1\n    }\n  ]\n}\n```\n\n**Example - Between Range:**\n```json\n{\n  \"type\": \"invoice_item_cost_account_number\",\n  \"comparator\": \"between\",\n  \"values_type\": \"positive_integer\",\n  \"type_id\": null,\n  \"values\": [\n    {\n      \"value_type\": \"range\",\n      \"start_value\": \"5000\",\n      \"start_value_name\": \"5000\",\n      \"end_value\": \"5999\",\n      \"end_value_name\": \"5999\",\n      \"index\": 0\n    }\n  ]\n}\n```\n\n---\n\n#### 6. Invoice Item Dimension Name (`invoice_item_dimension_name`)\n\nMatches invoices where any expense line item has a dimension of a specific type with matching values.\n\n**Supported Comparators:** `eq`, `in`\n\n**Values Type:** `list_of_values`\n\n**Type ID:** **REQUIRED** - Must contain the dimension type (from `dimension.type` field)\n- This is a lowercase string like `\"department\"`, `\"location\"`, `\"project\"`, etc.\n- The comparison is case-insensitive, so `dimension.type` can be `\"Department\"` or `\"DEPARTMENT\"` but `type_id` should be lowercase\n\n**Values Structure:**\n- `value`: **Dimension ID** (from `dimension.id`, as string)\n- `value_name`: **Dimension display name** (from `dimension.display_name`) - **Always populate for UI display**\n- `value_type`: Always `\"single\"`\n\n⚠️ **Important:**\n- The `value` field should contain the dimension **ID**, not the dimension name\n- The `value_name` field **must** contain the `display_name` for proper UI display\n- Never omit `value_name` - it's essential for users to understand what dimension they're selecting\n\n**Example - Equals Specific Department:**\n```json\n{\n  \"type\": \"invoice_item_dimension_name\",\n  \"comparator\": \"eq\",\n  \"values_type\": \"list_of_values\",\n  \"type_id\": \"department\",\n  \"values\": [\n    {\n      \"value_type\": \"single\",\n      \"value\": \"789\",\n      \"value_name\": \"Engineering\",\n      \"index\": 0\n    }\n  ]\n}\n```\n\n**Example - In Multiple Locations:**\n```json\n{\n  \"type\": \"invoice_item_dimension_name\",\n  \"comparator\": \"in\",\n  \"values_type\": \"list_of_values\",\n  \"type_id\": \"location\",\n  \"values\": [\n    {\n      \"value_type\": \"single\",\n      \"value\": \"456\",\n      \"value_name\": \"New York Office\",\n      \"index\": 0\n    },\n    {\n      \"value_type\": \"single\",\n      \"value\": \"457\",\n      \"value_name\": \"San Francisco Office\",\n      \"index\": 1\n    }\n  ]\n}\n```\n\n**Matching Logic:**\n- The dimension `type` field is compared case-insensitively to `type_id`\n- The dimension `id` OR `display_name` is checked against the rule values\n- For `:in` comparator, any match in the list passes\n- For `:eq` comparator, only one value should be provided\n\n---\n\n#### 7. Invoice Custom Field (`invoice_custom_field`)\n\nMatches invoices based on custom header field values.\n\n**Supported Comparators:** `eq`, `in`\n\n**Values Type:**\n- `string` for text fields with `:eq`\n- `list_of_values` for select fields with `:eq` or `:in`\n\n**Type ID:** **REQUIRED** - Must contain the field label (e.g., `\"custom:department\"`, `\"custom:project_code\"`)\n\n**Values Structure:**\n- `value`: Field value (as string)\n- `value_name`: Same as value (for display purposes)\n- `value_type`: Always `\"single\"`\n\n**Field Type Considerations:**\n- **Text fields:** Use `values_type: \"string\"` with `comparator: \"eq\"`\n- **Select fields:** Use `values_type: \"list_of_values\"` with `comparator: \"eq\"` or `\"in\"`\n\n**Example - Text Field (eq):**\n```json\n{\n  \"type\": \"invoice_custom_field\",\n  \"comparator\": \"eq\",\n  \"values_type\": \"string\",\n  \"type_id\": \"custom:repair_order\",\n  \"values\": [\n    {\n      \"value_type\": \"single\",\n      \"value\": \"RO-12345\",\n      \"value_name\": \"RO-12345\",\n      \"index\": 0\n    }\n  ]\n}\n```\n\n**Example - Select Field (eq):**\n```json\n{\n  \"type\": \"invoice_custom_field\",\n  \"comparator\": \"eq\",\n  \"values_type\": \"list_of_values\",\n  \"type_id\": \"custom:department\",\n  \"values\": [\n    {\n      \"value_type\": \"single\",\n      \"value\": \"Engineering\",\n      \"value_name\": \"Engineering\",\n      \"index\": 0\n    }\n  ]\n}\n```\n\n**Example - Select Field (in):**\n```json\n{\n  \"type\": \"invoice_custom_field\",\n  \"comparator\": \"in\",\n  \"values_type\": \"list_of_values\",\n  \"type_id\": \"custom:category\",\n  \"values\": [\n    {\n      \"value_type\": \"single\",\n      \"value\": \"Office Supplies\",\n      \"value_name\": \"Office Supplies\",\n      \"index\": 0\n    },\n    {\n      \"value_type\": \"single\",\n      \"value\": \"Office Equipment\",\n      \"value_name\": \"Office Equipment\",\n      \"index\": 1\n    }\n  ]\n}\n```\n\n**Matching Logic:**\n- Comparison is case-insensitive\n- For text fields, exact match after case normalization\n- For select fields, matches against predefined options\n\n---\n\n## Approval Steps\n\nApproval steps define the sequential approval process for a flow. Each step can have its own selection rules to determine when it applies, and approver selection rules to determine who should approve.\n\n### Step Structure\n\n```json\n{\n  \"id\": 123,\n  \"index\": 0,\n  \"approvers_required\": \"any\",\n  \"system_action\": null,\n  \"skip_if_no_approvers\": false,\n  \"selection_rules\": [],\n  \"approver_selection_rules\": [\n    {\n      \"type\": \"ROLE\",\n      \"values\": [\n        {\n          \"value\": \"Finance Manager\",\n          \"value_name\": \"Finance Manager\"\n        }\n      ]\n    }\n  ],\n  \"reminder_notifications\": [\n    {\n      \"delay_hours\": 24,\n      \"recipient_role\": \"manager\"\n    }\n  ]\n}\n```\n\n### Step Fields\n\n#### Optional Fields\n\n- **`id`** (integer or null) - The ID of an existing step to update\n  - If provided, the step will be updated in place\n  - If omitted, a new step will be created\n  - Example: `123`\n\n#### Required Fields\n\n- **`index`** (integer, minimum 0) - The order index for this step\n  - Steps are evaluated in order from lowest to highest index\n  - Example: `0`\n\n#### Optional Configuration Fields\n\n- **`approvers_required`** (string, default: `\"any\"`) - How many approvers are required\n  - `\"any\"` - Any one approver can approve this step\n  - `\"all\"` - All approvers must approve this step\n  - `\"system\"` - System automatically takes action (use with `system_action`)\n  - Example: `\"any\"`\n\n- **`system_action`** (string or null) - The system action to take (when `approvers_required` is `\"system\"`)\n  - `\"approve\"` - Automatically approve\n  - `\"reject\"` - Automatically reject\n  - `null` - No system action\n  - Example: `null`\n\n- **`skip_if_no_approvers`** (boolean, default: `false`) - Whether to skip this step if no approvers are found\n  - Example: `false`\n\n- **`selection_rules`** (array) - Selection rules that define when this step applies\n  - Uses the same format as flow selection rules (see [Selection Rules](#selection-rules) section)\n  - Example: `[]` (empty array means step always applies)\n\n- **`approver_selection_rules`** (array) - Rules that define who should approve at this step\n  - See [Approver Selection Rules](#approver-selection-rules) section below\n\n- **`reminder_notifications`** (array) - Reminder notifications to send if the step remains pending\n  - See [Reminder Notifications](#reminder-notifications) section below\n\n---\n\n## Reminder Notifications\n\nReminder notifications are scheduled emails sent when an approval step remains pending for a specified duration. They help ensure invoices don't get stuck waiting for approval.\n\n### Reminder Notification Structure\n\n```json\n{\n  \"delay_hours\": 24,\n  \"recipient_role\": \"manager\",\n  \"recipient_user_id\": null\n}\n```\n\n### Reminder Notification Fields\n\n- **`delay_hours`** (integer, required, minimum 0) - Hours after step activation before sending the reminder\n  - Use `0` to send immediately when the step becomes pending\n  - Example: `24` (send after 24 hours)\n\n- **`recipient_role`** (string, required) - The type of recipient for this reminder\n  - `\"user\"` - A specific user (requires `recipient_user_id`)\n  - `\"manager\"` - The manager(s) of the step's approver(s) - resolved at trigger time\n  - `\"managers_manager\"` - The manager's manager of the step's approver(s) - resolved at trigger time\n  - Example: `\"manager\"`\n\n- **`recipient_user_id`** (string or null, UUID format) - The UUID of the user who should receive the reminder\n  - Required when `recipient_role` is `\"user\"`\n  - Ignored when `recipient_role` is `\"manager\"` or `\"managers_manager\"`\n  - This is the user's `id` as returned by the V2 Users API\n  - Example: `\"550e8400-e29b-41d4-a716-446655440000\"`\n\n### Reminder Notification Examples\n\n#### Send to Manager After 24 Hours\n\n```json\n{\n  \"delay_hours\": 24,\n  \"recipient_role\": \"manager\"\n}\n```\n\n**Behavior:** 24 hours after the step becomes pending, an email will be sent to the manager(s) of the step's approver(s).\n\n#### Send to Specific User Immediately\n\n```json\n{\n  \"delay_hours\": 0,\n  \"recipient_role\": \"user\",\n  \"recipient_user_id\": \"550e8400-e29b-41d4-a716-446655440000\"\n}\n```\n\n**Behavior:** Immediately when the step becomes pending, an email will be sent to the specified user.\n\n#### Escalation Chain with Multiple Reminders\n\n```json\n{\n  \"reminder_notifications\": [\n    {\n      \"delay_hours\": 24,\n      \"recipient_role\": \"manager\"\n    },\n    {\n      \"delay_hours\": 48,\n      \"recipient_role\": \"managers_manager\"\n    }\n  ]\n}\n```\n\n**Behavior:**\n1. After 24 hours, the manager(s) of the approver(s) receive a reminder\n2. After 48 hours, the manager's manager receives a reminder\n\n### How Reminder Notifications Work\n\n1. **Scheduling:** When an approval step becomes active (status: pending), reminder jobs are scheduled based on the configured notifications\n2. **Trigger Time Resolution:** For `\"manager\"` and `\"managers_manager\"` recipient roles, the actual recipients are resolved at the time the reminder is triggered, not when configured\n3. **Cancellation:** When a step is approved, rejected, or skipped, any pending reminder jobs are automatically cancelled\n4. **Multiple Reminders:** You can configure multiple reminders per step with different delays and recipients\n\n### Use Cases\n\n1. **Escalation:** Send to manager after 24 hours, then manager's manager after 48 hours\n2. **Immediate Notification:** Use `delay_hours: 0` to notify someone immediately when approval is needed\n3. **Daily Reminders:** Configure multiple reminders at 24, 48, and 72 hours for persistent follow-up\n\n---\n\n## Approver Selection Rules\n\nApprover selection rules determine who should approve at a particular step. They use the `InvoiceApprovalFlowApproverSelectionRuleInputV2` schema.\n\nApprover selection rules work in conjunction with the `approvers_required` field to determine how many approvers from the selected group must approve:\n- When `approvers_required` is `\"any\"`, any one approver matching the rules can approve\n- When `approvers_required` is `\"all\"`, all approvers matching the rules must approve\n- When `approvers_required` is `\"system\"`, the system automatically takes action (no approvers needed)\n\n### Approver Rule Structure\n\n```json\n{\n  \"type\": \"ROLE\",\n  \"values\": [\n    {\n      \"value\": \"Finance Manager\",\n      \"value_name\": \"Finance Manager\"\n    },\n    {\n      \"value\": \"Controller\",\n      \"value_name\": \"Controller\"\n    }\n  ]\n}\n```\n\n### Approver Rule Fields\n\n- **`type`** (string, required, max 255 chars) - The type of approver selection rule\n  - **`\"ROLE\"`** and **`\"GROUP\"`**: These are specific types for organizations using certain accounting integrations. These types are only available when your integration supports roles and groups from the accounting system.\n  - **`\"USER\"`**: Selects specific individual users by their legacy ID\n  - **User metadata types**: You can also use user metadata types (see `UserMetadataEntryV2`). These are custom metadata fields configured for users in your system, allowing you to select approvers based on custom attributes.\n  - **Note:** Available types depend on your integration type. For more details on which types are available for your specific integration, please contact the implementation support team.\n  - Example: `\"ROLE\"` (for accounting integrations), or a user metadata type like `\"department\"` (if configured)\n\n- **`values`** (array of objects, required) - The values to match for this approver type\n  - Each value object has two required fields:\n    - **`value`** (string, required, max 255 chars) - The actual value used for matching\n    - **`value_name`** (string, required, max 255 chars) - The display name shown in the UI\n  - For `\"ROLE\"` (accounting integration specific): \n    - `value`: Role name from the accounting system (case-sensitive, must match exactly as configured)\n    - `value_name`: Role display name (typically the same as `value`, but can be customized for UI)\n  - For `\"GROUP\"` (accounting integration specific): \n    - `value`: Group name from the accounting system (case-sensitive, must match exactly as configured)\n    - `value_name`: Group display name (typically the same as `value`, but can be customized for UI)\n  - For `\"USER\"`: \n    - `value`: **Must be `User.legacy_id`** (the user's legacy ID, not email or username)\n    - `value_name`: User display name (typically the user's name or email for UI display)\n  - For **user metadata types** (see `UserMetadataEntryV2`):\n    - `value`: The metadata value (format depends on the metadata type)\n    - `value_name`: The display name for the metadata value (typically the same as `value`, but can be customized for UI)\n\n### How Approver Selection Works\n\n1. **Rule Evaluation:** The system evaluates all approver selection rules in the `approver_selection_rules` array\n2. **User Matching:** Users are matched based on their assigned roles, group memberships, or user identifiers\n3. **Approval Requirement:** The `approvers_required` field determines how many of the matched approvers must approve:\n   - `\"any\"`: One approval from any matched approver is sufficient\n   - `\"all\"`: All matched approvers must approve\n   - `\"system\"`: No human approvers needed, system takes action automatically\n4. **No Approvers Found:** If `skip_if_no_approvers` is `true` and no approvers match the rules, the step is skipped. If `false`, the step will wait indefinitely for an approver.\n\n### Multiple Approver Rules\n\nWhen multiple approver selection rules are defined in the `approver_selection_rules` array, the system uses **OR logic** - users matching ANY of the rules will be eligible approvers.\n\n**Important Constraint:** The `\"USER\"` type **cannot be mixed** with other types (`\"ROLE\"`, `\"GROUP\"`, etc.) in the same step. If you use `\"USER\"`, it must be the only approver selection rule in that step. Other types (`\"ROLE\"`, `\"GROUP\"`, etc.) can be combined together.\n\n**Example with Multiple Rules:**\n```json\n{\n  \"approvers_required\": \"any\",\n  \"approver_selection_rules\": [\n    {\n      \"type\": \"ROLE\",\n      \"values\": [\n        {\n          \"value\": \"Finance Manager\",\n          \"value_name\": \"Finance Manager\"\n        }\n      ]\n    },\n    {\n      \"type\": \"GROUP\",\n      \"values\": [\n        {\n          \"value\": \"Accounting Team\",\n          \"value_name\": \"Accounting Team\"\n        }\n      ]\n    }\n  ]\n}\n```\n\n**Behavior:** Any user who has the \"Finance Manager\" role OR is a member of the \"Accounting Team\" group can approve this step. Since `approvers_required` is `\"any\"`, only one approval is needed.\n\n### Approver Selection Rule Types\n\n#### 1. Role-Based Selection (`ROLE`)\n\nSelects approvers based on their assigned roles from the accounting system. **This type is only available for organizations using certain accounting integrations** that support roles.\n\n**Use Cases:**\n- Department managers for department-specific approvals\n- Finance roles for financial approvals\n- Executive roles for high-value invoice approvals\n\n**Example - Single Role:**\n```json\n{\n  \"type\": \"ROLE\",\n  \"values\": [\n    {\n      \"value\": \"Finance Manager\",\n      \"value_name\": \"Finance Manager\"\n    }\n  ]\n}\n```\n\n**Example - Multiple Roles (OR logic within values):**\n```json\n{\n  \"type\": \"ROLE\",\n  \"values\": [\n    {\n      \"value\": \"Finance Manager\",\n      \"value_name\": \"Finance Manager\"\n    },\n    {\n      \"value\": \"Controller\",\n      \"value_name\": \"Controller\"\n    },\n    {\n      \"value\": \"CFO\",\n      \"value_name\": \"CFO\"\n    }\n  ]\n}\n```\n\n**Behavior:** Users with any of these roles can approve. If `approvers_required` is `\"all\"`, users with all three roles would need to approve (unlikely), but typically you'd use `\"any\"` with multiple roles.\n\n**Complete Step Example:**\n```json\n{\n  \"index\": 0,\n  \"approvers_required\": \"any\",\n  \"skip_if_no_approvers\": false,\n  \"selection_rules\": [],\n  \"approver_selection_rules\": [\n    {\n      \"type\": \"ROLE\",\n      \"values\": [\n        {\n          \"value\": \"Finance Manager\",\n          \"value_name\": \"Finance Manager\"\n        }\n      ]\n    }\n  ]\n}\n```\n\n#### 2. Group-Based Selection (`GROUP`)\n\nSelects approvers based on their group memberships from the accounting system. **This type is only available for organizations using certain accounting integrations** that support groups. Useful when you want to route approvals to specific teams or departments.\n\n**Use Cases:**\n- Team-based approvals (e.g., \"Accounting Team\", \"Procurement Team\")\n- Department-wide approvals\n- Cross-functional approval groups\n\n**Example - Single Group:**\n```json\n{\n  \"type\": \"GROUP\",\n  \"values\": [\n    {\n      \"value\": \"Accounting Team\",\n      \"value_name\": \"Accounting Team\"\n    }\n  ]\n}\n```\n\n**Example - Multiple Groups:**\n```json\n{\n  \"type\": \"GROUP\",\n  \"values\": [\n    {\n      \"value\": \"Finance Department\",\n      \"value_name\": \"Finance Department\"\n    },\n    {\n      \"value\": \"Accounting Team\",\n      \"value_name\": \"Accounting Team\"\n    }\n  ]\n}\n```\n\n**Behavior:** Any user who is a member of any of these groups can approve.\n\n**Complete Step Example:**\n```json\n{\n  \"index\": 0,\n  \"approvers_required\": \"all\",\n  \"skip_if_no_approvers\": false,\n  \"selection_rules\": [],\n  \"approver_selection_rules\": [\n    {\n      \"type\": \"GROUP\",\n      \"values\": [\n        {\n          \"value\": \"Finance Department\",\n          \"value_name\": \"Finance Department\"\n        },\n        {\n          \"value\": \"Legal Department\",\n          \"value_name\": \"Legal Department\"\n        }\n      ]\n    }\n  ]\n}\n```\n\n**Behavior:** Since `approvers_required` is `\"all\"`, the system will look for users who are members of BOTH groups (if such users exist). More commonly, you'd use `\"any\"` with multiple groups to allow approval from either group.\n\n#### 3. User-Based Selection (`USER`)\n\nSelects specific individual users as approvers. **The `value` field must be `User.legacy_id`**, not email addresses or usernames.\n\n**Important:** The `\"USER\"` type **cannot be combined** with other approver selection rule types (`\"ROLE\"`, `\"GROUP\"`, etc.) in the same step. If you use `\"USER\"`, it must be the only approver selection rule in that step.\n\n**Use Cases:**\n- Direct assignment to specific individuals\n- Executive approvals for high-value items\n- Backup approvers when primary approvers are unavailable\n\n**Example - Single User:**\n```json\n{\n  \"type\": \"USER\",\n  \"values\": [\n    {\n      \"value\": \"legacy-id-12345\",\n      \"value_name\": \"John Doe\"\n    }\n  ]\n}\n```\n\n**Example - Multiple Users:**\n```json\n{\n  \"type\": \"USER\",\n  \"values\": [\n    {\n      \"value\": \"legacy-id-12345\",\n      \"value_name\": \"John Doe\"\n    },\n    {\n      \"value\": \"legacy-id-67890\",\n      \"value_name\": \"Jane Smith\"\n    },\n    {\n      \"value\": \"legacy-id-11111\",\n      \"value_name\": \"Bob Jones\"\n    }\n  ]\n}\n```\n\n**Behavior:** Only these specific users can approve. If `approvers_required` is `\"all\"`, all listed users must approve.\n\n**Complete Step Example:**\n```json\n{\n  \"index\": 0,\n  \"approvers_required\": \"all\",\n  \"skip_if_no_approvers\": false,\n  \"selection_rules\": [],\n  \"approver_selection_rules\": [\n    {\n      \"type\": \"USER\",\n      \"values\": [\n        {\n          \"value\": \"legacy-id-cfo-123\",\n          \"value_name\": \"CFO\"\n        },\n        {\n          \"value\": \"legacy-id-finance-dir-456\",\n          \"value_name\": \"Finance Director\"\n        }\n      ]\n    }\n  ]\n}\n```\n\n**Behavior:** Both the CFO and Finance Director must approve this step.\n\n### Combining Multiple Approver Rules\n\nYou can combine different approver rule types in a single step to create flexible approval workflows. **However, `\"USER\"` type cannot be combined with other types** - it must be used alone. Other types like `\"ROLE\"` and `\"GROUP\"` can be used together.\n\n**Example - Role OR Group:**\n```json\n{\n  \"index\": 0,\n  \"approvers_required\": \"any\",\n  \"skip_if_no_approvers\": false,\n  \"selection_rules\": [],\n  \"approver_selection_rules\": [\n    {\n      \"type\": \"ROLE\",\n      \"values\": [\n        {\n          \"value\": \"Finance Manager\",\n          \"value_name\": \"Finance Manager\"\n        }\n      ]\n    },\n    {\n      \"type\": \"GROUP\",\n      \"values\": [\n        {\n          \"value\": \"Accounting Team\",\n          \"value_name\": \"Accounting Team\"\n        }\n      ]\n    }\n  ]\n}\n```\n\n**Behavior:** Any user who has the \"Finance Manager\" role OR is a member of the \"Accounting Team\" group can approve. Since `approvers_required` is `\"any\"`, only one approval is needed.\n\n**Example - Multiple Roles with All Required:**\n```json\n{\n  \"index\": 1,\n  \"approvers_required\": \"all\",\n  \"skip_if_no_approvers\": false,\n  \"selection_rules\": [],\n  \"approver_selection_rules\": [\n    {\n      \"type\": \"ROLE\",\n      \"values\": [\n        {\n          \"value\": \"Finance Director\",\n          \"value_name\": \"Finance Director\"\n        }\n      ]\n    },\n    {\n      \"type\": \"ROLE\",\n      \"values\": [\n        {\n          \"value\": \"CFO\",\n          \"value_name\": \"CFO\"\n        }\n      ]\n    }\n  ]\n}\n```\n\n**Behavior:** This creates two separate approver pools. One user with \"Finance Director\" role AND one user with \"CFO\" role must both approve (they can be different people).\n\n**Example - Role and Group Combined:**\n```json\n{\n  \"index\": 2,\n  \"approvers_required\": \"any\",\n  \"skip_if_no_approvers\": false,\n  \"selection_rules\": [],\n  \"approver_selection_rules\": [\n    {\n      \"type\": \"ROLE\",\n      \"values\": [\n        {\n          \"value\": \"Finance Manager\",\n          \"value_name\": \"Finance Manager\"\n        },\n        {\n          \"value\": \"Controller\",\n          \"value_name\": \"Controller\"\n        }\n      ]\n    },\n    {\n      \"type\": \"GROUP\",\n      \"values\": [\n        {\n          \"value\": \"Accounting Team\",\n          \"value_name\": \"Accounting Team\"\n        }\n      ]\n    }\n  ]\n}\n```\n\n**Behavior:** Any user matching any of these criteria can approve:\n- Has \"Finance Manager\" or \"Controller\" role, OR\n- Is a member of \"Accounting Team\" group\n\n**Note:** `\"USER\"` type cannot be combined with `\"ROLE\"` or `\"GROUP\"` types. If you need to include specific users, create a separate step with only `\"USER\"` type approver rules.\n\n### Common Patterns and Examples\n\n#### Pattern 1: Department Manager Approval\n\nRequire approval from the department manager for department-specific invoices:\n\n```json\n{\n  \"index\": 0,\n  \"approvers_required\": \"any\",\n  \"skip_if_no_approvers\": false,\n  \"selection_rules\": [\n    {\n      \"type\": \"invoice_item_dimension_name\",\n      \"comparator\": \"eq\",\n      \"values_type\": \"list_of_values\",\n      \"type_id\": \"department\",\n      \"values\": [\n        {\n          \"value_type\": \"single\",\n          \"value\": \"789\",\n          \"value_name\": \"Engineering\",\n          \"index\": 0\n        }\n      ]\n    }\n  ],\n  \"approver_selection_rules\": [\n    {\n      \"type\": \"ROLE\",\n      \"values\": [\n        {\n          \"value\": \"Engineering Manager\",\n          \"value_name\": \"Engineering Manager\"\n        }\n      ]\n    }\n  ]\n}\n```\n\n#### Pattern 2: Dual Approval for High-Value Invoices\n\nRequire approval from both Finance Director and CFO for invoices over $50,000:\n\n```json\n{\n  \"index\": 1,\n  \"approvers_required\": \"all\",\n  \"skip_if_no_approvers\": false,\n  \"selection_rules\": [\n    {\n      \"type\": \"invoice_total_amount\",\n      \"comparator\": \"gte\",\n      \"values_type\": \"decimal\",\n      \"type_id\": null,\n      \"values\": [\n        {\n          \"value_type\": \"single\",\n          \"value\": \"50000.00\",\n          \"value_name\": \"50000.00\",\n          \"index\": 0\n        }\n      ]\n    }\n  ],\n  \"approver_selection_rules\": [\n    {\n      \"type\": \"ROLE\",\n      \"values\": [\n        {\n          \"value\": \"Finance Director\",\n          \"value_name\": \"Finance Director\"\n        }\n      ]\n    },\n    {\n      \"type\": \"ROLE\",\n      \"values\": [\n        {\n          \"value\": \"CFO\",\n          \"value_name\": \"CFO\"\n        }\n      ]\n    }\n  ]\n}\n```\n\n#### Pattern 3: Team-Based Approval\n\nAllow any member of a team to approve:\n\n```json\n{\n  \"index\": 0,\n  \"approvers_required\": \"any\",\n  \"skip_if_no_approvers\": false,\n  \"selection_rules\": [],\n  \"approver_selection_rules\": [\n    {\n      \"type\": \"GROUP\",\n      \"values\": [\n        {\n          \"value\": \"Procurement Team\",\n          \"value_name\": \"Procurement Team\"\n        }\n      ]\n    }\n  ]\n}\n```\n\n**Note:** If you need a backup approver, create a separate step with only `\"USER\"` type approver rules, since `\"USER\"` cannot be combined with other types.\n\n#### Pattern 4: Executive Escalation\n\nFor very high-value invoices, require approval from the CEO role:\n\n```json\n{\n  \"index\": 2,\n  \"approvers_required\": \"any\",\n  \"skip_if_no_approvers\": false,\n  \"selection_rules\": [\n    {\n      \"type\": \"invoice_total_amount\",\n      \"comparator\": \"gte\",\n      \"values_type\": \"decimal\",\n      \"type_id\": null,\n      \"values\": [\n        {\n          \"value_type\": \"single\",\n          \"value\": \"100000.00\",\n          \"value_name\": \"100000.00\",\n          \"index\": 0\n        }\n      ]\n    }\n  ],\n  \"approver_selection_rules\": [\n    {\n      \"type\": \"ROLE\",\n      \"values\": [\n        {\n          \"value\": \"CEO\",\n          \"value_name\": \"CEO\"\n        }\n      ]\n    }\n  ]\n}\n```\n\n**Note:** If you need to include a specific executive user, create a separate step with only `\"USER\"` type approver rules, since `\"USER\"` cannot be combined with `\"ROLE\"` or other types.\n\n### Important Considerations\n\n1. **Case Sensitivity:** Role and group names are case-sensitive and must match exactly as configured in your system\n2. **User IDs:** For `\"USER\"` type, the `value` field must be `User.legacy_id`, not email addresses or usernames\n3. **USER Type Constraint:** The `\"USER\"` type **cannot be combined** with other types (`\"ROLE\"`, `\"GROUP\"`, etc.) in the same step. It must be used alone. Other types can be combined together.\n4. **No Approvers Found:** If no users match the approver selection rules:\n   - If `skip_if_no_approvers` is `true`, the step is skipped\n   - If `skip_if_no_approvers` is `false`, the step will wait indefinitely until an approver is assigned\n5. **Multiple Rules:** Multiple approver selection rules use OR logic - users matching any rule are eligible (except `\"USER\"` which cannot be combined with others)\n6. **Approvers Required:** The `approvers_required` field works with the matched approvers:\n   - `\"any\"` with multiple rules: One approval from any matched approver\n   - `\"all\"` with multiple rules: One approval from each rule's matched approvers (if rules are separate)\n\n---\n\n## Implementation Notes\n\n### Case Sensitivity\n\nMost comparisons are **case-insensitive**:\n- Dimension type matching\n- Custom field value matching\n\n### Value Types\n\nThe `value_type` field in values array indicates the structure:\n- `\"single\"`: A single value with `value` and `value_name` fields\n- `\"range\"`: A range with `start_value` and `end_value` fields (used for `between` comparator)\n\n### Index Field\n\nThe `index` field in each value, step, and flow determines the order and should be sequential starting from 0.\n\n### Expense Line Filtering\n\nSome selection rules only evaluate expense line items:\n- `invoice_item_cost_account_number`\n- `invoice_item_dimension_name`\n\nIf the company configuration has `aaf_ignores_po_invoice_items: true`, then only invoice items with `line_type: \"expense\"` and `is_tax_only: false` are evaluated.\n\n### Multiple Rules (AND Logic)\n\nWhen multiple selection rules are defined on a flow or step, **ALL** rules must match (AND logic) for the invoice to match.\n\n---\n\n## Complete Example\n\nHere's a complete example of updating an approval flow with multiple rules and steps:\n\n```json\n{\n  \"label\": \"Regional High Value Invoices\",\n  \"description\": \"Multi-step approval for high-value invoices from specific vendors\",\n  \"index\": 0,\n  \"auto_initiate\": true,\n  \"selection_rules\": [\n    {\n      \"type\": \"invoice_total_amount\",\n      \"comparator\": \"gte\",\n      \"values_type\": \"decimal\",\n      \"type_id\": null,\n      \"values\": [\n        {\n          \"value_type\": \"single\",\n          \"value\": \"10000.00\",\n          \"value_name\": \"10000.00\",\n          \"index\": 0\n        }\n      ]\n    },\n    {\n      \"type\": \"invoice_vendor_tags\",\n      \"comparator\": \"in\",\n      \"values_type\": \"list_of_values\",\n      \"type_id\": null,\n      \"values\": [\n        {\n          \"value_type\": \"single\",\n          \"value\": \"100\",\n          \"value_name\": \"Preferred Vendor\",\n          \"index\": 0\n        }\n      ]\n    }\n  ],\n  \"steps\": [\n    {\n      \"index\": 0,\n      \"approvers_required\": \"any\",\n      \"skip_if_no_approvers\": false,\n      \"selection_rules\": [\n        {\n          \"type\": \"invoice_item_dimension_name\",\n          \"comparator\": \"eq\",\n          \"values_type\": \"list_of_values\",\n          \"type_id\": \"department\",\n          \"values\": [\n            {\n              \"value_type\": \"single\",\n              \"value\": \"789\",\n              \"value_name\": \"Engineering\",\n              \"index\": 0\n            }\n          ]\n        }\n      ],\n      \"approver_selection_rules\": [\n        {\n          \"type\": \"ROLE\",\n          \"values\": [\n            {\n              \"value\": \"Engineering Manager\",\n              \"value_name\": \"Engineering Manager\"\n            }\n          ]\n        }\n      ]\n    },\n    {\n      \"index\": 1,\n      \"approvers_required\": \"all\",\n      \"skip_if_no_approvers\": false,\n      \"selection_rules\": [],\n      \"approver_selection_rules\": [\n        {\n          \"type\": \"ROLE\",\n          \"values\": [\n            {\n              \"value\": \"Finance Director\",\n              \"value_name\": \"Finance Director\"\n            },\n            {\n              \"value\": \"CFO\",\n              \"value_name\": \"CFO\"\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n```\n\nThis example creates a flow that:\n1. Applies to invoices >= $10,000 from vendors tagged as \"Preferred Vendor\"\n2. First step requires approval from Engineering Manager (only for Engineering department invoices)\n3. Second step requires approval from both Finance Director AND CFO (for all invoices in this flow)\n\n---\n\n## Common Mistakes to Avoid\n\n1. **Dimension Rules:**\n   - ❌ Using dimension name in `value` field\n   - ✅ Use dimension ID in `value` field and displayName in `value_name`\n\n2. **Type ID:**\n   - ❌ Forgetting to set `type_id` for dimension or custom field rules\n   - ✅ Always set `type_id` for these rule types\n\n3. **Comparators:**\n   - ❌ Using unsupported comparator for a rule type\n   - ✅ Check supported comparators for each rule type above\n\n4. **Values Type:**\n   - ❌ Using wrong `values_type` for the comparator\n   - ✅ Use `positive_integer` for `between`, `decimal` for amount comparisons, `list_of_values` for `eq`/`in` with predefined options\n\n5. **Range Values:**\n   - ❌ Using `value` and `value_name` for `between` comparator\n   - ✅ Use `start_value` and `end_value` with `value_type: \"range\"`\n"
+      type: object
+      required:
+      - label
+      - description
+      - index
+      - auto_initiate
+      - selection_rules
+      properties:
+        label:
+          type: string
+          maxLength: 255
+          description: The label for the approval flow.
+          example: High Value Invoices
+        description:
+          type: string
+          maxLength: 255
+          description: A description of the approval flow.
+          example: Approval flow for invoices over $10,000
+        index:
+          type: integer
+          minimum: 0
+          description: 'The order index for this approval flow. If the provided value does not match
+
+            the next available index, it will be overridden to the next available integer value.
+
+            '
+          example: 0
+        auto_initiate:
+          type: boolean
+          description: Whether to automatically initiate this approval flow.
+          example: true
+        remote_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+          description: Remote identifier for this flow from an external system.
+          example: ext-flow-001
+        selection_rules:
+          type: array
+          description: Selection rules that define when this flow applies to an invoice.
+          items:
+            $ref: '#/components/schemas/InvoiceApprovalFlowSelectionRuleInputV2'
+        steps:
+          type: array
+          description: The approval steps for this flow.
+          items:
+            $ref: '#/components/schemas/InvoiceApprovalFlowStepInputV2'
+    UserAddressV2:
+      type: object
+      properties:
+        street_1:
+          type: string
+        street_2:
+          type: string
+        city:
+          type: string
+        postal_code:
+          type: string
+        country:
+          $ref: '#/components/schemas/CountryCode'
+    TimeZoneV2:
+      type: string
+      example: Etc/UTC
+    UserMetadataEntryV2:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'The name of the metadata entry. The name **MUST** be only lower case
+
+            `a-z` and numbers `0-9`. The `_` character is allowed. The name
+
+            *MUST** be unique in the set.
+
+            '
+          pattern: ^[a-z0-9_]+$
+          example: job_title
+        type:
+          type: string
+          enum:
+          - string
+          - boolean
+          - integer
+          - date
+        value:
+          type: string
+          description: The value of the entry.
+          example: Senior Manager
+    CreateCompanyV2:
+      type: object
+      required:
+      - name
+      - country_code
+      - billing_timezone
+      properties:
+        name:
+          type: string
+          description: The display name for the company.
+        country_code:
+          type: string
+          description: Two-letter ISO 3166-1 alpha-2 country code.
+          minLength: 2
+          maxLength: 2
+          example: US
+        billing_timezone:
+          type: string
+          description: IANA timezone identifier used for billing dates.
+          example: America/New_York
+        legal_name:
+          type: string
+          description: The legal entity name, if different from the display name.
+        doing_business_as:
+          type: string
+          description: Trade name or DBA.
+        remote_id:
+          type: string
+          description: An external identifier from the integration partner's system.
+        org_number:
+          type: string
+          description: Organization/registration number.
+        organization_id:
+          type: string
+          format: uuid
+          description: 'The organization (accounting firm) to place the company under.
+
+            Defaults to the OAuth client''s primary company organization.
+
+            Must be an organization the client already has access to.
+
+            '
+    InvoiceApprovalFlowSelectionRuleValueInputV2:
+      type: object
+      required:
+      - value_type
+      properties:
+        value_type:
+          type: string
+          enum:
+          - single
+          - range
+          description: Whether this is a single value or a range.
+          example: single
+        value:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+          description: The value (for single value_type).
+          example: '10000'
+        value_name:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+          description: The display name for the value (for single value_type).
+          example: Ten Thousand
+        start_value:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+          description: The start value (for range value_type).
+        start_value_name:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+          description: The display name for the start value (for range value_type).
+        end_value:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+          description: The end value (for range value_type).
+        end_value_name:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+          description: The display name for the end value (for range value_type).
+    InvoiceApprovalFlowApproverSelectionRuleInputV2:
+      type: object
+      required:
+      - type
+      - values
+      properties:
+        type:
+          type: string
+          maxLength: 255
+          description: The type of approver selection rule (e.g., GROUP, ROLE, USER, or custom user metadata type).
+          example: ROLE
+        values:
+          type: array
+          description: The values for the approver selection rule.
+          items:
+            $ref: '#/components/schemas/InvoiceApprovalFlowApproverSelectionRuleValueInputV2'
+    CompanyUserRolesV2:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: object
+          required:
+          - user_id
+          - company_id
+          - roles
+          properties:
+            user_id:
+              description: The ID of the user.
+              type: string
+              format: uuid
+            company_id:
+              description: The ID of the company.
+              type: string
+              format: uuid
+            roles:
+              description: The list of roles currently assigned to the user in this company.
+              type: array
+              items:
+                $ref: '#/components/schemas/CompanyUserRoleV2'
+    CompanySettingsV2:
+      type: object
+      description: 'A company''s configuration options. Every available setting is
+
+        always present in the response. Enum values are returned as
+
+        strings; booleans as booleans. `null` means the field has no
+
+        configured value and the caller should treat it as "unset"
+
+        rather than "false".
+
+        '
+      required:
+      - backend_mode
+      - approval_flow_engine_enabled
+      - approval_flow_engine_user_edits_allowed
+      - invoice_automation_enabled
+      - invoice_automated_next_step
+      - invoice_approval_next_step
+      - po_invoice_automation_enabled
+      - po_invoice_automated_next_step
+      - po_invoice_approval_next_step
+      - purchase_order_matching
+      - purchase_order_matching_level
+      - purchase_order_require_matching_to_post
+      - aaf_ignores_po_invoice_items
+      - enable_posting
+      - tax_handling
+      - freight_handling
+      properties:
+        backend_mode:
+          description: 'Backend processing mode for the company. Production
+
+            companies should use `default`. Non-default values are
+
+            reserved for demo and sandbox environments and should not
+
+            be set on production companies.
+
+            '
+          type: string
+          enum:
+          - default
+          - stub
+        approval_flow_engine_enabled:
+          description: 'Master switch for the approval flow engine. Must be `true`
+
+            for automatically generated approval steps to be created on
+
+            the company''s invoices.
+
+            '
+          type: boolean
+        approval_flow_engine_user_edits_allowed:
+          description: 'Allow end users to edit automatically generated approval
+
+            steps on an individual invoice.
+
+            '
+          type: boolean
+        invoice_automation_enabled:
+          description: 'When `true` combined with `invoice_automated_next_step`,
+
+            non-PO invoices auto-advance once analysis finishes.
+
+            '
+          type: boolean
+        invoice_automated_next_step:
+          description: 'The next action to take automatically once analysis finishes
+
+            on a non-PO invoice. `null` disables auto-advancement.
+
+            '
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - start_approval
+            - post
+            - export
+            - submit
+        invoice_approval_next_step:
+          description: 'The next action to take automatically once approval completes
+
+            on a non-PO invoice. `null` disables auto-advancement.
+
+            '
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - post
+            - export
+            - submit
+        po_invoice_automation_enabled:
+          description: 'When `true` combined with `po_invoice_automated_next_step`,
+
+            PO-matched invoices auto-advance once analysis finishes.
+
+            '
+          type: boolean
+        po_invoice_automated_next_step:
+          description: 'The next action to take automatically once analysis finishes
+
+            on a PO-matched invoice. `null` disables auto-advancement.
+
+            '
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - start_approval
+            - post
+        po_invoice_approval_next_step:
+          description: 'The next action to take automatically once approval completes
+
+            on a PO-matched invoice, independent of
+
+            `invoice_approval_next_step` (which covers non-PO invoices).
+
+            `null` disables auto-advancement for PO-matched invoices.
+
+            '
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - post
+            - export
+            - submit
+        purchase_order_matching:
+          description: 'Purchase-order matching mode. `none` disables PO matching
+
+            entirely; `standard`, `implicit`, and `explicit` select
+
+            different matching strategies.
+
+            '
+          type: string
+          enum:
+          - none
+          - standard
+          - implicit
+          - explicit
+        purchase_order_matching_level:
+          description: 'Granularity of PO matching: `line` matches invoice lines
+
+            against PO lines; `document` groups lines at the PO level.
+
+            '
+          type: string
+          enum:
+          - document
+          - line
+        purchase_order_require_matching_to_post:
+          description: 'When `true`, an invoice cannot be posted until every item
+
+            line is matched to a PO line.
+
+            '
+          type: boolean
+        aaf_ignores_po_invoice_items:
+          description: 'When `true` (the default), approval flow rules evaluating
+
+            against an invoice''s total amount sum only expense lines,
+
+            excluding PO-matched item lines (which are covered by the
+
+            PO matching approval path instead). Set to `false` to have
+
+            those rules evaluate against the full invoice total
+
+            including PO-matched items.
+
+            '
+          type: boolean
+        enable_posting:
+          description: 'Gates the post-approval posting action in the UI and the
+
+            corresponding API endpoints. Defaults to `false` on new
+
+            companies so the ERP integration can be verified before
+
+            invoices are pushed out.
+
+            '
+          type: boolean
+        tax_handling:
+          description: 'How invoice tax is computed and allocated across lines.
+
+            '
+          type: string
+          enum:
+          - none
+          - tax_engine
+          - tax_codes
+          - tax_expense_line
+          - vat_for_po_invoices
+          - tax_allocation
+        freight_handling:
+          description: 'How freight charges are allocated across lines. `null`
+
+            disables automatic freight handling.
+
+            '
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - expense_line
+            - even_allocation
+            - weighted_allocation
+    UserManagerV2:
+      description: A user's manager.
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          description: The manager's user ID.
+        name:
+          type: string
+          description: The manager's full preferred name.
+        email:
+          type: string
+          description: The manager's email.
+    PaginationMetaV2:
+      type: object
+      properties:
+        cursor:
+          description: 'The cursor to the next page of data. If it is null, that means there
+
+            is no more data to fetch.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
+    InvoiceApprovalFlowApproverSelectionRuleValueInputV2:
+      type: object
+      required:
+      - value
+      - value_name
+      properties:
+        value:
+          type: string
+          maxLength: 255
+          description: The value for the approver.
+          example: accountant
+        value_name:
+          type: string
+          maxLength: 255
+          description: The display name for the approver.
+          example: Accountant
+    CompanyFieldOptionsResponseV2:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: object
+          required:
+          - field_label
+          - values
+          - count
+          properties:
+            field_label:
+              type: string
+              description: The custom field label.
+              example: custom:department
+            values:
+              type: array
+              description: The resulting company-specific options for the field, ordered by value using case-sensitive database ordering.
+              items:
+                type: string
+              example:
+              - Engineering
+              - Finance
+            count:
+              type: integer
+              description: The number of company-specific options returned.
+              example: 2
+    Error:
+      description: 'generic error message in JSON format.  Note the ''code'' field should
+
+        match the HTTP status code of the wrapping HTTP request.
+
+        '
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          minimum: 100
+          maximum: 599
+        message:
+          $ref: '#/components/schemas/ErrorString'
+  responses:
+    UpdateCompanyUserManagerResponseV2:
+      description: The user's manager was updated.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - data
+            properties:
+              data:
+                $ref: '#/components/schemas/UserV2'
+    ErrorResponseV2:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ErrorV2'
+    RemoveUserFromCompanyResponseV2:
+      description: The user was removed from the company successfully.
+    CreateInvoiceApprovalFlowResponseV2:
+      description: Invoice approval flow was created successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/InvoiceApprovalFlowV2'
+    WebhookEventsResponseV2:
+      description: A paged list of webhook events (V2 format)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WebhookEventsListV2'
+    CompanyUserRolesResponseV2:
+      description: The user's current roles within the company.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CompanyUserRolesV2'
+    CreateCompanyUserResponseV2:
+      description: User was created and attached to the company successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CompanyUserMetaV2'
+    ResourceNotFoundResponse:
+      description: Resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    GetInvoiceApprovalFlowResponseV2:
+      description: A successful response with the invoice approval flow
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/InvoiceApprovalFlowV2'
+    ListInvoiceApprovalFlowsResponseV2:
+      description: A successful list of invoice approval flows
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                type: object
+                properties:
+                  page:
+                    $ref: '#/components/schemas/PaginationMetaV2'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/InvoiceApprovalFlowV2'
+    UpdateInvoiceApprovalFlowResponseV2:
+      description: Invoice approval flow was updated successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/InvoiceApprovalFlowV2'
+    CompanySettingsResponseV2:
+      description: The effective settings map for the company.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - data
+            properties:
+              data:
+                $ref: '#/components/schemas/CompanySettingsV2'
+    WebhookEventResponseV2:
+      description: A single webhook event with delivery information (V2 format)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WebhookEventV2'
+    CreateCompanyResponseV2:
+      description: 'A single newly-created company including a company-scoped OAuth
+
+        client. The `client_secret` is exposed only at creation time and
+
+        cannot be retrieved later.
+
+        '
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/CreatedCompanyV2'
+    ListCompaniesResponseV2:
+      description: A successful list of companies
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginationMetaV2'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CompanyV2'
+    ListCompanyUsersResponseV2:
+      description: A successful list of users
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginationMetaV2'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserV2'
+    GetCompanyResponseV2:
+      description: A single company.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/CompanyV2'
+  parameters:
+    OccurredAfter:
+      name: occurred_after
+      in: query
+      description: Filter events that occurred on or after this date. Required parameter. The date range between occurred_after and occurred_before cannot exceed 30 days.
+      required: true
+      schema:
+        type: string
+        format: date-time
+    WebhookUndeliveredFilter:
+      name: undelivered
+      in: query
+      description: Filter to show only events that have not been delivered
+      required: false
+      schema:
+        type: boolean
+    CompanyId:
+      name: company_id
+      in: path
+      required: true
+      description: The ID of the company
+      schema:
+        type: string
+        format: uuid
+    WebhookEventId:
+      name: event_id
+      in: path
+      required: true
+      description: The ID of the webhook event
+      schema:
+        type: string
+        format: uuid
+    PaginationV2:
+      name: page
+      in: query
+      schema:
+        $ref: '#/components/schemas/PaginationV2'
+    WebhookEventType:
+      name: event_type
+      in: query
+      description: 'Filter events by a single type. Omit the parameter to return events of
+
+        every type. To filter by several types at once, use `event_types`
+
+        instead.
+
+        '
+      required: false
+      schema:
+        $ref: '#/components/schemas/WebhookEventTypeName'
+    WebhookEventTypes:
+      name: event_types
+      in: query
+      description: 'Filter events by one or more types, given as a comma-separated list
+
+        (for example `invoice_posted,invoice_approved`). Omit to return events
+
+        of every type.
+
+        '
+      required: false
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/WebhookEventTypeName'
+    OccurredBefore:
+      name: occurred_before
+      in: query
+      description: Filter events that occurred on or before this date. Required parameter. The date range between occurred_after and occurred_before cannot exceed 30 days.
+      required: true
+      schema:
+        type: string
+        format: date-time
+  requestBodies:
+    UpdateInvoiceApprovalFlowRequestV2:
+      description: Update an invoice approval flow with selection rules and steps.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InvoiceApprovalFlowInputV2'
+    AttachUserToCompanyRequestV2:
+      description: Attach an existing user to a company.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AttachUserToCompanyV2'
+    UpdateCompanyUserRolesRequestV2:
+      description: Set the roles for a user within a company.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateCompanyUserRolesV2'
+    CreateCompanyRequestV2:
+      description: Create a new company.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateCompanyV2'
+    CreateInvoiceApprovalFlowRequestV2:
+      description: Create an invoice approval flow with selection rules and steps.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InvoiceApprovalFlowInputV2'
+    UpdateCompanyUserManagerRequestV2:
+      description: Set or clear a user's manager.
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - manager_id
+            properties:
+              manager_id:
+                description: 'The ID of the user to set as this user''s manager, or `null` to
+
+                  clear the manager. The manager must be a user within the same
+
+                  company. `null` is rejected when the user''s current manager is
+
+                  not a member of the company, so a hidden assignment cannot be
+
+                  cleared unknowingly.
+
+                  '
+                oneOf:
+                - type: string
+                  format: uuid
+                - type: 'null'
+    CreateCompanyUserRequestV2:
+      description: Create a user and attach it to a company.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateCompanyUserV2'
+    UpdateCompanySettingsRequestV2:
+      description: 'Partial update to the company settings map. Only fields
+
+        included in the body are modified.
+
+        '
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateCompanySettingsV2'
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-tagGroups:
+- name: Integration
+  tags:
+  - Authentication
+  - Pagination
+  - Webhooks
+  - Webhook Subscriptions
+  - Webhook Events
+  - Synchronizing
+  - Status
+- name: Master Data
+  tags:
+  - Accounts
+  - Dimensions
+  - Vendors
+  - Vendor Groups
+  - Vendor Tags
+  - Tags
+  - Tax Codes
+  - VAT Codes
+  - Payment Terms
+- name: Organization & Access
+  tags:
+  - Partners
+  - Organizations
+  - Companies
+  - Users
+- name: Invoices & Bills
+  tags:
+  - Invoices
+  - Bills
+  - Attachments
+  - Invoice Approval Flows
+  - Invoice Posting Guide
+  - Training Invoices
+- name: Purchase Orders
+  tags:
+  - Purchase Orders
+  - Purchase Order Line Items
+  - Purchase Order Matching Guide
+- name: Payments
+  tags:
+  - Payment Batches
+  - Payment Confirmations
+  - Credit Confirmations
+- name: Reporting
+  tags:
+  - CSV Reports
+- name: Reference
+  tags:
+  - Changelog

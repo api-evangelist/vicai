@@ -1,0 +1,564 @@
+openapi: 3.1.0
+info:
+  version: v10.40.4
+  contact: {}
+  title: Vic.ai Accounts Webhook Events API
+  description: "## Introduction\n\nThe Vic.ai API provides a seamless connection between your Enterprise Resource\nPlanning (ERP) system and the Vic.ai product suite.\n\nThe API is designed to offer three main areas of functionality:\n\n- **Syncing master data:** This refers to the data in your ERP that Vic.ai\n  interacts with. You are required to supply and update this data in Vic.ai, and\n  you also have the option to verify the copy of the masterdata in Vic.ai.\n\n- **Syncing training data:** We need historical data to train your AI model. To\n  that end, the API provides endpoints to sync historical invoices into Vic.ai\n  and to confirm their presence.\n\n- **Subscribing to and receiving webhooks:** Webhooks enable users or automated\n  tasks to interact with your ERP through various actions in the Vic.ai product\n  suite, such as posting an invoice, payment or purchase order or requesting\n  synchronization. You will receive a notification via a webhook when these\n  actions occur.\n\n\nFor US-based integrations, please use the following base API URL:\n\n```\nhttps://api.us.vic.ai\n```\n\nFor integrations based in Norway, use the following base API URL:\n\n```\nhttps://api.no.vic.ai\n```\n\nAll paths mentioned in this documentation should use one of these URLs as the\nbase.\n\nExample:\n\n```bash\ncurl https://api.us.vic.ai/v0/healthCheck \\\n    -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\"\n```\n\n## Getting Started\n\nTo begin interacting with the Vic.ai API, you will need the following\ncredentials:\n\n* A Vic.ai client ID\n* A Vic.ai client secret.\n\nThese can be provided to you securely by a Vic.ai representative\n[upon request](https://www.vic.ai/book-a-demo).\n\n**Please note:** These credentials are essentially the keys to your ERP\nintegration. If they fall into the wrong hands, unauthorized parties could\nimpersonate you, gain access to sensitive data, and potentially perform\nmalicious actions. Therefore, it's crucial to keep these credentials safe at all\ntimes to protect your application's integrity and your clients' data.\n\n### Limitations\n\nThe Vic.ai API has the following limitations:\n\n**Rate Limiting:** The API is rate-limited to 500 requests per 10-second time\nframe. If you exceed this limit, you will receive a `429 Too Many Requests`\nresponse. The limit is per Oauth client ID. If you continue to receive `429`s,\nplease contact support with a request id from the response headers.\n"
+servers:
+- url: https://api.no.stage.vic.ai
+  description: staging server, NO
+- url: https://api.us.vic.ai
+  description: production server, US
+- url: https://api.no.vic.ai
+  description: production server, NO
+security:
+- BearerAuth: []
+tags:
+- name: Webhook Events
+  description: "These are the `V1` events you can subscribe to. These will be sent as a `POST`\nto `https://yourCallbackUrl/events`.\n\n* `all` - This is a special form, that specifies that you want all events sent\n  to your webhook. Usage is not recommended in production.\n* [`invoice_approved`](#invoice-approved)\n* [`invoice_deleted`](#invoice-deleted)\n* [`invoice_post`](#invoice-post)\n* [`invoice_posted`](#invoice-posted)\n* [`invoice_rejected`](#invoice-rejected)\n* [`invoice_restored`](#invoice-restored)\n* [`invoice_submitted`](#invoice-submitted)\n* [`invoice_transfer`](#invoice-transfer)\n* [`invoice_updated`](#invoice-updated)\n* [`payment_batch_processed`](#payment-batch-processed)\n* [`payment_status_updated`](#payment-status-updated)\n* [`credit_status_updated`](#credit-status-updated)\n* [`purchase_order_created`](#purchase-order-created)\n* [`purchase_order_deleted`](#purchase-order-deleted)\n* [`purchase_order_updated`](#purchase-order-updated)\n* [`vendor_created`](#vendor-created)\n* [`vendor_onboarding_form_completed`](#vendor-onboarding-form-completed)\n* [`vendor_updated`](#vendor-updated)\n\n\nThe following `V0` events may be specified. They will be sent to the original\ncallback paths where the event name was in the path.\n\n* `vendorNew` - `POST` `https://yourCallbackUrl/vendorNew`\n* `invoicePost` - `POST` `https://yourCallbackUrl/invoicePost`\n* `invoiceTransfer` - `POST` `https://yourCallbackUrl/invoiceTransfer`\n* `syncRequest` - `POST` `https://yourCallbackUrl/syncRequest`\n\n### Performance Considerations\n\nAvoid using `\"all\"` as your subscription event type in production environment.\nInstead, create specific subscriptions for individual event types that your\nsystem can handle efficiently.\n\n### Event Details\n\nThe newer webhook endpoints will be sent to `https://yourCallbackUrl/events`.\nThe receiver is expected to handle everything asynchronously via this method. We\ndo not parse the response body and will ignore it.\n\n* All `2XX` responses will be treated as successful.\n* `401`, `403`, `429` responses will be treated as failures and retried with\n  a linear backoff with jitter. Once retries have been exhausted, the event\n  is discarded.\n* All other `4XX` responses will be treated as successful. If something is to be\n  rejected, you will need to make the appropriate calls to the Vic API to\n  complete the asynchronous handshake. Example: confirming or rejecting an\n  invoice post.\n* All `5XX` responses will be treated as a failure and retried with a linear\n  backoff with jitter. Once retries have been exhausted, the event is discarded.\n* Failed events will be attempted up to 5 times (1 initial attempt + up to 4 retries).\n\n> **NOTE**: The integrating system has 15 seconds to respond. After the time has\n> passed it will be considered a failure, and a retry will be sent for events\n> going to `https://yourCallbackUrl/events`.\n\nThe general structure of the webhook event will be as follows.\n\n```json\n{\n  \"id\": \"a7dae8d0-8baa-7a3d-885f-a7fc14835718\",\n  \"occurred_at\": \"2025-04-04T14:34:55.123Z\",\n  \"event\": \"the_event_name\",\n  \"data\": {\n    \"id\": \"123\",\n    \"something\": \"value\"\n  }\n}\n```\n\nThere will be a top-level field `event` that describes what the type of event\nis. There will also be a `data` envelope that will contain the data for the\nevent.\n\n### Invoice Approved\n\nThis event is emitted from the Vic system when an invoice has been approved.\nThe payload for this event matches almost exactly what you will receive in the\n`getInvoice` operation.\n\n```json\n{\n  \"id\": \"a7dae8d0-8baa-7a3d-885f-a7fc14835718\",\n  \"occurred_at\": \"2025-04-04T14:34:55.123Z\",\n  \"event\": \"invoice_approved\",\n  \"data\": {\n    \"totalAmount\": \"3.00\",\n    \"totalVatAmount\": \"0.00\",\n    \"amountWithoutTax\": \"1.00\",\n    \"amountTax\": \"1.00\",\n    \"amountNet\": \"1.00\",\n    \"amountVat\": \"0.00\",\n    \"amountSum\": \"3.00\",\n    \"amountFreight\": \"1.00\",\n    \"transactionType\": \"INVOICE\",\n    \"refNumber\": \"INV-1231123\",\n    \"poNumber\": \"PO-1231123\",\n    \"description\": \"Invoice for the month of April\",\n    \"currency\": \"USD\",\n    \"fields\": [\n      {\n        \"label\": \"custom:technician\",\n        \"title\": \"Technician\",\n        \"type\": \"text\",\n        \"value\": \"John Doe\"\n      }\n    ],\n    \"language\": \"en\",\n    \"issueDate\": \"2019-08-24\",\n    \"glDate\": \"2019-08-24\",\n    \"dueDate\": \"2019-08-24\",\n    \"paymentInfo\": {\n      \"bankAccountNum\": \"1234567890\",\n      \"bankCode\": \"1234567890\",\n      \"paymentTerm\": {\n        \"count\": 30,\n        \"unit\": \"DAYS\"\n      },\n      \"defaultMethod\": \"BANKACCOUNT\"\n    },\n    \"internalId\": \"123\",\n    \"internalUpdatedAt\": \"2019-08-24T14:15:22Z\",\n    \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n    \"paymentTermId\": \"80b25998-53d5-4563-abd4-ea6566e3cf2b\",\n    \"externalUpdatedAt\": \"2019-08-24T14:15:22Z\",\n    \"paymentTerm\": {\n      \"count\": 0,\n      \"unit\": \"DAYS\"\n    },\n    \"paymentRef\": \"string\",\n    \"vendorInternalId\": \"47\",\n    \"vendorExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n    \"vendor\": {\n      \"internalId\": \"47\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"orgNumber\": \"string\",\n      \"countryCode\": \"US\",\n      \"name\": \"string\"\n    },\n    \"lineItems\": [\n      {\n        \"index\": 1,\n        \"amountTax\": \"1.00\",\n        \"amountNet\": \"1.00\",\n        \"amountSum\": \"1.00\",\n        \"amountFreight\": \"1.00\",\n        \"description\": \"string\",\n        \"comment\": \"string\",\n        \"billable\": true,\n        \"invoiceLineItemInfo\": {\n          \"vatCode\": \"string\",\n          \"vatAmount\": 0,\n          \"vatRate\": \"1.00\"\n        },\n        \"taxCode\": {\n          \"id\": \"497f6eca-6276-4993-bfeb-53cbbbba6f08\",\n          \"code\": \"string\",\n          \"description\": \"Tax code description\",\n          \"rate\": \"0.25\"\n        },\n        \"costAccount\": {\n          \"internalId\": \"string\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"number\": \"string\"\n        },\n        \"dimensions\": [\n          {\n            \"name\": \"string\",\n            \"type\": \"string\",\n            \"typeName\": \"string\",\n            \"typeExternalId\": \"string\",\n            \"shortName\": \"string\",\n            \"externalData\": {},\n            \"displayName\": \"string\",\n            \"internalId\": \"47\",\n            \"internalUpdatedAt\": \"2019-08-24T14:15:22Z\",\n            \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n            \"externalUpdatedAt\": \"2021-06-29T17:20:53.154\"\n          }\n        ],\n        \"quantityInvoiced\": \"string\",\n        \"lineItemTotal\": \"1.00\",\n        \"lineType\": \"item\",\n        \"poLineNumber\": 0,\n        \"poNumber\": \"string\",\n        \"poItemsMatched\": [\n          {\n            \"invoiceItemId\": \"string\",\n            \"purchaseOrderItemId\": \"string\",\n            \"productNumber\": \"6512-41473\",\n            \"unitOfMeasure\": \"kg\",\n            \"amountMatched\": \"1.0\",\n            \"quantityMatched\": \"1.0\"\n          }\n        ],\n        \"unitPrice\": \"1.00\",\n        \"number\": \"123456\",\n        \"lineFields\": [\n          {\n            \"label\": \"custom:serial_number\",\n            \"title\": \"Serial Number\",\n            \"type\": \"text\",\n            \"value\": \"12-34540-1235\"\n          }\n        ]\n      }\n    ],\n    \"postingError\": null,\n    \"documentUrl\": \"http://example.com/invoice.pdf\",\n    \"status\": \"NOT_READY\",\n    \"bolNumbers\": [],\n    \"selfAssessedUseTaxAmount\": null,\n    \"selfAssessedUseTaxAccount\": null,\n    \"markedAs\": \"PAID\",\n    \"billStatus\": \"PAID\",\n    \"externalPaymentDate\": null,\n    \"externalPaymentNumber\": null,\n    \"externalPaymentStatus\": null\n  }\n}\n\n```\n### Invoice Deleted\n\nThis event is emitted from the Vic system when an invoice has been deleted.\nThe payload for this event is sparse. It only contains the `internalId` and\n`externalId` of the invoice.\n\n```json\n{\n  \"id\": \"a7dae8d0-8baa-7a3d-885f-a7fc14835718\",\n  \"occurred_at\": \"2025-04-04T14:34:55.123Z\",\n  \"event\": \"invoice_deleted\",\n  \"data\": {\n    \"internalId\": \"123\",\n    \"externalId\": \"I0001\"\n  }\n}\n```\n\n### Invoice Post\n\nThis event is emitted from the Vic system when an accountant wants to post an\ninvoice to the ERP. This is a signal that the invoice is ready to be posted. The\nintegrating system is expected to respond and either confirm or reject the post.\nThe payload for this event matches almost exactly what you will receive in the\n`getInvoice` operation.\n\nUnlike the old `/invoicePost` event, this will not be a multipart event. You\nwill be able to fetch the invoice pdf from the provided `documentUrl` in the\npayload.\n\n```json\n{\n  \"id\": \"a7dae8d0-8baa-7a3d-885f-a7fc04835310\",\n  \"occurred_at\": \"2025-04-04T14:34:55.123Z\",\n  \"event\": \"invoice_post\",\n  \"data\": {\n    \"totalAmount\": \"3.00\",\n    \"totalVatAmount\": \"0.00\",\n    \"amountWithoutTax\": \"1.00\",\n    \"amountTax\": \"1.00\",\n    \"amountNet\": \"1.00\",\n    \"amountVat\": \"0.00\",\n    \"amountSum\": \"3.00\",\n    \"amountFreight\": \"1.00\",\n    \"transactionType\": \"INVOICE\",\n    \"refNumber\": \"INV-1231123\",\n    \"poNumber\": \"PO-1231123\",\n    \"description\": \"Invoice for the month of April\",\n    \"currency\": \"USD\",\n    \"fields\": [\n      {\n        \"label\": \"custom:technician\",\n        \"title\": \"Technician\",\n        \"type\": \"text\",\n        \"value\": \"John Doe\"\n      }\n    ],\n    \"language\": \"en\",\n    \"issueDate\": \"2019-08-24\",\n    \"glDate\": \"2019-08-24\",\n    \"dueDate\": \"2019-08-24\",\n    \"paymentInfo\": {\n      \"bankAccountNum\": \"1234567890\",\n      \"bankCode\": \"1234567890\",\n      \"paymentTerm\": {\n        \"count\": 30,\n        \"unit\": \"DAYS\"\n      },\n      \"defaultMethod\": \"BANKACCOUNT\"\n    },\n    \"internalId\": \"123\",\n    \"internalUpdatedAt\": \"2019-08-24T14:15:22Z\",\n    \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n    \"paymentTermId\": \"80b25998-53d5-4563-abd4-ea6566e3cf2b\",\n    \"externalUpdatedAt\": \"2019-08-24T14:15:22Z\",\n    \"paymentTerm\": {\n      \"count\": 0,\n      \"unit\": \"DAYS\"\n    },\n    \"paymentRef\": \"string\",\n    \"vendorInternalId\": \"47\",\n    \"vendorExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n    \"vendor\": {\n      \"internalId\": \"47\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"orgNumber\": \"string\",\n      \"countryCode\": \"US\",\n      \"name\": \"string\"\n    },\n    \"lineItems\": [\n      {\n        \"index\": 1,\n        \"amountTax\": \"1.00\",\n        \"amountNet\": \"1.00\",\n        \"amountSum\": \"1.00\",\n        \"amountFreight\": \"1.00\",\n        \"description\": \"string\",\n        \"comment\": \"string\",\n        \"billable\": true,\n        \"invoiceLineItemInfo\": {\n          \"vatCode\": \"string\",\n          \"vatAmount\": 0,\n          \"vatRate\": \"1.00\"\n        },\n        \"taxCode\": {\n          \"id\": \"497f6eca-6276-4993-bfeb-53cbbbba6f08\",\n          \"code\": \"string\",\n          \"description\": \"Tax code description\",\n          \"rate\": \"0.25\"\n        },\n        \"costAccount\": {\n          \"internalId\": \"string\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"number\": \"string\"\n        },\n        \"dimensions\": [\n          {\n            \"name\": \"string\",\n            \"type\": \"string\",\n            \"typeName\": \"string\",\n            \"typeExternalId\": \"string\",\n            \"shortName\": \"string\",\n            \"externalData\": {},\n            \"displayName\": \"string\",\n            \"internalId\": \"47\",\n            \"internalUpdatedAt\": \"2019-08-24T14:15:22Z\",\n            \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n            \"externalUpdatedAt\": \"2021-06-29T17:20:53.154\"\n          }\n        ],\n        \"quantityInvoiced\": \"string\",\n        \"lineItemTotal\": \"1.00\",\n        \"lineType\": \"item\",\n        \"poLineNumber\": 0,\n        \"poNumber\": \"string\",\n        \"poItemsMatched\": [\n          {\n            \"invoiceItemId\": \"string\",\n            \"purchaseOrderItemId\": \"string\",\n            \"productNumber\": \"6512-41473\",\n            \"unitOfMeasure\": \"kg\",\n            \"amountMatched\": \"1.0\",\n            \"quantityMatched\": \"1.0\"\n          }\n        ],\n        \"unitPrice\": \"1.00\",\n        \"number\": \"123456\",\n        \"lineFields\": [\n          {\n            \"label\": \"custom:serial_number\",\n            \"title\": \"Serial Number\",\n            \"type\": \"text\",\n            \"value\": \"12-34540-1235\"\n          }\n        ]\n      }\n    ],\n    \"postingError\": null,\n    \"documentUrl\": \"http://example.com/invoice.pdf\",\n    \"status\": \"NOT_READY\",\n    \"bolNumbers\": [],\n    \"selfAssessedUseTaxAmount\": null,\n    \"selfAssessedUseTaxAccount\": null,\n    \"markedAs\": \"PAID\",\n    \"billStatus\": \"PAID\",\n    \"externalPaymentDate\": null,\n    \"externalPaymentNumber\": null,\n    \"externalPaymentStatus\": null\n  }\n}\n\n```\n\n### Invoice Posted\n\nThis event is emitted from the Vic system when an invoice has been posted to the\nERP successfully. The payload for this event matches almost exactly what you\nwill receive in the `getInvoice` operation.\n\n```json\n{\n  \"id\": \"a7dae8d0-8baa-7a3d-885f-a7fc14835718\",\n  \"occurred_at\": \"2025-04-04T14:34:55.123Z\",\n  \"event\": \"invoice_posted\",\n  \"data\": {\n    \"totalAmount\": \"3.00\",\n    \"totalVatAmount\": \"0.00\",\n    \"amountWithoutTax\": \"1.00\",\n    \"amountTax\": \"1.00\",\n    \"amountNet\": \"1.00\",\n    \"amountVat\": \"0.00\",\n    \"amountSum\": \"3.00\",\n    \"amountFreight\": \"1.00\",\n    \"transactionType\": \"INVOICE\",\n    \"refNumber\": \"INV-1231123\",\n    \"poNumber\": \"PO-1231123\",\n    \"description\": \"Invoice for the month of April\",\n    \"currency\": \"USD\",\n    \"fields\": [\n      {\n        \"label\": \"custom:technician\",\n        \"title\": \"Technician\",\n        \"type\": \"text\",\n        \"value\": \"John Doe\"\n      }\n    ],\n    \"language\": \"en\",\n    \"issueDate\": \"2019-08-24\",\n    \"glDate\": \"2019-08-24\",\n    \"dueDate\": \"2019-08-24\",\n    \"paymentInfo\": {\n      \"bankAccountNum\": \"1234567890\",\n      \"bankCode\": \"1234567890\",\n      \"paymentTerm\": {\n        \"count\": 30,\n        \"unit\": \"DAYS\"\n      },\n      \"defaultMethod\": \"BANKACCOUNT\"\n    },\n    \"internalId\": \"123\",\n    \"internalUpdatedAt\": \"2019-08-24T14:15:22Z\",\n    \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n    \"paymentTermId\": \"80b25998-53d5-4563-abd4-ea6566e3cf2b\",\n    \"externalUpdatedAt\": \"2019-08-24T14:15:22Z\",\n    \"paymentTerm\": {\n      \"count\": 0,\n      \"unit\": \"DAYS\"\n    },\n    \"paymentRef\": \"string\",\n    \"vendorInternalId\": \"47\",\n    \"vendorExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n    \"vendor\": {\n      \"internalId\": \"47\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"orgNumber\": \"string\",\n      \"countryCode\": \"US\",\n      \"name\": \"string\"\n    },\n    \"lineItems\": [\n      {\n        \"index\": 1,\n        \"amountTax\": \"1.00\",\n        \"amountNet\": \"1.00\",\n        \"amountSum\": \"1.00\",\n        \"amountFreight\": \"1.00\",\n        \"description\": \"string\",\n        \"comment\": \"string\",\n        \"billable\": true,\n        \"invoiceLineItemInfo\": {\n          \"vatCode\": \"string\",\n          \"vatAmount\": 0,\n          \"vatRate\": \"1.00\"\n        },\n        \"taxCode\": {\n          \"id\": \"497f6eca-6276-4993-bfeb-53cbbbba6f08\",\n          \"code\": \"string\",\n          \"description\": \"Tax code description\",\n          \"rate\": \"0.25\"\n        },\n        \"costAccount\": {\n          \"internalId\": \"string\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"number\": \"string\"\n        },\n        \"dimensions\": [\n          {\n            \"name\": \"string\",\n            \"type\": \"string\",\n            \"typeName\": \"string\",\n            \"typeExternalId\": \"string\",\n            \"shortName\": \"string\",\n            \"externalData\": {},\n            \"displayName\": \"string\",\n            \"internalId\": \"47\",\n            \"internalUpdatedAt\": \"2019-08-24T14:15:22Z\",\n            \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n            \"externalUpdatedAt\": \"2021-06-29T17:20:53.154\"\n          }\n        ],\n        \"quantityInvoiced\": \"string\",\n        \"lineItemTotal\": \"1.00\",\n        \"lineType\": \"item\",\n        \"poLineNumber\": 0,\n        \"poNumber\": \"string\",\n        \"poItemsMatched\": [\n          {\n            \"invoiceItemId\": \"string\",\n            \"purchaseOrderItemId\": \"string\",\n            \"productNumber\": \"6512-41473\",\n            \"unitOfMeasure\": \"kg\",\n            \"amountMatched\": \"1.0\",\n            \"quantityMatched\": \"1.0\"\n          }\n        ],\n        \"unitPrice\": \"1.00\",\n        \"number\": \"123456\",\n        \"lineFields\": [\n          {\n            \"label\": \"custom:serial_number\",\n            \"title\": \"Serial Number\",\n            \"type\": \"text\",\n            \"value\": \"12-34540-1235\"\n          }\n        ]\n      }\n    ],\n    \"postingError\": null,\n    \"documentUrl\": \"http://example.com/invoice.pdf\",\n    \"status\": \"NOT_READY\",\n    \"bolNumbers\": [],\n    \"selfAssessedUseTaxAmount\": null,\n    \"selfAssessedUseTaxAccount\": null,\n    \"markedAs\": \"PAID\",\n    \"billStatus\": \"PAID\",\n    \"externalPaymentDate\": null,\n    \"externalPaymentNumber\": null,\n    \"externalPaymentStatus\": null\n  }\n}\n```\n\n### Invoice Rejected\n\nThis event is emitted from the Vic system when an invoice has been rejected\nduring the approval process. The payload for this event matches almost exactly\nwhat you will receive in the `getInvoice` operation.\n\nThe structure is identical to `invoice_approved` — refer to that event for the\nfull payload example.\n\n### Invoice Restored\n\nThis event is emitted from the Vic system when a previously deleted invoice has\nbeen restored. It is the counterpart to `invoice_deleted`: subscribing to both\nlets you distinguish an invoice that was deleted, restored, and deleted again\nfrom a genuinely duplicated delete. The payload for this event is sparse — it\ncontains only the `internalId` and `externalId` of the invoice.\n\n```json\n{\n  \"id\": \"b8ebf9e1-9cbb-8b4e-996f-b8fd25946829\",\n  \"occurred_at\": \"2025-04-04T14:34:55.123Z\",\n  \"event\": \"invoice_restored\",\n  \"data\": {\n    \"internalId\": \"123\",\n    \"externalId\": \"I0001\"\n  }\n}\n```\n\n### Invoice Submitted\n\nThis event is emitted from the Vic system when an invoice has been submitted\nfor processing. The payload for this event matches almost exactly what you will\nreceive in the `getInvoice` operation.\n\nThe structure is identical to `invoice_approved` — refer to that event for the\nfull payload example.\n\n### Invoice Transfer\n\nThis event is emitted from the Vic system when an accountant wants to transfer\nan invoice to the ERP. This is a signal that the invoice is ready to be\ntransferred. The integrating system is expected to respond and either confirm or\nreject the transfer. The payload for this event matches almost exactly what you\nwill receive in the `getInvoice` operation.\n\n```json\n{\n  \"id\": \"a7dae8d0-8baa-7a3d-885f-a7fc14835718\",\n  \"occurred_at\": \"2025-04-04T14:34:55.123Z\",\n  \"event\": \"invoice_transfer\",\n  \"data\": {\n    \"totalAmount\": \"3.00\",\n    \"totalVatAmount\": \"0.00\",\n    \"amountWithoutTax\": \"1.00\",\n    \"amountTax\": \"1.00\",\n    \"amountNet\": \"1.00\",\n    \"amountVat\": \"0.00\",\n    \"amountSum\": \"3.00\",\n    \"amountFreight\": \"1.00\",\n    \"transactionType\": \"INVOICE\",\n    \"refNumber\": \"INV-1231123\",\n    \"poNumber\": \"PO-1231123\",\n    \"description\": \"Invoice for the month of April\",\n    \"currency\": \"USD\",\n    \"fields\": [\n      {\n        \"label\": \"custom:technician\",\n        \"title\": \"Technician\",\n        \"type\": \"text\",\n        \"value\": \"John Doe\"\n      }\n    ],\n    \"language\": \"en\",\n    \"issueDate\": \"2019-08-24\",\n    \"glDate\": \"2019-08-24\",\n    \"dueDate\": \"2019-08-24\",\n    \"paymentInfo\": {\n      \"bankAccountNum\": \"1234567890\",\n      \"bankCode\": \"1234567890\",\n      \"paymentTerm\": {\n        \"count\": 30,\n        \"unit\": \"DAYS\"\n      },\n      \"defaultMethod\": \"BANKACCOUNT\"\n    },\n    \"internalId\": \"123\",\n    \"internalUpdatedAt\": \"2019-08-24T14:15:22Z\",\n    \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n    \"paymentTermId\": \"80b25998-53d5-4563-abd4-ea6566e3cf2b\",\n    \"externalUpdatedAt\": \"2019-08-24T14:15:22Z\",\n    \"paymentTerm\": {\n      \"count\": 0,\n      \"unit\": \"DAYS\"\n    },\n    \"paymentRef\": \"string\",\n    \"vendorInternalId\": \"47\",\n    \"vendorExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n    \"vendor\": {\n      \"internalId\": \"47\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"orgNumber\": \"string\",\n      \"countryCode\": \"US\",\n      \"name\": \"string\"\n    },\n    \"lineItems\": [\n      {\n        \"index\": 1,\n        \"amountTax\": \"1.00\",\n        \"amountNet\": \"1.00\",\n        \"amountSum\": \"1.00\",\n        \"amountFreight\": \"1.00\",\n        \"description\": \"string\",\n        \"comment\": \"string\",\n        \"billable\": true,\n        \"invoiceLineItemInfo\": {\n          \"vatCode\": \"string\",\n          \"vatAmount\": 0,\n          \"vatRate\": \"1.00\"\n        },\n        \"taxCode\": {\n          \"id\": \"497f6eca-6276-4993-bfeb-53cbbbba6f08\",\n          \"code\": \"string\",\n          \"description\": \"Tax code description\",\n          \"rate\": \"0.25\"\n        },\n        \"costAccount\": {\n          \"internalId\": \"string\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"number\": \"string\"\n        },\n        \"dimensions\": [\n          {\n            \"name\": \"string\",\n            \"type\": \"string\",\n            \"typeName\": \"string\",\n            \"typeExternalId\": \"string\",\n            \"shortName\": \"string\",\n            \"externalData\": {},\n            \"displayName\": \"string\",\n            \"internalId\": \"47\",\n            \"internalUpdatedAt\": \"2019-08-24T14:15:22Z\",\n            \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n            \"externalUpdatedAt\": \"2021-06-29T17:20:53.154\"\n          }\n        ],\n        \"quantityInvoiced\": \"string\",\n        \"lineItemTotal\": \"1.00\",\n        \"lineType\": \"item\",\n        \"poLineNumber\": 0,\n        \"poNumber\": \"string\",\n        \"poItemsMatched\": [\n          {\n            \"invoiceItemId\": \"string\",\n            \"purchaseOrderItemId\": \"string\",\n            \"productNumber\": \"6512-41473\",\n            \"unitOfMeasure\": \"kg\",\n            \"amountMatched\": \"1.0\",\n            \"quantityMatched\": \"1.0\"\n          }\n        ],\n        \"unitPrice\": \"1.00\",\n        \"number\": \"123456\",\n        \"lineFields\": [\n          {\n            \"label\": \"custom:serial_number\",\n            \"title\": \"Serial Number\",\n            \"type\": \"text\",\n            \"value\": \"12-34540-1235\"\n          }\n        ]\n      }\n    ],\n    \"postingError\": null,\n    \"documentUrl\": \"http://example.com/invoice.pdf\",\n    \"status\": \"NOT_READY\",\n    \"bolNumbers\": [],\n    \"selfAssessedUseTaxAmount\": null,\n    \"selfAssessedUseTaxAccount\": null,\n    \"markedAs\": \"PAID\",\n    \"billStatus\": \"PAID\",\n    \"externalPaymentDate\": null,\n    \"externalPaymentNumber\": null,\n    \"externalPaymentStatus\": null\n  }\n}\n```\n\n### Invoice Updated\n\nThis event is emitted from the Vic system when an invoice has been updated.\nThe payload for this event matches almost exactly what you will receive in the\n`getInvoice` operation.\n\nThe structure is identical to `invoice_approved` — refer to that event for the\nfull payload example.\n\n### Purchase Order Created\n\nThis event is emitted from the Vic system when a purchase order has been created.\nThe payload for this event matches almost exactly what you will receive in the\n`getPurchaseOrder` operation.\n\n```json\n{\n  \"id\": \"a7dae8d0-8baa-7a3d-885f-a7fc14835718\",\n  \"occurred_at\": \"2025-04-04T14:34:55.123Z\",\n  \"event\": \"purchase_order_created\",\n  \"data\": {\n    \"internalId\": \"string\",\n    \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n    \"vendor\": {\n      \"internalId\": \"47\",\n      \"internalUpdatedAt\": \"2019-08-24T14:15:22Z\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"externalUpdatedAt\": \"2021-06-29T17:20:53.154\",\n      \"name\": \"Acme Corporation\",\n      \"email\": \"vendor@acme.com\",\n      \"description\": \"They sell anvils\",\n      \"phone\": \"555-555-5555\",\n      \"addressStreet\": \"123 Main Street\\nSuite 100\",\n      \"addressCity\": \"Springfield\",\n      \"addressState\": \"IL\",\n      \"addressPostalCode\": \"62701\",\n      \"countryCode\": \"US\",\n      \"currency\": \"USD\",\n      \"confirmedAt\": \"2019-08-24T14:15:22Z\",\n      \"state\": \"CONFIRMED\",\n      \"taxInfo\": {\n        \"taxId\": \"11-1234567\",\n        \"is1099vendor\": false,\n        \"orgNumber\": null\n      },\n      \"defaultPaymentInfo\": null,\n      \"paymentTermId\": \"80b25998-53d5-4563-abd4-ea6566e3cf2b\",\n      \"poMatchingDocumentLevel\": false,\n      \"vendorGroupId\": \"c4299feb-c5fa-4e0b-a7a6-51fbfbe0854d\",\n      \"tags\": [],\n      \"externalData\": {},\n      \"errors\": []\n    },\n    \"internalUpdatedAt\": \"2019-08-24T14:15:22Z\",\n    \"issuedOn\": \"2019-08-24\",\n    \"createdOn\": \"2019-08-24\",\n    \"poNumber\": \"string\",\n    \"deliverOn\": \"2019-08-24\",\n    \"amount\": \"1.00\",\n    \"currencyId\": \"USD\",\n    \"status\": \"open\",\n    \"matchingType\": \"document\",\n    \"type\": \"blanket\",\n    \"description\": \"string\",\n    \"lineItems\": [\n      {\n        \"internalId\": \"string\",\n        \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n        \"productNumber\": \"string\",\n        \"productDescription\": \"string\",\n        \"unitOfMeasure\": \"kg\",\n        \"quantityAccepted\": \"1.0\",\n        \"quantityRequested\": \"1.0\",\n        \"quantityReceived\": \"1.0\",\n        \"matchingType\": \"two_way\",\n        \"unitAmount\": \"1.00\",\n        \"lineItemTotal\": \"1.00\",\n        \"lineNumber\": 1,\n        \"dimensions\": [\n          {\n            \"internalId\": \"1234\",\n            \"externalId\": \"D0123148\",\n            \"name\": \"project - the big one\",\n            \"typeExternalId\": \"project\"\n          }\n        ],\n        \"invoiceItemsMatched\": [\n          {\n            \"invoiceItemId\": \"123\",\n            \"purchaseOrderItemId\": \"6bde599d-3b7e-497c-ab91-1594a2efcdab\",\n            \"unitOfMeasure\": \"kg\",\n            \"amountMatched\": \"123.34\",\n            \"quantityMatched\": \"1.0\"\n          }\n        ],\n        \"memo\": \"string\",\n        \"status\": \"open\"\n      }\n    ],\n    \"paymentTermId\": \"80b25998-53d5-4563-abd4-ea6566e3cf2b\"\n  }\n}\n```\n\n### Purchase Order Updated\n\nThis event is emitted from the Vic system when a purchase order has been updated.\nThe payload for this event matches almost exactly what you will receive in the\n`getPurchaseOrder` operation. This event is a snapshot of the purchase order at\nthe time of the event.\n\n```json\n{\n  \"id\": \"a7dae8d0-8baa-7a3d-885f-a7fc14835718\",\n  \"occurred_at\": \"2025-04-04T14:34:55.123Z\",\n  \"event\": \"purchase_order_updated\",\n  \"data\": {\n    \"internalId\": \"string\",\n    \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n    \"vendor\": {\n      \"internalId\": \"47\",\n      \"internalUpdatedAt\": \"2019-08-24T14:15:22Z\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"externalUpdatedAt\": \"2021-06-29T17:20:53.154\",\n      \"name\": \"Acme Corporation\",\n      \"email\": \"vendor@acme.com\",\n      \"description\": \"They sell anvils\",\n      \"phone\": \"555-555-5555\",\n      \"addressStreet\": \"123 Main Street\\nSuite 100\",\n      \"addressCity\": \"Springfield\",\n      \"addressState\": \"IL\",\n      \"addressPostalCode\": \"62701\",\n      \"countryCode\": \"US\",\n      \"currency\": \"USD\",\n      \"confirmedAt\": \"2019-08-24T14:15:22Z\",\n      \"state\": \"CONFIRMED\",\n      \"taxInfo\": {\n        \"taxId\": \"11-1234567\",\n        \"is1099vendor\": false,\n        \"orgNumber\": null\n      },\n      \"defaultPaymentInfo\": null,\n      \"paymentTermId\": \"80b25998-53d5-4563-abd4-ea6566e3cf2b\",\n      \"poMatchingDocumentLevel\": false,\n      \"vendorGroupId\": \"c4299feb-c5fa-4e0b-a7a6-51fbfbe0854d\",\n      \"tags\": [],\n      \"externalData\": {},\n      \"errors\": []\n    },\n    \"internalUpdatedAt\": \"2019-08-24T14:15:22Z\",\n    \"issuedOn\": \"2019-08-24\",\n    \"createdOn\": \"2019-08-24\",\n    \"poNumber\": \"string\",\n    \"deliverOn\": \"2019-08-24\",\n    \"amount\": \"1.00\",\n    \"currencyId\": \"USD\",\n    \"status\": \"open\",\n    \"matchingType\": \"document\",\n    \"type\": \"blanket\",\n    \"description\": \"string\",\n    \"lineItems\": [\n      {\n        \"internalId\": \"string\",\n        \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n        \"productNumber\": \"string\",\n        \"productDescription\": \"string\",\n        \"unitOfMeasure\": \"kg\",\n        \"quantityAccepted\": \"1.0\",\n        \"quantityRequested\": \"1.0\",\n        \"quantityReceived\": \"1.0\",\n        \"matchingType\": \"two_way\",\n        \"unitAmount\": \"1.00\",\n        \"lineItemTotal\": \"1.00\",\n        \"lineNumber\": 1,\n        \"dimensions\": [\n          {\n            \"internalId\": \"1234\",\n            \"externalId\": \"D0123148\",\n            \"name\": \"project - the big one\",\n            \"typeExternalId\": \"project\"\n          }\n        ],\n        \"invoiceItemsMatched\": [\n          {\n            \"invoiceItemId\": \"123\",\n            \"purchaseOrderItemId\": \"6bde599d-3b7e-497c-ab91-1594a2efcdab\",\n            \"unitOfMeasure\": \"kg\",\n            \"amountMatched\": \"123.34\",\n            \"quantityMatched\": \"1.0\"\n          }\n        ],\n        \"memo\": \"string\",\n        \"status\": \"open\"\n      }\n    ],\n    \"paymentTermId\": \"80b25998-53d5-4563-abd4-ea6566e3cf2b\"\n  }\n}\n```\n### Purchase Order Deleted\n\nThis event is emitted from the Vic system when a purchase order has been deleted.\nThe payload for this event is sparse. It only contains the `internalId` and\n`externalId` of the purchase order.\n\n```json\n{\n  \"id\": \"a7dae8d0-8baa-7a3d-885f-a7fc14835718\",\n  \"occurred_at\": \"2025-04-04T14:34:55.123Z\",\n  \"event\": \"purchase_order_deleted\",\n  \"data\": {\n    \"internalId\": \"4c029f1b-f87f-4a05-a511-8cda223dad2a\",\n    \"externalId\": \"12345\"\n  }\n}\n```\n\n### Payment Batch Processed\n\nThis event is emitted from the Vic system when a batch of payments has been sent\nto the payment processor and a successful response has been obtained. The\npayload for this event matches almost exactly what you will receive in the\n`getPaymentBatch` operation.\n\nOnly approved credits and payments will be emitted with the event. Voided and\nrejected payments will not be sent. If you need these values, you should call\n`getPaymentBatch` in order to fetch them.\n\nHere is an example of an $200 invoice being paid in full with a $20 credit note\nbeing applied. This will bring the total batch payment to $180. The credit note\napplied is not subtracted from the payment in this breakdown because ERPs\ntypically need entries of the payment being applied and the credit note being\nused in conjunction with that credit note.\n\n```json\n{\n  \"id\": \"a7dae8d0-8bsa-7a3d-882f-a7fc14835719\",\n  \"event\": \"payment_batch_processed\",\n  \"occurred_at\": \"2025-04-04T14:34:55.123Z\",\n  \"data\": {\n    \"id\": \"f1c2384f-57d8-41fe-afa6-17caf62b2a3f\",\n    \"name\": \"Batch 2023-10-01 001\",\n    \"processedAt\": \"2023-10-01T19:12:00Z\",\n    \"approvedAt\": \"2023-10-01T19:12:00Z\",\n    \"rejectedAt\": null,\n    \"voidedAt\": null,\n    \"status\": \"approved\",\n    \"companyId\": \"123\",\n    \"payments\": [\n      {\n        \"id\": \"edb3a624-9f12-4cd8-adb8-4d9a5ec0b48b\",\n        \"amount\": \"200.00\",\n        \"settlementAmount\": \"200.00\",\n        \"settlementCurrencyId\": \"USD\",\n        \"exchangeRate\": \"1.0\",\n        \"discountAmount\": \"0.00\",\n        \"currencyId\": \"USD\",\n        \"status\": \"approved\",\n        \"voidedAt\": null,\n        \"rejectedAt\": null,\n        \"approvedAt\": \"2023-10-01T19:12:00Z\",\n        \"fundedAt\": null,\n        \"costAccount\": {\n          \"internalId\": \"1\",\n          \"externalId\": \"cost-account-id-in-erp\"\n        },\n        \"invoice\": {\n          \"internalId\": \"876\",\n          \"externalId\": \"invoice-id-in-erp\",\n          \"refNumber\": \"INV-123456\"\n        },\n        \"vendor\": {\n          \"internalId\": \"409\",\n          \"externalId\": \"vendor-id-in-erp\"\n        },\n      }\n    ],\n    \"credits\": [\n      {\n        \"id\": \"091f257a-9b6e-4797-bcb6-ccd36dda260f\",\n        \"amount\": \"20.00\",\n        \"settlementAmount\": \"20.00\",\n        \"settlementCurrencyId\": \"USD\",\n        \"exchangeRate\": \"1.0\",\n        \"discountAmount\": \"0.00\",\n        \"currencyId\": \"USD\",\n        \"status\": \"approved\",\n        \"voidedAt\": null,\n        \"rejectedAt\": null,\n        \"approvedAt\": \"2023-10-01T19:12:00Z\",\n        \"fundedAt\": null,\n        \"costAccount\": {\n          \"internalId\": \"1\",\n          \"externalId\": \"cost-account-id-in-erp\"\n        },\n        \"invoice\": {\n          \"internalId\": \"900\",\n          \"externalId\": \"credit-note-id-in-erp\",\n          \"refNumber\": \"CRN-123456\"\n        },\n        \"vendor\": {\n          \"internalId\": \"409\",\n          \"externalId\": \"vendor-id-in-erp\"\n        },\n      }\n    ]\n  }\n}\n```\n\n### Payment Status Updated\n\nThis event is emitted when a payment you were previously notified about reaches\na terminal outcome. For now it is sent only for negative outcomes (`failed`,\n`returned` and `voided`) and may be extended to other statuses later, so read\n`data.status` rather than assuming the outcome. Use it to keep your own system\nin sync without polling. Credits have their own\n[`credit_status_updated`](#credit-status-updated) event.\n\n* `data` is the payment itself, in the same shape the `getPaymentBatch`\n  operation returns, flattened directly onto `data` (plus `batchId`).\n* `data.status` is the outcome that fired (`failed`, `returned` or `voided`). It\n  overrides the payment's own status, so a returned payment reads `returned`\n  here even though its underlying status may be `funded`.\n\n```json\n{\n  \"id\": \"a7dae8d0-8baa-7a3d-885f-a7fc14835718\",\n  \"occurred_at\": \"2025-04-04T14:34:55.123Z\",\n  \"event\": \"payment_status_updated\",\n  \"data\": {\n    \"status\": \"failed\",\n    \"batchId\": \"f1c2384f-57d8-41fe-afa6-17caf62b2a3f\",\n    \"id\": \"edb3a624-9f12-4cd8-adb8-4d9a5ec0b48b\",\n    \"amount\": \"200.00\",\n    \"currencyId\": \"USD\",\n    \"failedAt\": \"2023-10-02T08:00:00Z\",\n    \"failedReason\": \"insufficient_funds\",\n    \"invoice\": {\n      \"internalId\": \"876\",\n      \"externalId\": \"invoice-id-in-erp\",\n      \"refNumber\": \"INV-123456\"\n    },\n    \"vendor\": {\n      \"internalId\": \"409\",\n      \"externalId\": \"vendor-id-in-erp\"\n    }\n  }\n}\n```\n\n### Credit Status Updated\n\nThis event mirrors [`payment_status_updated`](#payment-status-updated) for\ncredits. It is emitted when a credit you were previously notified about reaches\na terminal outcome (currently `failed`, `returned` or `voided`).\n\n* `data` is the credit itself, in the same shape the `getPaymentBatch`\n  operation returns, flattened directly onto `data` (plus `batchId`).\n* `data.status` is the outcome that fired (`failed`, `returned` or `voided`),\n  overriding the credit's own status.\n\n```json\n{\n  \"id\": \"b1e9c7d2-4a3f-7b1e-995a-c2fd25946832\",\n  \"occurred_at\": \"2025-04-04T14:34:55.123Z\",\n  \"event\": \"credit_status_updated\",\n  \"data\": {\n    \"status\": \"voided\",\n    \"batchId\": \"f1c2384f-57d8-41fe-afa6-17caf62b2a3f\",\n    \"id\": \"091f257a-9b6e-4797-bcb6-ccd36dda260f\",\n    \"amount\": \"20.00\",\n    \"currencyId\": \"USD\",\n    \"voidedAt\": \"2023-10-02T08:00:00Z\",\n    \"invoice\": {\n      \"internalId\": \"900\",\n      \"externalId\": \"credit-note-id-in-erp\",\n      \"refNumber\": \"CRN-123456\"\n    },\n    \"vendor\": {\n      \"internalId\": \"409\",\n      \"externalId\": \"vendor-id-in-erp\"\n    }\n  }\n}\n```\n\n### Vendor Onboarding Form Completed\n\nThis event is emitted from the Vic system when a vendor completes their onboarding form submission. The payload includes the full vendor details along with the specific completed onboarding form, its items, and all responses.\n\nThis event is useful for integrations that need to capture vendor onboarding information, validate submitted data, or trigger follow-up processes in external systems when vendors complete their onboarding.\n\n```json\n{\n  \"id\": \"a7dae8d0-8baa-7a3d-885f-a7fc14835718\",\n  \"occurred_at\": \"2025-04-04T14:34:55.123Z\",\n  \"event\": \"vendor_onboarding_form_completed\",\n  \"data\": {\n    \"vendor\": {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"legacy_id\": \"12345\",\n      \"name\": \"Acme Corporation\",\n      \"legal_name\": \"Acme Corporation Inc.\",\n      \"doing_business_as\": \"Acme Supply Co\",\n      \"email\": \"vendor@acme.com\",\n      \"description\": \"Office supplies vendor\",\n      \"phone\": \"+1-555-123-4567\",\n      \"address_street_1\": \"123 Main Street\",\n      \"address_street_2\": \"Suite 100\",\n      \"address_city\": \"Springfield\",\n      \"address_state\": \"IL\",\n      \"address_postal_code\": \"62701\",\n      \"country_code\": \"US\",\n      \"currency\": \"USD\",\n      \"org_number\": \"123456789\",\n      \"tax_id\": \"12-3456789\",\n      \"tax_id_type\": \"ein\",\n      \"track_1099\": false,\n      \"confirmed_at\": \"2025-04-04T14:30:00Z\",\n      \"state\": \"pending\",\n      \"remote_id\": \"vendor-ext-123\",\n      \"remote_updated_at\": \"2025-04-04T14:30:00Z\",\n      \"remote_data\": null,\n      \"remote_errors\": null,\n      \"payment_term_id\": \"80b25998-53d5-4563-abd4-ea6566e3cf2b\",\n      \"po_matching_document_level\": false,\n      \"vendor_group_id\": null,\n      \"updated_at\": \"2025-04-04T14:30:00Z\",\n      \"ofac_status\": \"cleared\",\n      \"ofac_report\": {\n        \"id\": \"ad158953-172d-44dd-aaf0-a61882c792d0\",\n        \"high_risk_hits\": 0,\n        \"medium_risk_hits\": 0,\n        \"low_risk_hits\": 0,\n        \"total_hits\": 0,\n        \"risk_level\": \"low\",\n        \"matches\": [],\n        \"created_at\": \"2025-04-04T14:25:00Z\"\n      },\n      \"banking_info\": [\n        {\n          \"id\": \"7c5e8400-e29b-41d4-a716-446655440001\",\n          \"kind\": \"ach\",\n          \"account_number\": \"123456789\",\n          \"is_primary\": true\n        }\n      ],\n      \"tags\": [\n        {\n          \"id\": \"9f3a8400-e29b-41d4-a716-446655440002\",\n          \"value\": \"preferred-vendor\"\n        }\n      ]\n    },\n    \"form\": {\n      \"id\": \"b2c4e8d0-8baa-7a3d-885f-a7fc14835720\",\n      \"status\": \"submitted\",\n      \"template_version_id\": \"d5f7a2b1-9cde-4f6g-7h8i-9j0k1l2m3n4o\",\n      \"inserted_at\": \"2025-04-01T10:00:00Z\",\n      \"updated_at\": \"2025-04-04T14:30:00Z\",\n      \"items\": [\n        {\n          \"id\": \"c3d5f9e1-9cba-8b4e-996g-b8gd25946831\",\n          \"type\": \"text\",\n          \"required\": true,\n          \"order\": 1,\n          \"value\": \"Acme Corporation\",\n          \"date_value\": null,\n          \"question\": {\n            \"id\": \"e6g8h0f2-0deb-9c5f-007h-c9he36057942\",\n            \"label\": \"What is your business name?\",\n            \"type\": \"text\",\n            \"required\": true,\n            \"placeholder\": \"Enter your business name\",\n            \"max_length\": 255,\n            \"validation\": null,\n            \"min_selection\": null,\n            \"max_selection\": null,\n            \"rows\": null,\n            \"available_options\": []\n          },\n          \"options\": []\n        },\n        {\n          \"id\": \"d4e6g0f2-0dcb-9c5f-007h-c9he36057943\",\n          \"type\": \"email\",\n          \"required\": true,\n          \"order\": 2,\n          \"value\": \"contact@acme.com\",\n          \"date_value\": null,\n          \"question\": {\n            \"id\": \"f7h9i1g3-1edc-0d6g-118i-d0if47168053\",\n            \"label\": \"Primary contact email\",\n            \"type\": \"email\",\n            \"required\": true,\n            \"placeholder\": \"email@example.com\",\n            \"max_length\": null,\n            \"validation\": null,\n            \"min_selection\": null,\n            \"max_selection\": null,\n            \"rows\": null,\n            \"available_options\": []\n          },\n          \"options\": []\n        },\n        {\n          \"id\": \"e5f7h1g3-1edc-0d6g-118i-d0if47168054\",\n          \"type\": \"date\",\n          \"required\": false,\n          \"order\": 3,\n          \"value\": null,\n          \"date_value\": \"2025-01-15\",\n          \"question\": {\n            \"id\": \"g8i0j2h4-2fed-1e7h-229j-e1jg58279164\",\n            \"label\": \"When did you incorporate?\",\n            \"type\": \"date\",\n            \"required\": false,\n            \"placeholder\": null,\n            \"max_length\": null,\n            \"validation\": null,\n            \"min_selection\": null,\n            \"max_selection\": null,\n            \"rows\": null,\n            \"available_options\": []\n          },\n          \"options\": []\n        },\n        {\n          \"id\": \"f6g8i2h4-2fed-1e7h-229j-e1jg58279165\",\n          \"type\": \"radio\",\n          \"required\": true,\n          \"order\": 4,\n          \"value\": null,\n          \"date_value\": null,\n          \"question\": {\n            \"id\": \"h9j1k3i5-3gfe-2f8i-330k-f2kh69380275\",\n            \"label\": \"Are you a registered business?\",\n            \"type\": \"radio\",\n            \"required\": true,\n            \"placeholder\": null,\n            \"max_length\": null,\n            \"validation\": null,\n            \"min_selection\": null,\n            \"max_selection\": null,\n            \"rows\": null,\n            \"available_options\": [\n              {\n                \"id\": \"i0k2l4j6-4hgf-3g9j-441l-g3li70491386\",\n                \"value\": \"Yes\",\n                \"order\": 1,\n                \"allow_custom\": false\n              },\n              {\n                \"id\": \"j1l3m5k7-5ihg-4h0k-552m-h4mj81502497\",\n                \"value\": \"No\",\n                \"order\": 2,\n                \"allow_custom\": false\n              }\n            ]\n          },\n          \"options\": [\n            {\n              \"id\": \"g7h9j3i5-3gfe-2f8i-330k-f2kh69380276\",\n              \"value\": \"Yes\",\n              \"custom\": null,\n              \"order\": 1,\n              \"selected_option\": {\n                \"id\": \"i0k2l4j6-4hgf-3g9j-441l-g3li70491386\",\n                \"value\": \"Yes\",\n                \"allow_custom\": false\n              }\n            }\n          ]\n        },\n        {\n          \"id\": \"h8i0k4j6-4hgf-3g9j-441l-g3li70491387\",\n          \"type\": \"checkbox\",\n          \"required\": false,\n          \"order\": 5,\n          \"value\": null,\n          \"date_value\": null,\n          \"question\": {\n            \"id\": \"j1l3m5k7-5ihg-4h0k-552m-h4mj81502497\",\n            \"label\": \"Which certifications do you have?\",\n            \"type\": \"checkbox\",\n            \"required\": false,\n            \"placeholder\": null,\n            \"max_length\": null,\n            \"validation\": null,\n            \"min_selection\": 1,\n            \"max_selection\": null,\n            \"rows\": null,\n            \"available_options\": [\n              {\n                \"id\": \"k2m4n6l8-6jih-5i1l-663n-i5nk92613508\",\n                \"value\": \"ISO 9001\",\n                \"order\": 1,\n                \"allow_custom\": false\n              },\n              {\n                \"id\": \"l3n5o7m9-7kji-6j2m-774o-j6ol03724619\",\n                \"value\": \"ISO 14001\",\n                \"order\": 2,\n                \"allow_custom\": false\n              },\n              {\n                \"id\": \"m4o6p8n0-8lkj-7k3n-885p-k7pm14835730\",\n                \"value\": \"ISO 27001\",\n                \"order\": 3,\n                \"allow_custom\": false\n              }\n            ]\n          },\n          \"options\": [\n            {\n              \"id\": \"i9j1l5k7-5ihg-4h0k-552m-h4mj81502498\",\n              \"value\": \"ISO 9001\",\n              \"custom\": null,\n              \"order\": 1,\n              \"selected_option\": {\n                \"id\": \"k2m4n6l8-6jih-5i1l-663n-i5nk92613508\",\n                \"value\": \"ISO 9001\",\n                \"allow_custom\": false\n              }\n            },\n            {\n              \"id\": \"j0k2m6l8-6jih-5i1l-663n-i5nk92613509\",\n              \"value\": \"ISO 14001\",\n              \"custom\": null,\n              \"order\": 2,\n              \"selected_option\": {\n                \"id\": \"l3n5o7m9-7kji-6j2m-774o-j6ol03724619\",\n                \"value\": \"ISO 14001\",\n                \"allow_custom\": false\n              }\n            }\n          ]\n        },\n        {\n          \"id\": \"k1l3n7m9-7kji-6j2m-774o-j6ol03724620\",\n          \"type\": \"dropdown\",\n          \"required\": true,\n          \"order\": 6,\n          \"value\": null,\n          \"date_value\": null,\n          \"question\": {\n            \"id\": \"m4o6p8n0-8lkj-7k3n-885p-k7pm14835730\",\n            \"label\": \"What industry are you in?\",\n            \"type\": \"dropdown\",\n            \"required\": true,\n            \"placeholder\": \"Select an industry\",\n            \"max_length\": null,\n            \"validation\": null,\n            \"min_selection\": null,\n            \"max_selection\": null,\n            \"rows\": null,\n            \"available_options\": [\n              {\n                \"id\": \"o6q8r0p2-0nmk-9m5p-007r-m9ro36158052\",\n                \"value\": \"Technology\",\n                \"order\": 1,\n                \"allow_custom\": false\n              },\n              {\n                \"id\": \"p7r9s1q3-1onl-0n6q-118s-n0sp47269163\",\n                \"value\": \"Manufacturing\",\n                \"order\": 2,\n                \"allow_custom\": false\n              },\n              {\n                \"id\": \"n5p7q9o1-9mlk-8l4o-996q-l8qn25946841\",\n                \"value\": \"Other\",\n                \"order\": 3,\n                \"allow_custom\": true\n              }\n            ]\n          },\n          \"options\": [\n            {\n              \"id\": \"l2m4o8n0-8lkj-7k3n-885p-k7pm14835731\",\n              \"value\": \"Other\",\n              \"custom\": \"Custom industry type\",\n              \"order\": 1,\n              \"selected_option\": {\n                \"id\": \"n5p7q9o1-9mlk-8l4o-996q-l8qn25946841\",\n                \"value\": \"Other\",\n                \"allow_custom\": true\n              }\n            }\n          ]\n        }\n      ]\n    }\n  }\n}\n```\n\n### Vendor Created\n\nThis event is emitted when a vendor is created in Vic — for example, after a\nuser fills in the add-vendor form in the Vic UI. The payload contains the full\nvendor record so that an external ERP can create a matching vendor.\n\nBoth the predefined (\"common\") fields and any per-company custom fields the\ncompany has configured for vendors flow through to this payload via the\nvendor's standard attributes. Values that the company has not provided are\nsent as `null`.\n\n```json\n{\n  \"id\": \"a7dae8d0-8baa-7a3d-885f-a7fc14835720\",\n  \"occurred_at\": \"2025-04-04T14:34:55.123Z\",\n  \"event\": \"vendor_created\",\n  \"data\": {\n    \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"legacy_id\": \"12345\",\n    \"name\": \"Acme Corporation\",\n    \"legal_name\": \"Acme Corporation Inc.\",\n    \"remote_id\": null,\n    \"state\": \"pending\"\n  }\n}\n```\n\n### Vendor Updated\n\nThis event is emitted when an existing vendor is updated in Vic. The payload\nmirrors `vendor_created`. Rapid successive edits to the same vendor are\ndebounced — only the most recent state is delivered after a short window. An\nupdate that doesn't change any vendor data — for example, re-sending identical\ndata — does not emit this event.\n\n```json\n{\n  \"id\": \"a7dae8d0-8baa-7a3d-885f-a7fc14835721\",\n  \"occurred_at\": \"2025-04-04T14:34:55.123Z\",\n  \"event\": \"vendor_updated\",\n  \"data\": {\n    \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"legacy_id\": \"12345\",\n    \"name\": \"Acme Corporation\",\n    \"remote_id\": \"vendor-ext-123\",\n    \"state\": \"active\"\n  }\n}\n```\n"
+paths:
+  /v0/webhooks/events:
+    get:
+      description: 'Use this request to query webhook events that are stored in Vic.ai.
+
+        Events include invoice processing, vendor updates, payment processing,
+
+        purchase orders, and other system activities that trigger webhook notifications.
+
+
+        An event is recorded only if, at the time it is generated, a subscription''s
+
+        event types include it. Events generated before such a subscription existed
+
+        are not stored, so this endpoint returns the events recorded for the company
+
+        rather than a complete history of all account activity.
+
+        '
+      summary: List webhook events
+      operationId: listWebhookEvents
+      tags:
+      - Webhook Events
+      x-badges:
+      - name: Beta
+        position: after
+        color: orange
+      parameters:
+      - $ref: '#/components/parameters/PagingLimit'
+      - $ref: '#/components/parameters/PagingCursor'
+      - $ref: '#/components/parameters/WebhookEventTypes'
+      - $ref: '#/components/parameters/OccurredAfter'
+      - $ref: '#/components/parameters/OccurredBefore'
+      - $ref: '#/components/parameters/WebhookUndeliveredFilter'
+      responses:
+        '200':
+          $ref: '#/components/responses/WebhookEventsResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+  /v0/webhooks/events/{event_id}:
+    get:
+      description: 'Use this request to get data for a specific webhook event details
+
+        '
+      summary: Get a webhook event
+      operationId: getWebhookEvent
+      tags:
+      - Webhook Events
+      x-badges:
+      - name: Beta
+        position: after
+        color: orange
+      parameters:
+      - $ref: '#/components/parameters/WebhookEventId'
+      responses:
+        '200':
+          $ref: '#/components/responses/WebhookEventResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+  /v2/webhook_event_types:
+    get:
+      description: 'Use this request to get all available webhook event types that can be
+
+        subscribed to in Vic.ai. This includes event types for invoices,
+
+        vendors, payments, purchase orders, and other system activities.
+
+        '
+      summary: List webhook event types
+      operationId: listWebhookEventTypesV2
+      tags:
+      - Webhook Events
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      - name: Beta
+        position: after
+        color: orange
+      responses:
+        '200':
+          $ref: '#/components/responses/WebhookEventTypesResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/companies/{company_id}/webhook/events:
+    get:
+      description: 'Use this request to query the webhook events stored for a specific company.
+
+
+        An event is recorded only if, at the time it is generated, the company has a
+
+        subscription whose event types include it. Events generated before such a
+
+        subscription existed are not stored and cannot be retrieved here, so this
+
+        endpoint returns the events recorded for the company rather than a complete
+
+        history of all account activity.
+
+        '
+      summary: List webhook events by company
+      operationId: listCompanyWebhookEventsV2
+      tags:
+      - Webhook Events
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      - name: Beta
+        position: after
+        color: orange
+      parameters:
+      - $ref: '#/components/parameters/CompanyId'
+      - $ref: '#/components/parameters/WebhookEventType'
+      - $ref: '#/components/parameters/WebhookEventTypes'
+      - $ref: '#/components/parameters/OccurredAfter'
+      - $ref: '#/components/parameters/OccurredBefore'
+      - $ref: '#/components/parameters/WebhookUndeliveredFilter'
+      - $ref: '#/components/parameters/PaginationV2'
+      responses:
+        '200':
+          $ref: '#/components/responses/WebhookEventsResponseV2'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/companies/{company_id}/webhook/events/{event_id}:
+    get:
+      description: 'Use this request to get detailed information about a specific webhook event for a
+
+        company that is stored in Vic.ai. This includes delivery attempts, payload data, and status information.
+
+        '
+      summary: Get a webhook event by company
+      operationId: getCompanyWebhookEventV2
+      tags:
+      - Webhook Events
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      - name: Beta
+        position: after
+        color: orange
+      parameters:
+      - $ref: '#/components/parameters/CompanyId'
+      - $ref: '#/components/parameters/WebhookEventId'
+      responses:
+        '200':
+          $ref: '#/components/responses/WebhookEventResponseV2'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+components:
+  responses:
+    WebhookEventResponse:
+      description: A single webhook event.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WebhookEvent'
+    WebhookEventsResponseV2:
+      description: A paged list of webhook events (V2 format)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WebhookEventsListV2'
+    WebhookEventResponseV2:
+      description: A single webhook event with delivery information (V2 format)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WebhookEventV2'
+    ErrorResponse:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TooManyRequestsResponse:
+      description: HTTP call rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    WebhookEventsResponse:
+      description: A paged array of webhook events
+      headers:
+        x-next:
+          $ref: '#/components/headers/NextPageToken'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WebhookEventsList'
+    ErrorResponseV2:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ErrorV2'
+    WebhookEventTypesResponseV2:
+      description: A list of available webhook event types
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WebhookEventTypesList'
+    ResourceNotFoundResponse:
+      description: Resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    WebhookEventsListV2:
+      type: object
+      required:
+      - data
+      - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookEvent'
+          description: List of webhook events
+        meta:
+          type: object
+          required:
+          - page
+          properties:
+            page:
+              $ref: '#/components/schemas/PaginationMetaV2'
+    WebhookEventsList:
+      type: array
+      items:
+        $ref: '#/components/schemas/WebhookEvent'
+    ErrorV2:
+      type: object
+      required:
+      - message
+      properties:
+        field:
+          description: 'The field that the error occurred on. This field may not always be
+
+            present.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
+        message:
+          description: A description of the error.
+          type: string
+    WebhookEventTypesList:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            type: string
+          description: List of available webhook event type names
+          example:
+          - invoice_approved
+          - invoice_posted
+          - invoice_rejected
+          - invoice_updated
+          - payment_batch_processed
+          - payment_status_updated
+          - credit_status_updated
+          - purchase_order_created
+          - purchase_order_deleted
+          - purchase_order_updated
+          - vendor_created
+          - vendor_onboarding_form_completed
+          - vendor_updated
+          - ping
+    WebhookEvent:
+      type: object
+      required:
+      - id
+      - type
+      - version
+      - occurred_at
+      - body
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the webhook event
+        type:
+          type: string
+          description: The type of event that occurred
+          example: invoice_approved
+        version:
+          type: integer
+          description: Version of the event schema
+          example: 1
+        occurred_at:
+          type: string
+          format: date-time
+          description: When the event occurred
+        body:
+          type: object
+          description: Event-specific payload data
+    PaginationV2:
+      type: object
+      properties:
+        size:
+          type: integer
+          description: The page size.
+          maximum: 50
+          minimum: 1
+        cursor:
+          type: string
+          description: The cursor to use to get the next page of results.
+    WebhookEventV2:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          $ref: '#/components/schemas/WebhookEvent'
+    PaginationMetaV2:
+      type: object
+      properties:
+        cursor:
+          description: 'The cursor to the next page of data. If it is null, that means there
+
+            is no more data to fetch.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
+    WebhookEventTypeName:
+      type: string
+      description: A webhook event type.
+      enum:
+      - invoicePost
+      - invoiceTransfer
+      - vendorNew
+      - syncRequest
+      - payment_batch_processed
+      - payment_status_updated
+      - credit_status_updated
+      - invoice_approved
+      - invoice_deleted
+      - invoice_restored
+      - invoice_post
+      - invoice_posted
+      - invoice_rejected
+      - invoice_submitted
+      - invoice_transfer
+      - invoice_updated
+      - purchase_order_created
+      - purchase_order_updated
+      - purchase_order_deleted
+      - vendor_created
+      - vendor_updated
+      - vendor_onboarding_form_completed
+      - ping
+    ErrorString:
+      type: string
+      maxLength: 255
+    Error:
+      description: 'generic error message in JSON format.  Note the ''code'' field should
+
+        match the HTTP status code of the wrapping HTTP request.
+
+        '
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          minimum: 100
+          maximum: 599
+        message:
+          $ref: '#/components/schemas/ErrorString'
+  parameters:
+    WebhookEventTypes:
+      name: event_types
+      in: query
+      description: 'Filter events by one or more types, given as a comma-separated list
+
+        (for example `invoice_posted,invoice_approved`). Omit to return events
+
+        of every type.
+
+        '
+      required: false
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/WebhookEventTypeName'
+    PagingLimit:
+      name: limit
+      in: query
+      description: How many items to return at one time (max 100) (default 100)
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+    CompanyId:
+      name: company_id
+      in: path
+      required: true
+      description: The ID of the company
+      schema:
+        type: string
+        format: uuid
+    OccurredAfter:
+      name: occurred_after
+      in: query
+      description: Filter events that occurred on or after this date. Required parameter. The date range between occurred_after and occurred_before cannot exceed 30 days.
+      required: true
+      schema:
+        type: string
+        format: date-time
+    WebhookEventId:
+      name: event_id
+      in: path
+      required: true
+      description: The ID of the webhook event
+      schema:
+        type: string
+        format: uuid
+    OccurredBefore:
+      name: occurred_before
+      in: query
+      description: Filter events that occurred on or before this date. Required parameter. The date range between occurred_after and occurred_before cannot exceed 30 days.
+      required: true
+      schema:
+        type: string
+        format: date-time
+    PaginationV2:
+      name: page
+      in: query
+      schema:
+        $ref: '#/components/schemas/PaginationV2'
+    WebhookUndeliveredFilter:
+      name: undelivered
+      in: query
+      description: Filter to show only events that have not been delivered
+      required: false
+      schema:
+        type: boolean
+    WebhookEventType:
+      name: event_type
+      in: query
+      description: 'Filter events by a single type. Omit the parameter to return events of
+
+        every type. To filter by several types at once, use `event_types`
+
+        instead.
+
+        '
+      required: false
+      schema:
+        $ref: '#/components/schemas/WebhookEventTypeName'
+    PagingCursor:
+      name: cursor
+      in: query
+      description: Which item to start from. See [Pagination](#section/Pagination) for more information.
+      required: false
+      schema:
+        type: string
+  headers:
+    NextPageToken:
+      description: A link to the next page of responses
+      schema:
+        type: string
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-tagGroups:
+- name: Integration
+  tags:
+  - Authentication
+  - Pagination
+  - Webhooks
+  - Webhook Subscriptions
+  - Webhook Events
+  - Synchronizing
+  - Status
+- name: Master Data
+  tags:
+  - Accounts
+  - Dimensions
+  - Vendors
+  - Vendor Groups
+  - Vendor Tags
+  - Tags
+  - Tax Codes
+  - VAT Codes
+  - Payment Terms
+- name: Organization & Access
+  tags:
+  - Partners
+  - Organizations
+  - Companies
+  - Users
+- name: Invoices & Bills
+  tags:
+  - Invoices
+  - Bills
+  - Attachments
+  - Invoice Approval Flows
+  - Invoice Posting Guide
+  - Training Invoices
+- name: Purchase Orders
+  tags:
+  - Purchase Orders
+  - Purchase Order Line Items
+  - Purchase Order Matching Guide
+- name: Payments
+  tags:
+  - Payment Batches
+  - Payment Confirmations
+  - Credit Confirmations
+- name: Reporting
+  tags:
+  - CSV Reports
+- name: Reference
+  tags:
+  - Changelog

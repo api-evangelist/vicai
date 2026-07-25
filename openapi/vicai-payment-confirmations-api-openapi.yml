@@ -1,0 +1,1165 @@
+openapi: 3.1.0
+info:
+  version: v10.40.4
+  contact: {}
+  title: Vic.ai Accounts Payment Confirmations API
+  description: "## Introduction\n\nThe Vic.ai API provides a seamless connection between your Enterprise Resource\nPlanning (ERP) system and the Vic.ai product suite.\n\nThe API is designed to offer three main areas of functionality:\n\n- **Syncing master data:** This refers to the data in your ERP that Vic.ai\n  interacts with. You are required to supply and update this data in Vic.ai, and\n  you also have the option to verify the copy of the masterdata in Vic.ai.\n\n- **Syncing training data:** We need historical data to train your AI model. To\n  that end, the API provides endpoints to sync historical invoices into Vic.ai\n  and to confirm their presence.\n\n- **Subscribing to and receiving webhooks:** Webhooks enable users or automated\n  tasks to interact with your ERP through various actions in the Vic.ai product\n  suite, such as posting an invoice, payment or purchase order or requesting\n  synchronization. You will receive a notification via a webhook when these\n  actions occur.\n\n\nFor US-based integrations, please use the following base API URL:\n\n```\nhttps://api.us.vic.ai\n```\n\nFor integrations based in Norway, use the following base API URL:\n\n```\nhttps://api.no.vic.ai\n```\n\nAll paths mentioned in this documentation should use one of these URLs as the\nbase.\n\nExample:\n\n```bash\ncurl https://api.us.vic.ai/v0/healthCheck \\\n    -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\"\n```\n\n## Getting Started\n\nTo begin interacting with the Vic.ai API, you will need the following\ncredentials:\n\n* A Vic.ai client ID\n* A Vic.ai client secret.\n\nThese can be provided to you securely by a Vic.ai representative\n[upon request](https://www.vic.ai/book-a-demo).\n\n**Please note:** These credentials are essentially the keys to your ERP\nintegration. If they fall into the wrong hands, unauthorized parties could\nimpersonate you, gain access to sensitive data, and potentially perform\nmalicious actions. Therefore, it's crucial to keep these credentials safe at all\ntimes to protect your application's integrity and your clients' data.\n\n### Limitations\n\nThe Vic.ai API has the following limitations:\n\n**Rate Limiting:** The API is rate-limited to 500 requests per 10-second time\nframe. If you exceed this limit, you will receive a `429 Too Many Requests`\nresponse. The limit is per Oauth client ID. If you continue to receive `429`s,\nplease contact support with a request id from the response headers.\n"
+servers:
+- url: https://api.no.stage.vic.ai
+  description: staging server, NO
+- url: https://api.us.vic.ai
+  description: production server, US
+- url: https://api.no.vic.ai
+  description: production server, NO
+security:
+- BearerAuth: []
+tags:
+- name: Payment Confirmations
+  description: Confirm or mark payments as failed after processing in your ERP.
+paths:
+  /v0/payments/{id}/confirm:
+    post:
+      description: 'Confirms a single payment by setting the `confirmedAt` timestamp and
+
+        optionally setting a `remoteId`. This is used to mark a payment as
+
+        confirmed in an external system.
+
+        '
+      summary: Confirm a payment
+      operationId: confirmPayment
+      tags:
+      - Payment Confirmations
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The id of the payment.
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfirmPaymentInput'
+      responses:
+        '200':
+          $ref: '#/components/responses/PaymentConfirmedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntityResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+  /v0/payments/confirm:
+    post:
+      description: 'Bulk confirms multiple payments in a single request. Each payment in the
+
+        request body must include an `id`, `confirmedAt` timestamp, and
+
+        optionally a `remoteId`.
+
+
+        If a payment is not found, the entire bulk confirmation is aborted.
+
+        '
+      summary: Bulk confirm payments
+      operationId: bulkConfirmPayments
+      tags:
+      - Payment Confirmations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkConfirmPaymentsInput'
+      responses:
+        '200':
+          $ref: '#/components/responses/PaymentsBulkConfirmedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntityResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+  /v0/payments/{id}/fail:
+    post:
+      description: 'Marks a payment as having a remote error by setting the `remoteErroredAt`
+
+        timestamp and `remoteError` message. Optionally sets a `remoteId`. This
+
+        clears any existing `confirmedAt` timestamp.
+
+
+        **Note**: When providing an error, please provide a clear error message
+
+        that the user can understand.
+
+        '
+      summary: Mark payment as failed
+      operationId: failPayment
+      tags:
+      - Payment Confirmations
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The id of the payment.
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FailPaymentInput'
+      responses:
+        '200':
+          $ref: '#/components/responses/PaymentFailedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntityResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+  /v0/payments/fail:
+    post:
+      description: 'Bulk marks multiple payments as having remote errors in a single request.
+
+        Each payment in the request body must include an `id`, `remoteErroredAt`
+
+        timestamp, `remoteError` message, and optionally a `remoteId`.
+
+
+        **Note**: When providing an error, please provide a clear error message
+
+        that the user can understand.
+
+
+        If a payment is not found, the entire bulk operation is aborted.
+
+        '
+      summary: Bulk fail payments
+      operationId: bulkFailPayments
+      tags:
+      - Payment Confirmations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkFailPaymentsInput'
+      responses:
+        '200':
+          $ref: '#/components/responses/PaymentsBulkFailedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntityResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequestsResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponse'
+  /v2/companies/{company_id}/payments/{id}/confirm:
+    parameters:
+    - $ref: '#/components/parameters/CompanyId'
+    post:
+      description: 'Confirms a single payment by setting the `confirmed_at` timestamp and
+
+        optionally setting a `remote_id`. This is used to mark a payment as
+
+        confirmed in an external system.
+
+        '
+      summary: Confirm a payment
+      operationId: confirmPaymentV2
+      tags:
+      - Payment Confirmations
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: The id of the payment.
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfirmPaymentInputV2'
+      responses:
+        '200':
+          $ref: '#/components/responses/PaymentConfirmedResponseV2'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntityResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/companies/{company_id}/payments/confirm:
+    parameters:
+    - $ref: '#/components/parameters/CompanyId'
+    post:
+      description: 'Bulk confirms multiple payments in a single request. Each payment in the
+
+        request body must include an `id`, `confirmed_at` timestamp, and
+
+        optionally a `remote_id`.
+
+
+        If a payment is not found, the entire bulk confirmation is aborted.
+
+        '
+      summary: Bulk confirm payments
+      operationId: bulkConfirmPaymentsV2
+      tags:
+      - Payment Confirmations
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkConfirmPaymentsInputV2'
+      responses:
+        '200':
+          $ref: '#/components/responses/PaymentsBulkConfirmedResponseV2'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntityResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/companies/{company_id}/payments/{id}/fail:
+    parameters:
+    - $ref: '#/components/parameters/CompanyId'
+    - name: id
+      in: path
+      required: true
+      description: The id of the payment.
+      schema:
+        type: string
+        format: uuid
+    post:
+      description: 'Marks a payment as having a remote error by setting the `remote_errored_at`
+
+        timestamp and `remote_error` message. Optionally sets a `remote_id`. This
+
+        clears any existing `confirmed_at` timestamp.
+
+
+        **Note**: When providing an error, please provide a clear error message
+
+        that the user can understand.
+
+        '
+      summary: Mark payment as failed
+      operationId: failPaymentV2
+      tags:
+      - Payment Confirmations
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FailPaymentInputV2'
+      responses:
+        '200':
+          $ref: '#/components/responses/PaymentFailedResponseV2'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntityResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+  /v2/companies/{company_id}/payments/fail:
+    parameters:
+    - $ref: '#/components/parameters/CompanyId'
+    post:
+      description: 'Bulk marks multiple payments as having remote errors in a single request.
+
+        Each payment in the request body must include an `id`, `remote_errored_at`
+
+        timestamp, `remote_error` message, and optionally a `remote_id`.
+
+
+        **Note**: When providing an error, please provide a clear error message
+
+        that the user can understand.
+
+
+        If a payment is not found, the entire bulk operation is aborted.
+
+        '
+      summary: Bulk fail payments
+      operationId: bulkFailPaymentsV2
+      tags:
+      - Payment Confirmations
+      x-badges:
+      - name: V2
+        position: after
+        color: blue
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkFailPaymentsInputV2'
+      responses:
+        '200':
+          $ref: '#/components/responses/PaymentsBulkFailedResponseV2'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/ResourceNotFoundResponse'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntityResponse'
+        4XX:
+          $ref: '#/components/responses/ErrorResponseV2'
+components:
+  schemas:
+    Payment:
+      type: object
+      description: 'The payment made for an `Invoice`. The `Account` assigned to the
+
+        payment is where the funds are being debited from.
+
+        '
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The id of the credit.
+        batchId:
+          type: string
+          format: uuid
+          description: The id of the payment batch the payment belongs to.
+        amount:
+          $ref: '#/components/schemas/MonetaryValue'
+        settlementAmount:
+          $ref: '#/components/schemas/MonetaryValue'
+        discountAmount:
+          description: 'The discount amount applied using the `PaymentTerm` on the vendor.
+
+            The `discountAmount + amount` should be equal to the `Invoice`
+
+            amount due in most cases. Accountants are allowed to make partial
+
+            payments. Typically when partial payments are made, `discountAmount`
+
+            will be `0.00`.
+
+            '
+          oneOf:
+          - $ref: '#/components/schemas/MonetaryValue'
+        currencyId:
+          $ref: '#/components/schemas/Currency'
+        settlementCurrencyId:
+          $ref: '#/components/schemas/Currency'
+        exchangeRate:
+          $ref: '#/components/schemas/MonetaryValue'
+        status:
+          $ref: '#/components/schemas/PaymentStatus'
+        paymentMethod:
+          oneOf:
+          - $ref: '#/components/schemas/PaymentMethod'
+          - type: 'null'
+        referenceId:
+          oneOf:
+          - $ref: '#/components/schemas/PaymentReferenceId'
+          - type: 'null'
+        approvedAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: The payment approver has approved the payment.
+          - type: 'null'
+        failedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the payment was marked as failed.
+        failedReason:
+          type:
+          - string
+          - 'null'
+          description: The reason why the payment failed.
+        fundedAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: 'The date time the payment request began to be processed.
+
+
+              **Note**: This is not the actual date time that the funds were
+
+              withdrawn from the bank. The payment request can take 15
+
+              minutes to 4 hours or more to be processed. See the `acceptedAt`
+
+              field for the date time that the payment was submitted and
+
+              accepted.
+
+              '
+          - type: 'null'
+        acceptedAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: 'The date time the payment request was submitted and accepted
+
+              for processing.
+
+              '
+          - type: 'null'
+        rejectedAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: The payment approver has rejected the payment.
+          - type: 'null'
+        voidedAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: 'This is set when a credit has been voided by the payment processor.
+
+              Generally this would happen due to a `Vendor` missing address
+
+              information or a malformed `Invoice` was trying to be paid. Other
+
+              cases could cause this to be voided due to insufficient funds.
+
+              '
+          - type: 'null'
+        confirmedAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: The datetime when the payment was confirmed in an external system.
+          - type: 'null'
+        remoteId:
+          oneOf:
+          - type: string
+            maxLength: 255
+            description: An external identifier for the payment in the confirming system.
+          - type: 'null'
+        remoteError:
+          oneOf:
+          - type: string
+            description: An error message if the confirmation failed.
+          - type: 'null'
+        remoteErroredAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: When the remote error occurred.
+          - type: 'null'
+        invoice:
+          $ref: '#/components/schemas/InvoiceRef'
+        costAccount:
+          $ref: '#/components/schemas/CostAccountRef'
+        vendor:
+          $ref: '#/components/schemas/VendorRef'
+    PaymentMethod:
+      type: string
+      enum:
+      - ach
+      - card
+      - check
+      - wire
+    FailPaymentInputV2:
+      type: object
+      description: Input schema for marking a payment as failed (V2 API with snake_case fields).
+      required:
+      - remote_errored_at
+      - remote_error
+      properties:
+        remote_errored_at:
+          type: string
+          format: date-time
+          description: The datetime when the payment failed in the external system.
+        remote_error:
+          type: string
+          maxLength: 255
+          description: 'The error message describing why the payment failed. This message will be displayed
+
+            to the user. It should be clear as to what happened so that it can be rectified.
+
+            '
+        remote_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+          description: An optional external identifier for the failed payment.
+    BulkFailPaymentsInput:
+      type: object
+      description: Input schema for bulk failing multiple payments.
+      required:
+      - payments
+      properties:
+        payments:
+          type: array
+          minItems: 1
+          maxItems: 100
+          description: Array of payment failure items. Must contain at least one item.
+          items:
+            type: object
+            required:
+            - id
+            - remoteErroredAt
+            - remoteError
+            properties:
+              id:
+                type: string
+                format: uuid
+                description: The UUID of the payment to mark as failed.
+              remoteErroredAt:
+                type: string
+                format: date-time
+                description: The datetime when the payment failed in the external system.
+              remoteError:
+                type: string
+                maxLength: 255
+                description: 'The error message describing why the payment failed. This message will be
+
+                  displayed to the user. It should be clear as to what happened so that it can be
+
+                  rectified.
+
+                  '
+              remoteId:
+                type:
+                - string
+                - 'null'
+                maxLength: 255
+                description: An optional external identifier for the failed payment.
+    BulkFailPaymentsInputV2:
+      type: object
+      description: Input schema for bulk failing multiple payments (V2 API with snake_case fields).
+      required:
+      - payments
+      properties:
+        payments:
+          type: array
+          minItems: 1
+          maxItems: 100
+          description: Array of payment failure items. Must contain at least one item.
+          items:
+            type: object
+            required:
+            - id
+            - remote_errored_at
+            - remote_error
+            properties:
+              id:
+                type: string
+                format: uuid
+                description: The UUID of the payment to mark as failed.
+              remote_errored_at:
+                type: string
+                format: date-time
+                description: The datetime when the payment failed in the external system.
+              remote_error:
+                type: string
+                maxLength: 255
+                description: 'The error message describing why the payment failed. This message will be
+
+                  displayed to the user. It should be clear as to what happened so that it can be
+
+                  rectified.
+
+                  '
+              remote_id:
+                type:
+                - string
+                - 'null'
+                maxLength: 255
+                description: An optional external identifier for the failed payment.
+    BulkConfirmPaymentsInput:
+      type: object
+      description: Input schema for bulk confirming multiple payments.
+      required:
+      - payments
+      properties:
+        payments:
+          type: array
+          minItems: 1
+          description: Array of payment confirmation items. Must contain at least one item.
+          items:
+            type: object
+            required:
+            - id
+            - confirmedAt
+            properties:
+              id:
+                type: string
+                format: uuid
+                description: The UUID of the payment to confirm.
+              confirmedAt:
+                type: string
+                format: date-time
+                description: The datetime when the payment was confirmed in the external system.
+              remoteId:
+                type:
+                - string
+                - 'null'
+                maxLength: 255
+                description: An optional external identifier for the payment in the confirming system.
+    PaymentStatus:
+      type: string
+      enum:
+      - pending_approval
+      - rejected
+      - approved
+      - acknowledged
+      - voided
+      - failed
+      description: "The status of the payment.\n- `pending_approval` - The payment is awaiting approval.\n- `approved` - The payment was approved for payment.\n- `rejected` - The payment was rejected and was excluded from being paid.\n- `acknowledged` - The `rejected` payment was acknowledged by the payee.\n- `voided` - The payment was voided for reason.\n- `failed` - The payment failed to be submitted to the payment provider.\n  See the failed reason for more information.\n"
+    PaymentV2:
+      type: object
+      description: A payment in the V2 API format with snake_case field names.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier of the payment.
+        amount:
+          type: string
+          description: The payment amount as a decimal string.
+        approved_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The datetime when the payment was approved.
+        confirmed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The datetime when the payment was confirmed.
+        currency_id:
+          type: string
+          description: The ISO 4217 currency code.
+        discount_amount:
+          type:
+          - string
+          - 'null'
+          description: The discount amount applied as a decimal string.
+        exchange_rate:
+          type:
+          - string
+          - 'null'
+          description: The exchange rate used for the payment.
+        funded_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The datetime when funding began.
+        failed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The datetime when the payment failed
+        failed_reason:
+          type:
+          - string
+          - 'null'
+          description: The reason why the payment failed
+        accepted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The datetime when the payment was accepted for processing.
+        payment_method:
+          type:
+          - string
+          - 'null'
+          description: The payment method used.
+        reference_id:
+          type:
+          - string
+          - 'null'
+          description: The reference identifier for the payment.
+        rejected_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The datetime when the payment was rejected.
+        remote_error:
+          type:
+          - string
+          - 'null'
+          description: Error message if confirmation failed.
+        remote_errored_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the remote error occurred.
+        remote_id:
+          type:
+          - string
+          - 'null'
+          description: External system identifier for the payment.
+        settlement_amount:
+          type:
+          - string
+          - 'null'
+          description: The settlement amount as a decimal string.
+        settlement_currency_id:
+          type:
+          - string
+          - 'null'
+          description: The settlement currency ISO code.
+        status:
+          $ref: '#/components/schemas/PaymentStatus'
+        voided_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The datetime when the payment was voided.
+        created_at:
+          type: string
+          format: date-time
+          description: The datetime when the payment was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: The datetime when the payment was last updated.
+    ErrorV2:
+      type: object
+      required:
+      - message
+      properties:
+        field:
+          description: 'The field that the error occurred on. This field may not always be
+
+            present.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
+        message:
+          description: A description of the error.
+          type: string
+    BulkConfirmPaymentsInputV2:
+      type: object
+      description: Input schema for bulk confirming multiple payments (V2 API with snake_case fields).
+      required:
+      - payments
+      properties:
+        payments:
+          type: array
+          minItems: 1
+          maxItems: 100
+          description: Array of payment confirmation items. Must contain at least one item and no more than 100 items.
+          items:
+            type: object
+            required:
+            - id
+            - confirmed_at
+            properties:
+              id:
+                type: string
+                format: uuid
+                description: The UUID of the payment to confirm.
+              confirmed_at:
+                type: string
+                format: date-time
+                description: The datetime when the payment was confirmed in the external system.
+              remote_id:
+                type:
+                - string
+                - 'null'
+                maxLength: 255
+                description: An optional external identifier for the payment in the confirming system.
+    ConfirmPaymentInputV2:
+      type: object
+      description: Input schema for confirming a payment (V2 API with snake_case fields).
+      required:
+      - confirmed_at
+      properties:
+        confirmed_at:
+          type: string
+          format: date-time
+          description: The datetime when the payment was confirmed in the external system.
+        remote_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+          description: An optional external identifier for the payment in the confirming system.
+    VendorRef:
+      type: object
+      description: A reference to a `Vendor`.
+      properties:
+        internalId:
+          oneOf:
+          - $ref: '#/components/schemas/VendorInternalId'
+          - type: 'null'
+        externalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+    ExternalId:
+      description: 'The external id set by the ERP system. It does not have to be a UUID and
+
+        can be any non empty string desired.
+
+        '
+      type: string
+      example: 21b31bc7-1267-4335-893c-d7fe4706a238
+      maxLength: 255
+    InvoiceInternalId:
+      type: string
+      description: The id of the `Invoice` in Vic.
+      maxLength: 255
+    Currency:
+      description: The ISO-4217 currency code.
+      type: string
+      format: ISO-4217
+      maxLength: 3
+      example: USD
+    PaymentReferenceId:
+      type: string
+      description: 'The reference id of the payment or credit is associated with. This will
+
+        be the identifier is on the remittance advice sent to the Vendor.
+
+        Example: `P001234`, `A000134`, or `E123456`
+
+        '
+    VendorInternalId:
+      type: string
+      description: The id of the `Vendor` in Vic.
+      maxLength: 255
+    ErrorString:
+      type: string
+      maxLength: 255
+    Error:
+      description: 'generic error message in JSON format.  Note the ''code'' field should
+
+        match the HTTP status code of the wrapping HTTP request.
+
+        '
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          minimum: 100
+          maximum: 599
+        message:
+          $ref: '#/components/schemas/ErrorString'
+    InvoiceRef:
+      type: object
+      description: A reference to an `Invoice`.
+      properties:
+        internalId:
+          oneOf:
+          - $ref: '#/components/schemas/InvoiceInternalId'
+          - type: 'null'
+        externalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+        refNumber:
+          type:
+          - string
+          - 'null'
+    MonetaryValue:
+      description: 'The monetary value as a string.
+
+        A float **should not** be used. The api will accept a float and it will be
+
+        transformed into a monetary value, but for best results please use a string
+
+        with the proper decimal precision.
+
+        '
+      type: string
+      format: decimal
+      example: '1.00'
+    CostAccountRef:
+      type: object
+      description: A reference to a `Account`.
+      properties:
+        internalId:
+          oneOf:
+          - type: string
+            maxLength: 255
+            description: The id of the `Account` in Vic.
+          - type: 'null'
+        externalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+    ConfirmPaymentInput:
+      type: object
+      description: Input schema for confirming a payment.
+      required:
+      - confirmedAt
+      properties:
+        confirmedAt:
+          type: string
+          format: date-time
+          description: The datetime when the payment was confirmed in the external system.
+        remoteId:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+          description: An optional external identifier for the payment in the confirming system.
+    FailPaymentInput:
+      type: object
+      description: Input schema for marking a payment as failed.
+      required:
+      - remoteErroredAt
+      - remoteError
+      properties:
+        remoteErroredAt:
+          type: string
+          format: date-time
+          description: The datetime when the payment failed in the external system.
+        remoteError:
+          type: string
+          maxLength: 255
+          description: 'The error message describing why the payment failed. This message will be displayed to
+
+            the user. It should be clear as to what happened so that it can be rectified.
+
+            '
+        remoteId:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+          description: An optional external identifier for the failed payment.
+  responses:
+    PaymentsBulkFailedResponseV2:
+      description: Payments bulk failed successfully.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PaymentV2'
+    PaymentsBulkConfirmedResponse:
+      description: Payments bulk confirmed successfully.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Payment'
+    PaymentFailedResponse:
+      description: Payment marked as failed successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Payment'
+    PaymentsBulkConfirmedResponseV2:
+      description: Payments bulk confirmed successfully.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PaymentV2'
+    ErrorResponse:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TooManyRequestsResponse:
+      description: HTTP call rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    PaymentConfirmedResponseV2:
+      description: Payment confirmed successfully.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/PaymentV2'
+    PaymentFailedResponseV2:
+      description: Payment marked as failed successfully.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/PaymentV2'
+    ErrorResponseV2:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ErrorV2'
+    ResourceNotFoundResponse:
+      description: Resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UnprocessableEntityResponse:
+      description: Errors with the input are present.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    PaymentsBulkFailedResponse:
+      description: Payments bulk failed successfully.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Payment'
+    PaymentConfirmedResponse:
+      description: Payment confirmed successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Payment'
+    ForbiddenResponse:
+      description: The request was forbidden.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  parameters:
+    CompanyId:
+      name: company_id
+      in: path
+      required: true
+      description: The ID of the company
+      schema:
+        type: string
+        format: uuid
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+x-tagGroups:
+- name: Integration
+  tags:
+  - Authentication
+  - Pagination
+  - Webhooks
+  - Webhook Subscriptions
+  - Webhook Events
+  - Synchronizing
+  - Status
+- name: Master Data
+  tags:
+  - Accounts
+  - Dimensions
+  - Vendors
+  - Vendor Groups
+  - Vendor Tags
+  - Tags
+  - Tax Codes
+  - VAT Codes
+  - Payment Terms
+- name: Organization & Access
+  tags:
+  - Partners
+  - Organizations
+  - Companies
+  - Users
+- name: Invoices & Bills
+  tags:
+  - Invoices
+  - Bills
+  - Attachments
+  - Invoice Approval Flows
+  - Invoice Posting Guide
+  - Training Invoices
+- name: Purchase Orders
+  tags:
+  - Purchase Orders
+  - Purchase Order Line Items
+  - Purchase Order Matching Guide
+- name: Payments
+  tags:
+  - Payment Batches
+  - Payment Confirmations
+  - Credit Confirmations
+- name: Reporting
+  tags:
+  - CSV Reports
+- name: Reference
+  tags:
+  - Changelog
