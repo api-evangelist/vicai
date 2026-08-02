@@ -1,0 +1,879 @@
+generated: '2026-07-21'
+method: derived
+status: candidate
+source: openapi/vicai-openapi-original.json
+server:
+  name: vicai
+  transport: http
+  note: No official Vic.ai MCP server found (Jul 2026). Candidate tool list derived 1:1 from the 173 OpenAPI
+    operations to seed a future MCP server.
+auth:
+  scheme: bearer
+  token_endpoint: POST /v0/token (client_id + client_secret)
+tool_count: 173
+tools:
+- name: obtainToken
+  description: Obtain an access token
+  source_operation: openapi/vicai-openapi-original.json#obtainToken
+  method: POST
+  path: /v0/token
+- name: healthCheck
+  description: Health check
+  source_operation: openapi/vicai-openapi-original.json#healthCheck
+  method: GET
+  path: /v0/healthCheck
+- name: listAccounts
+  description: List all accounts
+  source_operation: openapi/vicai-openapi-original.json#listAccounts
+  method: GET
+  path: /v0/accounts
+- name: synchronizeAccounts
+  description: Synchronize Accounts
+  source_operation: openapi/vicai-openapi-original.json#synchronizeAccounts
+  method: POST
+  path: /v0/accounts/synchronize
+- name: getAccount
+  description: Info for a specific account
+  source_operation: openapi/vicai-openapi-original.json#getAccount
+  method: GET
+  path: /v0/accounts/{id}
+- name: upsertAccount
+  description: Upserts an account
+  source_operation: openapi/vicai-openapi-original.json#upsertAccount
+  method: PUT
+  path: /v0/accounts/{id}
+- name: deleteAccount
+  description: Deletes an account
+  source_operation: openapi/vicai-openapi-original.json#deleteAccount
+  method: DELETE
+  path: /v0/accounts/{id}
+- name: listDimensions
+  description: List all dimensions
+  source_operation: openapi/vicai-openapi-original.json#listDimensions
+  method: GET
+  path: /v0/dimensions
+- name: createDimension
+  description: Create a dimension
+  source_operation: openapi/vicai-openapi-original.json#createDimension
+  method: POST
+  path: /v0/dimensions
+- name: synchronizeDimensions
+  description: Synchronize Dimensions
+  source_operation: openapi/vicai-openapi-original.json#synchronizeDimensions
+  method: POST
+  path: /v0/dimensions/synchronize
+- name: getDimension
+  description: Info for a specific dimension
+  source_operation: openapi/vicai-openapi-original.json#getDimension
+  method: GET
+  path: /v0/dimensions/{id}
+- name: upsertDimension
+  description: Upserts a dimension
+  source_operation: openapi/vicai-openapi-original.json#upsertDimension
+  method: PUT
+  path: /v0/dimensions/{id}
+- name: deleteDimension
+  description: Deletes a dimension
+  source_operation: openapi/vicai-openapi-original.json#deleteDimension
+  method: DELETE
+  path: /v0/dimensions/{id}
+- name: listDimensionDependencies
+  description: List dimension dependencies
+  source_operation: openapi/vicai-openapi-original.json#listDimensionDependencies
+  method: GET
+  path: /v0/dimensions/{id}/dependencies
+- name: replaceDimensionDependencies
+  description: Upsert dimension dependency
+  source_operation: openapi/vicai-openapi-original.json#replaceDimensionDependencies
+  method: PUT
+  path: /v0/dimensions/{id}/dependencies
+- name: deleteDimensionDependency
+  description: Delete dimension dependency
+  source_operation: openapi/vicai-openapi-original.json#deleteDimensionDependency
+  method: DELETE
+  path: /v0/dimensions/{id}/dependencies/{dependent_id}
+- name: bulkUpsertDimensionDependencies
+  description: Bulk upsert dimension dependencies
+  source_operation: openapi/vicai-openapi-original.json#bulkUpsertDimensionDependencies
+  method: POST
+  path: /v0/dimensionDependencies
+- name: listVendors
+  description: List all vendors
+  source_operation: openapi/vicai-openapi-original.json#listVendors
+  method: GET
+  path: /v0/vendors
+- name: synchronizeVendors
+  description: Synchronize Vendors
+  source_operation: openapi/vicai-openapi-original.json#synchronizeVendors
+  method: POST
+  path: /v0/vendors/synchronize
+- name: getVendor
+  description: Info for a specific vendor
+  source_operation: openapi/vicai-openapi-original.json#getVendor
+  method: GET
+  path: /v0/vendors/{id}
+- name: upsertVendor
+  description: Upserts a vendor
+  source_operation: openapi/vicai-openapi-original.json#upsertVendor
+  method: PUT
+  path: /v0/vendors/{id}
+- name: deleteVendor
+  description: Deletes a vendor
+  source_operation: openapi/vicai-openapi-original.json#deleteVendor
+  method: DELETE
+  path: /v0/vendors/{id}
+- name: setVendorRemoteErrors
+  description: Completes the response callback cycle resulting from a 202
+  source_operation: openapi/vicai-openapi-original.json#setVendorRemoteErrors
+  method: POST
+  path: /v0/vendors/{id}/errors
+- name: clearVendorRemoteErrors
+  description: Clears errors on the Vendor.
+  source_operation: openapi/vicai-openapi-original.json#clearVendorRemoteErrors
+  method: DELETE
+  path: /v0/vendors/{id}/errors
+- name: deleteTagFromVendor
+  description: Delete a vendor tag by vendor ID and tag ID
+  source_operation: openapi/vicai-openapi-original.json#deleteTagFromVendor
+  method: DELETE
+  path: /v0/vendors/{vendor_id}/tags/{tag_id}
+- name: listVendorGroups
+  description: List all vendor groups
+  source_operation: openapi/vicai-openapi-original.json#listVendorGroups
+  method: GET
+  path: /v0/vendorGroups
+- name: createVendorGroup
+  description: Create a vendor group
+  source_operation: openapi/vicai-openapi-original.json#createVendorGroup
+  method: POST
+  path: /v0/vendorGroups
+- name: updateVendorGroup
+  description: Update the vendor group
+  source_operation: openapi/vicai-openapi-original.json#updateVendorGroup
+  method: PUT
+  path: /v0/vendorGroups/{id}
+- name: deleteVendorGroup
+  description: Delete vendor group
+  source_operation: openapi/vicai-openapi-original.json#deleteVendorGroup
+  method: DELETE
+  path: /v0/vendorGroups/{id}
+- name: listCsvReportsStatuses
+  description: List CSV reports status
+  source_operation: openapi/vicai-openapi-original.json#listCsvReportsStatuses
+  method: GET
+  path: /v0/csvReports
+- name: startCsvReportsGeneration
+  description: Generate CSV reports
+  source_operation: openapi/vicai-openapi-original.json#startCsvReportsGeneration
+  method: POST
+  path: /v0/csvReports
+- name: downloadCsvReport
+  description: Download CSV report
+  source_operation: openapi/vicai-openapi-original.json#downloadCsvReport
+  method: GET
+  path: /v0/csvReports/{report_name}
+- name: uploadAttachment
+  description: Upload an attachment
+  source_operation: openapi/vicai-openapi-original.json#uploadAttachment
+  method: POST
+  path: /v0/attachments
+- name: getAttachmentStatus
+  description: Get attachment processing status
+  source_operation: openapi/vicai-openapi-original.json#getAttachmentStatus
+  method: GET
+  path: /v0/attachments/{id}
+- name: listInvoices
+  description: List all invoices
+  source_operation: openapi/vicai-openapi-original.json#listInvoices
+  method: GET
+  path: /v0/invoices
+- name: createInvoice
+  description: Create an invoice.
+  source_operation: openapi/vicai-openapi-original.json#createInvoice
+  method: POST
+  path: /v0/invoices
+- name: getInvoice
+  description: Info for a specific invoice
+  source_operation: openapi/vicai-openapi-original.json#getInvoice
+  method: GET
+  path: /v0/invoices/{id}
+- name: ackInvoice
+  description: Asynchronous reply to invoice post or invoice transfer
+  source_operation: openapi/vicai-openapi-original.json#ackInvoice
+  method: PATCH
+  path: /v0/invoices/{id}
+- name: deleteInvoice
+  description: Deletes an invoice
+  source_operation: openapi/vicai-openapi-original.json#deleteInvoice
+  method: DELETE
+  path: /v0/invoices/{id}
+- name: startProcessingInvoice
+  description: Start the invoice processing.
+  source_operation: openapi/vicai-openapi-original.json#startProcessingInvoice
+  method: POST
+  path: /v0/invoices/{id}/process
+- name: getInvoiceDocument
+  description: Document for a specific invoice
+  source_operation: openapi/vicai-openapi-original.json#getInvoiceDocument
+  method: GET
+  path: /v0/invoices/{id}/document
+- name: uploadDocumentInvoice
+  description: Upload document invoice
+  source_operation: openapi/vicai-openapi-original.json#uploadDocumentInvoice
+  method: POST
+  path: /v0/invoices/{id}/document
+- name: listDimensionDependenciesV2
+  description: List dimension dependencies
+  source_operation: openapi/vicai-openapi-original.json#listDimensionDependenciesV2
+  method: GET
+  path: /v2/companies/{company_id}/dimensions/{dimension_id}/dependencies
+- name: upsertDimensionDependencyV2
+  description: Upsert dimension dependency
+  source_operation: openapi/vicai-openapi-original.json#upsertDimensionDependencyV2
+  method: PUT
+  path: /v2/companies/{company_id}/dimensions/{dimension_id}/dependencies
+- name: deleteDimensionDependencyV2
+  description: Delete dimension dependency
+  source_operation: openapi/vicai-openapi-original.json#deleteDimensionDependencyV2
+  method: DELETE
+  path: /v2/companies/{company_id}/dimensions/{dimension_id}/dependencies/{dependent_id}
+- name: bulkUpsertDimensionDependenciesV2
+  description: Bulk upsert dimension dependencies
+  source_operation: openapi/vicai-openapi-original.json#bulkUpsertDimensionDependenciesV2
+  method: POST
+  path: /v2/companies/{company_id}/dimension_dependencies
+- name: listEmailEndpointsV2
+  description: List email endpoints
+  source_operation: openapi/vicai-openapi-original.json#listEmailEndpointsV2
+  method: GET
+  path: /v2/companies/{company_id}/email_endpoints
+- name: createEmailEndpointV2
+  description: Create email endpoint
+  source_operation: openapi/vicai-openapi-original.json#createEmailEndpointV2
+  method: POST
+  path: /v2/companies/{company_id}/email_endpoints
+- name: getEmailEndpointV2
+  description: Get email endpoint
+  source_operation: openapi/vicai-openapi-original.json#getEmailEndpointV2
+  method: GET
+  path: /v2/email_endpoints/{id}
+- name: updateEmailEndpointV2
+  description: Update email endpoint
+  source_operation: openapi/vicai-openapi-original.json#updateEmailEndpointV2
+  method: PATCH
+  path: /v2/email_endpoints/{id}
+- name: deleteEmailEndpointV2
+  description: Delete email endpoint
+  source_operation: openapi/vicai-openapi-original.json#deleteEmailEndpointV2
+  method: DELETE
+  path: /v2/email_endpoints/{id}
+- name: listEmailEndpointAllowedSendersV2
+  description: List allowed senders
+  source_operation: openapi/vicai-openapi-original.json#listEmailEndpointAllowedSendersV2
+  method: GET
+  path: /v2/email_endpoints/{email_endpoint_id}/allowed_senders
+- name: createEmailEndpointAllowedSendersV2
+  description: Add allowed senders
+  source_operation: openapi/vicai-openapi-original.json#createEmailEndpointAllowedSendersV2
+  method: POST
+  path: /v2/email_endpoints/{email_endpoint_id}/allowed_senders
+- name: deleteEmailEndpointAllowedSenderV2
+  description: Remove allowed sender
+  source_operation: openapi/vicai-openapi-original.json#deleteEmailEndpointAllowedSenderV2
+  method: DELETE
+  path: /v2/email_endpoints/{email_endpoint_id}/allowed_senders/{id}
+- name: listInvoiceSupportingAttachments
+  description: List supporting attachments for an invoice
+  source_operation: openapi/vicai-openapi-original.json#listInvoiceSupportingAttachments
+  method: GET
+  path: /v0/invoices/{id}/supporting-attachments
+- name: uploadInvoiceSupportingAttachment
+  description: Upload a supporting attachment
+  source_operation: openapi/vicai-openapi-original.json#uploadInvoiceSupportingAttachment
+  method: POST
+  path: /v0/invoices/{id}/supporting-attachments
+- name: deleteInvoiceSupportingAttachment
+  description: Delete a supporting attachment
+  source_operation: openapi/vicai-openapi-original.json#deleteInvoiceSupportingAttachment
+  method: DELETE
+  path: /v0/invoices/{id}/supporting-attachments/{attachment_id}
+- name: listInvoicesV2
+  description: List invoices
+  source_operation: openapi/vicai-openapi-original.json#listInvoicesV2
+  method: GET
+  path: /v2/companies/{company_id}/invoices
+- name: getInvoiceV2
+  description: Get an invoice
+  source_operation: openapi/vicai-openapi-original.json#getInvoiceV2
+  method: GET
+  path: /v2/invoices/{id}
+- name: deleteInvoiceV2
+  description: Delete an invoice
+  source_operation: openapi/vicai-openapi-original.json#deleteInvoiceV2
+  method: DELETE
+  path: /v2/invoices/{id}
+- name: getInvoiceDocumentV2
+  description: Get invoice document
+  source_operation: openapi/vicai-openapi-original.json#getInvoiceDocumentV2
+  method: GET
+  path: /v2/invoices/{id}/document
+- name: confirmInvoice
+  description: Asynchronous reply to invoice post or invoice transfer
+  source_operation: openapi/vicai-openapi-original.json#confirmInvoice
+  method: POST
+  path: /v0/invoices/{id}/confirm
+- name: rejectInvoice
+  description: Asynchronous reply to invoice post
+  source_operation: openapi/vicai-openapi-original.json#rejectInvoice
+  method: POST
+  path: /v0/invoices/{id}/reject
+- name: getInvoicelineItems
+  description: List all line items for a specific invoice
+  source_operation: openapi/vicai-openapi-original.json#getInvoicelineItems
+  method: GET
+  path: /v0/invoices/{id}/lineItems
+- name: updateInvoiceItem
+  description: Update a specific invoice line item
+  source_operation: openapi/vicai-openapi-original.json#updateInvoiceItem
+  method: PUT
+  path: /v0/invoiceItems/{id}
+- name: updateInvoiceExternal
+  description: Update invoice external fields
+  source_operation: openapi/vicai-openapi-original.json#updateInvoiceExternal
+  method: PUT
+  path: /v0/invoices/{id}/external
+- name: listTrainingInvoices
+  description: List all training invoices
+  source_operation: openapi/vicai-openapi-original.json#listTrainingInvoices
+  method: GET
+  path: /v0/trainingInvoices
+- name: getTrainingInvoice
+  description: Info for a specific training invoice
+  source_operation: openapi/vicai-openapi-original.json#getTrainingInvoice
+  method: GET
+  path: /v0/trainingInvoices/{id}
+- name: upsertTrainingInvoice
+  description: Upserts a training invoice
+  source_operation: openapi/vicai-openapi-original.json#upsertTrainingInvoice
+  method: PUT
+  path: /v0/trainingInvoices/{id}
+- name: deleteTrainingInvoice
+  description: Deletes a training invoice
+  source_operation: openapi/vicai-openapi-original.json#deleteTrainingInvoice
+  method: DELETE
+  path: /v0/trainingInvoices/{id}
+- name: getTrainingInvoiceDocument
+  description: Document for a specific training invoice
+  source_operation: openapi/vicai-openapi-original.json#getTrainingInvoiceDocument
+  method: GET
+  path: /v0/trainingInvoices/{id}/document
+- name: listVatCodes
+  description: List all VAT codes
+  source_operation: openapi/vicai-openapi-original.json#listVatCodes
+  method: GET
+  path: /v0/vatCodes
+- name: synchronizeVatCodes
+  description: Synchronize Vat Codes
+  source_operation: openapi/vicai-openapi-original.json#synchronizeVatCodes
+  method: POST
+  path: /v0/vatCodes/synchronize
+- name: getVatCode
+  description: Info for a specific VAT code
+  source_operation: openapi/vicai-openapi-original.json#getVatCode
+  method: GET
+  path: /v0/vatCodes/{id}
+- name: upsertVatCode
+  description: Upserts a VAT code
+  source_operation: openapi/vicai-openapi-original.json#upsertVatCode
+  method: PUT
+  path: /v0/vatCodes/{id}
+- name: deleteVatCode
+  description: Deletes a VAT code
+  source_operation: openapi/vicai-openapi-original.json#deleteVatCode
+  method: DELETE
+  path: /v0/vatCodes/{id}
+- name: createTaxCode
+  description: Creates a company's tax code
+  source_operation: openapi/vicai-openapi-original.json#createTaxCode
+  method: POST
+  path: /v0/taxCodes
+- name: getTaxCodes
+  description: Get the list of tax codes for a company
+  source_operation: openapi/vicai-openapi-original.json#getTaxCodes
+  method: GET
+  path: /v0/taxCodes
+- name: getSubscription
+  description: Get current V0 webhook subscription
+  source_operation: openapi/vicai-openapi-original.json#getSubscription
+  method: GET
+  path: /v0/subscription
+- name: subscribe
+  description: Create new V0 webhook subscription
+  source_operation: openapi/vicai-openapi-original.json#subscribe
+  method: PUT
+  path: /v0/subscription
+- name: unsubscribe
+  description: Delete V0 webhook subscription
+  source_operation: openapi/vicai-openapi-original.json#unsubscribe
+  method: DELETE
+  path: /v0/subscription
+- name: listSubscriptions
+  description: List webhook subscriptions
+  source_operation: openapi/vicai-openapi-original.json#listSubscriptions
+  method: GET
+  path: /v2/companies/{company_id}/subscriptions
+- name: createSubscription
+  description: Create a webhook subscription
+  source_operation: openapi/vicai-openapi-original.json#createSubscription
+  method: POST
+  path: /v2/companies/{company_id}/subscriptions
+- name: getSubscriptionById
+  description: Get a webhook subscription
+  source_operation: openapi/vicai-openapi-original.json#getSubscriptionById
+  method: GET
+  path: /v2/companies/{company_id}/subscriptions/{id}
+- name: updateSubscription
+  description: Update a webhook subscription
+  source_operation: openapi/vicai-openapi-original.json#updateSubscription
+  method: PUT
+  path: /v2/companies/{company_id}/subscriptions/{id}
+- name: deleteSubscription
+  description: Delete a webhook subscription
+  source_operation: openapi/vicai-openapi-original.json#deleteSubscription
+  method: DELETE
+  path: /v2/companies/{company_id}/subscriptions/{id}
+- name: listWebhookEvents
+  description: List webhook events
+  source_operation: openapi/vicai-openapi-original.json#listWebhookEvents
+  method: GET
+  path: /v0/webhooks/events
+- name: getWebhookEvent
+  description: Get a webhook event
+  source_operation: openapi/vicai-openapi-original.json#getWebhookEvent
+  method: GET
+  path: /v0/webhooks/events/{event_id}
+- name: listPurchaseOrders
+  description: List purchase orders
+  source_operation: openapi/vicai-openapi-original.json#listPurchaseOrders
+  method: GET
+  path: /v0/purchaseOrders
+- name: createPurchaseOrder
+  description: Create a purchase order
+  source_operation: openapi/vicai-openapi-original.json#createPurchaseOrder
+  method: POST
+  path: /v0/purchaseOrders
+- name: synchronizePurchaseOrders
+  description: Synchronize Purchase Orders
+  source_operation: openapi/vicai-openapi-original.json#synchronizePurchaseOrders
+  method: POST
+  path: /v0/purchaseOrders/synchronize
+- name: getPurchaseOrder
+  description: Get a purchase order
+  source_operation: openapi/vicai-openapi-original.json#getPurchaseOrder
+  method: GET
+  path: /v0/purchaseOrders/{purchaseOrderId}
+- name: updatePurchaseOrder
+  description: Update a purchase order
+  source_operation: openapi/vicai-openapi-original.json#updatePurchaseOrder
+  method: PUT
+  path: /v0/purchaseOrders/{purchaseOrderId}
+- name: deletePurchaseOrder
+  description: Delete a purchase order
+  source_operation: openapi/vicai-openapi-original.json#deletePurchaseOrder
+  method: DELETE
+  path: /v0/purchaseOrders/{purchaseOrderId}
+- name: processPurchaseOrder
+  description: Process the purchase order
+  source_operation: openapi/vicai-openapi-original.json#processPurchaseOrder
+  method: POST
+  path: /v0/purchaseOrders/{purchaseOrderId}/process
+- name: closePurchaseOrder
+  description: Close a purchase order
+  source_operation: openapi/vicai-openapi-original.json#closePurchaseOrder
+  method: POST
+  path: /v0/purchaseOrders/{purchaseOrderId}/close
+- name: openPurchaseOrder
+  description: Opens a purchase order
+  source_operation: openapi/vicai-openapi-original.json#openPurchaseOrder
+  method: POST
+  path: /v0/purchaseOrders/{purchaseOrderId}/open
+- name: createPurchaseOrderLineItem
+  description: Add a line item to a purchase order.
+  source_operation: openapi/vicai-openapi-original.json#createPurchaseOrderLineItem
+  method: POST
+  path: /v0/purchaseOrderLineItems
+- name: getPurchaseOrderLineItem
+  description: Get a purchase order's line item
+  source_operation: openapi/vicai-openapi-original.json#getPurchaseOrderLineItem
+  method: GET
+  path: /v0/purchaseOrderLineItems/{purchaseOrderLineItemId}
+- name: updatePurchaseOrderLineItem
+  description: Update a purchase order's line item
+  source_operation: openapi/vicai-openapi-original.json#updatePurchaseOrderLineItem
+  method: PUT
+  path: /v0/purchaseOrderLineItems/{purchaseOrderLineItemId}
+- name: deletePurchaseOrderLineItem
+  description: Delete a purchase order's line item
+  source_operation: openapi/vicai-openapi-original.json#deletePurchaseOrderLineItem
+  method: DELETE
+  path: /v0/purchaseOrderLineItems/{purchaseOrderLineItemId}
+- name: closePurchaseOrderLineItem
+  description: Close a purchase order's line item
+  source_operation: openapi/vicai-openapi-original.json#closePurchaseOrderLineItem
+  method: POST
+  path: /v0/purchaseOrderLineItems/{purchaseOrderLineItemId}/close
+- name: openPurchaseOrderLineItem
+  description: Opens a purchase order's line item
+  source_operation: openapi/vicai-openapi-original.json#openPurchaseOrderLineItem
+  method: POST
+  path: /v0/purchaseOrderLineItems/{purchaseOrderLineItemId}/open
+- name: listTags
+  description: Get a list of tags
+  source_operation: openapi/vicai-openapi-original.json#listTags
+  method: GET
+  path: /v0/tags
+- name: createTag
+  description: Create a new tag
+  source_operation: openapi/vicai-openapi-original.json#createTag
+  method: POST
+  path: /v0/tags
+- name: updateTag
+  description: Update a tag
+  source_operation: openapi/vicai-openapi-original.json#updateTag
+  method: PUT
+  path: /v0/tags/{tag_id}
+- name: deleteTag
+  description: Delete a tag
+  source_operation: openapi/vicai-openapi-original.json#deleteTag
+  method: DELETE
+  path: /v0/tags/{tag_id}
+- name: listVendorTags
+  description: Get a list of vendor tags
+  source_operation: openapi/vicai-openapi-original.json#listVendorTags
+  method: GET
+  path: /v0/vendorTags
+- name: createVendorTag
+  description: Create a new vendor tag
+  source_operation: openapi/vicai-openapi-original.json#createVendorTag
+  method: POST
+  path: /v0/vendorTags
+- name: deleteVendorTag
+  description: Delete a vendor tag
+  source_operation: openapi/vicai-openapi-original.json#deleteVendorTag
+  method: DELETE
+  path: /v0/vendorTags/{id}
+- name: listPaymentTerms
+  description: Get a list of payment terms
+  source_operation: openapi/vicai-openapi-original.json#listPaymentTerms
+  method: GET
+  path: /v0/paymentTerms
+- name: createPaymentTerm
+  description: Create a new payment term
+  source_operation: openapi/vicai-openapi-original.json#createPaymentTerm
+  method: POST
+  path: /v0/paymentTerms
+- name: synchronizePaymentTerms
+  description: Synchronize Payment Terms
+  source_operation: openapi/vicai-openapi-original.json#synchronizePaymentTerms
+  method: POST
+  path: /v0/paymentTerms/synchronize
+- name: getPaymentTerm
+  description: Get a payment term
+  source_operation: openapi/vicai-openapi-original.json#getPaymentTerm
+  method: GET
+  path: /v0/paymentTerms/{id}
+- name: updatePaymentTerm
+  description: Update a payment term
+  source_operation: openapi/vicai-openapi-original.json#updatePaymentTerm
+  method: PUT
+  path: /v0/paymentTerms/{id}
+- name: deletePaymentTerm
+  description: Delete a payment term
+  source_operation: openapi/vicai-openapi-original.json#deletePaymentTerm
+  method: DELETE
+  path: /v0/paymentTerms/{id}
+- name: listPaymentBatches
+  description: List all payment batches
+  source_operation: openapi/vicai-openapi-original.json#listPaymentBatches
+  method: GET
+  path: /v0/paymentBatches
+- name: getPaymentBatch
+  description: Get a payment batch
+  source_operation: openapi/vicai-openapi-original.json#getPaymentBatch
+  method: GET
+  path: /v0/paymentBatches/{id}
+- name: confirmPayment
+  description: Confirm a payment
+  source_operation: openapi/vicai-openapi-original.json#confirmPayment
+  method: POST
+  path: /v0/payments/{id}/confirm
+- name: bulkConfirmPayments
+  description: Bulk confirm payments
+  source_operation: openapi/vicai-openapi-original.json#bulkConfirmPayments
+  method: POST
+  path: /v0/payments/confirm
+- name: confirmCredit
+  description: Confirm a credit
+  source_operation: openapi/vicai-openapi-original.json#confirmCredit
+  method: POST
+  path: /v0/credits/{id}/confirm
+- name: bulkConfirmCredits
+  description: Bulk confirm credits
+  source_operation: openapi/vicai-openapi-original.json#bulkConfirmCredits
+  method: POST
+  path: /v0/credits/confirm
+- name: failPayment
+  description: Mark payment as failed
+  source_operation: openapi/vicai-openapi-original.json#failPayment
+  method: POST
+  path: /v0/payments/{id}/fail
+- name: bulkFailPayments
+  description: Bulk fail payments
+  source_operation: openapi/vicai-openapi-original.json#bulkFailPayments
+  method: POST
+  path: /v0/payments/fail
+- name: failCredit
+  description: Mark credit as failed
+  source_operation: openapi/vicai-openapi-original.json#failCredit
+  method: POST
+  path: /v0/credits/{id}/fail
+- name: bulkFailCredits
+  description: Bulk fail credits
+  source_operation: openapi/vicai-openapi-original.json#bulkFailCredits
+  method: POST
+  path: /v0/credits/fail
+- name: listOrganizationsV2
+  description: Search and list organizations accessible
+  source_operation: openapi/vicai-openapi-original.json#listOrganizationsV2
+  method: GET
+  path: /v2/organizations
+- name: createOrganizationV2
+  description: Create an organization
+  source_operation: openapi/vicai-openapi-original.json#createOrganizationV2
+  method: POST
+  path: /v2/organizations
+- name: getOrganizationV2
+  description: Get an organization
+  source_operation: openapi/vicai-openapi-original.json#getOrganizationV2
+  method: GET
+  path: /v2/organizations/{organization_id}
+- name: listOrganizationUsersV2
+  description: List users attached to an organization
+  source_operation: openapi/vicai-openapi-original.json#listOrganizationUsersV2
+  method: GET
+  path: /v2/organizations/{organization_id}/users
+- name: createOrganizationUserV2
+  description: Create and attach user to an organization
+  source_operation: openapi/vicai-openapi-original.json#createOrganizationUserV2
+  method: POST
+  path: /v2/organizations/{organization_id}/users
+- name: attachUserToOrganizationV2
+  description: Attach an existing user to an organization
+  source_operation: openapi/vicai-openapi-original.json#attachUserToOrganizationV2
+  method: POST
+  path: /v2/organizations/{organization_id}/users/attach
+- name: removeUserFromOrganizationV2
+  description: Remove user from organization
+  source_operation: openapi/vicai-openapi-original.json#removeUserFromOrganizationV2
+  method: DELETE
+  path: /v2/organizations/{organization_id}/users/{user_id}
+- name: createOrganizationCompanyV2
+  description: Create a company under an organization
+  source_operation: openapi/vicai-openapi-original.json#createOrganizationCompanyV2
+  method: POST
+  path: /v2/organizations/{organization_id}/companies
+- name: listCompaniesV2
+  description: Search and list companies accessible
+  source_operation: openapi/vicai-openapi-original.json#listCompaniesV2
+  method: GET
+  path: /v2/companies
+- name: createCompanyV2
+  description: Create a company
+  source_operation: openapi/vicai-openapi-original.json#createCompanyV2
+  method: POST
+  path: /v2/companies
+- name: listCompanyTagsV2
+  description: List a company's tags
+  source_operation: openapi/vicai-openapi-original.json#listCompanyTagsV2
+  method: GET
+  path: /v2/companies/{company_id}/tags
+- name: createCompanyTagV2
+  description: Assign a tag to a company
+  source_operation: openapi/vicai-openapi-original.json#createCompanyTagV2
+  method: POST
+  path: /v2/companies/{company_id}/tags
+- name: getCompanyV2
+  description: Get a company
+  source_operation: openapi/vicai-openapi-original.json#getCompanyV2
+  method: GET
+  path: /v2/companies/{company_id}
+- name: listCompanyUsersV2
+  description: List or search for users attached to the company
+  source_operation: openapi/vicai-openapi-original.json#listCompanyUsersV2
+  method: GET
+  path: /v2/companies/{company_id}/users
+- name: createCompanyUserV2
+  description: Create and attach user to company
+  source_operation: openapi/vicai-openapi-original.json#createCompanyUserV2
+  method: POST
+  path: /v2/companies/{company_id}/users
+- name: attachUserToCompanyV2
+  description: Attach an existing user to a company
+  source_operation: openapi/vicai-openapi-original.json#attachUserToCompanyV2
+  method: POST
+  path: /v2/companies/{company_id}/users/attach
+- name: removeUserFromCompanyV2
+  description: Remove user from company
+  source_operation: openapi/vicai-openapi-original.json#removeUserFromCompanyV2
+  method: DELETE
+  path: /v2/companies/{company_id}/users/{user_id}
+- name: listCompanyUserRolesV2
+  description: List a user's roles in a company
+  source_operation: openapi/vicai-openapi-original.json#listCompanyUserRolesV2
+  method: GET
+  path: /v2/companies/{company_id}/users/{user_id}/roles
+- name: updateCompanyUserRolesV2
+  description: Update a user's roles in a company
+  source_operation: openapi/vicai-openapi-original.json#updateCompanyUserRolesV2
+  method: POST
+  path: /v2/companies/{company_id}/users/{user_id}/roles
+- name: updateCompanyFieldOptionsV2
+  description: Manage company custom field options
+  source_operation: openapi/vicai-openapi-original.json#updateCompanyFieldOptionsV2
+  method: PUT
+  path: /v2/companies/{company_id}/fields/{field_label}/options
+- name: updateCompanyUserManagerV2
+  description: Set or clear a user's manager in a company
+  source_operation: openapi/vicai-openapi-original.json#updateCompanyUserManagerV2
+  method: PATCH
+  path: /v2/companies/{company_id}/users/{user_id}/manager
+- name: listUsersV2
+  description: List users
+  source_operation: openapi/vicai-openapi-original.json#listUsersV2
+  method: GET
+  path: /v2/users
+- name: getUserV2
+  description: Get a user
+  source_operation: openapi/vicai-openapi-original.json#getUserV2
+  method: GET
+  path: /v2/users/{user_id}
+- name: updateUserV2
+  description: Update a user
+  source_operation: openapi/vicai-openapi-original.json#updateUserV2
+  method: PUT
+  path: /v2/users/{user_id}
+- name: getVendorV2
+  description: Get a vendor by UUID
+  source_operation: openapi/vicai-openapi-original.json#getVendorV2
+  method: GET
+  path: /v2/vendors/{id}
+- name: updateVendorV2
+  description: Update a vendor
+  source_operation: openapi/vicai-openapi-original.json#updateVendorV2
+  method: PUT
+  path: /v2/vendors/{id}
+- name: createBillV2
+  description: Create a new imported bill
+  source_operation: openapi/vicai-openapi-original.json#createBillV2
+  method: POST
+  path: /v2/bills
+- name: updateBillV2
+  description: Update an existing imported bill
+  source_operation: openapi/vicai-openapi-original.json#updateBillV2
+  method: PUT
+  path: /v2/bills/{id}
+- name: listInvoiceApprovalFlowsV2
+  description: List invoice approval flows
+  source_operation: openapi/vicai-openapi-original.json#listInvoiceApprovalFlowsV2
+  method: GET
+  path: /v2/companies/{company_id}/invoice_approval_flows
+- name: createInvoiceApprovalFlowV2
+  description: Create an invoice approval flow
+  source_operation: openapi/vicai-openapi-original.json#createInvoiceApprovalFlowV2
+  method: POST
+  path: /v2/companies/{company_id}/invoice_approval_flows
+- name: getInvoiceApprovalFlowV2
+  description: Get an invoice approval flow
+  source_operation: openapi/vicai-openapi-original.json#getInvoiceApprovalFlowV2
+  method: GET
+  path: /v2/companies/{company_id}/invoice_approval_flows/{id}
+- name: updateInvoiceApprovalFlowV2
+  description: Update an invoice approval flow
+  source_operation: openapi/vicai-openapi-original.json#updateInvoiceApprovalFlowV2
+  method: PUT
+  path: /v2/companies/{company_id}/invoice_approval_flows/{id}
+- name: deleteInvoiceApprovalFlowV2
+  description: Delete an invoice approval flow
+  source_operation: openapi/vicai-openapi-original.json#deleteInvoiceApprovalFlowV2
+  method: DELETE
+  path: /v2/companies/{company_id}/invoice_approval_flows/{id}
+- name: getCompanySettingsV2
+  description: Get company settings
+  source_operation: openapi/vicai-openapi-original.json#getCompanySettingsV2
+  method: GET
+  path: /v2/companies/{company_id}/settings
+- name: updateCompanySettingsV2
+  description: Update company settings
+  source_operation: openapi/vicai-openapi-original.json#updateCompanySettingsV2
+  method: PATCH
+  path: /v2/companies/{company_id}/settings
+- name: listWebhookEventTypesV2
+  description: List webhook event types
+  source_operation: openapi/vicai-openapi-original.json#listWebhookEventTypesV2
+  method: GET
+  path: /v2/webhook_event_types
+- name: confirmPaymentV2
+  description: Confirm a payment
+  source_operation: openapi/vicai-openapi-original.json#confirmPaymentV2
+  method: POST
+  path: /v2/companies/{company_id}/payments/{id}/confirm
+- name: bulkConfirmPaymentsV2
+  description: Bulk confirm payments
+  source_operation: openapi/vicai-openapi-original.json#bulkConfirmPaymentsV2
+  method: POST
+  path: /v2/companies/{company_id}/payments/confirm
+- name: confirmCreditV2
+  description: Confirm a credit
+  source_operation: openapi/vicai-openapi-original.json#confirmCreditV2
+  method: POST
+  path: /v2/companies/{company_id}/credits/{id}/confirm
+- name: bulkConfirmCreditsV2
+  description: Bulk confirm credits
+  source_operation: openapi/vicai-openapi-original.json#bulkConfirmCreditsV2
+  method: POST
+  path: /v2/companies/{company_id}/credits/confirm
+- name: failPaymentV2
+  description: Mark payment as failed
+  source_operation: openapi/vicai-openapi-original.json#failPaymentV2
+  method: POST
+  path: /v2/companies/{company_id}/payments/{id}/fail
+- name: bulkFailPaymentsV2
+  description: Bulk fail payments
+  source_operation: openapi/vicai-openapi-original.json#bulkFailPaymentsV2
+  method: POST
+  path: /v2/companies/{company_id}/payments/fail
+- name: failCreditV2
+  description: Mark credit as failed
+  source_operation: openapi/vicai-openapi-original.json#failCreditV2
+  method: POST
+  path: /v2/companies/{company_id}/credits/{id}/fail
+- name: bulkFailCreditsV2
+  description: Bulk fail credits
+  source_operation: openapi/vicai-openapi-original.json#bulkFailCreditsV2
+  method: POST
+  path: /v2/companies/{company_id}/credits/fail
+- name: bulkSubmitInvoicesV2
+  description: Bulk submit invoices for approval
+  source_operation: openapi/vicai-openapi-original.json#bulkSubmitInvoicesV2
+  method: POST
+  path: /v2/companies/{company_id}/invoices/submit
+- name: listCompanyWebhookEventsV2
+  description: List webhook events by company
+  source_operation: openapi/vicai-openapi-original.json#listCompanyWebhookEventsV2
+  method: GET
+  path: /v2/companies/{company_id}/webhook/events
+- name: getCompanyWebhookEventV2
+  description: Get a webhook event by company
+  source_operation: openapi/vicai-openapi-original.json#getCompanyWebhookEventV2
+  method: GET
+  path: /v2/companies/{company_id}/webhook/events/{event_id}

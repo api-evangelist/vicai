@@ -1,0 +1,17 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Vic.ai API
+  version: 1.0.0
+extends: openapi/vicai-openapi-original.json
+actions:
+- target: $.info
+  update:
+    x-apievangelist-enriched: '2026-07-21'
+    x-api-evangelist:
+      rate_limit: 500 requests / 10s per OAuth client id (429 on exceed)
+      pagination: cursor-based (limit max 100; cursor from X-next header)
+      auth: Bearer JWT via POST /v0/token (client_id + client_secret), expires_in 3600s
+      regions:
+      - api.us.vic.ai
+      - api.no.vic.ai
+      webhooks: webhook subscriptions + event catalog (invoice/payment/purchase-order events)

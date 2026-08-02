@@ -1,0 +1,16 @@
+generated: '2026-07-21'
+method: generated
+source: openapi/vicai-openapi-original.json + https://docs.vic.ai
+skills:
+  - file: vicai-sync-erp-masterdata.md
+    name: Sync ERP masterdata into Vic.ai
+    api: openapi/vicai-openapi-original.json
+    operations: [obtainToken, upsertAccount, synchronizeAccounts, upsertVendor, synchronizeVendors, upsertDimension, synchronizeDimensions]
+  - file: vicai-post-invoice-to-erp.md
+    name: Post an approved invoice from Vic.ai to your ERP
+    api: openapi/vicai-openapi-original.json
+    operations: [obtainToken, createSubscription, subscribe, listWebhookEvents, getWebhookEvent, getInvoice, confirmInvoice, rejectInvoice]
+  - file: vicai-purchase-order-matching.md
+    name: Sync purchase orders for invoice matching
+    api: openapi/vicai-openapi-original.json
+    operations: [obtainToken, createPurchaseOrder, synchronizePurchaseOrders, createPurchaseOrderLineItem, closePurchaseOrder, getInvoice]

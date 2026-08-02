@@ -1,0 +1,19 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.vic.ai (Changelog section, embedded in the Vic.ai API reference)
+scheme: dated
+current_version: v10.40.4
+entries:
+  - date: '2026-07-19'
+    breaking: false
+    highlights:
+      - Purchase order receipt lines now accept and return optional `billOfLading` and `deliveryNote` references in purchase order and purchase order line item create/update endpoints.
+  - date: '2026-07-10'
+    breaking: false
+    highlights:
+      - The `invoice_updated` and `invoice_rejected` webhook events are now emitted to subscribed endpoints.
+      - '`invoice_updated` fires on header/line-item data changes and on PO-match approval-status changes, debounced so a burst of edits delivers a single event.'
+      - '`invoice_rejected` fires when an invoice is rejected during approval. Delivery is being enabled progressively — contact Vic.ai support to enable for your organization.'
+note: >-
+  Vic.ai maintains a dated changelog inside its API reference (docs.vic.ai, "Changelog"
+  tag). Only the most recent window is captured here; the live reference is the source of truth.

@@ -1,0 +1,95 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/vicai-openapi-original.json
+summary:
+  entities_referenced: 15
+  relationships: 18
+  core_resources:
+  - companies
+  - organizations
+  - invoices
+  - vendors
+  - accounts
+  - dimensions
+  - purchase_orders
+  - purchase_order_line_items
+  - payments
+  - users
+  - webhook_subscriptions
+notes: Vic.ai models an ERP↔Vic masterdata graph. Companies belong to Organizations; masterdata (Accounts,
+  Dimensions, Vendors, VAT/Tax Codes, Payment Terms, Tags) is company-scoped; Invoices reference Vendors
+  and match against Purchase Orders (and Line Items); Payments/Credits settle Invoices; Users attach to
+  Companies and Organizations.
+relationships:
+- from: CompanyUserMetaV2
+  type: belongs_to
+  to: users
+  via: user_id
+- from: CompanyUserMetaV2
+  type: belongs_to
+  to: companies
+  via: company_id
+- from: OrganizationUserMetaV2
+  type: belongs_to
+  to: users
+  via: user_id
+- from: OrganizationUserMetaV2
+  type: belongs_to
+  to: organizations
+  via: organization_id
+- from: InvoiceApprovalFlowV2
+  type: belongs_to
+  to: companies
+  via: company_id
+- from: DimensionDependencyUpsertSuccessV2
+  type: belongs_to
+  to: dimensions
+  via: dimension_id
+- from: CompanyV2
+  type: belongs_to
+  to: organizations
+  via: organization_id
+- from: CreatedCompanyV2
+  type: belongs_to
+  to: organizations
+  via: organization_id
+- from: CreateCompanyV2
+  type: belongs_to
+  to: organizations
+  via: organization_id
+- from: AttachUserToCompanyV2
+  type: belongs_to
+  to: users
+  via: user_id
+- from: AttachUserToOrganizationV2
+  type: belongs_to
+  to: users
+  via: user_id
+- from: SubscriptionV2
+  type: belongs_to
+  to: companies
+  via: company_id
+- from: BillInputV2
+  type: belongs_to
+  to: payment_terms
+  via: payment_term_id
+- from: BillLineItemInputV2
+  type: belongs_to
+  to: tax_codes
+  via: tax_code_id
+- from: InvoiceLineItemVatInfoV2
+  type: belongs_to
+  to: vat_codes
+  via: vat_code_id
+- from: VendorV2
+  type: belongs_to
+  to: payment_terms
+  via: payment_term_id
+- from: VendorV2
+  type: belongs_to
+  to: vendor_groups
+  via: vendor_group_id
+- from: BillV2
+  type: belongs_to
+  to: payment_terms
+  via: payment_term_id

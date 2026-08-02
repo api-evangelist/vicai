@@ -1,0 +1,78 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.vic.ai (Webhooks, Webhook Subscriptions, Webhook Events)
+type: Webhooks
+spec_type: webhook-catalog
+summary: >-
+  Vic.ai delivers real-time webhooks when actions occur in the platform (posting an
+  invoice, processing a payment, completing a purchase order). Consumers create a
+  Webhook Subscription selecting events + a delivery URL, then browse delivery
+  history via the Webhook Events endpoints. Events are delivered as HTTP POST to
+  `https://<yourCallbackUrl>/events`. Each company may have one V0 subscription or
+  multiple V2 subscriptions. Subscribe to `"events":["all"]` (must be set alone) or a subset.
+delivery:
+  transport: https
+  method: POST
+  target: '<yourCallbackUrl>/events'
+subscription_operations:
+  v0:
+    - method: GET
+      path: '/v0/subscription'
+      operationId: getSubscription
+    - method: PUT
+      path: '/v0/subscription'
+      operationId: subscribe
+    - method: DELETE
+      path: '/v0/subscription'
+      operationId: unsubscribe
+  v2:
+    - method: GET
+      path: '/v2/companies/{company_id}/subscriptions'
+      operationId: listSubscriptions
+    - method: POST
+      path: '/v2/companies/{company_id}/subscriptions'
+      operationId: createSubscription
+    - method: GET
+      path: '/v2/companies/{company_id}/subscriptions/{id}'
+      operationId: getSubscriptionById
+    - method: PUT
+      path: '/v2/companies/{company_id}/subscriptions/{id}'
+      operationId: updateSubscription
+    - method: DELETE
+      path: '/v2/companies/{company_id}/subscriptions/{id}'
+      operationId: deleteSubscription
+event_history_operations:
+  - method: GET
+    path: '/v0/webhooks/events'
+    operationId: listWebhookEvents
+  - method: GET
+    path: '/v0/webhooks/events/{event_id}'
+    operationId: getWebhookEvent
+  - method: GET
+    path: '/v2/webhook_event_types'
+    operationId: listWebhookEventTypesV2
+  - method: GET
+    path: '/v2/companies/{company_id}/webhook/events'
+    operationId: listCompanyWebhookEventsV2
+  - method: GET
+    path: '/v2/companies/{company_id}/webhook/events/{event_id}'
+    operationId: getCompanyWebhookEventV2
+events:
+  - all
+  - invoice_approved
+  - invoice_deleted
+  - invoice_post
+  - invoice_posted
+  - invoice_rejected
+  - invoice_restored
+  - invoice_submitted
+  - invoice_transfer
+  - invoice_updated
+  - payment_batch_processed
+  - payment_status_updated
+  - credit_status_updated
+  - purchase_order_created
+  - purchase_order_deleted
+note: >-
+  No AsyncAPI document is published; this is the documented webhook catalog. `invoice_updated`
+  and `invoice_rejected` began delivering 2026-07-10 (progressive rollout per organization).

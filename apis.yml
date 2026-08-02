@@ -1,8 +1,13 @@
 aid: vicai
 name: Vic.ai
-description: 'Vic.ai is a company surfaced as a portfolio company of cowboy-ventures, ggv-capital, iconiq-capital
-  and added to the API Evangelist network as a stub for enrichment. Sector: fintech. This profile is a
-  lead awaiting the enrichment pipeline.'
+description: 'Vic.ai builds AI-native software for enterprise Accounts Payable and finance teams, automating
+  the end-to-end AP workflow: invoice capture from email/SFTP/API/mobile, AI extraction of header and
+  line-level data, GL coding, purchase-order matching, approval routing, bill pay and vendor portals,
+  corporate-card expense management, and analytics. It integrates with major ERPs (SAP, Oracle, Microsoft
+  Dynamics, NetSuite, Workday, Coupa). The public Vic.ai API (docs.vic.ai) is an ERP-integration surface
+  with 173 operations across invoices, purchase orders, payments, masterdata sync, and webhooks, authenticated
+  with client-credentials Bearer JWTs. Vic.ai holds SOC 1/SOC 2 Type II and operates on an ISO 27001 framework.
+  Backed by Cowboy Ventures, GGV Capital, and ICONIQ Capital.'
 url: https://raw.githubusercontent.com/api-evangelist/vicai/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -10,20 +15,2504 @@ x-backed-by:
 - cowboy-ventures
 - ggv-capital
 - iconiq-capital
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: enriched
+x-tier-reason: public-api-found
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-21'
+image: https://cdn.prod.website-files.com/67284e81c67879feb155c7f7/67dc61e47defbf433781d696_Home%20Page.png
 tags:
 - Company
 - Fintech
-apis: []
+- Accounts Payable
+- Invoicing
+- Payments
+- ERP Integration
+- AI
+- Finance Automation
+- Webhooks
+apis:
+- aid: vicai:vicai-accounts-api
+  name: Vic.ai Accounts API
+  description: >-
+    GL (General Ledger) accounts are part of your *ERP* **Masterdata**. In
+
+    order to be associated with an invoice line item, key data about the
+
+    account must be stored in Vic.ai.  These operations allow querying and
+
+    manipulation of these GL account data.
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-accounts-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-allowed-senders-api
+  name: Vic.ai Allowed Senders API
+  description: >-
+    Restricts which sender addresses an email endpoint will accept. Each
+
+    entry is either an `exact` match (full email address) or a `domain`
+
+    match (everything from that domain). When the restriction is active
+
+    and an inbound email's sender does not match any entry, the email is
+
+    rejected and not processed.
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Allowed Senders
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-allowed-senders-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-attachments-api
+  name: Vic.ai Attachments API
+  description: "Attachments are original invoice documents that can be processed by Vic.ai.\n\n## Supported\
+    \ content types\n\n- `application/msword`\n- `application/pdf`\n- `application/vnd.ms-word.document.macroEnabled.12`\n\
+    - `application/vnd.ms-word.template.macroEnabled.12`\n- `application/vnd.openxmlformats-officedocument.wordprocessingml.document`\n\
+    - `application/vnd.openxmlformats-officedocument.wordprocessingml.template`\n- `image/tiff`\n- `text/xml`\
+    \ **(See note below about supported EDI formats)**\n- `image/jpg`\n- `image/jpeg`\n- `image/png`\n\
+    - `image/gif`\n- `application/vnd.ms-excel`\n- `application/vnd.ms-excel.addin.macroenabled.12`\n\
+    - `application/vnd.ms-excel.sheet.binary.macroenabled.12`\n- `application/vnd.ms-excel.sheet.macroenabled.12`\n\
+    - `application/vnd.ms-excel.template.macroenabled.12`\n- `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`\n\
+    - `application/vnd.openxmlformats-officedocument.spreadsheetml.template`\n\n### Supported EDI formats:\n\
+    \n#### PEPPOL BIS Billing v3 \n\nSupported embedded attachment MIME codes: \n\n- `application/pdf`\n\
+    - `image/jpeg`\n- `image/png`\n- `image/tiff`\n\nThe API will ignore other attachment types.\n\n####\
+    \ X12 EDI 810\n\nX12 ingestion is opt-in — contact Vic.ai support to enable it for your\norganization.\n\
+    \nRaw X12 EDI 810 invoice files (version 4010) are accepted — upload the file as\nyour supplier sends\
+    \ it (a `.edi` or `.x12` file beginning with an `ISA`\nsegment), with no conversion. An interchange\
+    \ may contain several invoices; each\ntransaction set becomes its own invoice, and Vic.ai renders\
+    \ an image for each so\nit is processed like any other invoice.\n\nBecause processing happens asynchronously,\
+    \ the upload response confirms only that\nthe file was received. Use `GET /v0/attachments/{id}` to\
+    \ check whether processing\ncompleted and to retrieve the ids of the invoices that were created."
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Attachments
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-attachments-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-authentication-api
+  name: Vic.ai Authentication API
+  description: >-
+    To initiate the authentication process, send a POST request to `/v0/token` with
+
+    the payload as shown in the example below:
+
+
+    ```json
+
+    {
+        "client_id": "VIC_CLIENT_ID",
+        "client_secret": "VIC_CLIENT_SECRET"
+    }
+
+    ```
+
+
+    Here is an example of how to do this:
+
+
+    ```bash
+
+    curl -X POST https://api.us.vic.ai/v0/token \
+        -H "Content-Type: application/json" \
+        -d '{"client_id": "VIC_CLIENT_ID", "client_secret": "VIC_CLIENT_SECRET"}'
+    ```
+
+
+    Upon providing a valid client ID and client secret, you should receive a
+
+    response similar to the following:
+
+
+    ```json
+
+    {
+        "access_token": "YOUR_ACCESS_TOKEN",
+        "token_type": "Bearer",
+        "expires_in": 3600
+    }
+
+    ```
+
+
+    **Token Storage:** If you are storing the `access_token`, ensure your storage
+
+    mechanism does not impose a character limit. Access tokens use JWT format and
+
+    may be 530 characters or longer.
+
+
+    For subsequent calls, use the value in `access_token` in the `Authorization`
+
+    field.
+
+
+    Here is an example:
+
+
+    ```bash
+
+    curl https://api.us.vic.ai/v0/healthCheck \
+        -H "Content-Type: application/json" \
+        -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+    ```
+
+
+    The response should resemble the following:
+
+
+    ```bash
+
+    {"company":"Your Company Name","status":"PASS","version":"0.19.0"}
+
+    ```
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Authentication
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-authentication-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-beta-features-api
+  name: Vic.ai Beta Features API
+  description: "These are features that are not quite ready for general consumption and are \nliable to\
+    \ change. We will try not to break what is provided, but we can not\nguarantee that breakages won't\
+    \ happen."
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Beta Features
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-beta-features-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-bills-api
+  name: Vic.ai Bills API
+  description: >-
+    Bills are imported invoices that can be created and updated through the API.
+
+    These operations allow you to create new bills and update existing ones
+
+    that were previously imported via the API.
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Bills
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-bills-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-companies-api
+  name: Vic.ai Companies API
+  description: The companies in the Vic system.
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Companies
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-companies-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-company-settings-api
+  name: Vic.ai Company Settings API
+  description: >-
+    Per-company configuration options that an integration partner
+
+    can read and tune programmatically rather than by asking
+
+    Vic.ai support. Requires partner authentication (obtain a
+
+    token via `POST /v0/token` with partner credentials); the
+
+    partner must have provisioned or been linked to the company.
+
+    The settings response is a flat map of field name to value;
+
+    PATCH applies a partial update and is atomic — either the full
+
+    update succeeds or no changes are persisted.
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Company Settings
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-company-settings-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-credit-confirmations-api
+  name: Vic.ai Credit Confirmations API
+  description: Confirm or mark credits as failed after processing in your ERP.
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Credit Confirmations
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-credit-confirmations-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-csv-reports-api
+  name: Vic.ai CSV Reports API
+  description: Generate and retrieve reports
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - CSV Reports
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-csv-reports-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-dimensions-api
+  name: Vic.ai Dimensions API
+  description: >-
+    Dimensions are part of your *ERP* **Masterdata**, and represent business
+
+    categories that are associated with invoice line items, that Vic.ai can
+
+    automatically assign to invoice line items. These operations allow
+
+    querying and manipulation of the dimension data.
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Dimensions
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-dimensions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-email-endpoints-api
+  name: Vic.ai Email Endpoints API
+  description: >-
+    Email endpoints are dedicated email addresses that Vic.ai monitors so
+
+    your team can forward or send invoices, contracts, or receipts in by
+
+    email. Each company can have multiple endpoints, each configured for a
+
+    specific document type. Endpoints can optionally restrict which sender
+
+    addresses are accepted; see the *Allowed Senders* endpoints.
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Email Endpoints
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-email-endpoints-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-invoice-approval-flows-api
+  name: Vic.ai Invoice Approval Flows API
+  description: >-
+    Invoice approval flows define the criteria and steps for processing invoices
+
+    through an approval workflow. These operations allow you to create, update,
+
+    and manage approval flows with selection rules and approval steps.
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Invoice Approval Flows
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-invoice-approval-flows-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-invoices-api
+  name: Vic.ai Invoices API
+  description: >-
+    These routes give you read-only access to two types of invoices:
+
+    - Invoices which have not yet been posted to the ERP system (restricted access).
+
+    - Invoices which have been posted to the ERP system.
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Invoices
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-invoices-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-organizations-api
+  name: Vic.ai Organizations API
+  description: >-
+    Organizations within the Vic system. The old name for this resource is
+
+    Account Firm. We are transitioning to the name of Organization.
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Organizations
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-organizations-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-partners-api
+  name: Vic.ai Partners API
+  description: >-
+    Partner API for integration providers to provision new organizations
+
+    and companies. Requires partner-level credentials obtained from Vic.
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Partners
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-partners-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-payment-batches-api
+  name: Vic.ai Payment Batches API
+  description: List and inspect payment batches.
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Payment Batches
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-payment-batches-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-payment-confirmations-api
+  name: Vic.ai Payment Confirmations API
+  description: Confirm or mark payments as failed after processing in your ERP.
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Payment Confirmations
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-payment-confirmations-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-payment-terms-api
+  name: Vic.ai Payment Terms API
+  description: >-
+    Payment terms are part of your *ERP* **Masterdata**, and represent
+
+    payment terms that Vic.ai can automatically assign to invoices. Some
+
+    vendors may have a default payment term, and some invoices may have a
+
+    specific payment term. In either case, Vic.ai can automatically assign
+
+    payment terms to invoices.
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Payment Terms
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-payment-terms-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-purchase-order-line-items-api
+  name: Vic.ai Purchase Order Line Items API
+  description: Manage individual line items within a purchase order.
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Purchase Order Line Items
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-purchase-order-line-items-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-purchase-orders-api
+  name: Vic.ai Purchase Orders API
+  description: The purchase orders.
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Purchase Orders
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-purchase-orders-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-status-api
+  name: Vic.ai Status API
+  description: Status requests on the state of the Vic.ai system.
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Status
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-status-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-synchronizing-api
+  name: Vic.ai Synchronizing API
+  description: >-
+    Synchronization is explicit and it is up to the integration to call each
+
+    resource in the order deemed appropriate.
+
+
+    When calling any synchronization functions. Care must be taken by the
+
+    integration to not get itself into ping-pong call loop. For instance, if an api
+
+    call synchronizes a resource, then the webhook handler __should not__ call a
+
+    different resource synchronize function.
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Synchronizing
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-synchronizing-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-tags-api
+  name: Vic.ai Tags API
+  description: >-
+    Tags are part of your *ERP* **Masterdata**, and represent business
+
+    categories that are associated with certain entities, like Vendor.
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Tags
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-tags-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-tax-codes-api
+  name: Vic.ai Tax Codes API
+  description: The tax codes.
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Tax Codes
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-tax-codes-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-training-invoices-api
+  name: Vic.ai Training Invoices API
+  description: >-
+    Training invoices are historical invoices used to train your company's
+
+    AI model. By providing past invoices with their correct GL coding,
+
+    vendor assignments, Vic.ai learns your
+
+    accounting patterns and can automatically code future invoices.
+
+
+    These endpoints allow you to sync historical invoice data into Vic.ai
+
+    and verify that training data has been received correctly.
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Training Invoices
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-training-invoices-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-users-api
+  name: Vic.ai Users API
+  description: >-
+    Managing users in the Vic system. You are allowed to add and remove users from
+
+    companies and organizations along with managing some of their attributes.
+
+    However, you are not allowed edit a user's `email`. This is currently a
+
+    limitation of the system.
+
+
+    If a user is already created and you wish to add it to a company or
+
+    organization, use the following operations to add them.
+
+
+    * `POST /v2/organizations/{organization_id}/users/attach`
+
+    * `POST /v2/companies/{company_id}/users/attach`
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Users
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-users-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-vat-codes-api
+  name: Vic.ai VAT Codes API
+  description: >-
+    In some regions, VAT codes are part of your *ERP* **Masterdata**, that
+
+    represent timeboxed VAT codes and VAT values that Vic.ai can automatically
+
+    assign to invoice line items.
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - VAT Codes
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-vat-codes-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-vendor-groups-api
+  name: Vic.ai Vendor Groups API
+  description: >-
+    Vendors can be grouped together in Vic.ai. This is especially useful
+
+    for purchase order matching where you want to match a purchase order
+
+    to a group of vendors.
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Vendor Groups
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-vendor-groups-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-vendor-tags-api
+  name: Vic.ai Vendor Tags API
+  description: Vendor tags are used to categorize vendors using tags.
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Vendor Tags
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-vendor-tags-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-vendors-api
+  name: Vic.ai Vendors API
+  description: >-
+    Vendors are part of your *ERP* **Masterdata**, and represent companies
+
+    that produce invoices.  In order to be associated with an invoice, key
+
+    data about the vendor must be stored in Vic.ai. These operations allow
+
+    querying and manipulation of the vendor data.
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Vendors
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-vendors-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-webhook-events-api
+  name: Vic.ai Webhook Events API
+  description: >-
+    These are the `V1` events you can subscribe to. These will be sent as a `POST`
+
+    to `https://yourCallbackUrl/events`.
+
+
+    * `all` - This is a special form, that specifies that you want all events sent
+      to your webhook. Usage is not recommended in production.
+    * [`invoice_approved`](#invoice-approved)
+
+    * [`invoice_deleted`](#invoice-deleted)
+
+    * [`invoice_post`](#invoice-post)
+
+    * [`invoice_posted`](#invoice-posted)
+
+    * [`invoice_rejected`](#invoice-rejected)
+
+    * [`invoice_restored`](#invoice-restored)
+
+    * [`invoice_submitted`](#invoice-submitted)
+
+    * [`invoice_transfer`](#invoice-transfer)
+
+    * [`invoice_updated`](#invoice-updated)
+
+    * [`payment_batch_processed`](#payment-batch-processed)
+
+    * [`payment_status_updated`](#payment-status-updated)
+
+    * [`credit_status_updated`](#credit-status-updated)
+
+    * [`purchase_order_created`](#purchase-order-created)
+
+    * [`purchase_order_deleted`](#purchase-order-deleted)
+
+    * [`purchase_order_updated`](#purchase-order-updated)
+
+    * [`vendor_created`](#vendor-created)
+
+    * [`vendor_onboarding_form_completed`](#vendor-onboarding-form-completed)
+
+    * [`vendor_updated`](#vendor-updated)
+
+
+
+    The following `V0` events may be specified. They will be sent to the original
+
+    callback paths where the event name was in the path.
+
+
+    * `vendorNew` - `POST` `https://yourCallbackUrl/vendorNew`
+
+    * `invoicePost` - `POST` `https://yourCallbackUrl/invoicePost`
+
+    * `invoiceTransfer` - `POST` `https://yourCallbackUrl/invoiceTransfer`
+
+    * `syncRequest` - `POST` `https://yourCallbackUrl/syncRequest`
+
+
+    ### Performance Considerations
+
+
+    Avoid using `"all"` as your subscription event type in production environment.
+
+    Instead, create specific subscriptions for individual event types that your
+
+    system can handle efficiently.
+
+
+    ### Event Details
+
+
+    The newer webhook endpoints will be sent to `https://yourCallbackUrl/events`.
+
+    The receiver is expected to handle everything asynchronously via this method. We
+
+    do not parse the response body and will ignore it.
+
+
+    * All `2XX` responses will be treated as successful.
+
+    * `401`, `403`, `429` responses will be treated as failures and retried with
+      a linear backoff with jitter. Once retries have been exhausted, the event
+      is discarded.
+    * All other `4XX` responses will be treated as successful. If something is to be
+      rejected, you will need to make the appropriate calls to the Vic API to
+      complete the asynchronous handshake. Example: confirming or rejecting an
+      invoice post.
+    * All `5XX` responses will be treated as a failure and retried with a linear
+      backoff with jitter. Once retries have been exhausted, the event is discarded.
+    * Failed events will be attempted up to 5 times (1 initial attempt + up to 4 retries).
+
+
+    > **NOTE**: The integrating system has 15 seconds to respond. After the time has
+
+    > passed it will be considered a failure, and a retry will be sent for events
+
+    > going to `https://yourCallbackUrl/events`.
+
+
+    The general structure of the webhook event will be as follows.
+
+
+    ```json
+
+    {
+      "id": "a7dae8d0-8baa-7a3d-885f-a7fc14835718",
+      "occurred_at": "2025-04-04T14:34:55.123Z",
+      "event": "the_event_name",
+      "data": {
+        "id": "123",
+        "something": "value"
+      }
+    }
+
+    ```
+
+
+    There will be a top-level field `event` that describes what the type of event
+
+    is. There will also be a `data` envelope that will contain the data for the
+
+    event.
+
+
+    ### Invoice Approved
+
+
+    This event is emitted from the Vic system when an invoice has been approved.
+
+    The payload for this event matches almost exactly what you will receive in the
+
+    `getInvoice` operation.
+
+
+    ```json
+
+    {
+      "id": "a7dae8d0-8baa-7a3d-885f-a7fc14835718",
+      "occurred_at": "2025-04-04T14:34:55.123Z",
+      "event": "invoice_approved",
+      "data": {
+        "totalAmount": "3.00",
+        "totalVatAmount": "0.00",
+        "amountWithoutTax": "1.00",
+        "amountTax": "1.00",
+        "amountNet": "1.00",
+        "amountVat": "0.00",
+        "amountSum": "3.00",
+        "amountFreight": "1.00",
+        "transactionType": "INVOICE",
+        "refNumber": "INV-1231123",
+        "poNumber": "PO-1231123",
+        "description": "Invoice for the month of April",
+        "currency": "USD",
+        "fields": [
+          {
+            "label": "custom:technician",
+            "title": "Technician",
+            "type": "text",
+            "value": "John Doe"
+          }
+        ],
+        "language": "en",
+        "issueDate": "2019-08-24",
+        "glDate": "2019-08-24",
+        "dueDate": "2019-08-24",
+        "paymentInfo": {
+          "bankAccountNum": "1234567890",
+          "bankCode": "1234567890",
+          "paymentTerm": {
+            "count": 30,
+            "unit": "DAYS"
+          },
+          "defaultMethod": "BANKACCOUNT"
+        },
+        "internalId": "123",
+        "internalUpdatedAt": "2019-08-24T14:15:22Z",
+        "externalId": "21b31bc7-1267-4335-893c-d7fe4706a238",
+        "paymentTermId": "80b25998-53d5-4563-abd4-ea6566e3cf2b",
+        "externalUpdatedAt": "2019-08-24T14:15:22Z",
+        "paymentTerm": {
+          "count": 0,
+          "unit": "DAYS"
+        },
+        "paymentRef": "string",
+        "vendorInternalId": "47",
+        "vendorExternalId": "21b31bc7-1267-4335-893c-d7fe4706a238",
+        "vendor": {
+          "internalId": "47",
+          "externalId": "21b31bc7-1267-4335-893c-d7fe4706a238",
+          "orgNumber": "string",
+          "countryCode": "US",
+          "name": "string"
+        },
+        "lineItems": [
+          {
+            "index": 1,
+            "amountTax": "1.00",
+            "amountNet": "1.00",
+            "amountSum": "1.00",
+            "amountFreight": "1.00",
+            "description": "string",
+            "comment": "string",
+            "billable": true,
+            "invoiceLineItemInfo": {
+              "vatCode": "string",
+              "vatAmount": 0,
+              "vatRate": "1.00"
+            },
+            "taxCode": {
+              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+              "code": "string",
+              "description": "Tax code description",
+              "rate": "0.25"
+            },
+            "costAccount": {
+              "internalId": "string",
+              "externalId": "21b31bc7-1267-4335-893c-d7fe4706a238",
+              "number": "string"
+            },
+            "dimensions": [
+              {
+                "name": "string",
+                "type": "string",
+                "typeName": "string",
+                "typeExternalId": "string",
+                "shortName": "string",
+                "externalData": {},
+                "displayName": "string",
+                "internalId": "47",
+                "internalUpdatedAt": "2019-08-24T14:15:22Z",
+                "externalId": "21b31bc7-1267-4335-893c-d7fe4706a238",
+                "externalUpdatedAt": "2021-06-29T17:20:53.154"
+              }
+            ],
+            "quantityInvoiced": "string",
+            "lineItemTotal": "1.00",
+            "lineType": "item",
+            "poLineNumber": 0,
+            "poNumber": "string",
+            "poItemsMatched": [
+              {
+                "invoiceItemId": "string",
+                "purchaseOrderItemId": "string",
+                "productNumber": "6512-41473",
+                "unitOfMeasure": "kg",
+                "amountMatched": "1.0",
+                "quantityMatched": "1.0"
+              }
+            ],
+            "unitPrice": "1.00",
+            "number": "123456",
+            "lineFields": [
+              {
+                "label": "custom:serial_number",
+                "title": "Serial Number",
+                "type": "text",
+                "value": "12-34540-1235"
+              }
+            ]
+          }
+        ],
+        "postingError": null,
+        "documentUrl": "http://example.com/invoice.pdf",
+        "status": "NOT_READY",
+        "bolNumbers": [],
+        "selfAssessedUseTaxAmount": null,
+        "selfAssessedUseTaxAccount": null,
+        "markedAs": "PAID",
+        "billStatus": "PAID",
+        "externalPaymentDate": null,
+        "externalPaymentNumber": null,
+        "externalPaymentStatus": null
+      }
+    }
+
+
+    ```
+
+    ### Invoice Deleted
+
+
+    This event is emitted from the Vic system when an invoice has been deleted.
+
+    The payload for this event is sparse. It only contains the `internalId` and
+
+    `externalId` of the invoice.
+
+
+    ```json
+
+    {
+      "id": "a7dae8d0-8baa-7a3d-885f-a7fc14835718",
+      "occurred_at": "2025-04-04T14:34:55.123Z",
+      "event": "invoice_deleted",
+      "data": {
+        "internalId": "123",
+        "externalId": "I0001"
+      }
+    }
+
+    ```
+
+
+    ### Invoice Post
+
+
+    This event is emitted from the Vic system when an accountant wants to post an
+
+    invoice to the ERP. This is a signal that the invoice is ready to be posted. The
+
+    integrating system is expected to respond and either confirm or reject the post.
+
+    The payload for this event matches almost exactly what you will receive in the
+
+    `getInvoice` operation.
+
+
+    Unlike the old `/invoicePost` event, this will not be a multipart event. You
+
+    will be able to fetch the invoice pdf from the provided `documentUrl` in the
+
+    payload.
+
+
+    ```json
+
+    {
+      "id": "a7dae8d0-8baa-7a3d-885f-a7fc04835310",
+      "occurred_at": "2025-04-04T14:34:55.123Z",
+      "event": "invoice_post",
+      "data": {
+        "totalAmount": "3.00",
+        "totalVatAmount": "0.00",
+        "amountWithoutTax": "1.00",
+        "amountTax": "1.00",
+        "amountNet": "1.00",
+        "amountVat": "0.00",
+        "amountSum": "3.00",
+        "amountFreight": "1.00",
+        "transactionType": "INVOICE",
+        "refNumber": "INV-1231123",
+        "poNumber": "PO-1231123",
+        "description": "Invoice for the month of April",
+        "currency": "USD",
+        "fields": [
+          {
+            "label": "custom:technician",
+            "title": "Technician",
+            "type": "text",
+            "value": "John Doe"
+          }
+        ],
+        "language": "en",
+        "issueDate": "2019-08-24",
+        "glDate": "2019-08-24",
+        "dueDate": "2019-08-24",
+        "paymentInfo": {
+          "bankAccountNum": "1234567890",
+          "bankCode": "1234567890",
+          "paymentTerm": {
+            "count": 30,
+            "unit": "DAYS"
+          },
+          "defaultMethod": "BANKACCOUNT"
+        },
+        "internalId": "123",
+        "internalUpdatedAt": "2019-08-24T14:15:22Z",
+        "externalId": "21b31bc7-1267-4335-893c-d7fe4706a238",
+        "paymentTermId": "80b25998-53d5-4563-abd4-ea6566e3cf2b",
+        "externalUpdatedAt": "2019-08-24T14:15:22Z",
+        "paymentTerm": {
+          "count": 0,
+          "unit": "DAYS"
+        },
+        "paymentRef": "string",
+        "vendorInternalId": "47",
+        "vendorExternalId": "21b31bc7-1267-4335-893c-d7fe4706a238",
+        "vendor": {
+          "internalId": "47",
+          "externalId": "21b31bc7-1267-4335-893c-d7fe4706a238",
+          "orgNumber": "string",
+          "countryCode": "US",
+          "name": "string"
+        },
+        "lineItems": [
+          {
+            "index": 1,
+            "amountTax": "1.00",
+            "amountNet": "1.00",
+            "amountSum": "1.00",
+            "amountFreight": "1.00",
+            "description": "string",
+            "comment": "string",
+            "billable": true,
+            "invoiceLineItemInfo": {
+              "vatCode": "string",
+              "vatAmount": 0,
+              "vatRate": "1.00"
+            },
+            "taxCode": {
+              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+              "code": "string",
+              "description": "Tax code description",
+              "rate": "0.25"
+            },
+            "costAccount": {
+              "internalId": "string",
+              "externalId": "21b31bc7-1267-4335-893c-d7fe4706a238",
+              "number": "string"
+            },
+            "dimensions": [
+              {
+                "name": "string",
+                "type": "string",
+                "typeName": "string",
+                "typeExternalId": "string",
+                "shortName": "string",
+                "externalData": {},
+                "displayName": "string",
+                "internalId": "47",
+                "internalUpdatedAt": "2019-08-24T14:15:22Z",
+                "externalId": "21b31bc7-1267-4335-893c-d7fe4706a238",
+                "externalUpdatedAt": "2021-06-29T17:20:53.154"
+              }
+            ],
+            "quantityInvoiced": "string",
+            "lineItemTotal": "1.00",
+            "lineType": "item",
+            "poLineNumber": 0,
+            "poNumber": "string",
+            "poItemsMatched": [
+              {
+                "invoiceItemId": "string",
+                "purchaseOrderItemId": "string",
+                "productNumber": "6512-41473",
+                "unitOfMeasure": "kg",
+                "amountMatched": "1.0",
+                "quantityMatched": "1.0"
+              }
+            ],
+            "unitPrice": "1.00",
+            "number": "123456",
+            "lineFields": [
+              {
+                "label": "custom:serial_number",
+                "title": "Serial Number",
+                "type": "text",
+                "value": "12-34540-1235"
+              }
+            ]
+          }
+        ],
+        "postingError": null,
+        "documentUrl": "http://example.com/invoice.pdf",
+        "status": "NOT_READY",
+        "bolNumbers": [],
+        "selfAssessedUseTaxAmount": null,
+        "selfAssessedUseTaxAccount": null,
+        "markedAs": "PAID",
+        "billStatus": "PAID",
+        "externalPaymentDate": null,
+        "externalPaymentNumber": null,
+        "externalPaymentStatus": null
+      }
+    }
+
+
+    ```
+
+
+    ### Invoice Posted
+
+
+    This event is emitted from the Vic system when an invoice has been posted to the
+
+    ERP successfully. The payload for this event matches almost exactly what you
+
+    will receive in the `getInvoice` operation.
+
+
+    ```json
+
+    {
+      "id": "a7dae8d0-8baa-7a3d-885f-a7fc14835718",
+      "occurred_at": "2025-04-04T14:34:55.123Z",
+      "event": "invoice_posted",
+      "data": {
+        "totalAmount": "3.00",
+        "totalVatAmount": "0.00",
+        "amountWithoutTax": "1.00",
+        "amountTax": "1.00",
+        "amountNet": "1.00",
+        "amountVat": "0.00",
+        "amountSum": "3.00",
+        "amountFreight": "1.00",
+        "transactionType": "INVOICE",
+        "refNumber": "INV-1231123",
+        "poNumber": "PO-1231123",
+        "description": "Invoice for the month of April",
+        "currency": "USD",
+        "fields": [
+          {
+            "label": "custom:technician",
+            "title": "Technician",
+            "type": "text",
+            "value": "John Doe"
+          }
+        ],
+        "language": "en",
+        "issueDate": "2019-08-24",
+        "glDate": "2019-08-24",
+        "dueDate": "2019-08-24",
+        "paymentInfo": {
+          "bankAccountNum": "1234567890",
+          "bankCode": "1234567890",
+          "paymentTerm": {
+            "count": 30,
+            "unit": "DAYS"
+          },
+          "defaultMethod": "BANKACCOUNT"
+        },
+        "internalId": "123",
+        "internalUpdatedAt": "2019-08-24T14:15:22Z",
+        "externalId": "21b31bc7-1267-4335-893c-d7fe4706a238",
+        "paymentTermId": "80b25998-53d5-4563-abd4-ea6566e3cf2b",
+        "externalUpdatedAt": "2019-08-24T14:15:22Z",
+        "paymentTerm": {
+          "count": 0,
+          "unit": "DAYS"
+        },
+        "paymentRef": "string",
+        "vendorInternalId": "47",
+        "vendorExternalId": "21b31bc7-1267-4335-893c-d7fe4706a238",
+        "vendor": {
+          "internalId": "47",
+          "externalId": "21b31bc7-1267-4335-893c-d7fe4706a238",
+          "orgNumber": "string",
+          "countryCode": "US",
+          "name": "string"
+        },
+        "lineItems": [
+          {
+            "index": 1,
+            "amountTax": "1.00",
+            "amountNet": "1.00",
+            "amountSum": "1.00",
+            "amountFreight": "1.00",
+            "description": "string",
+            "comment": "string",
+            "billable": true,
+            "invoiceLineItemInfo": {
+              "vatCode": "string",
+              "vatAmount": 0,
+              "vatRate": "1.00"
+            },
+            "taxCode": {
+              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+              "code": "string",
+              "description": "Tax code description",
+              "rate": "0.25"
+            },
+            "costAccount": {
+              "internalId": "string",
+              "externalId": "21b31bc7-1267-4335-893c-d7fe4706a238",
+              "number": "string"
+            },
+            "dimensions": [
+              {
+                "name": "string",
+                "type": "string",
+                "typeName": "string",
+                "typeExternalId": "string",
+                "shortName": "string",
+                "externalData": {},
+                "displayName": "string",
+                "internalId": "47",
+                "internalUpdatedAt": "2019-08-24T14:15:22Z",
+                "externalId": "21b31bc7-1267-4335-893c-d7fe4706a238",
+                "externalUpdatedAt": "2021-06-29T17:20:53.154"
+              }
+            ],
+            "quantityInvoiced": "string",
+            "lineItemTotal": "1.00",
+            "lineType": "item",
+            "poLineNumber": 0,
+            "poNumber": "string",
+            "poItemsMatched": [
+              {
+                "invoiceItemId": "string",
+                "purchaseOrderItemId": "string",
+                "productNumber": "6512-41473",
+                "unitOfMeasure": "kg",
+                "amountMatched": "1.0",
+                "quantityMatched": "1.0"
+              }
+            ],
+            "unitPrice": "1.00",
+            "number": "123456",
+            "lineFields": [
+              {
+                "label": "custom:serial_number",
+                "title": "Serial Number",
+                "type": "text",
+                "value": "12-34540-1235"
+              }
+            ]
+          }
+        ],
+        "postingError": null,
+        "documentUrl": "http://example.com/invoice.pdf",
+        "status": "NOT_READY",
+        "bolNumbers": [],
+        "selfAssessedUseTaxAmount": null,
+        "selfAssessedUseTaxAccount": null,
+        "markedAs": "PAID",
+        "billStatus": "PAID",
+        "externalPaymentDate": null,
+        "externalPaymentNumber": null,
+        "externalPaymentStatus": null
+      }
+    }
+
+    ```
+
+
+    ### Invoice Rejected
+
+
+    This event is emitted from the Vic system when an invoice has been rejected
+
+    during the approval process. The payload for this event matches almost exactly
+
+    what you will receive in the `getInvoice` operation.
+
+
+    The structure is identical to `invoice_approved` — refer to that event for the
+
+    full payload example.
+
+
+    ### Invoice Restored
+
+
+    This event is emitted from the Vic system when a previously deleted invoice has
+
+    been restored. It is the counterpart to `invoice_deleted`: subscribing to both
+
+    lets you distinguish an invoice that was deleted, restored, and deleted again
+
+    from a genuinely duplicated delete. The payload for this event is sparse — it
+
+    contains only the `internalId` and `externalId` of the invoice.
+
+
+    ```json
+
+    {
+      "id": "b8ebf9e1-9cbb-8b4e-996f-b8fd25946829",
+      "occurred_at": "2025-04-04T14:34:55.123Z",
+      "event": "invoice_restored",
+      "data": {
+        "internalId": "123",
+        "externalId": "I0001"
+      }
+    }
+
+    ```
+
+
+    ### Invoice Submitted
+
+
+    This event is emitted from the Vic system when an invoice has been submitted
+
+    for processing. The payload for this event matches almost exactly what you will
+
+    receive in the `getInvoice` operation.
+
+
+    The structure is identical to `invoice_approved` — refer to that event for the
+
+    full payload example.
+
+
+    ### Invoice Transfer
+
+
+    This event is emitted from the Vic system when an accountant wants to transfer
+
+    an invoice to the ERP. This is a signal that the invoice is ready to be
+
+    transferred. The integrating system is expected to respond and either confirm or
+
+    reject the transfer. The payload for this event matches almost exactly what you
+
+    will receive in the `getInvoice` operation.
+
+
+    ```json
+
+    {
+      "id": "a7dae8d0-8baa-7a3d-885f-a7fc14835718",
+      "occurred_at": "2025-04-04T14:34:55.123Z",
+      "event": "invoice_transfer",
+      "data": {
+        "totalAmount": "3.00",
+        "totalVatAmount": "0.00",
+        "amountWithoutTax": "1.00",
+        "amountTax": "1.00",
+        "amountNet": "1.00",
+        "amountVat": "0.00",
+        "amountSum": "3.00",
+        "amountFreight": "1.00",
+        "transactionType": "INVOICE",
+        "refNumber": "INV-1231123",
+        "poNumber": "PO-1231123",
+        "description": "Invoice for the month of April",
+        "currency": "USD",
+        "fields": [
+          {
+            "label": "custom:technician",
+            "title": "Technician",
+            "type": "text",
+            "value": "John Doe"
+          }
+        ],
+        "language": "en",
+        "issueDate": "2019-08-24",
+        "glDate": "2019-08-24",
+        "dueDate": "2019-08-24",
+        "paymentInfo": {
+          "bankAccountNum": "1234567890",
+          "bankCode": "1234567890",
+          "paymentTerm": {
+            "count": 30,
+            "unit": "DAYS"
+          },
+          "defaultMethod": "BANKACCOUNT"
+        },
+        "internalId": "123",
+        "internalUpdatedAt": "2019-08-24T14:15:22Z",
+        "externalId": "21b31bc7-1267-4335-893c-d7fe4706a238",
+        "paymentTermId": "80b25998-53d5-4563-abd4-ea6566e3cf2b",
+        "externalUpdatedAt": "2019-08-24T14:15:22Z",
+        "paymentTerm": {
+          "count": 0,
+          "unit": "DAYS"
+        },
+        "paymentRef": "string",
+        "vendorInternalId": "47",
+        "vendorExternalId": "21b31bc7-1267-4335-893c-d7fe4706a238",
+        "vendor": {
+          "internalId": "47",
+          "externalId": "21b31bc7-1267-4335-893c-d7fe4706a238",
+          "orgNumber": "string",
+          "countryCode": "US",
+          "name": "string"
+        },
+        "lineItems": [
+          {
+            "index": 1,
+            "amountTax": "1.00",
+            "amountNet": "1.00",
+            "amountSum": "1.00",
+            "amountFreight": "1.00",
+            "description": "string",
+            "comment": "string",
+            "billable": true,
+            "invoiceLineItemInfo": {
+              "vatCode": "string",
+              "vatAmount": 0,
+              "vatRate": "1.00"
+            },
+            "taxCode": {
+              "id": "497f6eca-6276-4993-bfeb-53cbbbba6f08",
+              "code": "string",
+              "description": "Tax code description",
+              "rate": "0.25"
+            },
+            "costAccount": {
+              "internalId": "string",
+              "externalId": "21b31bc7-1267-4335-893c-d7fe4706a238",
+              "number": "string"
+            },
+            "dimensions": [
+              {
+                "name": "string",
+                "type": "string",
+                "typeName": "string",
+                "typeExternalId": "string",
+                "shortName": "string",
+                "externalData": {},
+                "displayName": "string",
+                "internalId": "47",
+                "internalUpdatedAt": "2019-08-24T14:15:22Z",
+                "externalId": "21b31bc7-1267-4335-893c-d7fe4706a238",
+                "externalUpdatedAt": "2021-06-29T17:20:53.154"
+              }
+            ],
+            "quantityInvoiced": "string",
+            "lineItemTotal": "1.00",
+            "lineType": "item",
+            "poLineNumber": 0,
+            "poNumber": "string",
+            "poItemsMatched": [
+              {
+                "invoiceItemId": "string",
+                "purchaseOrderItemId": "string",
+                "productNumber": "6512-41473",
+                "unitOfMeasure": "kg",
+                "amountMatched": "1.0",
+                "quantityMatched": "1.0"
+              }
+            ],
+            "unitPrice": "1.00",
+            "number": "123456",
+            "lineFields": [
+              {
+                "label": "custom:serial_number",
+                "title": "Serial Number",
+                "type": "text",
+                "value": "12-34540-1235"
+              }
+            ]
+          }
+        ],
+        "postingError": null,
+        "documentUrl": "http://example.com/invoice.pdf",
+        "status": "NOT_READY",
+        "bolNumbers": [],
+        "selfAssessedUseTaxAmount": null,
+        "selfAssessedUseTaxAccount": null,
+        "markedAs": "PAID",
+        "billStatus": "PAID",
+        "externalPaymentDate": null,
+        "externalPaymentNumber": null,
+        "externalPaymentStatus": null
+      }
+    }
+
+    ```
+
+
+    ### Invoice Updated
+
+
+    This event is emitted from the Vic system when an invoice has been updated.
+
+    The payload for this event matches almost exactly what you will receive in the
+
+    `getInvoice` operation.
+
+
+    The structure is identical to `invoice_approved` — refer to that event for the
+
+    full payload example.
+
+
+    ### Purchase Order Created
+
+
+    This event is emitted from the Vic system when a purchase order has been created.
+
+    The payload for this event matches almost exactly what you will receive in the
+
+    `getPurchaseOrder` operation.
+
+
+    ```json
+
+    {
+      "id": "a7dae8d0-8baa-7a3d-885f-a7fc14835718",
+      "occurred_at": "2025-04-04T14:34:55.123Z",
+      "event": "purchase_order_created",
+      "data": {
+        "internalId": "string",
+        "externalId": "21b31bc7-1267-4335-893c-d7fe4706a238",
+        "vendor": {
+          "internalId": "47",
+          "internalUpdatedAt": "2019-08-24T14:15:22Z",
+          "externalId": "21b31bc7-1267-4335-893c-d7fe4706a238",
+          "externalUpdatedAt": "2021-06-29T17:20:53.154",
+          "name": "Acme Corporation",
+          "email": "vendor@acme.com",
+          "description": "They sell anvils",
+          "phone": "555-555-5555",
+          "addressStreet": "123 Main Street\nSuite 100",
+          "addressCity": "Springfield",
+          "addressState": "IL",
+          "addressPostalCode": "62701",
+          "countryCode": "US",
+          "currency": "USD",
+          "confirmedAt": "2019-08-24T14:15:22Z",
+          "state": "CONFIRMED",
+          "taxInfo": {
+            "taxId": "11-1234567",
+            "is1099vendor": false,
+            "orgNumber": null
+          },
+          "defaultPaymentInfo": null,
+          "paymentTermId": "80b25998-53d5-4563-abd4-ea6566e3cf2b",
+          "poMatchingDocumentLevel": false,
+          "vendorGroupId": "c4299feb-c5fa-4e0b-a7a6-51fbfbe0854d",
+          "tags": [],
+          "externalData": {},
+          "errors": []
+        },
+        "internalUpdatedAt": "2019-08-24T14:15:22Z",
+        "issuedOn": "2019-08-24",
+        "createdOn": "2019-08-24",
+        "poNumber": "string",
+        "deliverOn": "2019-08-24",
+        "amount": "1.00",
+        "currencyId": "USD",
+        "status": "open",
+        "matchingType": "document",
+        "type": "blanket",
+        "description": "string",
+        "lineItems": [
+          {
+            "internalId": "string",
+            "externalId": "21b31bc7-1267-4335-893c-d7fe4706a238",
+            "productNumber": "string",
+            "productDescription": "string",
+            "unitOfMeasure": "kg",
+            "quantityAccepted": "1.0",
+            "quantityRequested": "1.0",
+            "quantityReceived": "1.0",
+            "matchingType": "two_way",
+            "unitAmount": "1.00",
+            "lineItemTotal": "1.00",
+            "lineNumber": 1,
+            "dimensions": [
+              {
+                "internalId": "1234",
+                "externalId": "D0123148",
+                "name": "project - the big one",
+                "typeExternalId": "project"
+              }
+            ],
+            "invoiceItemsMatched": [
+              {
+                "invoiceItemId": "123",
+                "purchaseOrderItemId": "6bde599d-3b7e-497c-ab91-1594a2efcdab",
+                "unitOfMeasure": "kg",
+                "amountMatched": "123.34",
+                "quantityMatched": "1.0"
+              }
+            ],
+            "memo": "string",
+            "status": "open"
+          }
+        ],
+        "paymentTermId": "80b25998-53d5-4563-abd4-ea6566e3cf2b"
+      }
+    }
+
+    ```
+
+
+    ### Purchase Order Updated
+
+
+    This event is emitted from the Vic system when a purchase order has been updated.
+
+    The payload for this event matches almost exactly what you will receive in the
+
+    `getPurchaseOrder` operation. This event is a snapshot of the purchase order at
+
+    the time of the event.
+
+
+    ```json
+
+    {
+      "id": "a7dae8d0-8baa-7a3d-885f-a7fc14835718",
+      "occurred_at": "2025-04-04T14:34:55.123Z",
+      "event": "purchase_order_updated",
+      "data": {
+        "internalId": "string",
+        "externalId": "21b31bc7-1267-4335-893c-d7fe4706a238",
+        "vendor": {
+          "internalId": "47",
+          "internalUpdatedAt": "2019-08-24T14:15:22Z",
+          "externalId": "21b31bc7-1267-4335-893c-d7fe4706a238",
+          "externalUpdatedAt": "2021-06-29T17:20:53.154",
+          "name": "Acme Corporation",
+          "email": "vendor@acme.com",
+          "description": "They sell anvils",
+          "phone": "555-555-5555",
+          "addressStreet": "123 Main Street\nSuite 100",
+          "addressCity": "Springfield",
+          "addressState": "IL",
+          "addressPostalCode": "62701",
+          "countryCode": "US",
+          "currency": "USD",
+          "confirmedAt": "2019-08-24T14:15:22Z",
+          "state": "CONFIRMED",
+          "taxInfo": {
+            "taxId": "11-1234567",
+            "is1099vendor": false,
+            "orgNumber": null
+          },
+          "defaultPaymentInfo": null,
+          "paymentTermId": "80b25998-53d5-4563-abd4-ea6566e3cf2b",
+          "poMatchingDocumentLevel": false,
+          "vendorGroupId": "c4299feb-c5fa-4e0b-a7a6-51fbfbe0854d",
+          "tags": [],
+          "externalData": {},
+          "errors": []
+        },
+        "internalUpdatedAt": "2019-08-24T14:15:22Z",
+        "issuedOn": "2019-08-24",
+        "createdOn": "2019-08-24",
+        "poNumber": "string",
+        "deliverOn": "2019-08-24",
+        "amount": "1.00",
+        "currencyId": "USD",
+        "status": "open",
+        "matchingType": "document",
+        "type": "blanket",
+        "description": "string",
+        "lineItems": [
+          {
+            "internalId": "string",
+            "externalId": "21b31bc7-1267-4335-893c-d7fe4706a238",
+            "productNumber": "string",
+            "productDescription": "string",
+            "unitOfMeasure": "kg",
+            "quantityAccepted": "1.0",
+            "quantityRequested": "1.0",
+            "quantityReceived": "1.0",
+            "matchingType": "two_way",
+            "unitAmount": "1.00",
+            "lineItemTotal": "1.00",
+            "lineNumber": 1,
+            "dimensions": [
+              {
+                "internalId": "1234",
+                "externalId": "D0123148",
+                "name": "project - the big one",
+                "typeExternalId": "project"
+              }
+            ],
+            "invoiceItemsMatched": [
+              {
+                "invoiceItemId": "123",
+                "purchaseOrderItemId": "6bde599d-3b7e-497c-ab91-1594a2efcdab",
+                "unitOfMeasure": "kg",
+                "amountMatched": "123.34",
+                "quantityMatched": "1.0"
+              }
+            ],
+            "memo": "string",
+            "status": "open"
+          }
+        ],
+        "paymentTermId": "80b25998-53d5-4563-abd4-ea6566e3cf2b"
+      }
+    }
+
+    ```
+
+    ### Purchase Order Deleted
+
+
+    This event is emitted from the Vic system when a purchase order has been deleted.
+
+    The payload for this event is sparse. It only contains the `internalId` and
+
+    `externalId` of the purchase order.
+
+
+    ```json
+
+    {
+      "id": "a7dae8d0-8baa-7a3d-885f-a7fc14835718",
+      "occurred_at": "2025-04-04T14:34:55.123Z",
+      "event": "purchase_order_deleted",
+      "data": {
+        "internalId": "4c029f1b-f87f-4a05-a511-8cda223dad2a",
+        "externalId": "12345"
+      }
+    }
+
+    ```
+
+
+    ### Payment Batch Processed
+
+
+    This event is emitted from the Vic system when a batch of payments has been sent
+
+    to the payment processor and a successful response has been obtained. The
+
+    payload for this event matches almost exactly what you will receive in the
+
+    `getPaymentBatch` operation.
+
+
+    Only approved credits and payments will be emitted with the event. Voided and
+
+    rejected payments will not be sent. If you need these values, you should call
+
+    `getPaymentBatch` in order to fetch them.
+
+
+    Here is an example of an $200 invoice being paid in full with a $20 credit note
+
+    being applied. This will bring the total batch payment to $180. The credit note
+
+    applied is not subtracted from the payment in this breakdown because ERPs
+
+    typically need entries of the payment being applied and the credit note being
+
+    used in conjunction with that credit note.
+
+
+    ```json
+
+    {
+      "id": "a7dae8d0-8bsa-7a3d-882f-a7fc14835719",
+      "event": "payment_batch_processed",
+      "occurred_at": "2025-04-04T14:34:55.123Z",
+      "data": {
+        "id": "f1c2384f-57d8-41fe-afa6-17caf62b2a3f",
+        "name": "Batch 2023-10-01 001",
+        "processedAt": "2023-10-01T19:12:00Z",
+        "approvedAt": "2023-10-01T19:12:00Z",
+        "rejectedAt": null,
+        "voidedAt": null,
+        "status": "approved",
+        "companyId": "123",
+        "payments": [
+          {
+            "id": "edb3a624-9f12-4cd8-adb8-4d9a5ec0b48b",
+            "amount": "200.00",
+            "settlementAmount": "200.00",
+            "settlementCurrencyId": "USD",
+            "exchangeRate": "1.0",
+            "discountAmount": "0.00",
+            "currencyId": "USD",
+            "status": "approved",
+            "voidedAt": null,
+            "rejectedAt": null,
+            "approvedAt": "2023-10-01T19:12:00Z",
+            "fundedAt": null,
+            "costAccount": {
+              "internalId": "1",
+              "externalId": "cost-account-id-in-erp"
+            },
+            "invoice": {
+              "internalId": "876",
+              "externalId": "invoice-id-in-erp",
+              "refNumber": "INV-123456"
+            },
+            "vendor": {
+              "internalId": "409",
+              "externalId": "vendor-id-in-erp"
+            },
+          }
+        ],
+        "credits": [
+          {
+            "id": "091f257a-9b6e-4797-bcb6-ccd36dda260f",
+            "amount": "20.00",
+            "settlementAmount": "20.00",
+            "settlementCurrencyId": "USD",
+            "exchangeRate": "1.0",
+            "discountAmount": "0.00",
+            "currencyId": "USD",
+            "status": "approved",
+            "voidedAt": null,
+            "rejectedAt": null,
+            "approvedAt": "2023-10-01T19:12:00Z",
+            "fundedAt": null,
+            "costAccount": {
+              "internalId": "1",
+              "externalId": "cost-account-id-in-erp"
+            },
+            "invoice": {
+              "internalId": "900",
+              "externalId": "credit-note-id-in-erp",
+              "refNumber": "CRN-123456"
+            },
+            "vendor": {
+              "internalId": "409",
+              "externalId": "vendor-id-in-erp"
+            },
+          }
+        ]
+      }
+    }
+
+    ```
+
+
+    ### Payment Status Updated
+
+
+    This event is emitted when a payment you were previously notified about reaches
+
+    a terminal outcome. For now it is sent only for negative outcomes (`failed`,
+
+    `returned` and `voided`) and may be extended to other statuses later, so read
+
+    `data.status` rather than assuming the outcome. Use it to keep your own system
+
+    in sync without polling. Credits have their own
+
+    [`credit_status_updated`](#credit-status-updated) event.
+
+
+    * `data` is the payment itself, in the same shape the `getPaymentBatch`
+      operation returns, flattened directly onto `data` (plus `batchId`).
+    * `data.status` is the outcome that fired (`failed`, `returned` or `voided`). It
+      overrides the payment's own status, so a returned payment reads `returned`
+      here even though its underlying status may be `funded`.
+
+    ```json
+
+    {
+      "id": "a7dae8d0-8baa-7a3d-885f-a7fc14835718",
+      "occurred_at": "2025-04-04T14:34:55.123Z",
+      "event": "payment_status_updated",
+      "data": {
+        "status": "failed",
+        "batchId": "f1c2384f-57d8-41fe-afa6-17caf62b2a3f",
+        "id": "edb3a624-9f12-4cd8-adb8-4d9a5ec0b48b",
+        "amount": "200.00",
+        "currencyId": "USD",
+        "failedAt": "2023-10-02T08:00:00Z",
+        "failedReason": "insufficient_funds",
+        "invoice": {
+          "internalId": "876",
+          "externalId": "invoice-id-in-erp",
+          "refNumber": "INV-123456"
+        },
+        "vendor": {
+          "internalId": "409",
+          "externalId": "vendor-id-in-erp"
+        }
+      }
+    }
+
+    ```
+
+
+    ### Credit Status Updated
+
+
+    This event mirrors [`payment_status_updated`](#payment-status-updated) for
+
+    credits. It is emitted when a credit you were previously notified about reaches
+
+    a terminal outcome (currently `failed`, `returned` or `voided`).
+
+
+    * `data` is the credit itself, in the same shape the `getPaymentBatch`
+      operation returns, flattened directly onto `data` (plus `batchId`).
+    * `data.status` is the outcome that fired (`failed`, `returned` or `voided`),
+      overriding the credit's own status.
+
+    ```json
+
+    {
+      "id": "b1e9c7d2-4a3f-7b1e-995a-c2fd25946832",
+      "occurred_at": "2025-04-04T14:34:55.123Z",
+      "event": "credit_status_updated",
+      "data": {
+        "status": "voided",
+        "batchId": "f1c2384f-57d8-41fe-afa6-17caf62b2a3f",
+        "id": "091f257a-9b6e-4797-bcb6-ccd36dda260f",
+        "amount": "20.00",
+        "currencyId": "USD",
+        "voidedAt": "2023-10-02T08:00:00Z",
+        "invoice": {
+          "internalId": "900",
+          "externalId": "credit-note-id-in-erp",
+          "refNumber": "CRN-123456"
+        },
+        "vendor": {
+          "internalId": "409",
+          "externalId": "vendor-id-in-erp"
+        }
+      }
+    }
+
+    ```
+
+
+    ### Vendor Onboarding Form Completed
+
+
+    This event is emitted from the Vic system when a vendor completes their onboarding form submission.
+    The payload includes the full vendor details along with the specific completed onboarding form, its
+    items, and all responses.
+
+
+    This event is useful for integrations that need to capture vendor onboarding information, validate
+    submitted data, or trigger follow-up processes in external systems when vendors complete their onboarding.
+
+
+    ```json
+
+    {
+      "id": "a7dae8d0-8baa-7a3d-885f-a7fc14835718",
+      "occurred_at": "2025-04-04T14:34:55.123Z",
+      "event": "vendor_onboarding_form_completed",
+      "data": {
+        "vendor": {
+          "id": "550e8400-e29b-41d4-a716-446655440000",
+          "legacy_id": "12345",
+          "name": "Acme Corporation",
+          "legal_name": "Acme Corporation Inc.",
+          "doing_business_as": "Acme Supply Co",
+          "email": "vendor@acme.com",
+          "description": "Office supplies vendor",
+          "phone": "+1-555-123-4567",
+          "address_street_1": "123 Main Street",
+          "address_street_2": "Suite 100",
+          "address_city": "Springfield",
+          "address_state": "IL",
+          "address_postal_code": "62701",
+          "country_code": "US",
+          "currency": "USD",
+          "org_number": "123456789",
+          "tax_id": "12-3456789",
+          "tax_id_type": "ein",
+          "track_1099": false,
+          "confirmed_at": "2025-04-04T14:30:00Z",
+          "state": "pending",
+          "remote_id": "vendor-ext-123",
+          "remote_updated_at": "2025-04-04T14:30:00Z",
+          "remote_data": null,
+          "remote_errors": null,
+          "payment_term_id": "80b25998-53d5-4563-abd4-ea6566e3cf2b",
+          "po_matching_document_level": false,
+          "vendor_group_id": null,
+          "updated_at": "2025-04-04T14:30:00Z",
+          "ofac_status": "cleared",
+          "ofac_report": {
+            "id": "ad158953-172d-44dd-aaf0-a61882c792d0",
+            "high_risk_hits": 0,
+            "medium_risk_hits": 0,
+            "low_risk_hits": 0,
+            "total_hits": 0,
+            "risk_level": "low",
+            "matches": [],
+            "created_at": "2025-04-04T14:25:00Z"
+          },
+          "banking_info": [
+            {
+              "id": "7c5e8400-e29b-41d4-a716-446655440001",
+              "kind": "ach",
+              "account_number": "123456789",
+              "is_primary": true
+            }
+          ],
+          "tags": [
+            {
+              "id": "9f3a8400-e29b-41d4-a716-446655440002",
+              "value": "preferred-vendor"
+            }
+          ]
+        },
+        "form": {
+          "id": "b2c4e8d0-8baa-7a3d-885f-a7fc14835720",
+          "status": "submitted",
+          "template_version_id": "d5f7a2b1-9cde-4f6g-7h8i-9j0k1l2m3n4o",
+          "inserted_at": "2025-04-01T10:00:00Z",
+          "updated_at": "2025-04-04T14:30:00Z",
+          "items": [
+            {
+              "id": "c3d5f9e1-9cba-8b4e-996g-b8gd25946831",
+              "type": "text",
+              "required": true,
+              "order": 1,
+              "value": "Acme Corporation",
+              "date_value": null,
+              "question": {
+                "id": "e6g8h0f2-0deb-9c5f-007h-c9he36057942",
+                "label": "What is your business name?",
+                "type": "text",
+                "required": true,
+                "placeholder": "Enter your business name",
+                "max_length": 255,
+                "validation": null,
+                "min_selection": null,
+                "max_selection": null,
+                "rows": null,
+                "available_options": []
+              },
+              "options": []
+            },
+            {
+              "id": "d4e6g0f2-0dcb-9c5f-007h-c9he36057943",
+              "type": "email",
+              "required": true,
+              "order": 2,
+              "value": "contact@acme.com",
+              "date_value": null,
+              "question": {
+                "id": "f7h9i1g3-1edc-0d6g-118i-d0if47168053",
+                "label": "Primary contact email",
+                "type": "email",
+                "required": true,
+                "placeholder": "email@example.com",
+                "max_length": null,
+                "validation": null,
+                "min_selection": null,
+                "max_selection": null,
+                "rows": null,
+                "available_options": []
+              },
+              "options": []
+            },
+            {
+              "id": "e5f7h1g3-1edc-0d6g-118i-d0if47168054",
+              "type": "date",
+              "required": false,
+              "order": 3,
+              "value": null,
+              "date_value": "2025-01-15",
+              "question": {
+                "id": "g8i0j2h4-2fed-1e7h-229j-e1jg58279164",
+                "label": "When did you incorporate?",
+                "type": "date",
+                "required": false,
+                "placeholder": null,
+                "max_length": null,
+                "validation": null,
+                "min_selection": null,
+                "max_selection": null,
+                "rows": null,
+                "available_options": []
+              },
+              "options": []
+            },
+            {
+              "id": "f6g8i2h4-2fed-1e7h-229j-e1jg58279165",
+              "type": "radio",
+              "required": true,
+              "order": 4,
+              "value": null,
+              "date_value": null,
+              "question": {
+                "id": "h9j1k3i5-3gfe-2f8i-330k-f2kh69380275",
+                "label": "Are you a registered business?",
+                "type": "radio",
+                "required": true,
+                "placeholder": null,
+                "max_length": null,
+                "validation": null,
+                "min_selection": null,
+                "max_selection": null,
+                "rows": null,
+                "available_options": [
+                  {
+                    "id": "i0k2l4j6-4hgf-3g9j-441l-g3li70491386",
+                    "value": "Yes",
+                    "order": 1,
+                    "allow_custom": false
+                  },
+                  {
+                    "id": "j1l3m5k7-5ihg-4h0k-552m-h4mj81502497",
+                    "value": "No",
+                    "order": 2,
+                    "allow_custom": false
+                  }
+                ]
+              },
+              "options": [
+                {
+                  "id": "g7h9j3i5-3gfe-2f8i-330k-f2kh69380276",
+                  "value": "Yes",
+                  "custom": null,
+                  "order": 1,
+                  "selected_option": {
+                    "id": "i0k2l4j6-4hgf-3g9j-441l-g3li70491386",
+                    "value": "Yes",
+                    "allow_custom": false
+                  }
+                }
+              ]
+            },
+            {
+              "id": "h8i0k4j6-4hgf-3g9j-441l-g3li70491387",
+              "type": "checkbox",
+              "required": false,
+              "order": 5,
+              "value": null,
+              "date_value": null,
+              "question": {
+                "id": "j1l3m5k7-5ihg-4h0k-552m-h4mj81502497",
+                "label": "Which certifications do you have?",
+                "type": "checkbox",
+                "required": false,
+                "placeholder": null,
+                "max_length": null,
+                "validation": null,
+                "min_selection": 1,
+                "max_selection": null,
+                "rows": null,
+                "available_options": [
+                  {
+                    "id": "k2m4n6l8-6jih-5i1l-663n-i5nk92613508",
+                    "value": "ISO 9001",
+                    "order": 1,
+                    "allow_custom": false
+                  },
+                  {
+                    "id": "l3n5o7m9-7kji-6j2m-774o-j6ol03724619",
+                    "value": "ISO 14001",
+                    "order": 2,
+                    "allow_custom": false
+                  },
+                  {
+                    "id": "m4o6p8n0-8lkj-7k3n-885p-k7pm14835730",
+                    "value": "ISO 27001",
+                    "order": 3,
+                    "allow_custom": false
+                  }
+                ]
+              },
+              "options": [
+                {
+                  "id": "i9j1l5k7-5ihg-4h0k-552m-h4mj81502498",
+                  "value": "ISO 9001",
+                  "custom": null,
+                  "order": 1,
+                  "selected_option": {
+                    "id": "k2m4n6l8-6jih-5i1l-663n-i5nk92613508",
+                    "value": "ISO 9001",
+                    "allow_custom": false
+                  }
+                },
+                {
+                  "id": "j0k2m6l8-6jih-5i1l-663n-i5nk92613509",
+                  "value": "ISO 14001",
+                  "custom": null,
+                  "order": 2,
+                  "selected_option": {
+                    "id": "l3n5o7m9-7kji-6j2m-774o-j6ol03724619",
+                    "value": "ISO 14001",
+                    "allow_custom": false
+                  }
+                }
+              ]
+            },
+            {
+              "id": "k1l3n7m9-7kji-6j2m-774o-j6ol03724620",
+              "type": "dropdown",
+              "required": true,
+              "order": 6,
+              "value": null,
+              "date_value": null,
+              "question": {
+                "id": "m4o6p8n0-8lkj-7k3n-885p-k7pm14835730",
+                "label": "What industry are you in?",
+                "type": "dropdown",
+                "required": true,
+                "placeholder": "Select an industry",
+                "max_length": null,
+                "validation": null,
+                "min_selection": null,
+                "max_selection": null,
+                "rows": null,
+                "available_options": [
+                  {
+                    "id": "o6q8r0p2-0nmk-9m5p-007r-m9ro36158052",
+                    "value": "Technology",
+                    "order": 1,
+                    "allow_custom": false
+                  },
+                  {
+                    "id": "p7r9s1q3-1onl-0n6q-118s-n0sp47269163",
+                    "value": "Manufacturing",
+                    "order": 2,
+                    "allow_custom": false
+                  },
+                  {
+                    "id": "n5p7q9o1-9mlk-8l4o-996q-l8qn25946841",
+                    "value": "Other",
+                    "order": 3,
+                    "allow_custom": true
+                  }
+                ]
+              },
+              "options": [
+                {
+                  "id": "l2m4o8n0-8lkj-7k3n-885p-k7pm14835731",
+                  "value": "Other",
+                  "custom": "Custom industry type",
+                  "order": 1,
+                  "selected_option": {
+                    "id": "n5p7q9o1-9mlk-8l4o-996q-l8qn25946841",
+                    "value": "Other",
+                    "allow_custom": true
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+
+    ```
+
+
+    ### Vendor Created
+
+
+    This event is emitted when a vendor is created in Vic — for example, after a
+
+    user fills in the add-vendor form in the Vic UI. The payload contains the full
+
+    vendor record so that an external ERP can create a matching vendor.
+
+
+    Both the predefined ("common") fields and any per-company custom fields the
+
+    company has configured for vendors flow through to this payload via the
+
+    vendor's standard attributes. Values that the company has not provided are
+
+    sent as `null`.
+
+
+    ```json
+
+    {
+      "id": "a7dae8d0-8baa-7a3d-885f-a7fc14835720",
+      "occurred_at": "2025-04-04T14:34:55.123Z",
+      "event": "vendor_created",
+      "data": {
+        "id": "550e8400-e29b-41d4-a716-446655440000",
+        "legacy_id": "12345",
+        "name": "Acme Corporation",
+        "legal_name": "Acme Corporation Inc.",
+        "remote_id": null,
+        "state": "pending"
+      }
+    }
+
+    ```
+
+
+    ### Vendor Updated
+
+
+    This event is emitted when an existing vendor is updated in Vic. The payload
+
+    mirrors `vendor_created`. Rapid successive edits to the same vendor are
+
+    debounced — only the most recent state is delivered after a short window. An
+
+    update that doesn't change any vendor data — for example, re-sending identical
+
+    data — does not emit this event.
+
+
+    ```json
+
+    {
+      "id": "a7dae8d0-8baa-7a3d-885f-a7fc14835721",
+      "occurred_at": "2025-04-04T14:34:55.123Z",
+      "event": "vendor_updated",
+      "data": {
+        "id": "550e8400-e29b-41d4-a716-446655440000",
+        "legacy_id": "12345",
+        "name": "Acme Corporation",
+        "remote_id": "vendor-ext-123",
+        "state": "active"
+      }
+    }
+
+    ```
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Webhook Events
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-webhook-events-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
+- aid: vicai:vicai-webhook-subscriptions-api
+  name: Vic.ai Webhook Subscriptions API
+  description: >-
+    Webhook subscriptions control which events your system receives and where
+
+    they are delivered. Each company may have one V0 subscription or multiple
+
+    V2 subscriptions.
+
+
+    You can subscribe to all events or a specific subset. If you need to update
+
+    your subscription to receive all events after trimming it down, pass
+
+    `"events":["all"]` -- when using `all`, it must be set by itself.
+
+
+    ## Partner Onboarding Flow
+
+
+    Integration partners can programmatically provision new companies and
+
+    configure webhook delivery using the V2 API:
+
+
+    1. **Create a company** — `POST /v2/companies` with the company's name,
+       country code, and billing timezone. The new company is automatically
+       linked to your OAuth client, inheriting the organization of your
+       primary company (or specify `organization_id` explicitly).
+
+    2. **Create webhook subscriptions** — `POST /v2/companies/{company_id}/subscriptions`
+       with your callback URL and the events you want to receive.
+
+    3. **Manage subscriptions** — use `GET`, `PUT`, or `DELETE` on
+       `/v2/companies/{company_id}/subscriptions/{id}` as needed.
+  humanURL: https://docs.vic.ai
+  baseURL: https://api.us.vic.ai
+  tags:
+  - Webhook Subscriptions
+  properties:
+  - type: OpenAPI
+    url: openapi/vicai-webhook-subscriptions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.vic.ai
+  - type: APIReference
+    url: https://docs.vic.ai
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: DeveloperPortal
+  url: https://docs.vic.ai
+- type: Documentation
+  url: https://docs.vic.ai
+- type: APIReference
+  url: https://docs.vic.ai
+- type: GettingStarted
+  url: https://docs.vic.ai
+- type: Support
+  url: https://www.vic.ai/contact-us
+- type: Blog
+  url: https://www.vic.ai/blog
+- type: Pricing
+  url: https://www.vic.ai/pricing
+- type: SignUp
+  url: https://www.vic.ai/book-a-demo
+- type: TermsOfService
+  url: https://www.vic.ai/terms-of-service
+- type: PrivacyPolicy
+  url: https://www.vic.ai/privacy-policy
+- type: GitHubOrganization
+  url: https://github.com/Vic-ai
+- type: Compliance
+  url: https://www.vic.ai/trust-and-security
+- type: TrustCenter
+  url: security/vicai-trust-center.yml
+- type: DomainSecurity
+  url: security/vicai-domain-security.yml
+- type: Authentication
+  url: authentication/vicai-authentication.yml
+- type: AgenticAccess
+  url: agentic-access/vicai-agentic-access.yml
+- type: Conventions
+  url: conventions/vicai-conventions.yml
+- type: Lifecycle
+  url: lifecycle/vicai-lifecycle.yml
+- type: ChangeLog
+  url: changelog/vicai-changelog.yml
+- type: Webhooks
+  url: asyncapi/vicai-webhooks.yml
+- type: ErrorCatalog
+  url: errors/vicai-error-codes.yml
+- type: Conformance
+  url: conformance/vicai-conformance.yml
+- type: DataModel
+  url: data-model/vicai-data-model.yml
+- type: RateLimits
+  url: rate-limits/vicai-rate-limits.yml
+- type: MCPServer
+  url: mcp/vicai-mcp.yml
+- type: LLMsTxt
+  url: llms/vicai-llms.txt
+- type: AgentSkill
+  url: skills/_index.yml
 - type: Website
   url: https://www.vic.ai
+x-enrichment:
+  date: '2026-07-21'
+  status: enriched
+  artifacts_added: 18
+  pass: local-v1

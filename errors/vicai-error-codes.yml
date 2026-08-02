@@ -1,0 +1,79 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.vic.ai (Vic.ai API reference) + openapi/vicai-openapi-original.json
+format: custom-json
+envelope:
+  description: Errors return a JSON object. V0 endpoints use {code, message} (code mirrors the HTTP status);
+    V2 endpoints use {field, message} (field names the offending property, may be null).
+  v0:
+    schema: Error
+    fields:
+    - code
+    - message
+  v2:
+    schema: ErrorV2
+    fields:
+    - field
+    - message
+  not_rfc9457: true
+notes: On 429, capture the request id from response headers and include it when contacting support. All
+  error bodies are application/json.
+problems:
+- status: 4XX
+  title: HTTP 4XX
+  example_operations:
+  - ackInvoice
+  - attachUserToCompanyV2
+  - attachUserToOrganizationV2
+  - bulkConfirmCredits
+  - bulkConfirmCreditsV2
+  - bulkConfirmPayments
+- status: '429'
+  title: Too Many Requests — exceeded 500 requests per 10-second window per OAuth client ID.
+  example_operations:
+  - ackInvoice
+  - bulkConfirmCredits
+  - bulkConfirmPayments
+  - bulkFailCredits
+  - bulkFailPayments
+  - bulkUpsertDimensionDependencies
+- status: '422'
+  title: Unprocessable Entity — well-formed request that failed business/validation rules.
+  example_operations:
+  - bulkConfirmCredits
+  - bulkConfirmCreditsV2
+  - bulkConfirmPayments
+  - bulkConfirmPaymentsV2
+  - bulkFailCredits
+  - bulkFailCreditsV2
+- status: '403'
+  title: Forbidden — token missing, invalid, or lacks permission for this company/resource.
+  example_operations:
+  - bulkConfirmCredits
+  - bulkConfirmCreditsV2
+  - bulkConfirmPayments
+  - bulkConfirmPaymentsV2
+  - bulkFailCredits
+  - bulkFailCreditsV2
+- status: '404'
+  title: Not Found — resource does not exist or is not visible to your client.
+  example_operations:
+  - bulkConfirmCredits
+  - bulkConfirmCreditsV2
+  - bulkConfirmPayments
+  - bulkConfirmPaymentsV2
+  - bulkFailCredits
+  - bulkFailCreditsV2
+- status: '400'
+  title: Bad Request — request payload or parameters malformed or failed validation.
+  example_operations:
+  - downloadCsvReport
+  - startCsvReportsGeneration
+- status: '302'
+  title: Found — redirect (document download endpoints redirect to a signed URL).
+  example_operations:
+  - downloadCsvReport
+- status: '500'
+  title: Internal Server Error — unexpected error on the Vic.ai side.
+  example_operations:
+  - getInvoiceDocumentV2

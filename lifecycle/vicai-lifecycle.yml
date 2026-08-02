@@ -1,0 +1,31 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.vic.ai (Vic.ai API reference)
+versioning:
+  scheme: uri-path
+  versions: [v0, v2]
+  current: v2
+  note: >-
+    v0 and v2 run concurrently. v2 adds company-scoped, multi-subscription webhook
+    delivery plus organization/company/user management for integration partners.
+stability:
+  beta_features:
+    documented: true
+    policy: >-
+      Endpoints under the "Beta Features" tag are not ready for general consumption
+      and are liable to change; Vic.ai tries not to break them but does not guarantee
+      backwards compatibility.
+deprecation:
+  policy_url: null
+  sunset_header: false
+  note: No formal public deprecation/Sunset (RFC 8594) policy was found. Some resources are being renamed in place (e.g. "Account Firm" -> "Organization") without a versioned deprecation cycle.
+sla:
+  url: https://www.vic.ai/trust-and-security
+  uptime_claim: "99.9%+ historical uptime (multi-region AWS replication)"
+  incident_response_sla: {critical: 4h, high: 48h}
+status_page: null
+status_page_note: No public status page (status.vic.ai did not resolve as of 2026-07-21).
+changelog:
+  in_spec: true
+  cross_reference: changelog/vicai-changelog.yml
+deprecated_operations: []

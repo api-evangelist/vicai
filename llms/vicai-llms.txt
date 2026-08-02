@@ -1,0 +1,47 @@
+# Vic.ai
+
+> Vic.ai builds AI-native software for enterprise Accounts Payable and finance teams.
+> The platform automates the end-to-end AP process — from invoice capture and data
+> extraction through coding, matching, approvals, and payment — so finance teams spend
+> less time on manual processing and more time on work that requires human judgment.
+> Vic.ai is used by mid-market and enterprise companies, integrates with major ERPs,
+> and holds SOC 1 Type II and SOC 2 Type II certifications with an ISO 27001 framework.
+
+## Product
+
+- [Accounts Payable Automation](https://www.vic.ai/accounts-payable): The core product. Handles the full AP workflow — invoice capture from any source, AI extraction of header and line-level data, PO matching, exception handling, approval routing, and touchless processing.
+- [Invoice Processing](https://www.vic.ai/accounts-payable/invoice-processing): Captures invoices from email, SFTP, API, or mobile and extracts structured data using AI trained on a large global invoice dataset. Achieves high accuracy without manual keying.
+- [PO Matching](https://www.vic.ai/accounts-payable/po-matching): Matches invoices against purchase orders across multiple dimensions. Flags exceptions and routes them for resolution rather than holding up the entire queue.
+- [Approvals](https://www.vic.ai/accounts-payable/approvals): Routes invoices for approval based on learned patterns and configured rules. Designed to minimize approver interruptions by only escalating what genuinely needs human review.
+- [Vic Inbox](https://www.vic.ai/ap-inbox): A centralized inbox for managing inbound invoices and vendor email. Replaces shared AP email inboxes with a structured, auditable workflow layer.
+- [Bill Pay & Payments](https://www.vic.ai/payments): Executes vendor payments within the Vic.ai workflow, reducing the need to switch between AP and payment systems.
+- [Vendor Portal](https://www.vic.ai/vendor-portal): Gives vendors a self-service interface to submit invoices and check payment status. Reduces inbound vendor inquiry volume for AP teams.
+- [Expense Management](https://www.vic.ai/expense-management-corporate-card): Manages corporate card transactions and employee expenses within the same platform as AP, giving finance teams a unified view.
+- [Analytics & Insights](https://www.vic.ai/analytics-and-insights): Reporting and dashboards for AP performance — invoice volumes, cycle times, exception rates, spend visibility, and team productivity.
+- [VicAgents](https://www.vic.ai/vic-agents): AI agents designed to handle discrete finance tasks autonomously — not just assist humans but complete work end-to-end within defined parameters.
+
+## Platform
+
+- [How It Works](https://www.vic.ai/how-it-works): Explains the underlying AI architecture — how Vic.ai uses global models trained across its customer base for header-level predictions and local models unique to each customer for line-level coding decisions.
+- [ERP Integrations](https://www.vic.ai/erp-integrations): Native integrations with SAP, Microsoft Dynamics, Oracle, and other major ERP systems. Vic.ai sits in front of the ERP and pushes coded, approved invoices into it.
+- [Trust & Security](https://www.vic.ai/trust-and-security): Security and compliance details for enterprise procurement and IT teams. Covers SOC 1 Type II and SOC 2 Type II certifications, ISO 27001 framework, AWS infrastructure, AES-256 encryption, SSO/MFA support, penetration testing, and data handling practices including the AI training data model.
+
+## Solutions
+
+- [CFO](https://www.vic.ai/solutions/cfo): Addresses CFO priorities around cost reduction, financial control, and scalability — particularly relevant for companies growing faster than their AP headcount can keep up.
+- [Controller](https://www.vic.ai/solutions/controller): Focuses on close cycle efficiency, coding accuracy, and audit readiness — the operational concerns a Controller cares about day-to-day.
+- [AP Manager](https://www.vic.ai/solutions/ap-manager): Speaks to AP Managers looking to reduce manual processing volume and scale team capacity without adding headcount.
+
+## Company
+
+- [About Vic.ai](https://www.vic.ai/about): Company background, mission, and leadership.
+- [Customers](https://www.vic.ai/customers): Case studies and results from enterprise customers across industries.
+- [Blog](https://www.vic.ai/blog): Articles on AI in finance, AP automation trends, and autonomous finance concepts.
+- [Request a Demo](https://www.vic.ai/request-demo): How prospective customers get in touch and see the product.
+
+## Optional
+
+- [Oracle Integration](https://www.vic.ai/integrations/oracle): Specific integration details for Oracle ERP environments.
+- [Microsoft Dynamics Integration](https://www.vic.ai/integrations/microsoft): Specific integration details for Microsoft Dynamics 365, GP, and Business Central.
+- [Coupa Integration](https://www.vic.ai/integrations/coupa): Specific integration details for Coupa environments.
+- [Careers](https://www.vic.ai/careers): Open roles at Vic.ai.

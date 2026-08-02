@@ -1,0 +1,51 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.vic.ai (Vic.ai API reference) + openapi/vicai-openapi-original.json
+authentication:
+  style: bearer-jwt
+  token_endpoint: POST /v0/token
+  credentials: client_id + client_secret (issued by a Vic.ai representative on request)
+  token: access_token is a JWT, token_type Bearer, expires_in 3600 seconds
+  header: 'Authorization: Bearer <access_token>'
+  note: JWT access tokens may be 530+ characters; storage must not impose a character limit.
+idempotency:
+  supported: false
+  note: >-
+    The Vic.ai API does not document an idempotency-key header or parameter. Write
+    operations are not idempotency-protected; synchronization is explicit and the
+    integration is responsible for avoiding duplicate/ping-pong calls.
+pagination:
+  style: cursor
+  request_params:
+    limit: max 100, default 100
+    cursor: opaque cursor token
+  response_field: X-next (use its value as the next request's cursor)
+versioning:
+  scheme: uri-path
+  versions: [v0, v2]
+  note: v0 is the original surface; v2 introduces company-scoped, multi-subscription and organization/user management endpoints. Both are live concurrently.
+rate_limiting:
+  limit: 500 requests per 10-second window
+  scope: per OAuth client id
+  exceeded_status: 429 Too Many Requests
+  guidance: capture the request id from response headers and include it when contacting support.
+request_tracing:
+  request_id: returned in response headers; required when escalating 429s or errors to Vic.ai support.
+error_envelope:
+  v0: '{ code, message } — code mirrors the HTTP status'
+  v2: '{ field, message } — field names the offending property (may be null)'
+  media_type: application/json
+  rfc9457: false
+  cross_reference: errors/vicai-error-codes.yml
+content_negotiation:
+  media_type: application/json
+  attachments: 'invoice document uploads accept PDF, Word, Excel, TIFF/JPG/PNG/GIF images, and text/xml (EDI) — see the Attachments tag'
+regions:
+  - {code: US, base_url: 'https://api.us.vic.ai'}
+  - {code: NO, base_url: 'https://api.no.vic.ai'}
+  - {code: NO-staging, base_url: 'https://api.no.stage.vic.ai'}
+cross_reference:
+  authentication: authentication/vicai-authentication.yml
+  errors: errors/vicai-error-codes.yml
+  lifecycle: lifecycle/vicai-lifecycle.yml
+  webhooks: asyncapi/vicai-webhooks.yml
