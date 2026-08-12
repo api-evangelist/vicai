@@ -2455,6 +2455,8 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Overlay
+  url: overlays/vicai-overlay.yaml
 - type: DeveloperPortal
   url: https://docs.vic.ai
 - type: Documentation
