@@ -1,0 +1,120 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vic.ai Accounts Vendor Tags API",
+    "version": "v10.40.4"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Vendor Tags",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Delete a vendor tag by vendor ID and tag ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.no.stage.vic.ai/v0/vendors/:vendor_id/tags/:tag_id",
+            "params": [
+              {
+                "name": "vendor_id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the vendor"
+              },
+              {
+                "name": "tag_id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the tag"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ]
+          },
+          "docs": "Use this endpoint to delete a vendor tag association by specifying both the vendor ID and tag ID.\n\nUse `/v0/vendorTags/{id}` when you want to use the vendor tag's ID instead of the vendor ID and tag ID.\n"
+        },
+        {
+          "info": {
+            "name": "Get a list of vendor tags",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/vendorTags",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "How many items to return at one time (max 100) (default 100)"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Which item to start from. See [Pagination](#section/Pagination) for more information."
+              },
+              {
+                "name": "vendorId",
+                "value": "",
+                "type": "query",
+                "description": "Filter the results to a single vendor's tag associations."
+              }
+            ]
+          },
+          "docs": "Get a list of vendor tags.\n"
+        },
+        {
+          "info": {
+            "name": "Create a new vendor tag",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/vendorTags",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new vendor tag. A vendor is not allowed to have the same tag\nattached multiple times.\n"
+        },
+        {
+          "info": {
+            "name": "Delete a vendor tag",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.no.stage.vic.ai/v0/vendorTags/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the vendor tag"
+              }
+            ]
+          },
+          "docs": "Delete a vendor tag association using the vendor tag's ID.\n\nUse `/v0/vendors/{vendor_id}/tags/{tag_id}` when you want to use the vendor ID and tag ID as opposed to the vendor tag's ID.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,182 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vic.ai Accounts Webhook Events API",
+    "version": "v10.40.4"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Webhook Events",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List webhook events",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/webhooks/events",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "How many items to return at one time (max 100) (default 100)"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Which item to start from. See [Pagination](#section/Pagination) for more information."
+              },
+              {
+                "name": "event_types",
+                "value": "",
+                "type": "query",
+                "description": "Filter events by one or more types, given as a comma-separated list\n(for example `invoice_posted,invoice_approved`). Omit to return events\nof every type.\n"
+              },
+              {
+                "name": "occurred_after",
+                "value": "",
+                "type": "query",
+                "description": "Filter events that occurred on or after this date. Required parameter. The date range between occurred_after and occurred_before cannot exceed 30 days."
+              },
+              {
+                "name": "occurred_before",
+                "value": "",
+                "type": "query",
+                "description": "Filter events that occurred on or before this date. Required parameter. The date range between occurred_after and occurred_before cannot exceed 30 days."
+              },
+              {
+                "name": "undelivered",
+                "value": "",
+                "type": "query",
+                "description": "Filter to show only events that have not been delivered"
+              }
+            ]
+          },
+          "docs": "Use this request to query webhook events that are stored in Vic.ai.\nEvents include invoice processing, vendor updates, payment processing,\npurchase orders, and other system activities that trigger webhook notifications.\n\nAn event is recorded only if, at the time it is generated, a subscription's\nevent types include it. Events generated before such a subscription existed\nare not stored, so this endpoint returns the events recorded for the company\nrather than a complete history of all account acti"
+        },
+        {
+          "info": {
+            "name": "Get a webhook event",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/webhooks/events/:event_id",
+            "params": [
+              {
+                "name": "event_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the webhook event"
+              }
+            ]
+          },
+          "docs": "Use this request to get data for a specific webhook event details\n"
+        },
+        {
+          "info": {
+            "name": "List webhook event types",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/webhook_event_types"
+          },
+          "docs": "Use this request to get all available webhook event types that can be\nsubscribed to in Vic.ai. This includes event types for invoices,\nvendors, payments, purchase orders, and other system activities.\n"
+        },
+        {
+          "info": {
+            "name": "List webhook events by company",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/webhook/events",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company"
+              },
+              {
+                "name": "event_type",
+                "value": "",
+                "type": "query",
+                "description": "Filter events by a single type. Omit the parameter to return events of\nevery type. To filter by several types at once, use `event_types`\ninstead.\n"
+              },
+              {
+                "name": "event_types",
+                "value": "",
+                "type": "query",
+                "description": "Filter events by one or more types, given as a comma-separated list\n(for example `invoice_posted,invoice_approved`). Omit to return events\nof every type.\n"
+              },
+              {
+                "name": "occurred_after",
+                "value": "",
+                "type": "query",
+                "description": "Filter events that occurred on or after this date. Required parameter. The date range between occurred_after and occurred_before cannot exceed 30 days."
+              },
+              {
+                "name": "occurred_before",
+                "value": "",
+                "type": "query",
+                "description": "Filter events that occurred on or before this date. Required parameter. The date range between occurred_after and occurred_before cannot exceed 30 days."
+              },
+              {
+                "name": "undelivered",
+                "value": "",
+                "type": "query",
+                "description": "Filter to show only events that have not been delivered"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Use this request to query the webhook events stored for a specific company.\n\nAn event is recorded only if, at the time it is generated, the company has a\nsubscription whose event types include it. Events generated before such a\nsubscription existed are not stored and cannot be retrieved here, so this\nendpoint returns the events recorded for the company rather than a complete\nhistory of all account activity.\n"
+        },
+        {
+          "info": {
+            "name": "Get a webhook event by company",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/webhook/events/:event_id",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company"
+              },
+              {
+                "name": "event_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the webhook event"
+              }
+            ]
+          },
+          "docs": "Use this request to get detailed information about a specific webhook event for a\ncompany that is stored in Vic.ai. This includes delivery attempts, payload data, and status information.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

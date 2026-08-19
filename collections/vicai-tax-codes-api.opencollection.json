@@ -1,0 +1,50 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vic.ai Accounts Tax Codes API",
+    "version": "v10.40.4"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Tax Codes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get the list of tax codes for a company",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/taxCodes"
+          },
+          "docs": "Get the list of tax codes for a company"
+        },
+        {
+          "info": {
+            "name": "Creates a company's tax code",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/taxCodes",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a company's tax code"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

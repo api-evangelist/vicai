@@ -1,0 +1,66 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vic.ai Accounts Company Settings API",
+    "version": "v10.40.4"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Company Settings",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get company settings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/settings",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company"
+              }
+            ]
+          },
+          "docs": "Returns the company's current configuration as a flat map. Every\navailable setting is present in the response with either the\ncompany's configured value or the default. Enum values are\nreturned as strings.\n\nRequires partner authentication (obtain a token via\n`POST /v0/token` with partner credentials); the partner must\nhave provisioned or been linked to the company.\n"
+        },
+        {
+          "info": {
+            "name": "Update company settings",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/settings",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Applies a partial settings update. The request body is a flat map\nof setting name to value; only fields included in the body are\nmodified. Unknown field names and type-invalid values are\nrejected with a 422 error listing every offending field.\n\nUpdates are atomic: either every change in the request is\napplied, or none are. On success the full refreshed settings map\nis returned.\n\nRequires partner authentication (obtain a token via\n`POST /v0/token` with partner credentials); the partner must\nhave "
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,187 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vic.ai Accounts Webhook Subscriptions API",
+    "version": "v10.40.4"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Webhook Subscriptions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get current V0 webhook subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/subscription"
+          },
+          "docs": "Get the current V0 webhook subscription if one exists.\n"
+        },
+        {
+          "info": {
+            "name": "Create new V0 webhook subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.no.stage.vic.ai/v0/subscription",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This request is used to configure or modify a new V0 subscription to user\nand automated actions.\nYou must supply a callback url and set an access token that Vic.ai can\nuse to authenticate itself in your system. Notifications of user actions\nwill proceed via the documented schema.\nThe callback url must be https.\n"
+        },
+        {
+          "info": {
+            "name": "Delete V0 webhook subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.no.stage.vic.ai/v0/subscription"
+          },
+          "docs": "This request is used to cancel a subscription to user actions. In\nconjunction with a post request, you may use this as a first step to\nupdate subscription URLs or authorization tokens.\n"
+        },
+        {
+          "info": {
+            "name": "List webhook subscriptions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/subscriptions",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List your webhook subscriptions.\n"
+        },
+        {
+          "info": {
+            "name": "Create a webhook subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/subscriptions",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new webhook subscription."
+        },
+        {
+          "info": {
+            "name": "Get a webhook subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/subscriptions/:id",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The subscription ID"
+              }
+            ]
+          },
+          "docs": "Get details of a specific webhook subscription."
+        },
+        {
+          "info": {
+            "name": "Update a webhook subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/subscriptions/:id",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The subscription ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update an existing webhook subscription."
+        },
+        {
+          "info": {
+            "name": "Delete a webhook subscription",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/subscriptions/:id",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The subscription ID"
+              }
+            ]
+          },
+          "docs": "Delete a webhook subscription."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

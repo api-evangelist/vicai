@@ -1,0 +1,92 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vic.ai Accounts Allowed Senders API",
+    "version": "v10.40.4"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Allowed Senders",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List allowed senders",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/email_endpoints/:email_endpoint_id/allowed_senders",
+            "params": [
+              {
+                "name": "email_endpoint_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Lists the allowed sender entries for an email endpoint."
+        },
+        {
+          "info": {
+            "name": "Add allowed senders",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v2/email_endpoints/:email_endpoint_id/allowed_senders",
+            "params": [
+              {
+                "name": "email_endpoint_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Adds one or more allowed sender entries to an email endpoint.\nUp to 20 entries per request. Duplicate `(match_type,\nsender_pattern)` pairs within a request are rejected.\n"
+        },
+        {
+          "info": {
+            "name": "Remove allowed sender",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.no.stage.vic.ai/v2/email_endpoints/:email_endpoint_id/allowed_senders/:id",
+            "params": [
+              {
+                "name": "email_endpoint_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Removes a single allowed sender entry."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

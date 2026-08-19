@@ -1,0 +1,3259 @@
+{
+  "item": [
+    {
+      "id": "fe49db65-47a9-4b37-a924-db269da1d06a",
+      "name": "Credit Confirmations",
+      "description": {
+        "content": "Confirm or mark credits as failed after processing in your ERP.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "fbeb47d9-29e9-42c0-8512-afc56e371eb3",
+          "name": "Confirm a credit",
+          "request": {
+            "name": "Confirm a credit",
+            "description": {
+              "content": "Confirms a single credit by setting the `confirmedAt` timestamp and\noptionally setting a `remoteId`. This is used to mark a credit as\nconfirmed in an external system.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "credits",
+                ":id",
+                "confirm"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "id",
+                  "description": "(Required) The id of the credit."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"confirmedAt\": \"<dateTime>\",\n  \"remoteId\": \"<string,null>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "b39f1cad-1919-46b7-bfc1-14da23285aca",
+              "name": "Credit confirmed successfully.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "credits",
+                    ":id",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the credit."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"confirmedAt\": \"<dateTime>\",\n  \"remoteId\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"4a738224-b956-e84e-a2e3-2b742b32f11b\",\n  \"batchId\": \"ce66e634-8de2-3439-1821-0a694bf3ad52\",\n  \"amount\": \"1.00\",\n  \"settlementAmount\": \"1.00\",\n  \"currencyId\": \"USD\",\n  \"settlementCurrencyId\": \"USD\",\n  \"exchangeRate\": \"1.00\",\n  \"status\": \"approved\",\n  \"paymentMethod\": \"ach\",\n  \"referenceId\": \"string\",\n  \"approvedAt\": \"2020-02-29T09:39:22.113Z\",\n  \"fundedAt\": \"2006-07-19T06:48:43.920Z\",\n  \"failedAt\": \"2026-01-03T02:20:23.451Z\",\n  \"failedReason\": \"string\",\n  \"acceptedAt\": \"1988-05-14T14:23:14.743Z\",\n  \"rejectedAt\": \"1978-06-07T06:24:11.002Z\",\n  \"voidedAt\": \"2019-03-11T03:22:07.390Z\",\n  \"confirmedAt\": \"1977-04-04T22:41:46.589Z\",\n  \"remoteId\": \"string\",\n  \"remoteError\": \"string\",\n  \"remoteErroredAt\": \"1971-01-06T16:51:34.876Z\",\n  \"invoice\": {\n    \"internalId\": \"string\",\n    \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n    \"refNumber\": \"string\"\n  },\n  \"costAccount\": {\n    \"internalId\": \"string\",\n    \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n  },\n  \"vendor\": {\n    \"internalId\": \"string\",\n    \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "47cd568a-3461-4ab6-bda2-6fb2e4355959",
+              "name": "The request was forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "credits",
+                    ":id",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the credit."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"confirmedAt\": \"<dateTime>\",\n  \"remoteId\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7eafab92-6c3d-4541-9be3-ac5cf2236a7e",
+              "name": "Resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "credits",
+                    ":id",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the credit."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"confirmedAt\": \"<dateTime>\",\n  \"remoteId\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2ae84ce4-37d8-4015-8773-46be0656892d",
+              "name": "Errors with the input are present.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "credits",
+                    ":id",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the credit."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"confirmedAt\": \"<dateTime>\",\n  \"remoteId\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "661a2a3d-e6d7-4033-9fc6-9f80a7d09b3e",
+              "name": "HTTP call rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "credits",
+                    ":id",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the credit."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"confirmedAt\": \"<dateTime>\",\n  \"remoteId\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.",
+                  "key": "Retry-After",
+                  "value": "3873"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "256d9979-43d3-4d46-8436-d4fd0c0d5864",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "credits",
+                    ":id",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the credit."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"confirmedAt\": \"<dateTime>\",\n  \"remoteId\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6bdf8585-7ed9-414d-b269-ab4e4bffe972",
+          "name": "Bulk confirm credits",
+          "request": {
+            "name": "Bulk confirm credits",
+            "description": {
+              "content": "Bulk confirms multiple credits in a single request. Each credit in the\nrequest body must include an `id`, `confirmedAt` timestamp, and\noptionally a `remoteId`.\n\nIf a credit is not found, the entire bulk confirmation is aborted.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "credits",
+                "confirm"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"credits\": [\n    {\n      \"id\": \"<uuid>\",\n      \"confirmedAt\": \"<dateTime>\",\n      \"remoteId\": \"<string,null>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "2667d92a-a3e2-4aa2-a823-6ce002a81e7d",
+              "name": "Credits bulk confirmed successfully.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "credits",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"credits\": [\n    {\n      \"id\": \"<uuid>\",\n      \"confirmedAt\": \"<dateTime>\",\n      \"remoteId\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"3bae75cb-cd94-6746-39ab-5a37fb406625\",\n    \"batchId\": \"50d3bfa1-50a0-eb3d-9a5b-20f3568e2965\",\n    \"amount\": \"1.00\",\n    \"settlementAmount\": \"1.00\",\n    \"currencyId\": \"USD\",\n    \"settlementCurrencyId\": \"USD\",\n    \"exchangeRate\": \"1.00\",\n    \"status\": \"acknowledged\",\n    \"paymentMethod\": \"ach\",\n    \"referenceId\": \"string\",\n    \"approvedAt\": \"1968-01-29T10:44:38.241Z\",\n    \"fundedAt\": \"1957-02-25T13:10:42.064Z\",\n    \"failedAt\": \"1958-03-22T20:54:40.495Z\",\n    \"failedReason\": \"string\",\n    \"acceptedAt\": \"1985-10-09T10:21:33.885Z\",\n    \"rejectedAt\": \"1968-04-13T11:46:25.417Z\",\n    \"voidedAt\": \"2008-07-05T23:39:34.874Z\",\n    \"confirmedAt\": \"1977-03-10T06:58:04.324Z\",\n    \"remoteId\": \"string\",\n    \"remoteError\": \"string\",\n    \"remoteErroredAt\": \"2023-08-05T01:21:44.537Z\",\n    \"invoice\": {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"refNumber\": \"string\"\n    },\n    \"costAccount\": {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n    },\n    \"vendor\": {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n    }\n  },\n  {\n    \"id\": \"f554bae9-8bf6-08ec-35e1-a1f4748d11b1\",\n    \"batchId\": \"a72cebce-5902-64eb-9450-aa5dd74ddab8\",\n    \"amount\": \"1.00\",\n    \"settlementAmount\": \"1.00\",\n    \"currencyId\": \"USD\",\n    \"settlementCurrencyId\": \"USD\",\n    \"exchangeRate\": \"1.00\",\n    \"status\": \"voided\",\n    \"paymentMethod\": \"wire\",\n    \"referenceId\": \"string\",\n    \"approvedAt\": \"1949-04-06T18:23:56.548Z\",\n    \"fundedAt\": \"1966-07-27T13:43:49.537Z\",\n    \"failedAt\": \"1976-10-28T11:24:32.212Z\",\n    \"failedReason\": \"string\",\n    \"acceptedAt\": \"1964-09-02T14:07:36.021Z\",\n    \"rejectedAt\": \"1997-02-03T16:35:11.024Z\",\n    \"voidedAt\": \"1969-07-14T07:51:15.838Z\",\n    \"confirmedAt\": \"2012-11-11T15:09:07.050Z\",\n    \"remoteId\": \"string\",\n    \"remoteError\": \"string\",\n    \"remoteErroredAt\": \"1968-06-23T19:47:32.721Z\",\n    \"invoice\": {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"refNumber\": \"string\"\n    },\n    \"costAccount\": {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n    },\n    \"vendor\": {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n    }\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8ff4ac96-a16d-47a8-abfa-c5000701c18e",
+              "name": "The request was forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "credits",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"credits\": [\n    {\n      \"id\": \"<uuid>\",\n      \"confirmedAt\": \"<dateTime>\",\n      \"remoteId\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9fae6d53-a3ec-4fd2-8b36-b55be8914ef2",
+              "name": "Resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "credits",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"credits\": [\n    {\n      \"id\": \"<uuid>\",\n      \"confirmedAt\": \"<dateTime>\",\n      \"remoteId\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d1b26cb8-ed50-4e62-9901-2bb4134022a5",
+              "name": "Errors with the input are present.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "credits",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"credits\": [\n    {\n      \"id\": \"<uuid>\",\n      \"confirmedAt\": \"<dateTime>\",\n      \"remoteId\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f6cb3423-7fde-4993-88eb-b5d897c6dc1f",
+              "name": "HTTP call rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "credits",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"credits\": [\n    {\n      \"id\": \"<uuid>\",\n      \"confirmedAt\": \"<dateTime>\",\n      \"remoteId\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.",
+                  "key": "Retry-After",
+                  "value": "3873"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "78bc4704-aaee-40ca-9f66-346e18b2eb17",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "credits",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"credits\": [\n    {\n      \"id\": \"<uuid>\",\n      \"confirmedAt\": \"<dateTime>\",\n      \"remoteId\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1e2b1709-8831-4bf5-95e3-4b267e4ef82f",
+          "name": "Mark credit as failed",
+          "request": {
+            "name": "Mark credit as failed",
+            "description": {
+              "content": "Marks a credit as having a remote error by setting the `remoteErroredAt`\ntimestamp and `remoteError` message. Optionally sets a `remoteId`. This\nclears any existing `confirmedAt` timestamp.\n\n**Note**: When providing an error, please provide a clear error message\nthat the user can understand.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "credits",
+                ":id",
+                "fail"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "id",
+                  "description": "(Required) The id of the credit."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"remoteErroredAt\": \"<dateTime>\",\n  \"remoteError\": \"<string>\",\n  \"remoteId\": \"<string,null>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "e027b193-a9be-425a-bf01-35b60e3c48be",
+              "name": "Credit marked as failed successfully.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "credits",
+                    ":id",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the credit."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"remoteErroredAt\": \"<dateTime>\",\n  \"remoteError\": \"<string>\",\n  \"remoteId\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"4a738224-b956-e84e-a2e3-2b742b32f11b\",\n  \"batchId\": \"ce66e634-8de2-3439-1821-0a694bf3ad52\",\n  \"amount\": \"1.00\",\n  \"settlementAmount\": \"1.00\",\n  \"currencyId\": \"USD\",\n  \"settlementCurrencyId\": \"USD\",\n  \"exchangeRate\": \"1.00\",\n  \"status\": \"approved\",\n  \"paymentMethod\": \"ach\",\n  \"referenceId\": \"string\",\n  \"approvedAt\": \"2020-02-29T09:39:22.113Z\",\n  \"fundedAt\": \"2006-07-19T06:48:43.920Z\",\n  \"failedAt\": \"2026-01-03T02:20:23.451Z\",\n  \"failedReason\": \"string\",\n  \"acceptedAt\": \"1988-05-14T14:23:14.743Z\",\n  \"rejectedAt\": \"1978-06-07T06:24:11.002Z\",\n  \"voidedAt\": \"2019-03-11T03:22:07.390Z\",\n  \"confirmedAt\": \"1977-04-04T22:41:46.589Z\",\n  \"remoteId\": \"string\",\n  \"remoteError\": \"string\",\n  \"remoteErroredAt\": \"1971-01-06T16:51:34.876Z\",\n  \"invoice\": {\n    \"internalId\": \"string\",\n    \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n    \"refNumber\": \"string\"\n  },\n  \"costAccount\": {\n    \"internalId\": \"string\",\n    \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n  },\n  \"vendor\": {\n    \"internalId\": \"string\",\n    \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2348ca99-a0c6-472c-8826-fbe4694f7560",
+              "name": "The request was forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "credits",
+                    ":id",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the credit."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"remoteErroredAt\": \"<dateTime>\",\n  \"remoteError\": \"<string>\",\n  \"remoteId\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1261738d-2946-4df2-9186-92ef79ca280e",
+              "name": "Resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "credits",
+                    ":id",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the credit."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"remoteErroredAt\": \"<dateTime>\",\n  \"remoteError\": \"<string>\",\n  \"remoteId\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "064763cd-1f6f-4fc3-9433-20ed4d20f9fe",
+              "name": "Errors with the input are present.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "credits",
+                    ":id",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the credit."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"remoteErroredAt\": \"<dateTime>\",\n  \"remoteError\": \"<string>\",\n  \"remoteId\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7c55bb33-a0f0-4291-8130-432530a24b4f",
+              "name": "HTTP call rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "credits",
+                    ":id",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the credit."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"remoteErroredAt\": \"<dateTime>\",\n  \"remoteError\": \"<string>\",\n  \"remoteId\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.",
+                  "key": "Retry-After",
+                  "value": "3873"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5305ac3c-4ace-4c35-ba5d-6b44223470ad",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "credits",
+                    ":id",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the credit."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"remoteErroredAt\": \"<dateTime>\",\n  \"remoteError\": \"<string>\",\n  \"remoteId\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f1743794-eb74-432e-9aa9-98829bb8a861",
+          "name": "Bulk fail credits",
+          "request": {
+            "name": "Bulk fail credits",
+            "description": {
+              "content": "Bulk marks multiple credits as having remote errors in a single request.\nEach credit in the request body must include an `id`, `remoteErroredAt`\ntimestamp, `remoteError` message, and optionally a `remoteId`.\n\n**Note**: When providing an error, please provide a clear error message\nthat the user can understand.\n\nIf a credit is not found, the entire bulk operation is aborted.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "credits",
+                "fail"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"credits\": [\n    {\n      \"id\": \"<uuid>\",\n      \"remoteErroredAt\": \"<dateTime>\",\n      \"remoteError\": \"<string>\",\n      \"remoteId\": \"<string,null>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "1ca0d398-5711-4beb-88d8-ed8dbe69c81c",
+              "name": "Credits bulk failed successfully.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "credits",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"credits\": [\n    {\n      \"id\": \"<uuid>\",\n      \"remoteErroredAt\": \"<dateTime>\",\n      \"remoteError\": \"<string>\",\n      \"remoteId\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"3bae75cb-cd94-6746-39ab-5a37fb406625\",\n    \"batchId\": \"50d3bfa1-50a0-eb3d-9a5b-20f3568e2965\",\n    \"amount\": \"1.00\",\n    \"settlementAmount\": \"1.00\",\n    \"currencyId\": \"USD\",\n    \"settlementCurrencyId\": \"USD\",\n    \"exchangeRate\": \"1.00\",\n    \"status\": \"acknowledged\",\n    \"paymentMethod\": \"ach\",\n    \"referenceId\": \"string\",\n    \"approvedAt\": \"1968-01-29T10:44:38.241Z\",\n    \"fundedAt\": \"1957-02-25T13:10:42.064Z\",\n    \"failedAt\": \"1958-03-22T20:54:40.495Z\",\n    \"failedReason\": \"string\",\n    \"acceptedAt\": \"1985-10-09T10:21:33.885Z\",\n    \"rejectedAt\": \"1968-04-13T11:46:25.417Z\",\n    \"voidedAt\": \"2008-07-05T23:39:34.874Z\",\n    \"confirmedAt\": \"1977-03-10T06:58:04.324Z\",\n    \"remoteId\": \"string\",\n    \"remoteError\": \"string\",\n    \"remoteErroredAt\": \"2023-08-05T01:21:44.537Z\",\n    \"invoice\": {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"refNumber\": \"string\"\n    },\n    \"costAccount\": {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n    },\n    \"vendor\": {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n    }\n  },\n  {\n    \"id\": \"f554bae9-8bf6-08ec-35e1-a1f4748d11b1\",\n    \"batchId\": \"a72cebce-5902-64eb-9450-aa5dd74ddab8\",\n    \"amount\": \"1.00\",\n    \"settlementAmount\": \"1.00\",\n    \"currencyId\": \"USD\",\n    \"settlementCurrencyId\": \"USD\",\n    \"exchangeRate\": \"1.00\",\n    \"status\": \"voided\",\n    \"paymentMethod\": \"wire\",\n    \"referenceId\": \"string\",\n    \"approvedAt\": \"1949-04-06T18:23:56.548Z\",\n    \"fundedAt\": \"1966-07-27T13:43:49.537Z\",\n    \"failedAt\": \"1976-10-28T11:24:32.212Z\",\n    \"failedReason\": \"string\",\n    \"acceptedAt\": \"1964-09-02T14:07:36.021Z\",\n    \"rejectedAt\": \"1997-02-03T16:35:11.024Z\",\n    \"voidedAt\": \"1969-07-14T07:51:15.838Z\",\n    \"confirmedAt\": \"2012-11-11T15:09:07.050Z\",\n    \"remoteId\": \"string\",\n    \"remoteError\": \"string\",\n    \"remoteErroredAt\": \"1968-06-23T19:47:32.721Z\",\n    \"invoice\": {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"refNumber\": \"string\"\n    },\n    \"costAccount\": {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n    },\n    \"vendor\": {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n    }\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "01f278d0-d65e-4e29-a85d-91ee202dfab3",
+              "name": "The request was forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "credits",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"credits\": [\n    {\n      \"id\": \"<uuid>\",\n      \"remoteErroredAt\": \"<dateTime>\",\n      \"remoteError\": \"<string>\",\n      \"remoteId\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9706cecc-2d24-4dc5-b9f3-6d7b24bbbb50",
+              "name": "Resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "credits",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"credits\": [\n    {\n      \"id\": \"<uuid>\",\n      \"remoteErroredAt\": \"<dateTime>\",\n      \"remoteError\": \"<string>\",\n      \"remoteId\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3bad99bb-9fd4-48b6-8131-7c997368e0f8",
+              "name": "Errors with the input are present.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "credits",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"credits\": [\n    {\n      \"id\": \"<uuid>\",\n      \"remoteErroredAt\": \"<dateTime>\",\n      \"remoteError\": \"<string>\",\n      \"remoteId\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8e263c40-9ffc-48c7-9be1-5407d2c45bf9",
+              "name": "HTTP call rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "credits",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"credits\": [\n    {\n      \"id\": \"<uuid>\",\n      \"remoteErroredAt\": \"<dateTime>\",\n      \"remoteError\": \"<string>\",\n      \"remoteId\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.",
+                  "key": "Retry-After",
+                  "value": "3873"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0c70b37c-f3da-4db3-ba90-19e54777d411",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "credits",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"credits\": [\n    {\n      \"id\": \"<uuid>\",\n      \"remoteErroredAt\": \"<dateTime>\",\n      \"remoteError\": \"<string>\",\n      \"remoteId\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d6c434f8-b1ae-4c12-9c65-bac610ea9505",
+          "name": "Confirm a credit",
+          "request": {
+            "name": "Confirm a credit",
+            "description": {
+              "content": "Confirms a single credit by setting the `confirmed_at` timestamp and\noptionally setting a `remote_id`. This is used to mark a credit as\nconfirmed in an external system.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "companies",
+                ":company_id",
+                "credits",
+                ":id",
+                "confirm"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "id",
+                  "description": "(Required) The id of the credit."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "company_id",
+                  "description": "(Required) The ID of the company"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"confirmed_at\": \"<dateTime>\",\n  \"remote_id\": \"<string,null>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "7f4a8707-5363-4784-acbf-bc59b093cb6c",
+              "name": "Credit confirmed successfully.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "credits",
+                    ":id",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the credit."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"confirmed_at\": \"<dateTime>\",\n  \"remote_id\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"478290b0-86bd-12c9-b517-c58f6dcb8411\",\n    \"amount\": \"string\",\n    \"approved_at\": \"1998-03-21T08:45:28.430Z\",\n    \"confirmed_at\": \"1973-03-24T16:09:57.190Z\",\n    \"currency_id\": \"string\",\n    \"exchange_rate\": \"string\",\n    \"failed_at\": \"1958-08-19T17:41:18.298Z\",\n    \"failed_reason\": \"string\",\n    \"funded_at\": \"2011-10-18T18:51:10.602Z\",\n    \"accepted_at\": \"1994-12-12T08:42:37.284Z\",\n    \"payment_method\": \"string\",\n    \"reference_id\": \"string\",\n    \"rejected_at\": \"1961-07-15T05:34:26.863Z\",\n    \"remote_error\": \"string\",\n    \"remote_errored_at\": \"1948-02-11T17:38:19.949Z\",\n    \"remote_id\": \"string\",\n    \"settlement_amount\": \"string\",\n    \"settlement_currency_id\": \"string\",\n    \"status\": \"failed\",\n    \"voided_at\": \"1989-12-23T22:02:52.350Z\",\n    \"created_at\": \"1948-10-09T02:41:11.652Z\",\n    \"updated_at\": \"1980-01-08T22:47:13.580Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c4863838-73d1-4836-b313-7e8cf0161326",
+              "name": "The request was forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "credits",
+                    ":id",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the credit."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"confirmed_at\": \"<dateTime>\",\n  \"remote_id\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "49f3bfd2-df3f-4138-91cf-89c007b1235e",
+              "name": "Resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "credits",
+                    ":id",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the credit."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"confirmed_at\": \"<dateTime>\",\n  \"remote_id\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5356910c-91b1-481d-aa41-922b96bc6e9a",
+              "name": "Errors with the input are present.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "credits",
+                    ":id",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the credit."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"confirmed_at\": \"<dateTime>\",\n  \"remote_id\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f0260cfb-cb8b-4bac-a2d4-4286ad38984c",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "credits",
+                    ":id",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the credit."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"confirmed_at\": \"<dateTime>\",\n  \"remote_id\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    },\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "79e220c8-dd6b-403e-8110-cf81aba38659",
+          "name": "Bulk confirm credits",
+          "request": {
+            "name": "Bulk confirm credits",
+            "description": {
+              "content": "Bulk confirms multiple credits in a single request. Each credit in the\nrequest body must include an `id`, `confirmed_at` timestamp, and\noptionally a `remote_id`.\n\nIf a credit is not found, the entire bulk confirmation is aborted.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "companies",
+                ":company_id",
+                "credits",
+                "confirm"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "company_id",
+                  "description": "(Required) The ID of the company"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"credits\": [\n    {\n      \"id\": \"<uuid>\",\n      \"confirmed_at\": \"<dateTime>\",\n      \"remote_id\": \"<string,null>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "3c6990ee-ba1c-443a-b7a5-b26e4d10ab99",
+              "name": "Credits bulk confirmed successfully.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "credits",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"credits\": [\n    {\n      \"id\": \"<uuid>\",\n      \"confirmed_at\": \"<dateTime>\",\n      \"remote_id\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"0b0ba1dd-694c-23a4-4ddf-a57af848df9b\",\n      \"amount\": \"string\",\n      \"approved_at\": \"1963-11-20T01:54:25.633Z\",\n      \"confirmed_at\": \"1949-12-29T08:21:57.557Z\",\n      \"currency_id\": \"string\",\n      \"exchange_rate\": \"string\",\n      \"failed_at\": \"1992-10-15T03:01:13.505Z\",\n      \"failed_reason\": \"string\",\n      \"funded_at\": \"2000-06-13T22:32:56.703Z\",\n      \"accepted_at\": \"1965-12-08T17:50:42.264Z\",\n      \"payment_method\": \"string\",\n      \"reference_id\": \"string\",\n      \"rejected_at\": \"1980-02-12T16:23:07.840Z\",\n      \"remote_error\": \"string\",\n      \"remote_errored_at\": \"2016-10-08T04:57:51.596Z\",\n      \"remote_id\": \"string\",\n      \"settlement_amount\": \"string\",\n      \"settlement_currency_id\": \"string\",\n      \"status\": \"acknowledged\",\n      \"voided_at\": \"2015-02-16T16:24:16.588Z\",\n      \"created_at\": \"1973-05-09T21:47:22.013Z\",\n      \"updated_at\": \"2010-06-02T17:39:10.107Z\"\n    },\n    {\n      \"id\": \"897cac98-e4b3-6fdd-bd23-33c61fe0c191\",\n      \"amount\": \"string\",\n      \"approved_at\": \"1994-01-20T14:42:00.161Z\",\n      \"confirmed_at\": \"2020-05-14T22:48:40.494Z\",\n      \"currency_id\": \"string\",\n      \"exchange_rate\": \"string\",\n      \"failed_at\": \"1999-05-15T08:46:25.735Z\",\n      \"failed_reason\": \"string\",\n      \"funded_at\": \"1990-10-29T00:57:20.389Z\",\n      \"accepted_at\": \"2010-06-14T09:22:46.812Z\",\n      \"payment_method\": \"string\",\n      \"reference_id\": \"string\",\n      \"rejected_at\": \"1996-02-12T18:31:16.984Z\",\n      \"remote_error\": \"string\",\n      \"remote_errored_at\": \"1969-01-12T20:58:30.367Z\",\n      \"remote_id\": \"string\",\n      \"settlement_amount\": \"string\",\n      \"settlement_currency_id\": \"string\",\n      \"status\": \"pending_approval\",\n      \"voided_at\": \"1993-01-12T13:34:13.070Z\",\n      \"created_at\": \"1974-11-29T09:22:48.561Z\",\n      \"updated_at\": \"2018-02-26T04:11:47.147Z\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2a039d6f-2a9e-4fa5-8842-3e04d2a71987",
+              "name": "The request was forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "credits",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"credits\": [\n    {\n      \"id\": \"<uuid>\",\n      \"confirmed_at\": \"<dateTime>\",\n      \"remote_id\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "31ab9fd2-df9a-4586-baa7-3ae7e155910f",
+              "name": "Resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "credits",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"credits\": [\n    {\n      \"id\": \"<uuid>\",\n      \"confirmed_at\": \"<dateTime>\",\n      \"remote_id\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c31c85e1-e80c-4b92-9a3d-7559bf14160a",
+              "name": "Errors with the input are present.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "credits",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"credits\": [\n    {\n      \"id\": \"<uuid>\",\n      \"confirmed_at\": \"<dateTime>\",\n      \"remote_id\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1aba7950-7cb4-48c3-8d11-08bbe9345aec",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "credits",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"credits\": [\n    {\n      \"id\": \"<uuid>\",\n      \"confirmed_at\": \"<dateTime>\",\n      \"remote_id\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    },\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ff6f959c-21de-4418-8897-651651b8de54",
+          "name": "Mark credit as failed",
+          "request": {
+            "name": "Mark credit as failed",
+            "description": {
+              "content": "Marks a credit as having a remote error by setting the `remote_errored_at`\ntimestamp and `remote_error` message. Optionally sets a `remote_id`. This\nclears any existing `confirmed_at` timestamp.\n\n**Note**: When providing an error, please provide a clear error message\nthat the user can understand.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "companies",
+                ":company_id",
+                "credits",
+                ":id",
+                "fail"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "company_id",
+                  "description": "(Required) The ID of the company"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "id",
+                  "description": "(Required) The id of the credit."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"remote_errored_at\": \"<dateTime>\",\n  \"remote_error\": \"<string>\",\n  \"remote_id\": \"<string,null>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "14492ec4-a3bd-47e3-85a7-6edab25dcd6f",
+              "name": "Credit marked as failed successfully.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "credits",
+                    ":id",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the credit."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"remote_errored_at\": \"<dateTime>\",\n  \"remote_error\": \"<string>\",\n  \"remote_id\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"478290b0-86bd-12c9-b517-c58f6dcb8411\",\n    \"amount\": \"string\",\n    \"approved_at\": \"1998-03-21T08:45:28.430Z\",\n    \"confirmed_at\": \"1973-03-24T16:09:57.190Z\",\n    \"currency_id\": \"string\",\n    \"exchange_rate\": \"string\",\n    \"failed_at\": \"1958-08-19T17:41:18.298Z\",\n    \"failed_reason\": \"string\",\n    \"funded_at\": \"2011-10-18T18:51:10.602Z\",\n    \"accepted_at\": \"1994-12-12T08:42:37.284Z\",\n    \"payment_method\": \"string\",\n    \"reference_id\": \"string\",\n    \"rejected_at\": \"1961-07-15T05:34:26.863Z\",\n    \"remote_error\": \"string\",\n    \"remote_errored_at\": \"1948-02-11T17:38:19.949Z\",\n    \"remote_id\": \"string\",\n    \"settlement_amount\": \"string\",\n    \"settlement_currency_id\": \"string\",\n    \"status\": \"failed\",\n    \"voided_at\": \"1989-12-23T22:02:52.350Z\",\n    \"created_at\": \"1948-10-09T02:41:11.652Z\",\n    \"updated_at\": \"1980-01-08T22:47:13.580Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "95c67e34-b537-432c-a6ad-6d977e3894e8",
+              "name": "The request was forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "credits",
+                    ":id",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the credit."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"remote_errored_at\": \"<dateTime>\",\n  \"remote_error\": \"<string>\",\n  \"remote_id\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ae811a34-5f54-47a4-83c0-c8012e221221",
+              "name": "Resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "credits",
+                    ":id",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the credit."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"remote_errored_at\": \"<dateTime>\",\n  \"remote_error\": \"<string>\",\n  \"remote_id\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2fbdde27-da6d-40a1-a944-03d0ecbbb265",
+              "name": "Errors with the input are present.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "credits",
+                    ":id",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the credit."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"remote_errored_at\": \"<dateTime>\",\n  \"remote_error\": \"<string>\",\n  \"remote_id\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "da6b2d2e-ba5f-4193-8344-ff9debedc70d",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "credits",
+                    ":id",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the credit."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"remote_errored_at\": \"<dateTime>\",\n  \"remote_error\": \"<string>\",\n  \"remote_id\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    },\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1c5a454e-f8c7-4088-91ad-eeeb8159fbbb",
+          "name": "Bulk fail credits",
+          "request": {
+            "name": "Bulk fail credits",
+            "description": {
+              "content": "Bulk marks multiple credits as having remote errors in a single request.\nEach credit in the request body must include an `id`, `remote_errored_at`\ntimestamp, `remote_error` message, and optionally a `remote_id`.\n\n**Note**: When providing an error, please provide a clear error message\nthat the user can understand.\n\nIf a credit is not found, the entire bulk operation is aborted.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "companies",
+                ":company_id",
+                "credits",
+                "fail"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "company_id",
+                  "description": "(Required) The ID of the company"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"credits\": [\n    {\n      \"id\": \"<uuid>\",\n      \"remote_errored_at\": \"<dateTime>\",\n      \"remote_error\": \"<string>\",\n      \"remote_id\": \"<string,null>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "4272b3d2-bcaf-4974-9cdc-1580607f72d7",
+              "name": "Credits bulk failed successfully.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "credits",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"credits\": [\n    {\n      \"id\": \"<uuid>\",\n      \"remote_errored_at\": \"<dateTime>\",\n      \"remote_error\": \"<string>\",\n      \"remote_id\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"0b0ba1dd-694c-23a4-4ddf-a57af848df9b\",\n      \"amount\": \"string\",\n      \"approved_at\": \"1963-11-20T01:54:25.633Z\",\n      \"confirmed_at\": \"1949-12-29T08:21:57.557Z\",\n      \"currency_id\": \"string\",\n      \"exchange_rate\": \"string\",\n      \"failed_at\": \"1992-10-15T03:01:13.505Z\",\n      \"failed_reason\": \"string\",\n      \"funded_at\": \"2000-06-13T22:32:56.703Z\",\n      \"accepted_at\": \"1965-12-08T17:50:42.264Z\",\n      \"payment_method\": \"string\",\n      \"reference_id\": \"string\",\n      \"rejected_at\": \"1980-02-12T16:23:07.840Z\",\n      \"remote_error\": \"string\",\n      \"remote_errored_at\": \"2016-10-08T04:57:51.596Z\",\n      \"remote_id\": \"string\",\n      \"settlement_amount\": \"string\",\n      \"settlement_currency_id\": \"string\",\n      \"status\": \"acknowledged\",\n      \"voided_at\": \"2015-02-16T16:24:16.588Z\",\n      \"created_at\": \"1973-05-09T21:47:22.013Z\",\n      \"updated_at\": \"2010-06-02T17:39:10.107Z\"\n    },\n    {\n      \"id\": \"897cac98-e4b3-6fdd-bd23-33c61fe0c191\",\n      \"amount\": \"string\",\n      \"approved_at\": \"1994-01-20T14:42:00.161Z\",\n      \"confirmed_at\": \"2020-05-14T22:48:40.494Z\",\n      \"currency_id\": \"string\",\n      \"exchange_rate\": \"string\",\n      \"failed_at\": \"1999-05-15T08:46:25.735Z\",\n      \"failed_reason\": \"string\",\n      \"funded_at\": \"1990-10-29T00:57:20.389Z\",\n      \"accepted_at\": \"2010-06-14T09:22:46.812Z\",\n      \"payment_method\": \"string\",\n      \"reference_id\": \"string\",\n      \"rejected_at\": \"1996-02-12T18:31:16.984Z\",\n      \"remote_error\": \"string\",\n      \"remote_errored_at\": \"1969-01-12T20:58:30.367Z\",\n      \"remote_id\": \"string\",\n      \"settlement_amount\": \"string\",\n      \"settlement_currency_id\": \"string\",\n      \"status\": \"pending_approval\",\n      \"voided_at\": \"1993-01-12T13:34:13.070Z\",\n      \"created_at\": \"1974-11-29T09:22:48.561Z\",\n      \"updated_at\": \"2018-02-26T04:11:47.147Z\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3dc8c14d-d097-41f0-b8fd-2eb1aa70c5b6",
+              "name": "The request was forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "credits",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"credits\": [\n    {\n      \"id\": \"<uuid>\",\n      \"remote_errored_at\": \"<dateTime>\",\n      \"remote_error\": \"<string>\",\n      \"remote_id\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "41d9b6fe-f943-4426-a8fc-63c22a1f0df5",
+              "name": "Resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "credits",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"credits\": [\n    {\n      \"id\": \"<uuid>\",\n      \"remote_errored_at\": \"<dateTime>\",\n      \"remote_error\": \"<string>\",\n      \"remote_id\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6c24a560-04d1-4fdb-933c-41746ed42f76",
+              "name": "Errors with the input are present.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "credits",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"credits\": [\n    {\n      \"id\": \"<uuid>\",\n      \"remote_errored_at\": \"<dateTime>\",\n      \"remote_error\": \"<string>\",\n      \"remote_id\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 419,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "353fc5da-182e-4ce0-a59d-051fee0b8ff5",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "credits",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"credits\": [\n    {\n      \"id\": \"<uuid>\",\n      \"remote_errored_at\": \"<dateTime>\",\n      \"remote_error\": \"<string>\",\n      \"remote_id\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    },\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.no.stage.vic.ai",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "9ea8cf45-dd16-4f47-b0bb-807440614f10",
+    "name": "Vic.ai Accounts Credit Confirmations API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "## Introduction\n\nThe Vic.ai API provides a seamless connection between your Enterprise Resource\nPlanning (ERP) system and the Vic.ai product suite.\n\nThe API is designed to offer three main areas of functionality:\n\n- **Syncing master data:** This refers to the data in your ERP that Vic.ai\n  interacts with. You are required to supply and update this data in Vic.ai, and\n  you also have the option to verify the copy of the masterdata in Vic.ai.\n\n- **Syncing training data:** We need historical data to train your AI model. To\n  that end, the API provides endpoints to sync historical invoices into Vic.ai\n  and to confirm their presence.\n\n- **Subscribing to and receiving webhooks:** Webhooks enable users or automated\n  tasks to interact with your ERP through various actions in the Vic.ai product\n  suite, such as posting an invoice, payment or purchase order or requesting\n  synchronization. You will receive a notification via a webhook when these\n  actions occur.\n\n\nFor US-based integrations, please use the following base API URL:\n\n```\nhttps://api.us.vic.ai\n```\n\nFor integrations based in Norway, use the following base API URL:\n\n```\nhttps://api.no.vic.ai\n```\n\nAll paths mentioned in this documentation should use one of these URLs as the\nbase.\n\nExample:\n\n```bash\ncurl https://api.us.vic.ai/v0/healthCheck \\\n    -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\"\n```\n\n## Getting Started\n\nTo begin interacting with the Vic.ai API, you will need the following\ncredentials:\n\n* A Vic.ai client ID\n* A Vic.ai client secret.\n\nThese can be provided to you securely by a Vic.ai representative\n[upon request](https://www.vic.ai/book-a-demo).\n\n**Please note:** These credentials are essentially the keys to your ERP\nintegration. If they fall into the wrong hands, unauthorized parties could\nimpersonate you, gain access to sensitive data, and potentially perform\nmalicious actions. Therefore, it's crucial to keep these credentials safe at all\ntimes to protect your application's integrity and your clients' data.\n\n### Limitations\n\nThe Vic.ai API has the following limitations:\n\n**Rate Limiting:** The API is rate-limited to 500 requests per 10-second time\nframe. If you exceed this limit, you will receive a `429 Too Many Requests`\nresponse. The limit is per Oauth client ID. If you continue to receive `429`s,\nplease contact support with a request id from the response headers.\n",
+      "type": "text/plain"
+    }
+  }
+}

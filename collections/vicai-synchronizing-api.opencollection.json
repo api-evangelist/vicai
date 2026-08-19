@@ -1,0 +1,90 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vic.ai Accounts Synchronizing API",
+    "version": "v10.40.4"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Synchronizing",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Synchronize Accounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/accounts/synchronize"
+          },
+          "docs": "Tells the ERP to synchronize the Account resource. If the ERP is\nusing the API, the call will be sent via the normal webhook methods. If\nthe ERP is not using this API then this will call the native\nintegration's synchronize functionality.\n"
+        },
+        {
+          "info": {
+            "name": "Synchronize Dimensions",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/dimensions/synchronize"
+          },
+          "docs": "Tells the ERP to synchronize the Dimension resource. If the ERP is\nusing the API, the call will be sent via the normal webhook methods. If\nthe ERP is not using this API then this will call the native\nintegration's synchronize functionality.\n"
+        },
+        {
+          "info": {
+            "name": "Synchronize Vendors",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/vendors/synchronize"
+          },
+          "docs": "Tells the ERP to synchronize the Vendor resource. If the ERP is using\nthe API, the call will be sent via the normal webhook methods. If the\nERP is not using this API then this will call the native integration's\nsynchronize functionality.\n"
+        },
+        {
+          "info": {
+            "name": "Synchronize Vat Codes",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/vatCodes/synchronize"
+          },
+          "docs": "Tells the ERP to synchronize the Vat Code resource. If the ERP is using\nthe API, the call will be sent via the normal webhook methods. If the\nERP is not using this API then this will call the native integration's\nsynchronize functionality.\n"
+        },
+        {
+          "info": {
+            "name": "Synchronize Purchase Orders",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/purchaseOrders/synchronize"
+          },
+          "docs": "Tells the ERP to synchronize the Purchase Orders resource. If the ERP is\nusing the API, the call will be sent via the normal webhook methods. If\nthe ERP is not using this API then this will call the native\nintegration's synchronize functionality.\n"
+        },
+        {
+          "info": {
+            "name": "Synchronize Payment Terms",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/paymentTerms/synchronize"
+          },
+          "docs": "Tells the ERP to synchronize the Payment Terms resource. If the ERP is\nusing the API, the call will be sent via the normal webhook methods. If\nthe ERP is not using this API then this will call the native\nintegration's synchronize functionality.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

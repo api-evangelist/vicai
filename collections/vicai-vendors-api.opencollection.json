@@ -1,0 +1,402 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vic.ai Accounts Vendors API",
+    "version": "v10.40.4"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Vendors",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all vendors",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/vendors",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "How many items to return at one time (max 100) (default 100)"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Which item to start from. See [Pagination](#section/Pagination) for more information."
+              },
+              {
+                "name": "since",
+                "value": "",
+                "type": "query",
+                "description": "Datetime value for incremental updates.\n**NOTE**: For external datetimes, the expected format is not in UTC. for\nvic-internal datetimes (see `SinceIsExternal`) the format is UTC.\n"
+              },
+              {
+                "name": "confirmed",
+                "value": "",
+                "type": "query",
+                "description": "selects if confirmed vendors are to be displayed."
+              },
+              {
+                "name": "unconfirmed",
+                "value": "",
+                "type": "query",
+                "description": "selects if unconfirmed vendors are to be displayed."
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              },
+              {
+                "name": "sortOrder",
+                "value": "",
+                "type": "query",
+                "description": "what sort order should be used for queries"
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query",
+                "description": "Filter vendors by state.\n- `PENDING` - The vendor is not confirmed, has no errors, and was\n  not predicted. It is pending to be confirmed.\n- `ACTIVE` - The vendor is confirmed and has no errors.\n- `PREDICTED` - The vendor was predicted by Vic.\n- `ERRORED` - The vendor has errors set.\n"
+              }
+            ]
+          },
+          "docs": "Use this request to query the vendor data that are stored in Vic.ai."
+        },
+        {
+          "info": {
+            "name": "Synchronize Vendors",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/vendors/synchronize"
+          },
+          "docs": "Tells the ERP to synchronize the Vendor resource. If the ERP is using\nthe API, the call will be sent via the normal webhook methods. If the\nERP is not using this API then this will call the native integration's\nsynchronize functionality.\n"
+        },
+        {
+          "info": {
+            "name": "Info for a specific vendor",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/vendors/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the database entry"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ]
+          },
+          "docs": "Use this request to get data for a single vendor that is stored in Vic.ai.\n"
+        },
+        {
+          "info": {
+            "name": "Upserts a vendor",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.no.stage.vic.ai/v0/vendors/:id",
+            "headers": [
+              {
+                "name": "X-Request-Id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the database entry"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates or inserts a vendor into the Vic.ai system.\nAll fields passed are set on the vendor. Most fields that are omitted\nfrom the request body are considered to be null and will be set to\nnull; the exceptions that keep their current value when omitted are\ncalled out in the individual field descriptions.\nIf the vendor is known by Vic.ai, the `externalId` supplied will be used\nto resolve the vendor and perform an update of the data, otherwise, a\nnew vendor will be inserted.\nIf the upsert action i"
+        },
+        {
+          "info": {
+            "name": "Deletes a vendor",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.no.stage.vic.ai/v0/vendors/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the database entry"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ]
+          },
+          "docs": "Use this request to delete data for a single vendor that is stored in\nVic.ai\n"
+        },
+        {
+          "info": {
+            "name": "Completes the response callback cycle resulting from a 202",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/vendors/:id/errors",
+            "headers": [
+              {
+                "name": "X-Request-Id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the database entry"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Use this post to report vendor update failure errors back to Vic.ai.\nStrictly a response to the callbacks.\n* The `X-Request-Id` header is required.\n* The `id` MUST be a Vendor `internalId`.\n"
+        },
+        {
+          "info": {
+            "name": "Clears errors on the Vendor.",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.no.stage.vic.ai/v0/vendors/:id/errors",
+            "headers": [
+              {
+                "name": "X-Request-Id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the database entry"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ]
+          },
+          "docs": "Used to clear errors that have been fixed in the ERP system."
+        },
+        {
+          "info": {
+            "name": "Delete a vendor tag by vendor ID and tag ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.no.stage.vic.ai/v0/vendors/:vendor_id/tags/:tag_id",
+            "params": [
+              {
+                "name": "vendor_id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the vendor"
+              },
+              {
+                "name": "tag_id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the tag"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ]
+          },
+          "docs": "Use this endpoint to delete a vendor tag association by specifying both the vendor ID and tag ID.\n\nUse `/v0/vendorTags/{id}` when you want to use the vendor tag's ID instead of the vendor ID and tag ID.\n"
+        },
+        {
+          "info": {
+            "name": "List all vendor groups",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/vendorGroups",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "How many items to return at one time (max 100) (default 100)"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Which item to start from. See [Pagination](#section/Pagination) for more information."
+              }
+            ]
+          },
+          "docs": "List all vendor groups."
+        },
+        {
+          "info": {
+            "name": "Create a vendor group",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/vendorGroups",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a vendor group."
+        },
+        {
+          "info": {
+            "name": "Update the vendor group",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.no.stage.vic.ai/v0/vendorGroups/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the vendor group"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update the vendor group."
+        },
+        {
+          "info": {
+            "name": "Delete vendor group",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.no.stage.vic.ai/v0/vendorGroups/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the vendor group"
+              }
+            ]
+          },
+          "docs": "Delete vendor group."
+        },
+        {
+          "info": {
+            "name": "Get a vendor by UUID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/vendors/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The UUID of the vendor in Vic.ai."
+              }
+            ]
+          },
+          "docs": "Retrieve a vendor by UUID from the Vic.ai system.\n\nThis endpoint returns detailed information about a specific vendor, including:\n- Basic vendor information (name, email, phone, address)\n- Banking information (ACH, IBAN, etc., excluding check payment methods)\n- Tags associated with the vendor\n- OFAC screening results\n- Remote system data and errors\n- Vendor state (pending, active, predicted, errored)\n\n**Note**: This endpoint includes vendors regardless of their onboarding completion status.\n"
+        },
+        {
+          "info": {
+            "name": "Update a vendor",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.no.stage.vic.ai/v2/vendors/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The UUID of the vendor in Vic.ai."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a vendor's information in the Vic.ai system.\n\nThis endpoint allows updating the following fields:\n- `remote_id`: The external system's identifier for this vendor\n- `confirmed_at`: The datetime when the vendor was confirmed in the external system\n\nAt least one field must be provided in the request body.\n\n**Note**: This endpoint supports vendors with onboarding status (draft, active, submitted, etc.)\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

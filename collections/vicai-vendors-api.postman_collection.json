@@ -1,0 +1,3673 @@
+{
+  "item": [
+    {
+      "id": "dab2fe9f-5d02-43ca-a685-d7578ba46bd1",
+      "name": "Vendors",
+      "description": {
+        "content": "Vendors are part of your *ERP* **Masterdata**, and represent companies\nthat produce invoices.  In order to be associated with an invoice, key\ndata about the vendor must be stored in Vic.ai. These operations allow\nquerying and manipulation of the vendor data.\n",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "1e9a0bbe-53ed-4263-bafc-f0cf8babfc72",
+          "name": "List all vendors",
+          "request": {
+            "name": "List all vendors",
+            "description": {
+              "content": "Use this request to query the vendor data that are stored in Vic.ai.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "vendors"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "<integer>",
+                  "description": "How many items to return at one time (max 100) (default 100)"
+                },
+                {
+                  "disabled": false,
+                  "key": "cursor",
+                  "value": "<string>",
+                  "description": "Which item to start from. See [Pagination](#section/Pagination) for more information."
+                },
+                {
+                  "disabled": false,
+                  "key": "since",
+                  "value": "<dateTime>",
+                  "description": "Datetime value for incremental updates.\n**NOTE**: For external datetimes, the expected format is not in UTC. for\nvic-internal datetimes (see `SinceIsExternal`) the format is UTC.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "confirmed",
+                  "value": "true",
+                  "description": "selects if confirmed vendors are to be displayed."
+                },
+                {
+                  "disabled": false,
+                  "key": "unconfirmed",
+                  "value": "true",
+                  "description": "selects if unconfirmed vendors are to be displayed."
+                },
+                {
+                  "disabled": false,
+                  "key": "useSystem",
+                  "value": "EXTERNAL",
+                  "description": "Which system to use for id or updatedAt filters.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "sortOrder",
+                  "value": "ASCENDING",
+                  "description": "what sort order should be used for queries"
+                },
+                {
+                  "disabled": false,
+                  "key": "state",
+                  "value": "<string>",
+                  "description": "Filter vendors by state.\n- `PENDING` - The vendor is not confirmed, has no errors, and was\n  not predicted. It is pending to be confirmed.\n- `ACTIVE` - The vendor is confirmed and has no errors.\n- `PREDICTED` - The vendor was predicted by Vic.\n- `ERRORED` - The vendor has errors set.\n"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "be3d925c-cb1b-445b-b48f-0ecbaf8e5413",
+              "name": "A paged array of vendors",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendors"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "since",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "confirmed",
+                      "value": "true"
+                    },
+                    {
+                      "key": "unconfirmed",
+                      "value": "true"
+                    },
+                    {
+                      "key": "useSystem",
+                      "value": "EXTERNAL"
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "ASCENDING"
+                    },
+                    {
+                      "key": "state",
+                      "value": "ACTIVE"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "A link to the next page of responses",
+                  "key": "x-next",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"internalId\": \"47\",\n    \"internalUpdatedAt\": \"1956-05-02T22:58:04.268Z\",\n    \"name\": \"string\",\n    \"email\": \"eJ7o1LJ78@aaIJX.mmv\",\n    \"phone\": \"string\",\n    \"addressStreet\": \"string\",\n    \"addressCity\": \"string\",\n    \"addressState\": \"string\",\n    \"addressPostalCode\": \"string\",\n    \"countryCode\": \"US\",\n    \"companyId\": \"12345\",\n    \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n    \"externalUpdatedAt\": \"1979-08-30T20:10:01.795Z\",\n    \"description\": \"string\",\n    \"currency\": \"USD\",\n    \"confirmedAt\": \"1969-03-21T17:38:01.153Z\",\n    \"state\": \"CONFIRMED\",\n    \"taxInfo\": {\n      \"taxId\": \"string\",\n      \"taxIdType\": \"other\",\n      \"is1099vendor\": false,\n      \"orgNumber\": \"string\"\n    },\n    \"defaultPaymentInfo\": {\n      \"bankAccountNum\": \"string\",\n      \"bankCode\": \"string\",\n      \"paymentTerm\": {\n        \"count\": 7740,\n        \"unit\": \"DAYS\"\n      },\n      \"bankGiro\": \"string\",\n      \"plusGiro\": \"string\",\n      \"bban\": \"string\",\n      \"internationalBankAccount\": {\n        \"iban\": \"string\",\n        \"bic\": \"string\"\n      },\n      \"defaultMethod\": \"BBAN\"\n    },\n    \"paymentTermId\": \"17b0f9c3-f63d-0df5-ee2f-bb72c4fcf30f\",\n    \"poMatchingDocumentLevel\": false,\n    \"vendorGroupId\": \"2602eb4f-0b7d-bc5e-959f-8e5c3680a95d\",\n    \"tags\": [\n      {\n        \"value\": \"string\",\n        \"id\": \"string\"\n      },\n      {\n        \"value\": \"string\",\n        \"id\": \"string\"\n      }\n    ],\n    \"externalData\": {},\n    \"errors\": {}\n  },\n  {\n    \"internalId\": \"47\",\n    \"internalUpdatedAt\": \"2020-01-23T17:12:27.724Z\",\n    \"name\": \"string\",\n    \"email\": \"NsKUft2tOcTS@BFuoIHZoVlaJWeQkHwEXDTUpJ.mvn\",\n    \"phone\": \"string\",\n    \"addressStreet\": \"string\",\n    \"addressCity\": \"string\",\n    \"addressState\": \"string\",\n    \"addressPostalCode\": \"string\",\n    \"countryCode\": \"US\",\n    \"companyId\": \"12345\",\n    \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n    \"externalUpdatedAt\": \"1978-02-16T04:39:35.733Z\",\n    \"description\": \"string\",\n    \"currency\": \"USD\",\n    \"confirmedAt\": \"1974-05-25T17:30:33.290Z\",\n    \"state\": \"CONFIRMED\",\n    \"taxInfo\": {\n      \"taxId\": \"string\",\n      \"taxIdType\": \"other\",\n      \"is1099vendor\": false,\n      \"orgNumber\": \"string\"\n    },\n    \"defaultPaymentInfo\": {\n      \"bankAccountNum\": \"string\",\n      \"bankCode\": \"string\",\n      \"paymentTerm\": {\n        \"count\": 5512,\n        \"unit\": \"DAYS\"\n      },\n      \"bankGiro\": \"string\",\n      \"plusGiro\": \"string\",\n      \"bban\": \"string\",\n      \"internationalBankAccount\": {\n        \"iban\": \"string\",\n        \"bic\": \"string\"\n      },\n      \"defaultMethod\": \"BBAN\"\n    },\n    \"paymentTermId\": \"4469021c-373a-f924-7529-e914e5f939b3\",\n    \"poMatchingDocumentLevel\": false,\n    \"vendorGroupId\": \"898e0198-6177-a8bd-e42f-9e5d2cccf9ad\",\n    \"tags\": [\n      {\n        \"value\": \"string\",\n        \"id\": \"string\"\n      },\n      {\n        \"value\": \"string\",\n        \"id\": \"string\"\n      }\n    ],\n    \"externalData\": {},\n    \"errors\": {}\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2484b88d-3d99-4fd6-a88e-1a4f16f12efb",
+              "name": "HTTP call rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendors"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "since",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "confirmed",
+                      "value": "true"
+                    },
+                    {
+                      "key": "unconfirmed",
+                      "value": "true"
+                    },
+                    {
+                      "key": "useSystem",
+                      "value": "EXTERNAL"
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "ASCENDING"
+                    },
+                    {
+                      "key": "state",
+                      "value": "ACTIVE"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.",
+                  "key": "Retry-After",
+                  "value": "6095"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 493,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "70a62d08-b8d4-49cb-aa02-3d6910ca4e79",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendors"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "since",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "confirmed",
+                      "value": "true"
+                    },
+                    {
+                      "key": "unconfirmed",
+                      "value": "true"
+                    },
+                    {
+                      "key": "useSystem",
+                      "value": "EXTERNAL"
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "ASCENDING"
+                    },
+                    {
+                      "key": "state",
+                      "value": "ACTIVE"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 493,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a4e05df0-12fd-49a3-8759-49f99bc1fd4e",
+          "name": "Synchronize Vendors",
+          "request": {
+            "name": "Synchronize Vendors",
+            "description": {
+              "content": "Tells the ERP to synchronize the Vendor resource. If the ERP is using\nthe API, the call will be sent via the normal webhook methods. If the\nERP is not using this API then this will call the native integration's\nsynchronize functionality.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "vendors",
+                "synchronize"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "713bc773-809d-44eb-aaae-d71f3dd555b4",
+              "name": "A request to synchronize the vendors was acknowledged and is in the\nprocess of being ran.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendors",
+                    "synchronize"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "276c75c8-785e-46ff-a45c-be4c55ad0313",
+              "name": "HTTP call rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendors",
+                    "synchronize"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.",
+                  "key": "Retry-After",
+                  "value": "6095"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 493,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "995abc19-b9ce-4be6-9392-a1db50ac7d7b",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendors",
+                    "synchronize"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 493,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0221832e-8e44-4724-a584-f0a3d044bb3c",
+          "name": "Info for a specific vendor",
+          "request": {
+            "name": "Info for a specific vendor",
+            "description": {
+              "content": "Use this request to get data for a single vendor that is stored in Vic.ai.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "vendors",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "useSystem",
+                  "value": "EXTERNAL",
+                  "description": "Which system to use for id or updatedAt filters.\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The id of the database entry"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "69aed036-6f56-4f79-ac0e-ada7ab413674",
+              "name": "A single vendor.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendors",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "EXTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of the database entry"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"internalId\": \"47\",\n  \"internalUpdatedAt\": \"2020-08-04T13:17:40.793Z\",\n  \"name\": \"string\",\n  \"email\": \"arx-CO4EYW@iBvtvwmlhwzGILcKwKZEpAGOgtxnMaL.qdww\",\n  \"phone\": \"string\",\n  \"addressStreet\": \"string\",\n  \"addressCity\": \"string\",\n  \"addressState\": \"string\",\n  \"addressPostalCode\": \"string\",\n  \"countryCode\": \"US\",\n  \"companyId\": \"12345\",\n  \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n  \"externalUpdatedAt\": \"1999-08-27T00:35:32.085Z\",\n  \"description\": \"string\",\n  \"currency\": \"USD\",\n  \"confirmedAt\": \"1961-10-09T12:34:56.381Z\",\n  \"state\": \"UNCONFIRMED\",\n  \"taxInfo\": {\n    \"taxId\": \"string\",\n    \"taxIdType\": \"other\",\n    \"is1099vendor\": false,\n    \"orgNumber\": \"string\"\n  },\n  \"defaultPaymentInfo\": {\n    \"bankAccountNum\": \"string\",\n    \"bankCode\": \"string\",\n    \"paymentTerm\": {\n      \"count\": 4236,\n      \"unit\": \"DAYS\"\n    },\n    \"bankGiro\": \"string\",\n    \"plusGiro\": \"string\",\n    \"bban\": \"string\",\n    \"internationalBankAccount\": {\n      \"iban\": \"string\",\n      \"bic\": \"string\"\n    },\n    \"defaultMethod\": \"BANKACCOUNT\"\n  },\n  \"paymentTermId\": \"73408f23-4d49-e176-06be-2c7874a3f64a\",\n  \"poMatchingDocumentLevel\": false,\n  \"vendorGroupId\": \"07fa24f1-93d8-d2d2-9216-3e0a5b4a1279\",\n  \"tags\": [\n    {\n      \"value\": \"string\",\n      \"id\": \"string\"\n    },\n    {\n      \"value\": \"string\",\n      \"id\": \"string\"\n    }\n  ],\n  \"externalData\": {},\n  \"errors\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "30885210-ca71-4859-b9b2-ac68c954b093",
+              "name": "HTTP call rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendors",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "EXTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of the database entry"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.",
+                  "key": "Retry-After",
+                  "value": "6095"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 493,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a2e3721b-7c67-4779-887a-c5f2673ce395",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendors",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "EXTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of the database entry"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 493,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "54e2fb69-3612-41be-9830-e8c3548bedeb",
+          "name": "Upserts a vendor",
+          "request": {
+            "name": "Upserts a vendor",
+            "description": {
+              "content": "Updates or inserts a vendor into the Vic.ai system.\nAll fields passed are set on the vendor. Most fields that are omitted\nfrom the request body are considered to be null and will be set to\nnull; the exceptions that keep their current value when omitted are\ncalled out in the individual field descriptions.\nIf the vendor is known by Vic.ai, the `externalId` supplied will be used\nto resolve the vendor and perform an update of the data, otherwise, a\nnew vendor will be inserted.\nIf the upsert action is part of a `syncRequest`, you should include the\n`syncRequest` ID in the `X-Request-Id` header.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "vendors",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "useSystem",
+                  "value": "EXTERNAL",
+                  "description": "Which system to use for id or updatedAt filters.\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The id of the database entry"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "token to be able to correctly log associated requests",
+                "key": "X-Request-Id",
+                "value": "<uuid>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"externalUpdatedAt\": \"<dateTime>\",\n  \"name\": \"<string>\",\n  \"externalId\": \"<string>\",\n  \"email\": \"<email>\",\n  \"phone\": \"<string>\",\n  \"addressStreet\": \"<string>\",\n  \"addressCity\": \"<string>\",\n  \"addressState\": \"<string>\",\n  \"addressPostalCode\": \"<string>\",\n  \"countryCode\": \"<ISO-3166>\",\n  \"currency\": \"<ISO-4217>\",\n  \"confirmedAt\": \"<dateTime>\",\n  \"state\": \"<string>\",\n  \"taxInfo\": {\n    \"taxId\": \"<string>\",\n    \"taxIdType\": \"<string>\",\n    \"is1099vendor\": \"<boolean>\",\n    \"orgNumber\": \"<string>\"\n  },\n  \"defaultPaymentInfo\": {\n    \"bankAccountNum\": \"<string>\",\n    \"bankCode\": \"<string>\",\n    \"paymentTerm\": {\n      \"count\": \"<integer>\",\n      \"unit\": \"<string>\"\n    },\n    \"bankGiro\": \"<string>\",\n    \"plusGiro\": \"<string>\",\n    \"bban\": \"<string>\",\n    \"internationalBankAccount\": {\n      \"iban\": \"<string>\",\n      \"bic\": \"<string>\"\n    },\n    \"defaultMethod\": \"<string>\"\n  },\n  \"paymentTermId\": \"<uuid>\",\n  \"poMatchingDocumentLevel\": \"<boolean>\",\n  \"vendorGroupId\": \"<uuid>\",\n  \"externalData\": \"<object>\",\n  \"managers\": [\n    {\n      \"email\": \"<email>\",\n      \"name\": \"<string>\"\n    },\n    {\n      \"email\": \"<email>\",\n      \"name\": \"<string>\"\n    }\n  ],\n  \"errors\": {}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "19e8b7c4-2d76-4642-9deb-6412dd854afd",
+              "name": "Vendor was successfully updated.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendors",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "EXTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of the database entry"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "token to be able to correctly log associated requests",
+                    "key": "X-Request-Id",
+                    "value": "<uuid>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"externalUpdatedAt\": \"<dateTime>\",\n  \"name\": \"<string>\",\n  \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n  \"email\": \"aMOwZ7@bWbTKKQVmfZqxZDGOIxPUYyyoFViFYm.sun\",\n  \"phone\": \"<string>\",\n  \"addressStreet\": \"<string>\",\n  \"addressCity\": \"<string>\",\n  \"addressState\": \"<string>\",\n  \"addressPostalCode\": \"<string>\",\n  \"countryCode\": \"US\",\n  \"currency\": \"USD\",\n  \"confirmedAt\": \"<dateTime>\",\n  \"state\": \"UNCONFIRMED\",\n  \"taxInfo\": {\n    \"taxId\": \"string\",\n    \"taxIdType\": \"other\",\n    \"is1099vendor\": true,\n    \"orgNumber\": \"string\"\n  },\n  \"defaultPaymentInfo\": {\n    \"bankAccountNum\": \"string\",\n    \"bankCode\": \"string\",\n    \"paymentTerm\": {\n      \"count\": 9921,\n      \"unit\": \"DAYS\"\n    },\n    \"bankGiro\": \"string\",\n    \"plusGiro\": \"string\",\n    \"bban\": \"string\",\n    \"internationalBankAccount\": {\n      \"iban\": \"string\",\n      \"bic\": \"string\"\n    },\n    \"defaultMethod\": \"BBAN\"\n  },\n  \"paymentTermId\": \"<uuid>\",\n  \"poMatchingDocumentLevel\": \"<boolean>\",\n  \"vendorGroupId\": \"<uuid>\",\n  \"externalData\": {},\n  \"managers\": [\n    {\n      \"email\": \"yWd1MZ2j@qUvSwCQTaRZHNlDZbLCYDVrpfvkv.rsg\",\n      \"name\": \"string\"\n    },\n    {\n      \"email\": \"w6GeU3HvEN@Wxbc.jhel\",\n      \"name\": \"string\"\n    }\n  ],\n  \"errors\": {}\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"internalId\": \"47\",\n  \"internalUpdatedAt\": \"2020-08-04T13:17:40.793Z\",\n  \"name\": \"string\",\n  \"email\": \"arx-CO4EYW@iBvtvwmlhwzGILcKwKZEpAGOgtxnMaL.qdww\",\n  \"phone\": \"string\",\n  \"addressStreet\": \"string\",\n  \"addressCity\": \"string\",\n  \"addressState\": \"string\",\n  \"addressPostalCode\": \"string\",\n  \"countryCode\": \"US\",\n  \"companyId\": \"12345\",\n  \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n  \"externalUpdatedAt\": \"1999-08-27T00:35:32.085Z\",\n  \"description\": \"string\",\n  \"currency\": \"USD\",\n  \"confirmedAt\": \"1961-10-09T12:34:56.381Z\",\n  \"state\": \"UNCONFIRMED\",\n  \"taxInfo\": {\n    \"taxId\": \"string\",\n    \"taxIdType\": \"other\",\n    \"is1099vendor\": false,\n    \"orgNumber\": \"string\"\n  },\n  \"defaultPaymentInfo\": {\n    \"bankAccountNum\": \"string\",\n    \"bankCode\": \"string\",\n    \"paymentTerm\": {\n      \"count\": 4236,\n      \"unit\": \"DAYS\"\n    },\n    \"bankGiro\": \"string\",\n    \"plusGiro\": \"string\",\n    \"bban\": \"string\",\n    \"internationalBankAccount\": {\n      \"iban\": \"string\",\n      \"bic\": \"string\"\n    },\n    \"defaultMethod\": \"BANKACCOUNT\"\n  },\n  \"paymentTermId\": \"73408f23-4d49-e176-06be-2c7874a3f64a\",\n  \"poMatchingDocumentLevel\": false,\n  \"vendorGroupId\": \"07fa24f1-93d8-d2d2-9216-3e0a5b4a1279\",\n  \"tags\": [\n    {\n      \"value\": \"string\",\n      \"id\": \"string\"\n    },\n    {\n      \"value\": \"string\",\n      \"id\": \"string\"\n    }\n  ],\n  \"externalData\": {},\n  \"errors\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "873f6547-d785-4c63-87e9-a1708b8d34f0",
+              "name": "Vendor was successfully created.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendors",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "EXTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of the database entry"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "token to be able to correctly log associated requests",
+                    "key": "X-Request-Id",
+                    "value": "<uuid>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"externalUpdatedAt\": \"<dateTime>\",\n  \"name\": \"<string>\",\n  \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n  \"email\": \"aMOwZ7@bWbTKKQVmfZqxZDGOIxPUYyyoFViFYm.sun\",\n  \"phone\": \"<string>\",\n  \"addressStreet\": \"<string>\",\n  \"addressCity\": \"<string>\",\n  \"addressState\": \"<string>\",\n  \"addressPostalCode\": \"<string>\",\n  \"countryCode\": \"US\",\n  \"currency\": \"USD\",\n  \"confirmedAt\": \"<dateTime>\",\n  \"state\": \"UNCONFIRMED\",\n  \"taxInfo\": {\n    \"taxId\": \"string\",\n    \"taxIdType\": \"other\",\n    \"is1099vendor\": true,\n    \"orgNumber\": \"string\"\n  },\n  \"defaultPaymentInfo\": {\n    \"bankAccountNum\": \"string\",\n    \"bankCode\": \"string\",\n    \"paymentTerm\": {\n      \"count\": 9921,\n      \"unit\": \"DAYS\"\n    },\n    \"bankGiro\": \"string\",\n    \"plusGiro\": \"string\",\n    \"bban\": \"string\",\n    \"internationalBankAccount\": {\n      \"iban\": \"string\",\n      \"bic\": \"string\"\n    },\n    \"defaultMethod\": \"BBAN\"\n  },\n  \"paymentTermId\": \"<uuid>\",\n  \"poMatchingDocumentLevel\": \"<boolean>\",\n  \"vendorGroupId\": \"<uuid>\",\n  \"externalData\": {},\n  \"managers\": [\n    {\n      \"email\": \"yWd1MZ2j@qUvSwCQTaRZHNlDZbLCYDVrpfvkv.rsg\",\n      \"name\": \"string\"\n    },\n    {\n      \"email\": \"w6GeU3HvEN@Wxbc.jhel\",\n      \"name\": \"string\"\n    }\n  ],\n  \"errors\": {}\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"internalId\": \"47\",\n  \"internalUpdatedAt\": \"2020-08-04T13:17:40.793Z\",\n  \"name\": \"string\",\n  \"email\": \"arx-CO4EYW@iBvtvwmlhwzGILcKwKZEpAGOgtxnMaL.qdww\",\n  \"phone\": \"string\",\n  \"addressStreet\": \"string\",\n  \"addressCity\": \"string\",\n  \"addressState\": \"string\",\n  \"addressPostalCode\": \"string\",\n  \"countryCode\": \"US\",\n  \"companyId\": \"12345\",\n  \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n  \"externalUpdatedAt\": \"1999-08-27T00:35:32.085Z\",\n  \"description\": \"string\",\n  \"currency\": \"USD\",\n  \"confirmedAt\": \"1961-10-09T12:34:56.381Z\",\n  \"state\": \"UNCONFIRMED\",\n  \"taxInfo\": {\n    \"taxId\": \"string\",\n    \"taxIdType\": \"other\",\n    \"is1099vendor\": false,\n    \"orgNumber\": \"string\"\n  },\n  \"defaultPaymentInfo\": {\n    \"bankAccountNum\": \"string\",\n    \"bankCode\": \"string\",\n    \"paymentTerm\": {\n      \"count\": 4236,\n      \"unit\": \"DAYS\"\n    },\n    \"bankGiro\": \"string\",\n    \"plusGiro\": \"string\",\n    \"bban\": \"string\",\n    \"internationalBankAccount\": {\n      \"iban\": \"string\",\n      \"bic\": \"string\"\n    },\n    \"defaultMethod\": \"BANKACCOUNT\"\n  },\n  \"paymentTermId\": \"73408f23-4d49-e176-06be-2c7874a3f64a\",\n  \"poMatchingDocumentLevel\": false,\n  \"vendorGroupId\": \"07fa24f1-93d8-d2d2-9216-3e0a5b4a1279\",\n  \"tags\": [\n    {\n      \"value\": \"string\",\n      \"id\": \"string\"\n    },\n    {\n      \"value\": \"string\",\n      \"id\": \"string\"\n    }\n  ],\n  \"externalData\": {},\n  \"errors\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "796c7952-9655-4456-a085-7043a9fe345d",
+              "name": "HTTP call rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendors",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "EXTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of the database entry"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "token to be able to correctly log associated requests",
+                    "key": "X-Request-Id",
+                    "value": "<uuid>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"externalUpdatedAt\": \"<dateTime>\",\n  \"name\": \"<string>\",\n  \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n  \"email\": \"aMOwZ7@bWbTKKQVmfZqxZDGOIxPUYyyoFViFYm.sun\",\n  \"phone\": \"<string>\",\n  \"addressStreet\": \"<string>\",\n  \"addressCity\": \"<string>\",\n  \"addressState\": \"<string>\",\n  \"addressPostalCode\": \"<string>\",\n  \"countryCode\": \"US\",\n  \"currency\": \"USD\",\n  \"confirmedAt\": \"<dateTime>\",\n  \"state\": \"UNCONFIRMED\",\n  \"taxInfo\": {\n    \"taxId\": \"string\",\n    \"taxIdType\": \"other\",\n    \"is1099vendor\": true,\n    \"orgNumber\": \"string\"\n  },\n  \"defaultPaymentInfo\": {\n    \"bankAccountNum\": \"string\",\n    \"bankCode\": \"string\",\n    \"paymentTerm\": {\n      \"count\": 9921,\n      \"unit\": \"DAYS\"\n    },\n    \"bankGiro\": \"string\",\n    \"plusGiro\": \"string\",\n    \"bban\": \"string\",\n    \"internationalBankAccount\": {\n      \"iban\": \"string\",\n      \"bic\": \"string\"\n    },\n    \"defaultMethod\": \"BBAN\"\n  },\n  \"paymentTermId\": \"<uuid>\",\n  \"poMatchingDocumentLevel\": \"<boolean>\",\n  \"vendorGroupId\": \"<uuid>\",\n  \"externalData\": {},\n  \"managers\": [\n    {\n      \"email\": \"yWd1MZ2j@qUvSwCQTaRZHNlDZbLCYDVrpfvkv.rsg\",\n      \"name\": \"string\"\n    },\n    {\n      \"email\": \"w6GeU3HvEN@Wxbc.jhel\",\n      \"name\": \"string\"\n    }\n  ],\n  \"errors\": {}\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.",
+                  "key": "Retry-After",
+                  "value": "6095"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 493,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1091cd40-52f6-4974-8b61-bde488e7d549",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendors",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "EXTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of the database entry"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "token to be able to correctly log associated requests",
+                    "key": "X-Request-Id",
+                    "value": "<uuid>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"externalUpdatedAt\": \"<dateTime>\",\n  \"name\": \"<string>\",\n  \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n  \"email\": \"aMOwZ7@bWbTKKQVmfZqxZDGOIxPUYyyoFViFYm.sun\",\n  \"phone\": \"<string>\",\n  \"addressStreet\": \"<string>\",\n  \"addressCity\": \"<string>\",\n  \"addressState\": \"<string>\",\n  \"addressPostalCode\": \"<string>\",\n  \"countryCode\": \"US\",\n  \"currency\": \"USD\",\n  \"confirmedAt\": \"<dateTime>\",\n  \"state\": \"UNCONFIRMED\",\n  \"taxInfo\": {\n    \"taxId\": \"string\",\n    \"taxIdType\": \"other\",\n    \"is1099vendor\": true,\n    \"orgNumber\": \"string\"\n  },\n  \"defaultPaymentInfo\": {\n    \"bankAccountNum\": \"string\",\n    \"bankCode\": \"string\",\n    \"paymentTerm\": {\n      \"count\": 9921,\n      \"unit\": \"DAYS\"\n    },\n    \"bankGiro\": \"string\",\n    \"plusGiro\": \"string\",\n    \"bban\": \"string\",\n    \"internationalBankAccount\": {\n      \"iban\": \"string\",\n      \"bic\": \"string\"\n    },\n    \"defaultMethod\": \"BBAN\"\n  },\n  \"paymentTermId\": \"<uuid>\",\n  \"poMatchingDocumentLevel\": \"<boolean>\",\n  \"vendorGroupId\": \"<uuid>\",\n  \"externalData\": {},\n  \"managers\": [\n    {\n      \"email\": \"yWd1MZ2j@qUvSwCQTaRZHNlDZbLCYDVrpfvkv.rsg\",\n      \"name\": \"string\"\n    },\n    {\n      \"email\": \"w6GeU3HvEN@Wxbc.jhel\",\n      \"name\": \"string\"\n    }\n  ],\n  \"errors\": {}\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 493,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "36844596-d7f6-49aa-a3e6-a0ad2309c3a7",
+          "name": "Deletes a vendor",
+          "request": {
+            "name": "Deletes a vendor",
+            "description": {
+              "content": "Use this request to delete data for a single vendor that is stored in\nVic.ai\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "vendors",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "useSystem",
+                  "value": "EXTERNAL",
+                  "description": "Which system to use for id or updatedAt filters.\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The id of the database entry"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "c8c227f9-d189-4dc7-8b89-cff59ca79cb7",
+              "name": "Vendor was successfully deleted.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendors",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "EXTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of the database entry"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"internalId\": \"47\",\n  \"internalUpdatedAt\": \"2020-08-04T13:17:40.793Z\",\n  \"name\": \"string\",\n  \"email\": \"arx-CO4EYW@iBvtvwmlhwzGILcKwKZEpAGOgtxnMaL.qdww\",\n  \"phone\": \"string\",\n  \"addressStreet\": \"string\",\n  \"addressCity\": \"string\",\n  \"addressState\": \"string\",\n  \"addressPostalCode\": \"string\",\n  \"countryCode\": \"US\",\n  \"companyId\": \"12345\",\n  \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n  \"externalUpdatedAt\": \"1999-08-27T00:35:32.085Z\",\n  \"description\": \"string\",\n  \"currency\": \"USD\",\n  \"confirmedAt\": \"1961-10-09T12:34:56.381Z\",\n  \"state\": \"UNCONFIRMED\",\n  \"taxInfo\": {\n    \"taxId\": \"string\",\n    \"taxIdType\": \"other\",\n    \"is1099vendor\": false,\n    \"orgNumber\": \"string\"\n  },\n  \"defaultPaymentInfo\": {\n    \"bankAccountNum\": \"string\",\n    \"bankCode\": \"string\",\n    \"paymentTerm\": {\n      \"count\": 4236,\n      \"unit\": \"DAYS\"\n    },\n    \"bankGiro\": \"string\",\n    \"plusGiro\": \"string\",\n    \"bban\": \"string\",\n    \"internationalBankAccount\": {\n      \"iban\": \"string\",\n      \"bic\": \"string\"\n    },\n    \"defaultMethod\": \"BANKACCOUNT\"\n  },\n  \"paymentTermId\": \"73408f23-4d49-e176-06be-2c7874a3f64a\",\n  \"poMatchingDocumentLevel\": false,\n  \"vendorGroupId\": \"07fa24f1-93d8-d2d2-9216-3e0a5b4a1279\",\n  \"tags\": [\n    {\n      \"value\": \"string\",\n      \"id\": \"string\"\n    },\n    {\n      \"value\": \"string\",\n      \"id\": \"string\"\n    }\n  ],\n  \"externalData\": {},\n  \"errors\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "87f54f99-c6ee-425d-aaff-fcaa36af8596",
+              "name": "HTTP call rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendors",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "EXTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of the database entry"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.",
+                  "key": "Retry-After",
+                  "value": "6095"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 493,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "32ba3ced-b78e-44a4-a25b-4706276a3dd3",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendors",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "EXTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of the database entry"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 493,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a852346c-fa49-4594-8b53-2a3037c541e3",
+          "name": "Completes the response callback cycle resulting from a 202",
+          "request": {
+            "name": "Completes the response callback cycle resulting from a 202",
+            "description": {
+              "content": "Use this post to report vendor update failure errors back to Vic.ai.\nStrictly a response to the callbacks.\n* The `X-Request-Id` header is required.\n* The `id` MUST be a Vendor `internalId`.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "vendors",
+                ":id",
+                "errors"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "useSystem",
+                  "value": "EXTERNAL",
+                  "description": "Which system to use for id or updatedAt filters.\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The id of the database entry"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "token to be able to correctly log associated requests",
+                "key": "X-Request-Id",
+                "value": "<uuid>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"errors\": {}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "c64fa1f8-c7c3-4738-8654-3e466d35c066",
+              "name": "Vendor errors were successfully updated.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendors",
+                    ":id",
+                    "errors"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "EXTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of the database entry"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "token to be able to correctly log associated requests",
+                    "key": "X-Request-Id",
+                    "value": "<uuid>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"errors\": {}\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"internalId\": \"47\",\n  \"internalUpdatedAt\": \"2020-08-04T13:17:40.793Z\",\n  \"name\": \"string\",\n  \"email\": \"arx-CO4EYW@iBvtvwmlhwzGILcKwKZEpAGOgtxnMaL.qdww\",\n  \"phone\": \"string\",\n  \"addressStreet\": \"string\",\n  \"addressCity\": \"string\",\n  \"addressState\": \"string\",\n  \"addressPostalCode\": \"string\",\n  \"countryCode\": \"US\",\n  \"companyId\": \"12345\",\n  \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n  \"externalUpdatedAt\": \"1999-08-27T00:35:32.085Z\",\n  \"description\": \"string\",\n  \"currency\": \"USD\",\n  \"confirmedAt\": \"1961-10-09T12:34:56.381Z\",\n  \"state\": \"UNCONFIRMED\",\n  \"taxInfo\": {\n    \"taxId\": \"string\",\n    \"taxIdType\": \"other\",\n    \"is1099vendor\": false,\n    \"orgNumber\": \"string\"\n  },\n  \"defaultPaymentInfo\": {\n    \"bankAccountNum\": \"string\",\n    \"bankCode\": \"string\",\n    \"paymentTerm\": {\n      \"count\": 4236,\n      \"unit\": \"DAYS\"\n    },\n    \"bankGiro\": \"string\",\n    \"plusGiro\": \"string\",\n    \"bban\": \"string\",\n    \"internationalBankAccount\": {\n      \"iban\": \"string\",\n      \"bic\": \"string\"\n    },\n    \"defaultMethod\": \"BANKACCOUNT\"\n  },\n  \"paymentTermId\": \"73408f23-4d49-e176-06be-2c7874a3f64a\",\n  \"poMatchingDocumentLevel\": false,\n  \"vendorGroupId\": \"07fa24f1-93d8-d2d2-9216-3e0a5b4a1279\",\n  \"tags\": [\n    {\n      \"value\": \"string\",\n      \"id\": \"string\"\n    },\n    {\n      \"value\": \"string\",\n      \"id\": \"string\"\n    }\n  ],\n  \"externalData\": {},\n  \"errors\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "61def7b7-e2e1-4888-844d-ef42705b7481",
+              "name": "HTTP call rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendors",
+                    ":id",
+                    "errors"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "EXTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of the database entry"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "token to be able to correctly log associated requests",
+                    "key": "X-Request-Id",
+                    "value": "<uuid>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"errors\": {}\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.",
+                  "key": "Retry-After",
+                  "value": "6095"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 493,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d519353a-de38-4deb-8b23-bfdd42fccb3e",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendors",
+                    ":id",
+                    "errors"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "EXTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of the database entry"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "token to be able to correctly log associated requests",
+                    "key": "X-Request-Id",
+                    "value": "<uuid>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"errors\": {}\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 493,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "09cfd682-96f5-4406-90e7-5c85738aa752",
+          "name": "Clears errors on the Vendor.",
+          "request": {
+            "name": "Clears errors on the Vendor.",
+            "description": {
+              "content": "Used to clear errors that have been fixed in the ERP system.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "vendors",
+                ":id",
+                "errors"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "useSystem",
+                  "value": "EXTERNAL",
+                  "description": "Which system to use for id or updatedAt filters.\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The id of the database entry"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "token to be able to correctly log associated requests",
+                "key": "X-Request-Id",
+                "value": "<uuid>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "16a480da-1031-4aee-862c-5d9c0f4c81a6",
+              "name": "Vendor errors were successfully cleared.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendors",
+                    ":id",
+                    "errors"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "EXTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of the database entry"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "token to be able to correctly log associated requests",
+                    "key": "X-Request-Id",
+                    "value": "<uuid>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"internalId\": \"47\",\n  \"internalUpdatedAt\": \"2020-08-04T13:17:40.793Z\",\n  \"name\": \"string\",\n  \"email\": \"arx-CO4EYW@iBvtvwmlhwzGILcKwKZEpAGOgtxnMaL.qdww\",\n  \"phone\": \"string\",\n  \"addressStreet\": \"string\",\n  \"addressCity\": \"string\",\n  \"addressState\": \"string\",\n  \"addressPostalCode\": \"string\",\n  \"countryCode\": \"US\",\n  \"companyId\": \"12345\",\n  \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n  \"externalUpdatedAt\": \"1999-08-27T00:35:32.085Z\",\n  \"description\": \"string\",\n  \"currency\": \"USD\",\n  \"confirmedAt\": \"1961-10-09T12:34:56.381Z\",\n  \"state\": \"UNCONFIRMED\",\n  \"taxInfo\": {\n    \"taxId\": \"string\",\n    \"taxIdType\": \"other\",\n    \"is1099vendor\": false,\n    \"orgNumber\": \"string\"\n  },\n  \"defaultPaymentInfo\": {\n    \"bankAccountNum\": \"string\",\n    \"bankCode\": \"string\",\n    \"paymentTerm\": {\n      \"count\": 4236,\n      \"unit\": \"DAYS\"\n    },\n    \"bankGiro\": \"string\",\n    \"plusGiro\": \"string\",\n    \"bban\": \"string\",\n    \"internationalBankAccount\": {\n      \"iban\": \"string\",\n      \"bic\": \"string\"\n    },\n    \"defaultMethod\": \"BANKACCOUNT\"\n  },\n  \"paymentTermId\": \"73408f23-4d49-e176-06be-2c7874a3f64a\",\n  \"poMatchingDocumentLevel\": false,\n  \"vendorGroupId\": \"07fa24f1-93d8-d2d2-9216-3e0a5b4a1279\",\n  \"tags\": [\n    {\n      \"value\": \"string\",\n      \"id\": \"string\"\n    },\n    {\n      \"value\": \"string\",\n      \"id\": \"string\"\n    }\n  ],\n  \"externalData\": {},\n  \"errors\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "54745ce3-2e58-4408-8ba3-0c0bb6d7dab1",
+              "name": "HTTP call rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendors",
+                    ":id",
+                    "errors"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "EXTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of the database entry"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "token to be able to correctly log associated requests",
+                    "key": "X-Request-Id",
+                    "value": "<uuid>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.",
+                  "key": "Retry-After",
+                  "value": "6095"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 493,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3ddd2b85-a278-4a3e-a3cf-6d102dea5e94",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendors",
+                    ":id",
+                    "errors"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "EXTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of the database entry"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "token to be able to correctly log associated requests",
+                    "key": "X-Request-Id",
+                    "value": "<uuid>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 493,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "094e2050-182c-44a5-a64b-3f4c42d1eb25",
+          "name": "Delete a vendor tag by vendor ID and tag ID",
+          "request": {
+            "name": "Delete a vendor tag by vendor ID and tag ID",
+            "description": {
+              "content": "Use this endpoint to delete a vendor tag association by specifying both the vendor ID and tag ID.\n\nUse `/v0/vendorTags/{id}` when you want to use the vendor tag's ID instead of the vendor ID and tag ID.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "vendors",
+                ":vendor_id",
+                "tags",
+                ":tag_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "useSystem",
+                  "value": "EXTERNAL",
+                  "description": "Which system to use for id or updatedAt filters.\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "vendor_id",
+                  "description": "(Required) The id of the vendor"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "tag_id",
+                  "description": "(Required) The id of the tag"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ea21665e-0bee-4a0c-a830-692385b4f6c6",
+              "name": "Vendor tag was successfully deleted.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendors",
+                    ":vendor_id",
+                    "tags",
+                    ":tag_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "EXTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "vendor_id",
+                      "description": "(Required) The id of the vendor"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "tag_id",
+                      "description": "(Required) The id of the tag"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "47b4491e-837e-4807-b0f9-af846bd4c204",
+              "name": "The request was forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendors",
+                    ":vendor_id",
+                    "tags",
+                    ":tag_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "EXTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "vendor_id",
+                      "description": "(Required) The id of the vendor"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "tag_id",
+                      "description": "(Required) The id of the tag"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 493,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a4fcdf14-944a-4e0d-b37c-83f853c88b23",
+              "name": "Resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendors",
+                    ":vendor_id",
+                    "tags",
+                    ":tag_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "EXTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "vendor_id",
+                      "description": "(Required) The id of the vendor"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "tag_id",
+                      "description": "(Required) The id of the tag"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 493,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "11c0878a-745f-4a98-b89e-2c9f1832aafb",
+              "name": "HTTP call rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendors",
+                    ":vendor_id",
+                    "tags",
+                    ":tag_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "EXTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "vendor_id",
+                      "description": "(Required) The id of the vendor"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "tag_id",
+                      "description": "(Required) The id of the tag"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.",
+                  "key": "Retry-After",
+                  "value": "6095"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 493,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5d23471d-7b69-4bd6-8a13-6025afe03327",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendors",
+                    ":vendor_id",
+                    "tags",
+                    ":tag_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "EXTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "vendor_id",
+                      "description": "(Required) The id of the vendor"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "tag_id",
+                      "description": "(Required) The id of the tag"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 493,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "13ed280d-8d89-440f-adc9-d47beea18861",
+          "name": "List all vendor groups",
+          "request": {
+            "name": "List all vendor groups",
+            "description": {
+              "content": "List all vendor groups.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "vendorGroups"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "<integer>",
+                  "description": "How many items to return at one time (max 100) (default 100)"
+                },
+                {
+                  "disabled": false,
+                  "key": "cursor",
+                  "value": "<string>",
+                  "description": "Which item to start from. See [Pagination](#section/Pagination) for more information."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "267ec0dd-35f3-441c-8900-3c03a72cb8b6",
+              "name": "List of vendor groups.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendorGroups"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "A link to the next page of responses",
+                  "key": "x-next",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"string\",\n    \"name\": \"string\"\n  },\n  {\n    \"id\": \"string\",\n    \"name\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "323cc98f-a213-4813-a5a4-6417990003a5",
+              "name": "HTTP call rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendorGroups"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.",
+                  "key": "Retry-After",
+                  "value": "6095"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 493,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "eaa93cb6-d3c8-4133-a6eb-983a8e05499f",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendorGroups"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 493,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0f88a288-efe2-40a9-aa3f-ce9ba3f3f51f",
+          "name": "Create a vendor group",
+          "request": {
+            "name": "Create a vendor group",
+            "description": {
+              "content": "Create a vendor group.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "vendorGroups"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "51a22825-3d80-4e91-bc4a-44e06c9ca164",
+              "name": "List of vendor groups.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendorGroups"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "A link to the next page of responses",
+                  "key": "x-next",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"name\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "27d5ee6e-c06e-4c5d-82eb-c90f3a4bbf0f",
+              "name": "HTTP call rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendorGroups"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.",
+                  "key": "Retry-After",
+                  "value": "6095"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 493,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2ea200fc-9a1a-4ac5-b174-c4a2ee20d933",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendorGroups"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 493,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8683fe41-5c64-4a0b-902a-e0bd184bca1e",
+          "name": "Update the vendor group",
+          "request": {
+            "name": "Update the vendor group",
+            "description": {
+              "content": "Update the vendor group.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "vendorGroups",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "id",
+                  "description": "(Required) The id of the vendor group"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "fdc83e3d-2006-4aac-8ab5-6ed49c37c56a",
+              "name": "List of vendor groups.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendorGroups",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the vendor group"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "A link to the next page of responses",
+                  "key": "x-next",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"name\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "34a14ccb-921a-4085-a324-fbf13642d5ee",
+              "name": "HTTP call rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendorGroups",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the vendor group"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.",
+                  "key": "Retry-After",
+                  "value": "6095"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 493,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8e264d01-30af-4a9d-b7aa-5a50736b140c",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendorGroups",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the vendor group"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 493,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "27d7bf32-da7d-41ef-9751-040d5b0e316f",
+          "name": "Delete vendor group",
+          "request": {
+            "name": "Delete vendor group",
+            "description": {
+              "content": "Delete vendor group.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "vendorGroups",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "id",
+                  "description": "(Required) The id of the vendor group"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "4860c173-aec3-4374-88ca-1fff89d8be23",
+              "name": "Vendor group was successfully deleted.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendorGroups",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the vendor group"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "8af25e36-8983-4aa4-a4ab-97097e132086",
+              "name": "HTTP call rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendorGroups",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the vendor group"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.",
+                  "key": "Retry-After",
+                  "value": "6095"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 493,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "475c4e3d-7ddc-40c9-b28c-d43335db6db8",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "vendorGroups",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the vendor group"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 493,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "6cce96f6-cca3-40b5-a3c7-4b7415d3a0b9",
+          "name": "Get a vendor by UUID",
+          "request": {
+            "name": "Get a vendor by UUID",
+            "description": {
+              "content": "Retrieve a vendor by UUID from the Vic.ai system.\n\nThis endpoint returns detailed information about a specific vendor, including:\n- Basic vendor information (name, email, phone, address)\n- Banking information (ACH, IBAN, etc., excluding check payment methods)\n- Tags associated with the vendor\n- OFAC screening results\n- Remote system data and errors\n- Vendor state (pending, active, predicted, errored)\n\n**Note**: This endpoint includes vendors regardless of their onboarding completion status.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "vendors",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "id",
+                  "description": "(Required) The UUID of the vendor in Vic.ai."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "87388794-e45d-4259-9f18-8794e032179a",
+              "name": "Vendor information.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "vendors",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The UUID of the vendor in Vic.ai."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"legacy_id\": \"12345\",\n    \"address_city\": \"New York\",\n    \"address_postal_code\": \"10001\",\n    \"address_street_1\": \"123 Main St\",\n    \"address_street_2\": \"Suite 100\",\n    \"address_state\": \"NY\",\n    \"confirmed_at\": \"2024-01-15T10:30:00Z\",\n    \"country_code\": \"US\",\n    \"currency\": \"USD\",\n    \"description\": \"Office supplies vendor\",\n    \"doing_business_as\": \"Acme Supply Co\",\n    \"email\": \"vendor@example.com\",\n    \"legal_name\": \"Acme Corporation Inc.\",\n    \"remote_id\": \"vendor-123\",\n    \"remote_data\": {\n      \"key_0\": 8713,\n      \"key_1\": false,\n      \"key_2\": 6752\n    },\n    \"remote_errors\": {\n      \"key_0\": 9795,\n      \"key_1\": 1945.8505555795502\n    },\n    \"remote_updated_at\": \"1956-03-20T15:37:04.777Z\",\n    \"updated_at\": \"2024-01-15T10:30:00Z\",\n    \"name\": \"Acme Corp\",\n    \"ofac_report\": {\n      \"id\": \"2fc6ab84-2cdf-1d12-dd4d-1ed078394971\",\n      \"high_risk_hits\": 7302,\n      \"medium_risk_hits\": 7548,\n      \"low_risk_hits\": 4577,\n      \"total_hits\": 9902,\n      \"risk_level\": \"high\",\n      \"created_at\": \"2018-09-21T05:35:03.918Z\"\n    },\n    \"ofac_status\": \"cleared\",\n    \"org_number\": \"987654321\",\n    \"payment_term_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"phone\": \"+1-555-0100\",\n    \"po_matching_document_level\": false,\n    \"state\": \"active\",\n    \"tax_id\": \"12-3456789\",\n    \"tax_id_type\": \"ssn\",\n    \"track_1099\": false,\n    \"vendor_group_id\": \"550e8400-e29b-41d4-a716-446655440000\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "be478ad7-8573-4dc8-9ab3-84285e0c63b7",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "vendors",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The UUID of the vendor in Vic.ai."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    },\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8cab53ca-1898-4715-8ce1-d3b90208c3c6",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "vendors",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The UUID of the vendor in Vic.ai."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    },\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ea799b60-5914-40f2-a36f-7610c0d3d403",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "vendors",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The UUID of the vendor in Vic.ai."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    },\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3293561c-423c-4b78-8e8a-91fbd5d53c75",
+          "name": "Update a vendor",
+          "request": {
+            "name": "Update a vendor",
+            "description": {
+              "content": "Update a vendor's information in the Vic.ai system.\n\nThis endpoint allows updating the following fields:\n- `remote_id`: The external system's identifier for this vendor\n- `confirmed_at`: The datetime when the vendor was confirmed in the external system\n\nAt least one field must be provided in the request body.\n\n**Note**: This endpoint supports vendors with onboarding status (draft, active, submitted, etc.)\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "vendors",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "id",
+                  "description": "(Required) The UUID of the vendor in Vic.ai."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"remote_id\": \"<string,null>\",\n  \"confirmed_at\": \"<string,null-date-time>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "f9b7a766-abc2-443d-a66a-2ffae28b421f",
+              "name": "Vendor information.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "vendors",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The UUID of the vendor in Vic.ai."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"remote_id\": \"vendor-ext-123\",\n  \"confirmed_at\": \"2024-01-15T10:30:00Z\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"legacy_id\": \"12345\",\n    \"address_city\": \"New York\",\n    \"address_postal_code\": \"10001\",\n    \"address_street_1\": \"123 Main St\",\n    \"address_street_2\": \"Suite 100\",\n    \"address_state\": \"NY\",\n    \"confirmed_at\": \"2024-01-15T10:30:00Z\",\n    \"country_code\": \"US\",\n    \"currency\": \"USD\",\n    \"description\": \"Office supplies vendor\",\n    \"doing_business_as\": \"Acme Supply Co\",\n    \"email\": \"vendor@example.com\",\n    \"legal_name\": \"Acme Corporation Inc.\",\n    \"remote_id\": \"vendor-123\",\n    \"remote_data\": {\n      \"key_0\": 8713,\n      \"key_1\": false,\n      \"key_2\": 6752\n    },\n    \"remote_errors\": {\n      \"key_0\": 9795,\n      \"key_1\": 1945.8505555795502\n    },\n    \"remote_updated_at\": \"1956-03-20T15:37:04.777Z\",\n    \"updated_at\": \"2024-01-15T10:30:00Z\",\n    \"name\": \"Acme Corp\",\n    \"ofac_report\": {\n      \"id\": \"2fc6ab84-2cdf-1d12-dd4d-1ed078394971\",\n      \"high_risk_hits\": 7302,\n      \"medium_risk_hits\": 7548,\n      \"low_risk_hits\": 4577,\n      \"total_hits\": 9902,\n      \"risk_level\": \"high\",\n      \"created_at\": \"2018-09-21T05:35:03.918Z\"\n    },\n    \"ofac_status\": \"cleared\",\n    \"org_number\": \"987654321\",\n    \"payment_term_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"phone\": \"+1-555-0100\",\n    \"po_matching_document_level\": false,\n    \"state\": \"active\",\n    \"tax_id\": \"12-3456789\",\n    \"tax_id_type\": \"ssn\",\n    \"track_1099\": false,\n    \"vendor_group_id\": \"550e8400-e29b-41d4-a716-446655440000\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0d22ff2c-0e4e-4f82-817c-2b6b557391cb",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "vendors",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The UUID of the vendor in Vic.ai."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"remote_id\": \"vendor-ext-123\",\n  \"confirmed_at\": \"2024-01-15T10:30:00Z\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    },\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b85c6d42-d6ff-4f18-ae6b-64f6a32886bb",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "vendors",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The UUID of the vendor in Vic.ai."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"remote_id\": \"vendor-ext-123\",\n  \"confirmed_at\": \"2024-01-15T10:30:00Z\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    },\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.no.stage.vic.ai",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "9ad82960-4123-4d07-a050-5aa52b96fc6a",
+    "name": "Vic.ai Accounts Vendors API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "## Introduction\n\nThe Vic.ai API provides a seamless connection between your Enterprise Resource\nPlanning (ERP) system and the Vic.ai product suite.\n\nThe API is designed to offer three main areas of functionality:\n\n- **Syncing master data:** This refers to the data in your ERP that Vic.ai\n  interacts with. You are required to supply and update this data in Vic.ai, and\n  you also have the option to verify the copy of the masterdata in Vic.ai.\n\n- **Syncing training data:** We need historical data to train your AI model. To\n  that end, the API provides endpoints to sync historical invoices into Vic.ai\n  and to confirm their presence.\n\n- **Subscribing to and receiving webhooks:** Webhooks enable users or automated\n  tasks to interact with your ERP through various actions in the Vic.ai product\n  suite, such as posting an invoice, payment or purchase order or requesting\n  synchronization. You will receive a notification via a webhook when these\n  actions occur.\n\n\nFor US-based integrations, please use the following base API URL:\n\n```\nhttps://api.us.vic.ai\n```\n\nFor integrations based in Norway, use the following base API URL:\n\n```\nhttps://api.no.vic.ai\n```\n\nAll paths mentioned in this documentation should use one of these URLs as the\nbase.\n\nExample:\n\n```bash\ncurl https://api.us.vic.ai/v0/healthCheck \\\n    -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\"\n```\n\n## Getting Started\n\nTo begin interacting with the Vic.ai API, you will need the following\ncredentials:\n\n* A Vic.ai client ID\n* A Vic.ai client secret.\n\nThese can be provided to you securely by a Vic.ai representative\n[upon request](https://www.vic.ai/book-a-demo).\n\n**Please note:** These credentials are essentially the keys to your ERP\nintegration. If they fall into the wrong hands, unauthorized parties could\nimpersonate you, gain access to sensitive data, and potentially perform\nmalicious actions. Therefore, it's crucial to keep these credentials safe at all\ntimes to protect your application's integrity and your clients' data.\n\n### Limitations\n\nThe Vic.ai API has the following limitations:\n\n**Rate Limiting:** The API is rate-limited to 500 requests per 10-second time\nframe. If you exceed this limit, you will receive a `429 Too Many Requests`\nresponse. The limit is per Oauth client ID. If you continue to receive `429`s,\nplease contact support with a request id from the response headers.\n",
+      "type": "text/plain"
+    }
+  }
+}

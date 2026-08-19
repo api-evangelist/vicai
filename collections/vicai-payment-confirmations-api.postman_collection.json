@@ -1,0 +1,3259 @@
+{
+  "item": [
+    {
+      "id": "f8c885f7-cea8-4646-964e-e05fcfa4abf7",
+      "name": "Payment Confirmations",
+      "description": {
+        "content": "Confirm or mark payments as failed after processing in your ERP.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "4cec11b5-0af7-4a4c-a0a6-bbb206177aa2",
+          "name": "Confirm a payment",
+          "request": {
+            "name": "Confirm a payment",
+            "description": {
+              "content": "Confirms a single payment by setting the `confirmedAt` timestamp and\noptionally setting a `remoteId`. This is used to mark a payment as\nconfirmed in an external system.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "payments",
+                ":id",
+                "confirm"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "id",
+                  "description": "(Required) The id of the payment."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"confirmedAt\": \"<dateTime>\",\n  \"remoteId\": \"<string,null>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "f02cea9d-a9dc-465a-8e84-36166e6c30b6",
+              "name": "Payment confirmed successfully.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "payments",
+                    ":id",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the payment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"confirmedAt\": \"<dateTime>\",\n  \"remoteId\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"c34ad585-126d-2b11-eb87-e27b5e5e2c8b\",\n  \"batchId\": \"9a1163c5-d7bc-d3fb-9836-d80f1442db9a\",\n  \"amount\": \"1.00\",\n  \"settlementAmount\": \"1.00\",\n  \"discountAmount\": \"1.00\",\n  \"currencyId\": \"USD\",\n  \"settlementCurrencyId\": \"USD\",\n  \"exchangeRate\": \"1.00\",\n  \"status\": \"rejected\",\n  \"paymentMethod\": \"ach\",\n  \"referenceId\": \"string\",\n  \"approvedAt\": \"1958-08-29T16:56:02.590Z\",\n  \"failedAt\": \"2015-11-03T22:22:19.383Z\",\n  \"failedReason\": \"string\",\n  \"fundedAt\": \"1989-12-02T23:12:59.251Z\",\n  \"acceptedAt\": \"2022-05-23T15:16:36.044Z\",\n  \"rejectedAt\": \"2008-03-25T05:18:12.260Z\",\n  \"voidedAt\": \"2022-11-04T06:25:41.052Z\",\n  \"confirmedAt\": \"2012-03-21T23:12:24.865Z\",\n  \"remoteId\": \"string\",\n  \"remoteError\": \"string\",\n  \"remoteErroredAt\": \"2002-10-27T09:41:13.908Z\",\n  \"invoice\": {\n    \"internalId\": \"string\",\n    \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n    \"refNumber\": \"string\"\n  },\n  \"costAccount\": {\n    \"internalId\": \"string\",\n    \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n  },\n  \"vendor\": {\n    \"internalId\": \"string\",\n    \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ee222e97-8964-4cc0-bee1-4081d41b3387",
+              "name": "The request was forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "payments",
+                    ":id",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the payment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"confirmedAt\": \"<dateTime>\",\n  \"remoteId\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "444c8e2e-e8b0-4acd-b1da-6bd4d10b0253",
+              "name": "Resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "payments",
+                    ":id",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the payment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"confirmedAt\": \"<dateTime>\",\n  \"remoteId\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ef97af0a-3cac-4bb1-af2a-299bf99a67c0",
+              "name": "Errors with the input are present.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "payments",
+                    ":id",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the payment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"confirmedAt\": \"<dateTime>\",\n  \"remoteId\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8b3d390c-e5f5-48fa-b1d1-86904bf6adcb",
+              "name": "HTTP call rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "payments",
+                    ":id",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the payment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"confirmedAt\": \"<dateTime>\",\n  \"remoteId\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.",
+                  "key": "Retry-After",
+                  "value": "3259"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "62464fab-f1d1-4dee-83c0-d04dbcb16729",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "payments",
+                    ":id",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the payment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"confirmedAt\": \"<dateTime>\",\n  \"remoteId\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "05c746ac-52a5-4194-9a0a-df9ac2cb5c57",
+          "name": "Bulk confirm payments",
+          "request": {
+            "name": "Bulk confirm payments",
+            "description": {
+              "content": "Bulk confirms multiple payments in a single request. Each payment in the\nrequest body must include an `id`, `confirmedAt` timestamp, and\noptionally a `remoteId`.\n\nIf a payment is not found, the entire bulk confirmation is aborted.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "payments",
+                "confirm"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payments\": [\n    {\n      \"id\": \"<uuid>\",\n      \"confirmedAt\": \"<dateTime>\",\n      \"remoteId\": \"<string,null>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "ddeeccd0-3f51-43ef-a7bc-e9377505042d",
+              "name": "Payments bulk confirmed successfully.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "payments",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"payments\": [\n    {\n      \"id\": \"<uuid>\",\n      \"confirmedAt\": \"<dateTime>\",\n      \"remoteId\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"7d61d1af-ca4e-68f3-dd85-64b4f359af56\",\n    \"batchId\": \"94a37147-2e10-f31b-7e30-c350304eaaf3\",\n    \"amount\": \"1.00\",\n    \"settlementAmount\": \"1.00\",\n    \"discountAmount\": \"1.00\",\n    \"currencyId\": \"USD\",\n    \"settlementCurrencyId\": \"USD\",\n    \"exchangeRate\": \"1.00\",\n    \"status\": \"failed\",\n    \"paymentMethod\": \"check\",\n    \"referenceId\": \"string\",\n    \"approvedAt\": \"1950-10-20T23:16:20.037Z\",\n    \"failedAt\": \"2000-02-22T22:10:12.094Z\",\n    \"failedReason\": \"string\",\n    \"fundedAt\": \"1963-06-07T17:56:46.777Z\",\n    \"acceptedAt\": \"1991-11-03T11:51:06.008Z\",\n    \"rejectedAt\": \"1997-07-18T07:41:04.789Z\",\n    \"voidedAt\": \"1976-08-13T18:34:45.941Z\",\n    \"confirmedAt\": \"2017-07-13T17:07:34.802Z\",\n    \"remoteId\": \"string\",\n    \"remoteError\": \"string\",\n    \"remoteErroredAt\": \"2024-05-12T03:30:28.006Z\",\n    \"invoice\": {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"refNumber\": \"string\"\n    },\n    \"costAccount\": {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n    },\n    \"vendor\": {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n    }\n  },\n  {\n    \"id\": \"aa220860-94f3-24af-a9ba-7adea4c1b262\",\n    \"batchId\": \"044b875c-6d89-a191-d5dc-7860f58d8412\",\n    \"amount\": \"1.00\",\n    \"settlementAmount\": \"1.00\",\n    \"discountAmount\": \"1.00\",\n    \"currencyId\": \"USD\",\n    \"settlementCurrencyId\": \"USD\",\n    \"exchangeRate\": \"1.00\",\n    \"status\": \"pending_approval\",\n    \"paymentMethod\": \"ach\",\n    \"referenceId\": \"string\",\n    \"approvedAt\": \"1955-10-04T04:11:00.633Z\",\n    \"failedAt\": \"1954-06-22T04:33:07.594Z\",\n    \"failedReason\": \"string\",\n    \"fundedAt\": \"1971-02-16T16:07:53.835Z\",\n    \"acceptedAt\": \"2000-12-29T18:39:11.912Z\",\n    \"rejectedAt\": \"2013-09-05T12:01:18.504Z\",\n    \"voidedAt\": \"1979-12-02T21:41:03.096Z\",\n    \"confirmedAt\": \"2007-03-11T01:29:15.795Z\",\n    \"remoteId\": \"string\",\n    \"remoteError\": \"string\",\n    \"remoteErroredAt\": \"2006-05-14T05:14:49.055Z\",\n    \"invoice\": {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"refNumber\": \"string\"\n    },\n    \"costAccount\": {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n    },\n    \"vendor\": {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n    }\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c7b04445-6d83-46f2-be17-dc24b49b7632",
+              "name": "The request was forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "payments",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"payments\": [\n    {\n      \"id\": \"<uuid>\",\n      \"confirmedAt\": \"<dateTime>\",\n      \"remoteId\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8f6bb1d7-deb4-4372-9cfd-54cd153ba542",
+              "name": "Resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "payments",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"payments\": [\n    {\n      \"id\": \"<uuid>\",\n      \"confirmedAt\": \"<dateTime>\",\n      \"remoteId\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "19fdba6b-6c06-472e-bde1-c3e1640c80cf",
+              "name": "Errors with the input are present.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "payments",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"payments\": [\n    {\n      \"id\": \"<uuid>\",\n      \"confirmedAt\": \"<dateTime>\",\n      \"remoteId\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "05bdfeb3-1b72-4e17-9ec2-da3feb33e291",
+              "name": "HTTP call rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "payments",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"payments\": [\n    {\n      \"id\": \"<uuid>\",\n      \"confirmedAt\": \"<dateTime>\",\n      \"remoteId\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.",
+                  "key": "Retry-After",
+                  "value": "3259"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2c42281e-16bd-48d7-abdd-d3b6b94f7ae8",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "payments",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"payments\": [\n    {\n      \"id\": \"<uuid>\",\n      \"confirmedAt\": \"<dateTime>\",\n      \"remoteId\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "04247d45-8361-4243-8404-74cb681cae07",
+          "name": "Mark payment as failed",
+          "request": {
+            "name": "Mark payment as failed",
+            "description": {
+              "content": "Marks a payment as having a remote error by setting the `remoteErroredAt`\ntimestamp and `remoteError` message. Optionally sets a `remoteId`. This\nclears any existing `confirmedAt` timestamp.\n\n**Note**: When providing an error, please provide a clear error message\nthat the user can understand.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "payments",
+                ":id",
+                "fail"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "id",
+                  "description": "(Required) The id of the payment."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"remoteErroredAt\": \"<dateTime>\",\n  \"remoteError\": \"<string>\",\n  \"remoteId\": \"<string,null>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "78663891-1b94-4969-8abd-948b930f83c5",
+              "name": "Payment marked as failed successfully.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "payments",
+                    ":id",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the payment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"remoteErroredAt\": \"<dateTime>\",\n  \"remoteError\": \"<string>\",\n  \"remoteId\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"c34ad585-126d-2b11-eb87-e27b5e5e2c8b\",\n  \"batchId\": \"9a1163c5-d7bc-d3fb-9836-d80f1442db9a\",\n  \"amount\": \"1.00\",\n  \"settlementAmount\": \"1.00\",\n  \"discountAmount\": \"1.00\",\n  \"currencyId\": \"USD\",\n  \"settlementCurrencyId\": \"USD\",\n  \"exchangeRate\": \"1.00\",\n  \"status\": \"rejected\",\n  \"paymentMethod\": \"ach\",\n  \"referenceId\": \"string\",\n  \"approvedAt\": \"1958-08-29T16:56:02.590Z\",\n  \"failedAt\": \"2015-11-03T22:22:19.383Z\",\n  \"failedReason\": \"string\",\n  \"fundedAt\": \"1989-12-02T23:12:59.251Z\",\n  \"acceptedAt\": \"2022-05-23T15:16:36.044Z\",\n  \"rejectedAt\": \"2008-03-25T05:18:12.260Z\",\n  \"voidedAt\": \"2022-11-04T06:25:41.052Z\",\n  \"confirmedAt\": \"2012-03-21T23:12:24.865Z\",\n  \"remoteId\": \"string\",\n  \"remoteError\": \"string\",\n  \"remoteErroredAt\": \"2002-10-27T09:41:13.908Z\",\n  \"invoice\": {\n    \"internalId\": \"string\",\n    \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n    \"refNumber\": \"string\"\n  },\n  \"costAccount\": {\n    \"internalId\": \"string\",\n    \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n  },\n  \"vendor\": {\n    \"internalId\": \"string\",\n    \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7d7c5b7b-ccb3-4b31-8759-77f7eac2190f",
+              "name": "The request was forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "payments",
+                    ":id",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the payment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"remoteErroredAt\": \"<dateTime>\",\n  \"remoteError\": \"<string>\",\n  \"remoteId\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "07879a0c-e07a-4901-9a75-0740fedb7d0a",
+              "name": "Resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "payments",
+                    ":id",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the payment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"remoteErroredAt\": \"<dateTime>\",\n  \"remoteError\": \"<string>\",\n  \"remoteId\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3c50a05b-794f-4623-b37b-42be2280d632",
+              "name": "Errors with the input are present.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "payments",
+                    ":id",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the payment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"remoteErroredAt\": \"<dateTime>\",\n  \"remoteError\": \"<string>\",\n  \"remoteId\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ac27b74d-c1c6-4761-a60e-58cc1cc60861",
+              "name": "HTTP call rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "payments",
+                    ":id",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the payment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"remoteErroredAt\": \"<dateTime>\",\n  \"remoteError\": \"<string>\",\n  \"remoteId\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.",
+                  "key": "Retry-After",
+                  "value": "3259"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2e95157b-8b23-4d4d-a639-34e5427b66c1",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "payments",
+                    ":id",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the payment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"remoteErroredAt\": \"<dateTime>\",\n  \"remoteError\": \"<string>\",\n  \"remoteId\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "5c01ec9a-6d48-41f0-ba8d-4d4b85740368",
+          "name": "Bulk fail payments",
+          "request": {
+            "name": "Bulk fail payments",
+            "description": {
+              "content": "Bulk marks multiple payments as having remote errors in a single request.\nEach payment in the request body must include an `id`, `remoteErroredAt`\ntimestamp, `remoteError` message, and optionally a `remoteId`.\n\n**Note**: When providing an error, please provide a clear error message\nthat the user can understand.\n\nIf a payment is not found, the entire bulk operation is aborted.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "payments",
+                "fail"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payments\": [\n    {\n      \"id\": \"<uuid>\",\n      \"remoteErroredAt\": \"<dateTime>\",\n      \"remoteError\": \"<string>\",\n      \"remoteId\": \"<string,null>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "3b60ecd8-7203-44c9-9a75-1d2d87e24869",
+              "name": "Payments bulk failed successfully.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "payments",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"payments\": [\n    {\n      \"id\": \"<uuid>\",\n      \"remoteErroredAt\": \"<dateTime>\",\n      \"remoteError\": \"<string>\",\n      \"remoteId\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"7d61d1af-ca4e-68f3-dd85-64b4f359af56\",\n    \"batchId\": \"94a37147-2e10-f31b-7e30-c350304eaaf3\",\n    \"amount\": \"1.00\",\n    \"settlementAmount\": \"1.00\",\n    \"discountAmount\": \"1.00\",\n    \"currencyId\": \"USD\",\n    \"settlementCurrencyId\": \"USD\",\n    \"exchangeRate\": \"1.00\",\n    \"status\": \"failed\",\n    \"paymentMethod\": \"check\",\n    \"referenceId\": \"string\",\n    \"approvedAt\": \"1950-10-20T23:16:20.037Z\",\n    \"failedAt\": \"2000-02-22T22:10:12.094Z\",\n    \"failedReason\": \"string\",\n    \"fundedAt\": \"1963-06-07T17:56:46.777Z\",\n    \"acceptedAt\": \"1991-11-03T11:51:06.008Z\",\n    \"rejectedAt\": \"1997-07-18T07:41:04.789Z\",\n    \"voidedAt\": \"1976-08-13T18:34:45.941Z\",\n    \"confirmedAt\": \"2017-07-13T17:07:34.802Z\",\n    \"remoteId\": \"string\",\n    \"remoteError\": \"string\",\n    \"remoteErroredAt\": \"2024-05-12T03:30:28.006Z\",\n    \"invoice\": {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"refNumber\": \"string\"\n    },\n    \"costAccount\": {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n    },\n    \"vendor\": {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n    }\n  },\n  {\n    \"id\": \"aa220860-94f3-24af-a9ba-7adea4c1b262\",\n    \"batchId\": \"044b875c-6d89-a191-d5dc-7860f58d8412\",\n    \"amount\": \"1.00\",\n    \"settlementAmount\": \"1.00\",\n    \"discountAmount\": \"1.00\",\n    \"currencyId\": \"USD\",\n    \"settlementCurrencyId\": \"USD\",\n    \"exchangeRate\": \"1.00\",\n    \"status\": \"pending_approval\",\n    \"paymentMethod\": \"ach\",\n    \"referenceId\": \"string\",\n    \"approvedAt\": \"1955-10-04T04:11:00.633Z\",\n    \"failedAt\": \"1954-06-22T04:33:07.594Z\",\n    \"failedReason\": \"string\",\n    \"fundedAt\": \"1971-02-16T16:07:53.835Z\",\n    \"acceptedAt\": \"2000-12-29T18:39:11.912Z\",\n    \"rejectedAt\": \"2013-09-05T12:01:18.504Z\",\n    \"voidedAt\": \"1979-12-02T21:41:03.096Z\",\n    \"confirmedAt\": \"2007-03-11T01:29:15.795Z\",\n    \"remoteId\": \"string\",\n    \"remoteError\": \"string\",\n    \"remoteErroredAt\": \"2006-05-14T05:14:49.055Z\",\n    \"invoice\": {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"refNumber\": \"string\"\n    },\n    \"costAccount\": {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n    },\n    \"vendor\": {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n    }\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c9c45c1d-f412-4a6a-9337-8aa1c97cf973",
+              "name": "The request was forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "payments",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"payments\": [\n    {\n      \"id\": \"<uuid>\",\n      \"remoteErroredAt\": \"<dateTime>\",\n      \"remoteError\": \"<string>\",\n      \"remoteId\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "798e6d51-ac7f-473e-b43e-1e08843107b8",
+              "name": "Resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "payments",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"payments\": [\n    {\n      \"id\": \"<uuid>\",\n      \"remoteErroredAt\": \"<dateTime>\",\n      \"remoteError\": \"<string>\",\n      \"remoteId\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "07959c49-ac1b-45e4-9d75-d07e5e7961df",
+              "name": "Errors with the input are present.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "payments",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"payments\": [\n    {\n      \"id\": \"<uuid>\",\n      \"remoteErroredAt\": \"<dateTime>\",\n      \"remoteError\": \"<string>\",\n      \"remoteId\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "85307ea2-5fcf-4b84-a3e5-754850ec5409",
+              "name": "HTTP call rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "payments",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"payments\": [\n    {\n      \"id\": \"<uuid>\",\n      \"remoteErroredAt\": \"<dateTime>\",\n      \"remoteError\": \"<string>\",\n      \"remoteId\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.",
+                  "key": "Retry-After",
+                  "value": "3259"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "14ac2d6d-0d6e-4ecb-a63b-3d2107499e04",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "payments",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"payments\": [\n    {\n      \"id\": \"<uuid>\",\n      \"remoteErroredAt\": \"<dateTime>\",\n      \"remoteError\": \"<string>\",\n      \"remoteId\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "4e7f8f52-65e3-4671-908d-6b2c2149b5cd",
+          "name": "Confirm a payment",
+          "request": {
+            "name": "Confirm a payment",
+            "description": {
+              "content": "Confirms a single payment by setting the `confirmed_at` timestamp and\noptionally setting a `remote_id`. This is used to mark a payment as\nconfirmed in an external system.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "companies",
+                ":company_id",
+                "payments",
+                ":id",
+                "confirm"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "id",
+                  "description": "(Required) The id of the payment."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "company_id",
+                  "description": "(Required) The ID of the company"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"confirmed_at\": \"<dateTime>\",\n  \"remote_id\": \"<string,null>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "0858f743-5f14-478c-9fee-6ef4921895b9",
+              "name": "Payment confirmed successfully.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "payments",
+                    ":id",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the payment."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"confirmed_at\": \"<dateTime>\",\n  \"remote_id\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"4d072e28-22be-7387-8d40-da6983767c69\",\n    \"amount\": \"string\",\n    \"approved_at\": \"1980-08-31T17:02:41.386Z\",\n    \"confirmed_at\": \"2004-04-24T22:39:51.237Z\",\n    \"currency_id\": \"string\",\n    \"discount_amount\": \"string\",\n    \"exchange_rate\": \"string\",\n    \"funded_at\": \"2001-03-12T23:11:31.016Z\",\n    \"failed_at\": \"2019-05-31T00:24:58.549Z\",\n    \"failed_reason\": \"string\",\n    \"accepted_at\": \"1993-04-04T17:06:04.610Z\",\n    \"payment_method\": \"string\",\n    \"reference_id\": \"string\",\n    \"rejected_at\": \"1989-09-18T20:00:41.792Z\",\n    \"remote_error\": \"string\",\n    \"remote_errored_at\": \"1948-02-10T01:30:49.480Z\",\n    \"remote_id\": \"string\",\n    \"settlement_amount\": \"string\",\n    \"settlement_currency_id\": \"string\",\n    \"status\": \"approved\",\n    \"voided_at\": \"1946-10-17T03:31:50.566Z\",\n    \"created_at\": \"1976-10-28T12:55:23.904Z\",\n    \"updated_at\": \"1988-09-20T22:21:14.605Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5d368a2b-e116-4088-aa01-762e94693ffd",
+              "name": "The request was forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "payments",
+                    ":id",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the payment."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"confirmed_at\": \"<dateTime>\",\n  \"remote_id\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f8dc1ca9-6380-4510-87f3-ce39731270e4",
+              "name": "Resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "payments",
+                    ":id",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the payment."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"confirmed_at\": \"<dateTime>\",\n  \"remote_id\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bd4a7487-7fb0-4325-a005-0cc12c2d5ee2",
+              "name": "Errors with the input are present.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "payments",
+                    ":id",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the payment."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"confirmed_at\": \"<dateTime>\",\n  \"remote_id\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7e19f773-2abf-44e7-8619-bbdf36fb61e8",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "payments",
+                    ":id",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the payment."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"confirmed_at\": \"<dateTime>\",\n  \"remote_id\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    },\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3a9e83e2-afbd-49ef-bece-d5572581e27d",
+          "name": "Bulk confirm payments",
+          "request": {
+            "name": "Bulk confirm payments",
+            "description": {
+              "content": "Bulk confirms multiple payments in a single request. Each payment in the\nrequest body must include an `id`, `confirmed_at` timestamp, and\noptionally a `remote_id`.\n\nIf a payment is not found, the entire bulk confirmation is aborted.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "companies",
+                ":company_id",
+                "payments",
+                "confirm"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "company_id",
+                  "description": "(Required) The ID of the company"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payments\": [\n    {\n      \"id\": \"<uuid>\",\n      \"confirmed_at\": \"<dateTime>\",\n      \"remote_id\": \"<string,null>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "ff69e45a-da8a-4bbd-932d-26744a43074e",
+              "name": "Payments bulk confirmed successfully.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "payments",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"payments\": [\n    {\n      \"id\": \"<uuid>\",\n      \"confirmed_at\": \"<dateTime>\",\n      \"remote_id\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"3b1be142-e8c0-8a24-ab1f-361bbb0fc45b\",\n      \"amount\": \"string\",\n      \"approved_at\": \"1966-10-14T02:19:14.743Z\",\n      \"confirmed_at\": \"1987-03-30T17:48:55.796Z\",\n      \"currency_id\": \"string\",\n      \"discount_amount\": \"string\",\n      \"exchange_rate\": \"string\",\n      \"funded_at\": \"1995-05-08T00:09:48.802Z\",\n      \"failed_at\": \"2012-05-22T16:52:27.271Z\",\n      \"failed_reason\": \"string\",\n      \"accepted_at\": \"1995-07-05T09:23:12.793Z\",\n      \"payment_method\": \"string\",\n      \"reference_id\": \"string\",\n      \"rejected_at\": \"2007-04-28T04:58:36.381Z\",\n      \"remote_error\": \"string\",\n      \"remote_errored_at\": \"2016-10-31T08:31:48.601Z\",\n      \"remote_id\": \"string\",\n      \"settlement_amount\": \"string\",\n      \"settlement_currency_id\": \"string\",\n      \"status\": \"failed\",\n      \"voided_at\": \"2021-11-06T08:08:28.506Z\",\n      \"created_at\": \"1997-12-14T19:11:41.532Z\",\n      \"updated_at\": \"2010-06-13T22:23:44.738Z\"\n    },\n    {\n      \"id\": \"381c4263-03fe-8672-a81a-72cd273ca66b\",\n      \"amount\": \"string\",\n      \"approved_at\": \"2019-02-26T14:28:48.845Z\",\n      \"confirmed_at\": \"1960-12-18T11:53:03.923Z\",\n      \"currency_id\": \"string\",\n      \"discount_amount\": \"string\",\n      \"exchange_rate\": \"string\",\n      \"funded_at\": \"1968-03-09T02:37:40.136Z\",\n      \"failed_at\": \"2009-10-05T03:52:25.437Z\",\n      \"failed_reason\": \"string\",\n      \"accepted_at\": \"1964-10-06T22:30:33.601Z\",\n      \"payment_method\": \"string\",\n      \"reference_id\": \"string\",\n      \"rejected_at\": \"1950-11-21T17:20:32.994Z\",\n      \"remote_error\": \"string\",\n      \"remote_errored_at\": \"1968-08-19T02:36:46.054Z\",\n      \"remote_id\": \"string\",\n      \"settlement_amount\": \"string\",\n      \"settlement_currency_id\": \"string\",\n      \"status\": \"rejected\",\n      \"voided_at\": \"1958-06-29T14:58:43.310Z\",\n      \"created_at\": \"1957-09-08T15:28:04.576Z\",\n      \"updated_at\": \"1951-08-16T17:35:42.394Z\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5c0d94be-615c-47da-9f16-f701a73d1365",
+              "name": "The request was forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "payments",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"payments\": [\n    {\n      \"id\": \"<uuid>\",\n      \"confirmed_at\": \"<dateTime>\",\n      \"remote_id\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "68b3a320-61fd-4f96-a79b-b6e63fb199d6",
+              "name": "Resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "payments",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"payments\": [\n    {\n      \"id\": \"<uuid>\",\n      \"confirmed_at\": \"<dateTime>\",\n      \"remote_id\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "98f17129-ca83-417f-a381-3d08b2912b89",
+              "name": "Errors with the input are present.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "payments",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"payments\": [\n    {\n      \"id\": \"<uuid>\",\n      \"confirmed_at\": \"<dateTime>\",\n      \"remote_id\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2666fec7-1534-453c-b24a-491da56c481a",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "payments",
+                    "confirm"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"payments\": [\n    {\n      \"id\": \"<uuid>\",\n      \"confirmed_at\": \"<dateTime>\",\n      \"remote_id\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    },\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "857f8243-8ae1-4e13-b90a-1e75f0299325",
+          "name": "Mark payment as failed",
+          "request": {
+            "name": "Mark payment as failed",
+            "description": {
+              "content": "Marks a payment as having a remote error by setting the `remote_errored_at`\ntimestamp and `remote_error` message. Optionally sets a `remote_id`. This\nclears any existing `confirmed_at` timestamp.\n\n**Note**: When providing an error, please provide a clear error message\nthat the user can understand.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "companies",
+                ":company_id",
+                "payments",
+                ":id",
+                "fail"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "company_id",
+                  "description": "(Required) The ID of the company"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "id",
+                  "description": "(Required) The id of the payment."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"remote_errored_at\": \"<dateTime>\",\n  \"remote_error\": \"<string>\",\n  \"remote_id\": \"<string,null>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "2d3be71c-2ee9-4630-b71d-b9660b248aab",
+              "name": "Payment marked as failed successfully.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "payments",
+                    ":id",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the payment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"remote_errored_at\": \"<dateTime>\",\n  \"remote_error\": \"<string>\",\n  \"remote_id\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"4d072e28-22be-7387-8d40-da6983767c69\",\n    \"amount\": \"string\",\n    \"approved_at\": \"1980-08-31T17:02:41.386Z\",\n    \"confirmed_at\": \"2004-04-24T22:39:51.237Z\",\n    \"currency_id\": \"string\",\n    \"discount_amount\": \"string\",\n    \"exchange_rate\": \"string\",\n    \"funded_at\": \"2001-03-12T23:11:31.016Z\",\n    \"failed_at\": \"2019-05-31T00:24:58.549Z\",\n    \"failed_reason\": \"string\",\n    \"accepted_at\": \"1993-04-04T17:06:04.610Z\",\n    \"payment_method\": \"string\",\n    \"reference_id\": \"string\",\n    \"rejected_at\": \"1989-09-18T20:00:41.792Z\",\n    \"remote_error\": \"string\",\n    \"remote_errored_at\": \"1948-02-10T01:30:49.480Z\",\n    \"remote_id\": \"string\",\n    \"settlement_amount\": \"string\",\n    \"settlement_currency_id\": \"string\",\n    \"status\": \"approved\",\n    \"voided_at\": \"1946-10-17T03:31:50.566Z\",\n    \"created_at\": \"1976-10-28T12:55:23.904Z\",\n    \"updated_at\": \"1988-09-20T22:21:14.605Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b3d98821-a4cf-4237-8679-550ed5b2505b",
+              "name": "The request was forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "payments",
+                    ":id",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the payment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"remote_errored_at\": \"<dateTime>\",\n  \"remote_error\": \"<string>\",\n  \"remote_id\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "74044195-c6a1-4678-b6b3-e2bd52bb3680",
+              "name": "Resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "payments",
+                    ":id",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the payment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"remote_errored_at\": \"<dateTime>\",\n  \"remote_error\": \"<string>\",\n  \"remote_id\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d57de593-e53b-4891-a790-acd735d3e1ae",
+              "name": "Errors with the input are present.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "payments",
+                    ":id",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the payment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"remote_errored_at\": \"<dateTime>\",\n  \"remote_error\": \"<string>\",\n  \"remote_id\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e5412d7b-6817-45ee-b009-6f817ae47967",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "payments",
+                    ":id",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "id",
+                      "description": "(Required) The id of the payment."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"remote_errored_at\": \"<dateTime>\",\n  \"remote_error\": \"<string>\",\n  \"remote_id\": \"<string,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    },\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "5380dfb3-e6ef-4363-a168-7502a83d7d03",
+          "name": "Bulk fail payments",
+          "request": {
+            "name": "Bulk fail payments",
+            "description": {
+              "content": "Bulk marks multiple payments as having remote errors in a single request.\nEach payment in the request body must include an `id`, `remote_errored_at`\ntimestamp, `remote_error` message, and optionally a `remote_id`.\n\n**Note**: When providing an error, please provide a clear error message\nthat the user can understand.\n\nIf a payment is not found, the entire bulk operation is aborted.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "companies",
+                ":company_id",
+                "payments",
+                "fail"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "company_id",
+                  "description": "(Required) The ID of the company"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"payments\": [\n    {\n      \"id\": \"<uuid>\",\n      \"remote_errored_at\": \"<dateTime>\",\n      \"remote_error\": \"<string>\",\n      \"remote_id\": \"<string,null>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "4d29528d-e880-4154-b953-bc7defa9357a",
+              "name": "Payments bulk failed successfully.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "payments",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"payments\": [\n    {\n      \"id\": \"<uuid>\",\n      \"remote_errored_at\": \"<dateTime>\",\n      \"remote_error\": \"<string>\",\n      \"remote_id\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"3b1be142-e8c0-8a24-ab1f-361bbb0fc45b\",\n      \"amount\": \"string\",\n      \"approved_at\": \"1966-10-14T02:19:14.743Z\",\n      \"confirmed_at\": \"1987-03-30T17:48:55.796Z\",\n      \"currency_id\": \"string\",\n      \"discount_amount\": \"string\",\n      \"exchange_rate\": \"string\",\n      \"funded_at\": \"1995-05-08T00:09:48.802Z\",\n      \"failed_at\": \"2012-05-22T16:52:27.271Z\",\n      \"failed_reason\": \"string\",\n      \"accepted_at\": \"1995-07-05T09:23:12.793Z\",\n      \"payment_method\": \"string\",\n      \"reference_id\": \"string\",\n      \"rejected_at\": \"2007-04-28T04:58:36.381Z\",\n      \"remote_error\": \"string\",\n      \"remote_errored_at\": \"2016-10-31T08:31:48.601Z\",\n      \"remote_id\": \"string\",\n      \"settlement_amount\": \"string\",\n      \"settlement_currency_id\": \"string\",\n      \"status\": \"failed\",\n      \"voided_at\": \"2021-11-06T08:08:28.506Z\",\n      \"created_at\": \"1997-12-14T19:11:41.532Z\",\n      \"updated_at\": \"2010-06-13T22:23:44.738Z\"\n    },\n    {\n      \"id\": \"381c4263-03fe-8672-a81a-72cd273ca66b\",\n      \"amount\": \"string\",\n      \"approved_at\": \"2019-02-26T14:28:48.845Z\",\n      \"confirmed_at\": \"1960-12-18T11:53:03.923Z\",\n      \"currency_id\": \"string\",\n      \"discount_amount\": \"string\",\n      \"exchange_rate\": \"string\",\n      \"funded_at\": \"1968-03-09T02:37:40.136Z\",\n      \"failed_at\": \"2009-10-05T03:52:25.437Z\",\n      \"failed_reason\": \"string\",\n      \"accepted_at\": \"1964-10-06T22:30:33.601Z\",\n      \"payment_method\": \"string\",\n      \"reference_id\": \"string\",\n      \"rejected_at\": \"1950-11-21T17:20:32.994Z\",\n      \"remote_error\": \"string\",\n      \"remote_errored_at\": \"1968-08-19T02:36:46.054Z\",\n      \"remote_id\": \"string\",\n      \"settlement_amount\": \"string\",\n      \"settlement_currency_id\": \"string\",\n      \"status\": \"rejected\",\n      \"voided_at\": \"1958-06-29T14:58:43.310Z\",\n      \"created_at\": \"1957-09-08T15:28:04.576Z\",\n      \"updated_at\": \"1951-08-16T17:35:42.394Z\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "37818e0b-b18b-4656-b9fe-e51d77a0e86c",
+              "name": "The request was forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "payments",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"payments\": [\n    {\n      \"id\": \"<uuid>\",\n      \"remote_errored_at\": \"<dateTime>\",\n      \"remote_error\": \"<string>\",\n      \"remote_id\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "eb99d93a-76e0-4880-b687-385f280c36d3",
+              "name": "Resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "payments",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"payments\": [\n    {\n      \"id\": \"<uuid>\",\n      \"remote_errored_at\": \"<dateTime>\",\n      \"remote_error\": \"<string>\",\n      \"remote_id\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d6ba9927-5f44-49bf-9529-6870d38b6254",
+              "name": "Errors with the input are present.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "payments",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"payments\": [\n    {\n      \"id\": \"<uuid>\",\n      \"remote_errored_at\": \"<dateTime>\",\n      \"remote_error\": \"<string>\",\n      \"remote_id\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 407,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d5b11614-053c-4c8a-b98b-2ee1350f10bc",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "payments",
+                    "fail"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"payments\": [\n    {\n      \"id\": \"<uuid>\",\n      \"remote_errored_at\": \"<dateTime>\",\n      \"remote_error\": \"<string>\",\n      \"remote_id\": \"<string,null>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    },\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.no.stage.vic.ai",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "c8d74e1d-988f-46a2-833b-dfae8569826e",
+    "name": "Vic.ai Accounts Payment Confirmations API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "## Introduction\n\nThe Vic.ai API provides a seamless connection between your Enterprise Resource\nPlanning (ERP) system and the Vic.ai product suite.\n\nThe API is designed to offer three main areas of functionality:\n\n- **Syncing master data:** This refers to the data in your ERP that Vic.ai\n  interacts with. You are required to supply and update this data in Vic.ai, and\n  you also have the option to verify the copy of the masterdata in Vic.ai.\n\n- **Syncing training data:** We need historical data to train your AI model. To\n  that end, the API provides endpoints to sync historical invoices into Vic.ai\n  and to confirm their presence.\n\n- **Subscribing to and receiving webhooks:** Webhooks enable users or automated\n  tasks to interact with your ERP through various actions in the Vic.ai product\n  suite, such as posting an invoice, payment or purchase order or requesting\n  synchronization. You will receive a notification via a webhook when these\n  actions occur.\n\n\nFor US-based integrations, please use the following base API URL:\n\n```\nhttps://api.us.vic.ai\n```\n\nFor integrations based in Norway, use the following base API URL:\n\n```\nhttps://api.no.vic.ai\n```\n\nAll paths mentioned in this documentation should use one of these URLs as the\nbase.\n\nExample:\n\n```bash\ncurl https://api.us.vic.ai/v0/healthCheck \\\n    -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\"\n```\n\n## Getting Started\n\nTo begin interacting with the Vic.ai API, you will need the following\ncredentials:\n\n* A Vic.ai client ID\n* A Vic.ai client secret.\n\nThese can be provided to you securely by a Vic.ai representative\n[upon request](https://www.vic.ai/book-a-demo).\n\n**Please note:** These credentials are essentially the keys to your ERP\nintegration. If they fall into the wrong hands, unauthorized parties could\nimpersonate you, gain access to sensitive data, and potentially perform\nmalicious actions. Therefore, it's crucial to keep these credentials safe at all\ntimes to protect your application's integrity and your clients' data.\n\n### Limitations\n\nThe Vic.ai API has the following limitations:\n\n**Rate Limiting:** The API is rate-limited to 500 requests per 10-second time\nframe. If you exceed this limit, you will receive a `429 Too Many Requests`\nresponse. The limit is per Oauth client ID. If you continue to receive `429`s,\nplease contact support with a request id from the response headers.\n",
+      "type": "text/plain"
+    }
+  }
+}

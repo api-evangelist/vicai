@@ -1,0 +1,204 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vic.ai Accounts Payment Confirmations API",
+    "version": "v10.40.4"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Payment Confirmations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Confirm a payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/payments/:id/confirm",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the payment."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Confirms a single payment by setting the `confirmedAt` timestamp and\noptionally setting a `remoteId`. This is used to mark a payment as\nconfirmed in an external system.\n"
+        },
+        {
+          "info": {
+            "name": "Bulk confirm payments",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/payments/confirm",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Bulk confirms multiple payments in a single request. Each payment in the\nrequest body must include an `id`, `confirmedAt` timestamp, and\noptionally a `remoteId`.\n\nIf a payment is not found, the entire bulk confirmation is aborted.\n"
+        },
+        {
+          "info": {
+            "name": "Mark payment as failed",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/payments/:id/fail",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the payment."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Marks a payment as having a remote error by setting the `remoteErroredAt`\ntimestamp and `remoteError` message. Optionally sets a `remoteId`. This\nclears any existing `confirmedAt` timestamp.\n\n**Note**: When providing an error, please provide a clear error message\nthat the user can understand.\n"
+        },
+        {
+          "info": {
+            "name": "Bulk fail payments",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/payments/fail",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Bulk marks multiple payments as having remote errors in a single request.\nEach payment in the request body must include an `id`, `remoteErroredAt`\ntimestamp, `remoteError` message, and optionally a `remoteId`.\n\n**Note**: When providing an error, please provide a clear error message\nthat the user can understand.\n\nIf a payment is not found, the entire bulk operation is aborted.\n"
+        },
+        {
+          "info": {
+            "name": "Confirm a payment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/payments/:id/confirm",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the payment."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Confirms a single payment by setting the `confirmed_at` timestamp and\noptionally setting a `remote_id`. This is used to mark a payment as\nconfirmed in an external system.\n"
+        },
+        {
+          "info": {
+            "name": "Bulk confirm payments",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/payments/confirm",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Bulk confirms multiple payments in a single request. Each payment in the\nrequest body must include an `id`, `confirmed_at` timestamp, and\noptionally a `remote_id`.\n\nIf a payment is not found, the entire bulk confirmation is aborted.\n"
+        },
+        {
+          "info": {
+            "name": "Mark payment as failed",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/payments/:id/fail",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the payment."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Marks a payment as having a remote error by setting the `remote_errored_at`\ntimestamp and `remote_error` message. Optionally sets a `remote_id`. This\nclears any existing `confirmed_at` timestamp.\n\n**Note**: When providing an error, please provide a clear error message\nthat the user can understand.\n"
+        },
+        {
+          "info": {
+            "name": "Bulk fail payments",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/payments/fail",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Bulk marks multiple payments as having remote errors in a single request.\nEach payment in the request body must include an `id`, `remote_errored_at`\ntimestamp, `remote_error` message, and optionally a `remote_id`.\n\n**Note**: When providing an error, please provide a clear error message\nthat the user can understand.\n\nIf a payment is not found, the entire bulk operation is aborted.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

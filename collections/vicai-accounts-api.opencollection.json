@@ -1,0 +1,163 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vic.ai Accounts API",
+    "version": "v10.40.4"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Accounts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all accounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/accounts",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "How many items to return at one time (max 100) (default 100)"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Which item to start from. See [Pagination](#section/Pagination) for more information."
+              },
+              {
+                "name": "since",
+                "value": "",
+                "type": "query",
+                "description": "Datetime value for incremental updates.\n**NOTE**: For external datetimes, the expected format is not in UTC. for\nvic-internal datetimes (see `SinceIsExternal`) the format is UTC.\n"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              },
+              {
+                "name": "sortOrder",
+                "value": "",
+                "type": "query",
+                "description": "what sort order should be used for queries"
+              }
+            ]
+          },
+          "docs": "Use this request to query the GL account data that are stored in Vic.ai.\n"
+        },
+        {
+          "info": {
+            "name": "Synchronize Accounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/accounts/synchronize"
+          },
+          "docs": "Tells the ERP to synchronize the Account resource. If the ERP is\nusing the API, the call will be sent via the normal webhook methods. If\nthe ERP is not using this API then this will call the native\nintegration's synchronize functionality.\n"
+        },
+        {
+          "info": {
+            "name": "Info for a specific account",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/accounts/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the database entry"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ]
+          },
+          "docs": "Use this request to get data for a single GL account that is stored in\nVic.ai.\n"
+        },
+        {
+          "info": {
+            "name": "Upserts an account",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.no.stage.vic.ai/v0/accounts/:id",
+            "headers": [
+              {
+                "name": "X-Request-Id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the database entry"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Use this request to *upsert* GL account data for one GL account into\nVic.ai.\nIf the account is known by Vic.ai, the externalId supplied will be used\nto resolve the account and perform an update of the data, otherwise, a\nnew account will be inserted.\nIf the upsert action is part of a syncRequest, you should include the\nsyncRequest ID in the `X-Request-Id` header.\n"
+        },
+        {
+          "info": {
+            "name": "Deletes an account",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.no.stage.vic.ai/v0/accounts/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the database entry"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ]
+          },
+          "docs": "Use this request to delete data for a single account that is stored in\nVic.ai\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

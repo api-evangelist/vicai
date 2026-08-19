@@ -1,0 +1,406 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vic.ai Accounts Dimensions API",
+    "version": "v10.40.4"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Dimensions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all dimensions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/dimensions",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "How many items to return at one time (max 100) (default 100)"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Which item to start from. See [Pagination](#section/Pagination) for more information."
+              },
+              {
+                "name": "since",
+                "value": "",
+                "type": "query",
+                "description": "Datetime value for incremental updates.\n**NOTE**: For external datetimes, the expected format is not in UTC. for\nvic-internal datetimes (see `SinceIsExternal`) the format is UTC.\n"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              },
+              {
+                "name": "sortOrder",
+                "value": "",
+                "type": "query",
+                "description": "what sort order should be used for queries"
+              },
+              {
+                "name": "externalId",
+                "value": "",
+                "type": "query",
+                "description": "Filter the dimensions that have the matching `externalId`."
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Filter the dimensions that have the matching `type`."
+              }
+            ]
+          },
+          "docs": "Use this request to query the dimensions data that are stored in Vic.ai.\n"
+        },
+        {
+          "info": {
+            "name": "Create a dimension",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/dimensions",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new dimension in Vic.ai."
+        },
+        {
+          "info": {
+            "name": "Synchronize Dimensions",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/dimensions/synchronize"
+          },
+          "docs": "Tells the ERP to synchronize the Dimension resource. If the ERP is\nusing the API, the call will be sent via the normal webhook methods. If\nthe ERP is not using this API then this will call the native\nintegration's synchronize functionality.\n"
+        },
+        {
+          "info": {
+            "name": "Info for a specific dimension",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/dimensions/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the database entry"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ]
+          },
+          "docs": "Use this request to get data for a single dimension that is stored in\nVic.ai.\n**Note:** When using `useSystem=external`, this operation may fail with a\n`422 Non Unique External Id Error` if duplicate external IDs exist. Use the\nunique internal ID or `listDimensions` operation as alternatives.\n"
+        },
+        {
+          "info": {
+            "name": "Upserts a dimension",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.no.stage.vic.ai/v0/dimensions/:id",
+            "headers": [
+              {
+                "name": "X-Request-Id",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the database entry"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Use this request to update or insert dimensions data for one dimension\ninto Vic.ai.\n**Note:** The insert portion of this will be changed to no longer\nfunction and the `createDimension` operation should be used instead.\nIf the dimension is known by Vic.ai, the `externalId` supplied will be\nused to resolve the dimension and perform an update of the data,\notherwise, a new dimension will be inserted.\nIf the upsert action is part of a `syncRequest`, you should include the\n`syncRequest` ID in the `X-R"
+        },
+        {
+          "info": {
+            "name": "Deletes a dimension",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.no.stage.vic.ai/v0/dimensions/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the database entry"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ]
+          },
+          "docs": "Use this request to delete data for a single dimension that is stored in\nVic.ai.\n**Note:** When using `useSystem=external`, this operation may fail with a\n`422 Non Unique External Id Error` if duplicate external IDs exist. Use\nthe unique internal ID as alternative.\n"
+        },
+        {
+          "info": {
+            "name": "List dimension dependencies",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/dimensions/:id/dependencies",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the database entry"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "How many items to return at one time (max 100) (default 100)"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Which item to start from. See [Pagination](#section/Pagination) for more information."
+              }
+            ]
+          },
+          "docs": "Lists the dimensions that depend on the dimension identified by `id`.\n"
+        },
+        {
+          "info": {
+            "name": "Upsert dimension dependency",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.no.stage.vic.ai/v0/dimensions/:id/dependencies",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the database entry"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Upserts a directional dependency pair for a single dimension value.\n"
+        },
+        {
+          "info": {
+            "name": "Delete dimension dependency",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.no.stage.vic.ai/v0/dimensions/:id/dependencies/:dependent_id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the database entry"
+              },
+              {
+                "name": "dependent_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ]
+          },
+          "docs": "Removes a directional dependency pair for a single dimension value.\n"
+        },
+        {
+          "info": {
+            "name": "Bulk upsert dimension dependencies",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/dimensionDependencies",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Atomically upserts up to 20 directional dimension dependency pairs.\n"
+        },
+        {
+          "info": {
+            "name": "List dimension dependencies",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/dimensions/:dimension_id/dependencies",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "dimension_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Lists dimensions that depend on the specified dimension."
+        },
+        {
+          "info": {
+            "name": "Upsert dimension dependency",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/dimensions/:dimension_id/dependencies",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "dimension_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Upserts one directional dimension dependency pair."
+        },
+        {
+          "info": {
+            "name": "Delete dimension dependency",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/dimensions/:dimension_id/dependencies/:dependent_id",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "dimension_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "dependent_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Deletes one directional dimension dependency pair."
+        },
+        {
+          "info": {
+            "name": "Bulk upsert dimension dependencies",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/dimension_dependencies",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Atomically upserts up to 20 directional dimension dependency pairs."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

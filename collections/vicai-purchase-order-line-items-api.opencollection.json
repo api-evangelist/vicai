@@ -1,0 +1,168 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vic.ai Accounts Purchase Order Line Items API",
+    "version": "v10.40.4"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Purchase Order Line Items",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Add a line item to a purchase order.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/purchaseOrderLineItems",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a purchase order's line item.\n\nCaution should be taken when creating a new line item in a purchase order. Each\npurchase order line item must have a line number and it must be unique among the\nother line items. It should be a non negative value.\n\nNote: This action will change purchase order `status` from `closed` to `open`,\nif the purchase order is `closed`.\n\nAfter creating the new purchase order line item, you **must** update the the\npurchase order's `amount` field. This should be done on"
+        },
+        {
+          "info": {
+            "name": "Get a purchase order's line item",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/purchaseOrderLineItems/:purchaseOrderLineItemId",
+            "params": [
+              {
+                "name": "purchaseOrderLineItemId",
+                "value": "",
+                "type": "path",
+                "description": "The internal id or external id of the purchase order line item. If using\nthe external id, you **must** pass `useSystem=external`.\n"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ]
+          },
+          "docs": "Get a purchase order's line item."
+        },
+        {
+          "info": {
+            "name": "Update a purchase order's line item",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.no.stage.vic.ai/v0/purchaseOrderLineItems/:purchaseOrderLineItemId",
+            "params": [
+              {
+                "name": "purchaseOrderLineItemId",
+                "value": "",
+                "type": "path",
+                "description": "The internal id or external id of the purchase order line item. If using\nthe external id, you **must** pass `useSystem=external`.\n"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates a purchase order's line item.\n\nIf there are existing matches made to an invoice that has been transmitted, or\nthat is currently being posted, you will not be able to update the purchase order\nline item if any of the following fields are being changed:\n\n- `lineNumber`\n- `matchingType`\n- `productDescription`\n- `productNumber`\n- `unitAmount`\n\nAdditionally, for the fields `lineItemTotal`, `quantityAccepted`, `quantityRequested`,\nand `quantityReceived`, updates are only allowed if the new val"
+        },
+        {
+          "info": {
+            "name": "Delete a purchase order's line item",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.no.stage.vic.ai/v0/purchaseOrderLineItems/:purchaseOrderLineItemId",
+            "params": [
+              {
+                "name": "purchaseOrderLineItemId",
+                "value": "",
+                "type": "path",
+                "description": "The internal id or external id of the purchase order line item. If using\nthe external id, you **must** pass `useSystem=external`.\n"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ]
+          },
+          "docs": "Delete a purchase order's line item.\n\nIf there are existing matches made to an invoice that has been transmitted, or\nthat is currently being posted, you will not be able to delete the purchase\norder line item - an `UnprocessableEntityResponse` will be returned.\n\nAfter deleting the purchase order line item, you **must** update the the\npurchase order's `amount` field. This should be done once you are finished\nmanipulating all of the line items.\n\nAfter the line item is deleted, Vic automatically sc"
+        },
+        {
+          "info": {
+            "name": "Close a purchase order's line item",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/purchaseOrderLineItems/:purchaseOrderLineItemId/close",
+            "params": [
+              {
+                "name": "purchaseOrderLineItemId",
+                "value": "",
+                "type": "path",
+                "description": "The internal id or external id of the purchase order line item. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ]
+          },
+          "docs": "Closes a purchase order's line item."
+        },
+        {
+          "info": {
+            "name": "Opens a purchase order's line item",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/purchaseOrderLineItems/:purchaseOrderLineItemId/open",
+            "params": [
+              {
+                "name": "purchaseOrderLineItemId",
+                "value": "",
+                "type": "path",
+                "description": "The internal id or external id of the purchase order line item. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ]
+          },
+          "docs": "Opens a purchase order's line item."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

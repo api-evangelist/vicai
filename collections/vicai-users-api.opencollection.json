@@ -1,0 +1,429 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vic.ai Accounts Users API",
+    "version": "v10.40.4"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Users",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List users attached to an organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/organizations/:organization_id/users",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the Organization."
+              },
+              {
+                "name": "name",
+                "value": "",
+                "type": "query",
+                "description": "The name of the user. This is a case-insensitive match."
+              },
+              {
+                "name": "name_contains",
+                "value": "",
+                "type": "query",
+                "description": "The name of the user contains the value specified. This is a\ncase-insensitive match.\n"
+              },
+              {
+                "name": "email",
+                "value": "",
+                "type": "query",
+                "description": "The user has the email address. This is a case-insensitive match.\n"
+              },
+              {
+                "name": "email_contains",
+                "value": "",
+                "type": "query",
+                "description": "The email of the user contains the value specified. This is a\ncase-insensitive match.\n"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List users attached to an organization."
+        },
+        {
+          "info": {
+            "name": "Create and attach user to an organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v2/organizations/:organization_id/users",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create and attach a user to an organization. If the user already exists,\nuse the `attachUserToOrganizationV2` (`POST /v2/organizations/{organization_id}/users/attach`)\noperation instead.\n"
+        },
+        {
+          "info": {
+            "name": "Attach an existing user to an organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v2/organizations/:organization_id/users/attach",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Attaches an existing user to an organization. You may provide the\n`user_id` or `email`. If the user does not exist, you will need to use\nthe `createOrganizationUserV2` operation.\n"
+        },
+        {
+          "info": {
+            "name": "Remove user from organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.no.stage.vic.ai/v2/organizations/:organization_id/users/:user_id",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization."
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user."
+              }
+            ]
+          },
+          "docs": "Removes the user from the organization. **NOTE**: This will remove the\nuser from __ALL__ of the companies within the organization.\n"
+        },
+        {
+          "info": {
+            "name": "List or search for users attached to the company",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/users",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company."
+              },
+              {
+                "name": "name",
+                "value": "",
+                "type": "query",
+                "description": "The name of the user. This is a case-insensitive match."
+              },
+              {
+                "name": "name_contains",
+                "value": "",
+                "type": "query",
+                "description": "The name of the user contains the value specified. This is a\ncase-insensitive match.\n"
+              },
+              {
+                "name": "email",
+                "value": "",
+                "type": "query",
+                "description": "The user has the email address. This is a case-insensitive match.\n"
+              },
+              {
+                "name": "email_contains",
+                "value": "",
+                "type": "query",
+                "description": "The email of the user contains the value specified. This is a\ncase-insensitive match.\n"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List or search for users attached to the company"
+        },
+        {
+          "info": {
+            "name": "Create and attach user to company",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/users",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create and attach a user to a company. If the user already exists, use\nthe `attachUserToCompanyV2` (`POST /v2/companies/{company_id}/users/attach`)\noperation instead.\n"
+        },
+        {
+          "info": {
+            "name": "Attach an existing user to a company",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/users/attach",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Attaches an existing user to a company. You may provide the `user_id` or\n`email`. If the user does not exist, you will need to use the\n`createCompanyUserV2` operation.\n"
+        },
+        {
+          "info": {
+            "name": "Remove user from company",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/users/:user_id",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company."
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user."
+              }
+            ]
+          },
+          "docs": "Removes the user from the company. This does not remove them from the\norganization, even when the user is not attached to any companies within\nthe organization.\n"
+        },
+        {
+          "info": {
+            "name": "List a user's roles in a company",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/users/:user_id/roles",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company."
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user."
+              }
+            ]
+          },
+          "docs": "Returns the list of roles currently assigned to a user within a specific\ncompany. Roles are company-scoped and determine what actions the user can\nperform within that company.\n"
+        },
+        {
+          "info": {
+            "name": "Update a user's roles in a company",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/users/:user_id/roles",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company."
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Declaratively set the roles for a user within a company. The provided list\nof roles replaces the user's current roles entirely — roles included in the\nlist become active, and all others become inactive.\n\nThis operation is idempotent: assigning roles that are already active has\nno effect on those roles.\n"
+        },
+        {
+          "info": {
+            "name": "Set or clear a user's manager in a company",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/users/:user_id/manager",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company."
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Set or clear the user's manager. Provide `manager_id` to set the\nmanager, or `null` to clear it. The manager must be a user within the\nsame company.\n\nA user has a single manager that applies across every company they\nbelong to. The company in the path scopes who may call this and which\nusers are eligible to be the manager, but the resulting relationship is\nnot company-specific: setting or clearing it here changes the user's\nmanager everywhere they are a member, which can affect approval routing\n"
+        },
+        {
+          "info": {
+            "name": "List users",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/users",
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "query",
+                "description": "The name of the user. This is a case-insensitive match."
+              },
+              {
+                "name": "name_contains",
+                "value": "",
+                "type": "query",
+                "description": "The name of the user contains the value specified. This is a\ncase-insensitive match.\n"
+              },
+              {
+                "name": "email",
+                "value": "",
+                "type": "query",
+                "description": "The user has the email address. This is a case-insensitive match.\n"
+              },
+              {
+                "name": "email_contains",
+                "value": "",
+                "type": "query",
+                "description": "The email of the user contains the value specified. This is a\ncase-insensitive match.\n"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List users accessible in the system. The users accessible will be those\nthat are attached to organizations that have granted access to your\nclient.\n"
+        },
+        {
+          "info": {
+            "name": "Get a user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/users/:user_id",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user."
+              }
+            ]
+          },
+          "docs": "Get a user"
+        },
+        {
+          "info": {
+            "name": "Update a user",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.no.stage.vic.ai/v2/users/:user_id",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a user with the data provided. If fields are omitted, they will\nbe considered `null` and will be cleared. If you do not wish to clear\nthese values, please provide everything.\n<br />\n<br />\n**Note**: A user's email is not allowed to be updated over the API. If a\nuser's email must be changed, please use the Web UI or contact support\nabout this.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

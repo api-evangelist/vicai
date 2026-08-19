@@ -1,0 +1,362 @@
+{
+  "item": [
+    {
+      "id": "2d270f06-cc1c-49ec-97f7-65f2dea9fae6",
+      "name": "Company Settings",
+      "description": {
+        "content": "Per-company configuration options that an integration partner\ncan read and tune programmatically rather than by asking\nVic.ai support. Requires partner authentication (obtain a\ntoken via `POST /v0/token` with partner credentials); the\npartner must have provisioned or been linked to the company.\nThe settings response is a flat map of field name to value;\nPATCH applies a partial update and is atomic — either the full\nupdate succeeds or no changes are persisted.\n",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "c3886db2-2037-4407-8e08-5ff38f28978a",
+          "name": "Get company settings",
+          "request": {
+            "name": "Get company settings",
+            "description": {
+              "content": "Returns the company's current configuration as a flat map. Every\navailable setting is present in the response with either the\ncompany's configured value or the default. Enum values are\nreturned as strings.\n\nRequires partner authentication (obtain a token via\n`POST /v0/token` with partner credentials); the partner must\nhave provisioned or been linked to the company.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "companies",
+                ":company_id",
+                "settings"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "company_id",
+                  "description": "(Required) The ID of the company"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "dc8ea5df-cb59-42e1-a3c2-ebaf9d3825af",
+              "name": "The effective settings map for the company.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "settings"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"backend_mode\": \"stub\",\n    \"approval_flow_engine_enabled\": true,\n    \"approval_flow_engine_user_edits_allowed\": false,\n    \"invoice_automation_enabled\": true,\n    \"invoice_automated_next_step\": null,\n    \"invoice_approval_next_step\": null,\n    \"po_invoice_automation_enabled\": true,\n    \"po_invoice_automated_next_step\": null,\n    \"po_invoice_approval_next_step\": null,\n    \"purchase_order_matching\": \"none\",\n    \"purchase_order_matching_level\": \"line\",\n    \"purchase_order_require_matching_to_post\": true,\n    \"aaf_ignores_po_invoice_items\": false,\n    \"enable_posting\": false,\n    \"tax_handling\": \"tax_expense_line\",\n    \"freight_handling\": null\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ea66db77-eebc-4aa5-97da-0dc8077b81d7",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "settings"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    },\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "16c91ccd-1d35-4018-921e-9b7ca63011bc",
+          "name": "Update company settings",
+          "request": {
+            "name": "Update company settings",
+            "description": {
+              "content": "Applies a partial settings update. The request body is a flat map\nof setting name to value; only fields included in the body are\nmodified. Unknown field names and type-invalid values are\nrejected with a 422 error listing every offending field.\n\nUpdates are atomic: either every change in the request is\napplied, or none are. On success the full refreshed settings map\nis returned.\n\nRequires partner authentication (obtain a token via\n`POST /v0/token` with partner credentials); the partner must\nhave provisioned or been linked to the company.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "companies",
+                ":company_id",
+                "settings"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "company_id",
+                  "description": "(Required) The ID of the company"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"backend_mode\": \"<string>\",\n  \"approval_flow_engine_enabled\": \"<boolean>\",\n  \"approval_flow_engine_user_edits_allowed\": \"<boolean>\",\n  \"invoice_automation_enabled\": \"<boolean>\",\n  \"invoice_automated_next_step\": \"<null>\",\n  \"invoice_approval_next_step\": \"<null>\",\n  \"po_invoice_automation_enabled\": \"<boolean>\",\n  \"po_invoice_automated_next_step\": \"<null>\",\n  \"po_invoice_approval_next_step\": \"<null>\",\n  \"purchase_order_matching\": \"<string>\",\n  \"purchase_order_matching_level\": \"<string>\",\n  \"purchase_order_require_matching_to_post\": \"<boolean>\",\n  \"aaf_ignores_po_invoice_items\": \"<boolean>\",\n  \"enable_posting\": \"<boolean>\",\n  \"tax_handling\": \"<string>\",\n  \"freight_handling\": \"<null>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "dc471307-61fc-49ab-8311-28d1c2cc17bd",
+              "name": "The effective settings map for the company.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "settings"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"backend_mode\": \"stub\",\n    \"approval_flow_engine_enabled\": true,\n    \"approval_flow_engine_user_edits_allowed\": false,\n    \"invoice_automation_enabled\": true,\n    \"invoice_automated_next_step\": null,\n    \"invoice_approval_next_step\": null,\n    \"po_invoice_automation_enabled\": true,\n    \"po_invoice_automated_next_step\": null,\n    \"po_invoice_approval_next_step\": null,\n    \"purchase_order_matching\": \"none\",\n    \"purchase_order_matching_level\": \"line\",\n    \"purchase_order_require_matching_to_post\": true,\n    \"aaf_ignores_po_invoice_items\": false,\n    \"enable_posting\": false,\n    \"tax_handling\": \"tax_expense_line\",\n    \"freight_handling\": null\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8af94c9e-117d-40d4-b236-d18574cbb57b",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "companies",
+                    ":company_id",
+                    "settings"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "company_id",
+                      "description": "(Required) The ID of the company"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    },\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.no.stage.vic.ai",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "d13e27d2-0536-402b-a8d8-aabfa66a75f3",
+    "name": "Vic.ai Accounts Company Settings API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "## Introduction\n\nThe Vic.ai API provides a seamless connection between your Enterprise Resource\nPlanning (ERP) system and the Vic.ai product suite.\n\nThe API is designed to offer three main areas of functionality:\n\n- **Syncing master data:** This refers to the data in your ERP that Vic.ai\n  interacts with. You are required to supply and update this data in Vic.ai, and\n  you also have the option to verify the copy of the masterdata in Vic.ai.\n\n- **Syncing training data:** We need historical data to train your AI model. To\n  that end, the API provides endpoints to sync historical invoices into Vic.ai\n  and to confirm their presence.\n\n- **Subscribing to and receiving webhooks:** Webhooks enable users or automated\n  tasks to interact with your ERP through various actions in the Vic.ai product\n  suite, such as posting an invoice, payment or purchase order or requesting\n  synchronization. You will receive a notification via a webhook when these\n  actions occur.\n\n\nFor US-based integrations, please use the following base API URL:\n\n```\nhttps://api.us.vic.ai\n```\n\nFor integrations based in Norway, use the following base API URL:\n\n```\nhttps://api.no.vic.ai\n```\n\nAll paths mentioned in this documentation should use one of these URLs as the\nbase.\n\nExample:\n\n```bash\ncurl https://api.us.vic.ai/v0/healthCheck \\\n    -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\"\n```\n\n## Getting Started\n\nTo begin interacting with the Vic.ai API, you will need the following\ncredentials:\n\n* A Vic.ai client ID\n* A Vic.ai client secret.\n\nThese can be provided to you securely by a Vic.ai representative\n[upon request](https://www.vic.ai/book-a-demo).\n\n**Please note:** These credentials are essentially the keys to your ERP\nintegration. If they fall into the wrong hands, unauthorized parties could\nimpersonate you, gain access to sensitive data, and potentially perform\nmalicious actions. Therefore, it's crucial to keep these credentials safe at all\ntimes to protect your application's integrity and your clients' data.\n\n### Limitations\n\nThe Vic.ai API has the following limitations:\n\n**Rate Limiting:** The API is rate-limited to 500 requests per 10-second time\nframe. If you exceed this limit, you will receive a `429 Too Many Requests`\nresponse. The limit is per Oauth client ID. If you continue to receive `429`s,\nplease contact support with a request id from the response headers.\n",
+      "type": "text/plain"
+    }
+  }
+}

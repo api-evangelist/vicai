@@ -1,0 +1,62 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vic.ai Accounts Bills API",
+    "version": "v10.40.4"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Bills",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a new imported bill",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v2/bills",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new imported bill with the given `remote_id`. If a bill with the\nsame `remote_id` already exists, returns an error.\n\nImported bills are automatically set to \"posted\" status.\n\n**Document Upload**: You can upload a document along with the bill data using multipart/form-data.\nWhen using multipart, send the bill data fields directly and the file as `document`.\n\n**VAT Handling**: If `total_vat_amount` is provided and greater than zero, the system\nwill automatically create a hidden VAT line i"
+        },
+        {
+          "info": {
+            "name": "Update an existing imported bill",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.no.stage.vic.ai/v2/bills/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the bill in the Vic system."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update an existing imported bill with the given `id`. If no bill\nwith the `id` exists, returns an error.\n\nOnly bills that were previously imported via the API can be updated.\nAttempting to update a bill that was not imported via the API will result in an error.\n\n**Document Upload**: You can upload a new document along with the bill data using multipart/form-data.\nWhen using multipart, send the bill data fields directly and the file as `document`.\n\n**VAT Handling**: If `total_vat_amount` is provi"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

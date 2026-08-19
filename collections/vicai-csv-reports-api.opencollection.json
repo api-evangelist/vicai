@@ -1,0 +1,69 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vic.ai Accounts CSV Reports API",
+    "version": "v10.40.4"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "CSV Reports",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List CSV reports status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/csvReports"
+          },
+          "docs": "Get the status of all available CSV reports. This endpoint returns a list\nof all supported report types along with their current status (`READY` or `NOT_READY`).\nReports that are `READY` can be downloaded immediately.\n\n**Note**: This feature is only available to customers with analytics CSV reports enabled.\n\nIf you would like access to the reports please contact Customer Support.\n"
+        },
+        {
+          "info": {
+            "name": "Generate CSV reports",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/csvReports",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Generate all available CSV reports. This operation is asynchronous -\nthe reports will be queued for generation and their status\nwill be NOT_READY initially. Use the GET endpoint to check when reports\nare READY and can be downloaded. This endpoint has rate limiting (max 1 requests\nper hour).\n\n**Note**: This feature is only available to customers with analytics CSV reports enabled.\n\nIf you would like access to the reports please contact Customer Support.\n"
+        },
+        {
+          "info": {
+            "name": "Download CSV report",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/csvReports/:report_name",
+            "params": [
+              {
+                "name": "report_name",
+                "value": "",
+                "type": "path",
+                "description": "The name of the CSV report to download. Forwards to the location of the CSV file\nand also returns the signedUrl.\n"
+              }
+            ]
+          },
+          "docs": "Download a specific CSV report by name. Returns a redirect (302) to a\nsigned URL where the CSV file can be downloaded. The report must be in\nREADY status to be downloadable otherwise it will return a 404.\n\n**Note**: This feature is only available to customers with analytics CSV reports enabled.\n\nIf you would like access to the reports please contact Customer Support.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

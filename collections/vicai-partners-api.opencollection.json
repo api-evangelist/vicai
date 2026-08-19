@@ -1,0 +1,189 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vic.ai Accounts Partners API",
+    "version": "v10.40.4"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Partners",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Search and list organizations accessible",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/organizations",
+            "params": [
+              {
+                "name": "name_contains",
+                "value": "",
+                "type": "query",
+                "description": "List organizations with names containing the value provided. This is\na case insensitive match.\n"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Search and list organizations accessible. Accepts both company-scoped\ntokens and partner tokens (obtained via `POST /v0/token` with the\nrespective credentials). Partners see the organizations they created\nvia `POST /v2/organizations` or were granted access to.\n"
+        },
+        {
+          "info": {
+            "name": "Create an organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v2/organizations",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new organization. The organization is automatically linked to\nthe authenticated partner client. Requires partner authentication\n(obtain a token via `POST /v0/token`).\n\nThis endpoint creates only the organization. Create the first company\nunder it as a separate step with\n`POST /v2/organizations/{organization_id}/companies` — the partner\nbootstrap path, which returns the new company's company-scoped OAuth\nclient. (`POST /v2/companies` also creates companies, but it derives the\norganizatio"
+        },
+        {
+          "info": {
+            "name": "Get an organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/organizations/:organization_id",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the Organization."
+              }
+            ]
+          },
+          "docs": "Get an organization. Accepts both company-scoped tokens and partner\ntokens (obtained via `POST /v0/token` with the respective\ncredentials). The organization must be one the caller has access to —\nfor partners, one they created via `POST /v2/organizations` or were\ngranted access to. Useful for verifying an existing organization\nbefore creating companies under it.\n"
+        },
+        {
+          "info": {
+            "name": "Create a company under an organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v2/organizations/:organization_id/companies",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization to create the company under."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a company under a specific organization, using partner\nauthentication. The company is created under the organization named in\nthe path — which must be one the authenticated partner client already\nhas access to (e.g. one it created via `POST /v2/organizations`) — and\nany `organization_id` in the request body is ignored.\n\nThe response includes the new company's company-scoped OAuth client so\nthe partner can bootstrap a company-level integration without a second\nround-trip; the `client_secre"
+        },
+        {
+          "info": {
+            "name": "List a company's tags",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/tags",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID (UUID) of the company."
+              }
+            ]
+          },
+          "docs": "List the tags assigned to a company. Requires partner authentication;\nthe company must belong to an organization the partner can access.\n"
+        },
+        {
+          "info": {
+            "name": "Assign a tag to a company",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/tags",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID (UUID) of the company."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Assign a tag to a company, using partner authentication. The company\nmust belong to an organization the partner can access.\n\nTags are how Vic expresses **company grouping**: mark the parent company\nof a group with the `group-leader` tag and a shared `group:<key>` tag,\nand mark each member company with the same `group:<key>` tag. Assigning\na `group:`/`group-leader` tag also enables company groups on the\norganization. Re-assigning an existing tag is idempotent.\n"
+        },
+        {
+          "info": {
+            "name": "Get company settings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/settings",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company"
+              }
+            ]
+          },
+          "docs": "Returns the company's current configuration as a flat map. Every\navailable setting is present in the response with either the\ncompany's configured value or the default. Enum values are\nreturned as strings.\n\nRequires partner authentication (obtain a token via\n`POST /v0/token` with partner credentials); the partner must\nhave provisioned or been linked to the company.\n"
+        },
+        {
+          "info": {
+            "name": "Update company settings",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/settings",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Applies a partial settings update. The request body is a flat map\nof setting name to value; only fields included in the body are\nmodified. Unknown field names and type-invalid values are\nrejected with a 422 error listing every offending field.\n\nUpdates are atomic: either every change in the request is\napplied, or none are. On success the full refreshed settings map\nis returned.\n\nRequires partner authentication (obtain a token via\n`POST /v0/token` with partner credentials); the partner must\nhave "
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

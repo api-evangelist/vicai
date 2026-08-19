@@ -1,0 +1,631 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vic.ai Accounts Companies API",
+    "version": "v10.40.4"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Companies",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a company under an organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v2/organizations/:organization_id/companies",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization to create the company under."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a company under a specific organization, using partner\nauthentication. The company is created under the organization named in\nthe path — which must be one the authenticated partner client already\nhas access to (e.g. one it created via `POST /v2/organizations`) — and\nany `organization_id` in the request body is ignored.\n\nThe response includes the new company's company-scoped OAuth client so\nthe partner can bootstrap a company-level integration without a second\nround-trip; the `client_secre"
+        },
+        {
+          "info": {
+            "name": "Search and list companies accessible",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/companies",
+            "params": [
+              {
+                "name": "name_contains",
+                "value": "",
+                "type": "query",
+                "description": "List companies with names containing the value provided. This is a\ncase insensitive match.\n"
+              },
+              {
+                "name": "remote_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter by a companies remote ID.\n"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Search and list companies accessible."
+        },
+        {
+          "info": {
+            "name": "Create a company",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v2/companies",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new company and automatically grant the authenticated OAuth\nclient access to it. The company is created under the same organization\nas the OAuth client's primary company, unless `organization_id` is\nprovided (must be an organization the client already has access to).\n\nAfter creation, use `POST /v2/companies/{company_id}/subscriptions` to\nset up webhook subscriptions for the new company.\n"
+        },
+        {
+          "info": {
+            "name": "List a company's tags",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/tags",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID (UUID) of the company."
+              }
+            ]
+          },
+          "docs": "List the tags assigned to a company. Requires partner authentication;\nthe company must belong to an organization the partner can access.\n"
+        },
+        {
+          "info": {
+            "name": "Assign a tag to a company",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/tags",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID (UUID) of the company."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Assign a tag to a company, using partner authentication. The company\nmust belong to an organization the partner can access.\n\nTags are how Vic expresses **company grouping**: mark the parent company\nof a group with the `group-leader` tag and a shared `group:<key>` tag,\nand mark each member company with the same `group:<key>` tag. Assigning\na `group:`/`group-leader` tag also enables company groups on the\norganization. Re-assigning an existing tag is idempotent.\n"
+        },
+        {
+          "info": {
+            "name": "Get a company",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company."
+              }
+            ]
+          },
+          "docs": "Get a company."
+        },
+        {
+          "info": {
+            "name": "List or search for users attached to the company",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/users",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company."
+              },
+              {
+                "name": "name",
+                "value": "",
+                "type": "query",
+                "description": "The name of the user. This is a case-insensitive match."
+              },
+              {
+                "name": "name_contains",
+                "value": "",
+                "type": "query",
+                "description": "The name of the user contains the value specified. This is a\ncase-insensitive match.\n"
+              },
+              {
+                "name": "email",
+                "value": "",
+                "type": "query",
+                "description": "The user has the email address. This is a case-insensitive match.\n"
+              },
+              {
+                "name": "email_contains",
+                "value": "",
+                "type": "query",
+                "description": "The email of the user contains the value specified. This is a\ncase-insensitive match.\n"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List or search for users attached to the company"
+        },
+        {
+          "info": {
+            "name": "Create and attach user to company",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/users",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create and attach a user to a company. If the user already exists, use\nthe `attachUserToCompanyV2` (`POST /v2/companies/{company_id}/users/attach`)\noperation instead.\n"
+        },
+        {
+          "info": {
+            "name": "Attach an existing user to a company",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/users/attach",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Attaches an existing user to a company. You may provide the `user_id` or\n`email`. If the user does not exist, you will need to use the\n`createCompanyUserV2` operation.\n"
+        },
+        {
+          "info": {
+            "name": "Remove user from company",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/users/:user_id",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company."
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user."
+              }
+            ]
+          },
+          "docs": "Removes the user from the company. This does not remove them from the\norganization, even when the user is not attached to any companies within\nthe organization.\n"
+        },
+        {
+          "info": {
+            "name": "List a user's roles in a company",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/users/:user_id/roles",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company."
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user."
+              }
+            ]
+          },
+          "docs": "Returns the list of roles currently assigned to a user within a specific\ncompany. Roles are company-scoped and determine what actions the user can\nperform within that company.\n"
+        },
+        {
+          "info": {
+            "name": "Update a user's roles in a company",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/users/:user_id/roles",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company."
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Declaratively set the roles for a user within a company. The provided list\nof roles replaces the user's current roles entirely — roles included in the\nlist become active, and all others become inactive.\n\nThis operation is idempotent: assigning roles that are already active has\nno effect on those roles.\n"
+        },
+        {
+          "info": {
+            "name": "Manage company custom field options",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/fields/:field_label/options",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company."
+              },
+              {
+                "name": "field_label",
+                "value": "",
+                "type": "path",
+                "description": "The custom field label, URL-encoded as a path segment."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Replaces or adds company-specific options for a `select` custom field.\nWhen `replace` is `true`, the provided values become the full set of\ncompany-specific options for the field. When `replace` is `false`, the\nprovided values are added to the existing company-specific options.\n\nThe field label is the stable field identifier, such as\n`custom:department`. URL-encode the label when sending it as a path\nparameter, for example `custom%3Adepartment`.\n"
+        },
+        {
+          "info": {
+            "name": "Set or clear a user's manager in a company",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/users/:user_id/manager",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company."
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Set or clear the user's manager. Provide `manager_id` to set the\nmanager, or `null` to clear it. The manager must be a user within the\nsame company.\n\nA user has a single manager that applies across every company they\nbelong to. The company in the path scopes who may call this and which\nusers are eligible to be the manager, but the resulting relationship is\nnot company-specific: setting or clearing it here changes the user's\nmanager everywhere they are a member, which can affect approval routing\n"
+        },
+        {
+          "info": {
+            "name": "List invoice approval flows",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/invoice_approval_flows",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Lists invoice approval flows for a company. Returns a paginated list of\napproval flows with their selection rules and steps.\n"
+        },
+        {
+          "info": {
+            "name": "Create an invoice approval flow",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/invoice_approval_flows",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "## Creating a Flow with Selection Rules\n\nWhen you create an approval flow (see the main invoice approval flow endpoint documentation for the request/response contract), you can define the selection rules that determine which invoices will be routed through that flow and its steps. The sections below describe the structure and semantics for those selection rules so you can include them in the `InvoiceApprovalFlowInputV2` payload.\n\n**Request Body:** `InvoiceApprovalFlowInputV2`\n\n**Response:** `201"
+        },
+        {
+          "info": {
+            "name": "Get an invoice approval flow",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/invoice_approval_flows/:id",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the invoice approval flow. Can be either:\n- An integer ID (the internal database ID)\n- A `remote_id` (a string identifier used to look up the flow)\n\nIf the value is a valid integer, the system will first attempt to find the flow by its integer ID.\nIf not found or if the value is not a valid integer, it will attempt to find the flow by `remote_id`.\n"
+              }
+            ]
+          },
+          "docs": "Returns the approval flow with the given ID if it exists and the OAuth client\nhas access to the company.\n"
+        },
+        {
+          "info": {
+            "name": "Update an invoice approval flow",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/invoice_approval_flows/:id",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the invoice approval flow. Can be either:\n- An integer ID (the internal database ID)\n- A `remote_id` (a string identifier used to look up the flow)\n\nIf the value is a valid integer, the system will first attempt to find the flow by its integer ID.\nIf not found or if the value is not a valid integer, it will attempt to find the flow by `remote_id`.\n\nYou can also provide an integer ID in the URL and update the `remote_id` field in the request body.\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates an existing approval flow with selection rules and steps.\nThe flow must belong to the company associated with the OAuth client.\n\nThe request body structure and selection rules are the same as the POST endpoint\nfor creating an approval flow. See the POST endpoint documentation for complete\ndetails on flow structure, selection rules, steps, and approver selection rules.\n"
+        },
+        {
+          "info": {
+            "name": "Delete an invoice approval flow",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/invoice_approval_flows/:id",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the invoice approval flow. Can be either:\n- An integer ID (the internal database ID)\n- A `remote_id` (a string identifier used to look up the flow)\n\nIf the value is a valid integer, the system will first attempt to find the flow by its integer ID.\nIf not found or if the value is not a valid integer, it will attempt to find the flow by `remote_id`.\n"
+              }
+            ]
+          },
+          "docs": "Deletes an invoice approval flow. Performs a soft delete by setting the\ndeleted_at timestamp. Returns 204 No Content on success.\n"
+        },
+        {
+          "info": {
+            "name": "Get company settings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/settings",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company"
+              }
+            ]
+          },
+          "docs": "Returns the company's current configuration as a flat map. Every\navailable setting is present in the response with either the\ncompany's configured value or the default. Enum values are\nreturned as strings.\n\nRequires partner authentication (obtain a token via\n`POST /v0/token` with partner credentials); the partner must\nhave provisioned or been linked to the company.\n"
+        },
+        {
+          "info": {
+            "name": "Update company settings",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/settings",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Applies a partial settings update. The request body is a flat map\nof setting name to value; only fields included in the body are\nmodified. Unknown field names and type-invalid values are\nrejected with a 422 error listing every offending field.\n\nUpdates are atomic: either every change in the request is\napplied, or none are. On success the full refreshed settings map\nis returned.\n\nRequires partner authentication (obtain a token via\n`POST /v0/token` with partner credentials); the partner must\nhave "
+        },
+        {
+          "info": {
+            "name": "List webhook events by company",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/webhook/events",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company"
+              },
+              {
+                "name": "event_type",
+                "value": "",
+                "type": "query",
+                "description": "Filter events by a single type. Omit the parameter to return events of\nevery type. To filter by several types at once, use `event_types`\ninstead.\n"
+              },
+              {
+                "name": "event_types",
+                "value": "",
+                "type": "query",
+                "description": "Filter events by one or more types, given as a comma-separated list\n(for example `invoice_posted,invoice_approved`). Omit to return events\nof every type.\n"
+              },
+              {
+                "name": "occurred_after",
+                "value": "",
+                "type": "query",
+                "description": "Filter events that occurred on or after this date. Required parameter. The date range between occurred_after and occurred_before cannot exceed 30 days."
+              },
+              {
+                "name": "occurred_before",
+                "value": "",
+                "type": "query",
+                "description": "Filter events that occurred on or before this date. Required parameter. The date range between occurred_after and occurred_before cannot exceed 30 days."
+              },
+              {
+                "name": "undelivered",
+                "value": "",
+                "type": "query",
+                "description": "Filter to show only events that have not been delivered"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Use this request to query the webhook events stored for a specific company.\n\nAn event is recorded only if, at the time it is generated, the company has a\nsubscription whose event types include it. Events generated before such a\nsubscription existed are not stored and cannot be retrieved here, so this\nendpoint returns the events recorded for the company rather than a complete\nhistory of all account activity.\n"
+        },
+        {
+          "info": {
+            "name": "Get a webhook event by company",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/webhook/events/:event_id",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company"
+              },
+              {
+                "name": "event_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the webhook event"
+              }
+            ]
+          },
+          "docs": "Use this request to get detailed information about a specific webhook event for a\ncompany that is stored in Vic.ai. This includes delivery attempts, payload data, and status information.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

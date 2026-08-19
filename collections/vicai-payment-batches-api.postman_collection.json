@@ -1,0 +1,525 @@
+{
+  "item": [
+    {
+      "id": "b8dca594-9d68-420c-bc84-23ae743d7127",
+      "name": "Payment Batches",
+      "description": {
+        "content": "List and inspect payment batches.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "6685cdb6-a15f-4ec0-9e62-e9dd81c7165b",
+          "name": "List all payment batches",
+          "request": {
+            "name": "List all payment batches",
+            "description": {
+              "content": "List all payment batches.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "paymentBatches"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "completedAtOrAfter",
+                  "value": "<dateTime>",
+                  "description": "Filter batches that were completed at or after the date time\nprovided. This can be used in combination with `completedAtOrBefore`.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "completedAtOrBefore",
+                  "value": "<dateTime>",
+                  "description": "Filter batches that were completed at or before the date time\nprovided. This can be used in combination with `completedAtOrAfter`.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>",
+                  "description": "Selects the payment batches that match the status provided. When left\nunspecified, it is the same as if `all` was specified.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "<integer>",
+                  "description": "How many items to return at one time (max 100) (default 100)"
+                },
+                {
+                  "disabled": false,
+                  "key": "cursor",
+                  "value": "<string>",
+                  "description": "Which item to start from. See [Pagination](#section/Pagination) for more information."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "4e2e098c-d973-4dfd-9706-77ae5232144c",
+              "name": "A paged array of Payment batches",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "paymentBatches"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "completedAtOrAfter",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "completedAtOrBefore",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "approved"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "A link to the next page of responses",
+                  "key": "x-next",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": \"72269735-7b57-0724-04aa-ebf07c320f1b\",\n    \"name\": \"string\",\n    \"companyId\": \"string\",\n    \"processedAt\": \"2021-12-02T11:40:21.810Z\",\n    \"completedAt\": \"1989-01-21T07:29:24.569Z\",\n    \"approvedAt\": \"1958-06-18T12:52:57.451Z\",\n    \"rejectedAt\": \"1981-07-22T04:24:47.598Z\",\n    \"voidedAt\": \"2025-01-28T13:54:43.791Z\",\n    \"status\": \"approved\",\n    \"payments\": [\n      {\n        \"id\": \"ec3b9fb5-2145-7bdf-b807-c96e4f1c3286\",\n        \"batchId\": \"62e1678c-5c01-5349-c315-2a53492748d4\",\n        \"amount\": \"1.00\",\n        \"settlementAmount\": \"1.00\",\n        \"discountAmount\": \"1.00\",\n        \"currencyId\": \"USD\",\n        \"settlementCurrencyId\": \"USD\",\n        \"exchangeRate\": \"1.00\",\n        \"status\": \"rejected\",\n        \"paymentMethod\": \"ach\",\n        \"referenceId\": \"string\",\n        \"approvedAt\": \"1999-10-01T11:16:20.455Z\",\n        \"failedAt\": \"1983-03-03T22:23:42.927Z\",\n        \"failedReason\": \"string\",\n        \"fundedAt\": \"1968-02-12T11:54:50.307Z\",\n        \"acceptedAt\": \"1953-06-01T10:31:57.134Z\",\n        \"rejectedAt\": \"1980-07-26T17:17:17.067Z\",\n        \"voidedAt\": \"2008-11-03T01:40:27.724Z\",\n        \"confirmedAt\": \"2022-07-13T11:18:16.512Z\",\n        \"remoteId\": \"string\",\n        \"remoteError\": \"string\",\n        \"remoteErroredAt\": \"2008-05-04T09:10:37.983Z\",\n        \"invoice\": {\n          \"internalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"externalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"refNumber\": \"string\"\n        },\n        \"costAccount\": {\n          \"internalId\": \"string\",\n          \"externalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"vendor\": {\n          \"internalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"externalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      }\n    ],\n    \"credits\": [\n      {\n        \"id\": \"c64ab21c-ec98-3a20-7f81-2d38b1d38643\",\n        \"batchId\": \"b26c4f1d-1058-fccb-fb75-554d426619d4\",\n        \"amount\": \"1.00\",\n        \"settlementAmount\": \"1.00\",\n        \"currencyId\": \"USD\",\n        \"settlementCurrencyId\": \"USD\",\n        \"exchangeRate\": \"1.00\",\n        \"status\": \"acknowledged\",\n        \"paymentMethod\": \"check\",\n        \"referenceId\": \"string\",\n        \"approvedAt\": \"1990-05-30T23:14:51.446Z\",\n        \"fundedAt\": \"1982-12-23T05:17:05.917Z\",\n        \"failedAt\": \"2001-11-23T20:55:04.214Z\",\n        \"failedReason\": \"string\",\n        \"acceptedAt\": \"2018-05-21T19:57:09.095Z\",\n        \"rejectedAt\": \"1991-11-17T20:16:46.797Z\",\n        \"voidedAt\": \"1959-08-29T04:52:06.141Z\",\n        \"confirmedAt\": \"2018-02-10T02:48:43.101Z\",\n        \"remoteId\": \"string\",\n        \"remoteError\": \"string\",\n        \"remoteErroredAt\": \"1949-02-22T21:59:34.771Z\",\n        \"invoice\": {\n          \"internalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"externalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"refNumber\": \"string\"\n        },\n        \"costAccount\": {\n          \"internalId\": \"string\",\n          \"externalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"vendor\": {\n          \"internalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"externalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      }\n    ]\n  },\n  {\n    \"id\": \"48f53beb-8b3b-7da2-4e7e-dc7d8b28f218\",\n    \"name\": \"string\",\n    \"companyId\": \"string\",\n    \"processedAt\": \"1996-10-16T16:20:34.439Z\",\n    \"completedAt\": \"1996-10-04T03:20:56.990Z\",\n    \"approvedAt\": \"1961-12-25T22:02:17.629Z\",\n    \"rejectedAt\": \"1999-01-17T06:04:02.528Z\",\n    \"voidedAt\": \"1974-07-21T07:01:52.699Z\",\n    \"status\": \"rejected\",\n    \"payments\": [\n      {\n        \"id\": \"f5aeae1b-8249-9f1a-0cc9-565f5cc29ecb\",\n        \"batchId\": \"74470e93-4e89-8ecf-a298-610ba104f51e\",\n        \"amount\": \"1.00\",\n        \"settlementAmount\": \"1.00\",\n        \"discountAmount\": \"1.00\",\n        \"currencyId\": \"USD\",\n        \"settlementCurrencyId\": \"USD\",\n        \"exchangeRate\": \"1.00\",\n        \"status\": \"voided\",\n        \"paymentMethod\": \"card\",\n        \"referenceId\": \"string\",\n        \"approvedAt\": \"2012-09-24T07:36:35.899Z\",\n        \"failedAt\": \"1969-03-26T17:16:17.328Z\",\n        \"failedReason\": \"string\",\n        \"fundedAt\": \"2016-03-17T01:22:19.938Z\",\n        \"acceptedAt\": \"1973-05-17T17:54:42.391Z\",\n        \"rejectedAt\": \"1993-06-11T11:59:49.759Z\",\n        \"voidedAt\": \"1955-09-15T07:27:37.186Z\",\n        \"confirmedAt\": \"1993-10-09T09:13:28.145Z\",\n        \"remoteId\": \"string\",\n        \"remoteError\": \"string\",\n        \"remoteErroredAt\": \"2025-08-07T10:10:59.599Z\",\n        \"invoice\": {\n          \"internalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"externalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"refNumber\": \"string\"\n        },\n        \"costAccount\": {\n          \"internalId\": \"string\",\n          \"externalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"vendor\": {\n          \"internalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"externalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      }\n    ],\n    \"credits\": [\n      {\n        \"id\": \"5a83ad48-a6c5-7f72-4237-adec5c1a4e83\",\n        \"batchId\": \"3c69283a-4a38-622b-be96-19ccfb969658\",\n        \"amount\": \"1.00\",\n        \"settlementAmount\": \"1.00\",\n        \"currencyId\": \"USD\",\n        \"settlementCurrencyId\": \"USD\",\n        \"exchangeRate\": \"1.00\",\n        \"status\": \"approved\",\n        \"paymentMethod\": \"check\",\n        \"referenceId\": \"string\",\n        \"approvedAt\": \"2012-10-06T23:22:08.206Z\",\n        \"fundedAt\": \"1983-05-04T05:15:03.361Z\",\n        \"failedAt\": \"1987-09-17T00:05:57.069Z\",\n        \"failedReason\": \"string\",\n        \"acceptedAt\": \"2024-08-06T01:41:43.376Z\",\n        \"rejectedAt\": \"1951-07-14T15:48:53.040Z\",\n        \"voidedAt\": \"1979-05-22T08:14:33.730Z\",\n        \"confirmedAt\": \"1962-05-08T03:14:02.567Z\",\n        \"remoteId\": \"string\",\n        \"remoteError\": \"string\",\n        \"remoteErroredAt\": \"1984-10-18T14:59:16.859Z\",\n        \"invoice\": {\n          \"internalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"externalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"refNumber\": \"string\"\n        },\n        \"costAccount\": {\n          \"internalId\": \"string\",\n          \"externalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"vendor\": {\n          \"internalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"externalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      }\n    ]\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d2a9a559-3705-49c6-8ab7-b8da6871b77e",
+              "name": "HTTP call rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "paymentBatches"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "completedAtOrAfter",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "completedAtOrBefore",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "approved"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.",
+                  "key": "Retry-After",
+                  "value": "5727"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 145,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8638a710-94c6-4c0e-874e-59d21dbd489a",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "paymentBatches"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "completedAtOrAfter",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "completedAtOrBefore",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "approved"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 145,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8b058e13-1654-4ea3-9eaf-14ef62e27efd",
+          "name": "Get a payment batch",
+          "request": {
+            "name": "Get a payment batch",
+            "description": {
+              "content": "The batches returned may include payments and credits that could be\nrejected or voided. This is by design. If you are synchronizing with\nan ERP, discard the rejected and voided payments or credits on successful\npayment batches. When payments or credits are voided, this can happen for\na variety of reasons, such as:<br />\n- The payment provider cannot process that payment due to an error.\n- The vendor attached to that payment is missing required information or\nis no longer valid.\n- A stop payment was issued outside of Vic and support has had to go\nremediate.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "paymentBatches",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The ID of the payment batch."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "a6a0fbba-9f91-4989-88b7-e7ac9cb127f7",
+              "name": "A single Payment Batch.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "paymentBatches",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The ID of the payment batch."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"cb2f62f3-4500-06b7-db31-fb8d66ea1627\",\n  \"name\": \"string\",\n  \"companyId\": \"string\",\n  \"processedAt\": \"1967-02-15T18:01:18.673Z\",\n  \"completedAt\": \"2025-01-21T21:51:51.905Z\",\n  \"approvedAt\": \"1999-06-19T00:54:40.432Z\",\n  \"rejectedAt\": \"1992-08-23T07:47:59.945Z\",\n  \"voidedAt\": \"1982-04-07T20:23:15.208Z\",\n  \"status\": \"rejected\",\n  \"payments\": [\n    {\n      \"id\": \"8e8979b8-efcf-b242-9224-52d2119214d7\",\n      \"batchId\": \"29211b01-0126-b949-a82d-52f7be14eb38\",\n      \"amount\": \"1.00\",\n      \"settlementAmount\": \"1.00\",\n      \"discountAmount\": \"1.00\",\n      \"currencyId\": \"USD\",\n      \"settlementCurrencyId\": \"USD\",\n      \"exchangeRate\": \"1.00\",\n      \"status\": \"voided\",\n      \"paymentMethod\": \"ach\",\n      \"referenceId\": \"string\",\n      \"approvedAt\": \"1965-09-26T05:31:05.290Z\",\n      \"failedAt\": \"1973-10-12T03:10:26.529Z\",\n      \"failedReason\": \"string\",\n      \"fundedAt\": \"1960-05-01T08:48:39.022Z\",\n      \"acceptedAt\": \"1952-10-25T01:41:55.663Z\",\n      \"rejectedAt\": \"2020-07-10T12:15:31.564Z\",\n      \"voidedAt\": \"1963-07-30T18:39:52.714Z\",\n      \"confirmedAt\": \"2011-09-22T10:17:51.302Z\",\n      \"remoteId\": \"string\",\n      \"remoteError\": \"string\",\n      \"remoteErroredAt\": \"2015-12-28T22:06:13.119Z\",\n      \"invoice\": {\n        \"internalId\": \"string\",\n        \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n        \"refNumber\": \"string\"\n      },\n      \"costAccount\": {\n        \"internalId\": \"string\",\n        \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n      },\n      \"vendor\": {\n        \"internalId\": \"string\",\n        \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n      }\n    }\n  ],\n  \"credits\": [\n    {\n      \"id\": \"20230dcc-56fb-c796-253e-1f62e851f8bd\",\n      \"batchId\": \"cbfcd94b-7048-4d89-12dc-8e5363f9c592\",\n      \"amount\": \"1.00\",\n      \"settlementAmount\": \"1.00\",\n      \"currencyId\": \"USD\",\n      \"settlementCurrencyId\": \"USD\",\n      \"exchangeRate\": \"1.00\",\n      \"status\": \"acknowledged\",\n      \"paymentMethod\": \"card\",\n      \"referenceId\": \"string\",\n      \"approvedAt\": \"1949-02-08T09:05:47.033Z\",\n      \"fundedAt\": \"1989-11-11T03:08:09.745Z\",\n      \"failedAt\": \"2004-11-20T00:52:57.829Z\",\n      \"failedReason\": \"string\",\n      \"acceptedAt\": \"2020-12-29T20:56:26.093Z\",\n      \"rejectedAt\": \"1976-03-31T23:04:28.285Z\",\n      \"voidedAt\": \"1985-10-21T08:45:30.511Z\",\n      \"confirmedAt\": \"2001-11-06T12:40:47.189Z\",\n      \"remoteId\": \"string\",\n      \"remoteError\": \"string\",\n      \"remoteErroredAt\": \"1996-11-13T20:54:41.514Z\",\n      \"invoice\": {\n        \"internalId\": \"string\",\n        \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n        \"refNumber\": \"string\"\n      },\n      \"costAccount\": {\n        \"internalId\": \"string\",\n        \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n      },\n      \"vendor\": {\n        \"internalId\": \"string\",\n        \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5f25201a-793a-494b-beb4-0db5869da733",
+              "name": "HTTP call rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "paymentBatches",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The ID of the payment batch."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.",
+                  "key": "Retry-After",
+                  "value": "5727"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 145,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "77870aea-9337-4c81-a97f-682e9f63ec1d",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "paymentBatches",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The ID of the payment batch."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 145,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.no.stage.vic.ai",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "521a8e9b-65c7-4985-978c-c67ed44e4212",
+    "name": "Vic.ai Accounts Payment Batches API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "## Introduction\n\nThe Vic.ai API provides a seamless connection between your Enterprise Resource\nPlanning (ERP) system and the Vic.ai product suite.\n\nThe API is designed to offer three main areas of functionality:\n\n- **Syncing master data:** This refers to the data in your ERP that Vic.ai\n  interacts with. You are required to supply and update this data in Vic.ai, and\n  you also have the option to verify the copy of the masterdata in Vic.ai.\n\n- **Syncing training data:** We need historical data to train your AI model. To\n  that end, the API provides endpoints to sync historical invoices into Vic.ai\n  and to confirm their presence.\n\n- **Subscribing to and receiving webhooks:** Webhooks enable users or automated\n  tasks to interact with your ERP through various actions in the Vic.ai product\n  suite, such as posting an invoice, payment or purchase order or requesting\n  synchronization. You will receive a notification via a webhook when these\n  actions occur.\n\n\nFor US-based integrations, please use the following base API URL:\n\n```\nhttps://api.us.vic.ai\n```\n\nFor integrations based in Norway, use the following base API URL:\n\n```\nhttps://api.no.vic.ai\n```\n\nAll paths mentioned in this documentation should use one of these URLs as the\nbase.\n\nExample:\n\n```bash\ncurl https://api.us.vic.ai/v0/healthCheck \\\n    -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\"\n```\n\n## Getting Started\n\nTo begin interacting with the Vic.ai API, you will need the following\ncredentials:\n\n* A Vic.ai client ID\n* A Vic.ai client secret.\n\nThese can be provided to you securely by a Vic.ai representative\n[upon request](https://www.vic.ai/book-a-demo).\n\n**Please note:** These credentials are essentially the keys to your ERP\nintegration. If they fall into the wrong hands, unauthorized parties could\nimpersonate you, gain access to sensitive data, and potentially perform\nmalicious actions. Therefore, it's crucial to keep these credentials safe at all\ntimes to protect your application's integrity and your clients' data.\n\n### Limitations\n\nThe Vic.ai API has the following limitations:\n\n**Rate Limiting:** The API is rate-limited to 500 requests per 10-second time\nframe. If you exceed this limit, you will receive a `429 Too Many Requests`\nresponse. The limit is per Oauth client ID. If you continue to receive `429`s,\nplease contact support with a request id from the response headers.\n",
+      "type": "text/plain"
+    }
+  }
+}

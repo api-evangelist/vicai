@@ -1,0 +1,201 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vic.ai Accounts Organizations API",
+    "version": "v10.40.4"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Organizations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Search and list organizations accessible",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/organizations",
+            "params": [
+              {
+                "name": "name_contains",
+                "value": "",
+                "type": "query",
+                "description": "List organizations with names containing the value provided. This is\na case insensitive match.\n"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Search and list organizations accessible. Accepts both company-scoped\ntokens and partner tokens (obtained via `POST /v0/token` with the\nrespective credentials). Partners see the organizations they created\nvia `POST /v2/organizations` or were granted access to.\n"
+        },
+        {
+          "info": {
+            "name": "Create an organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v2/organizations",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new organization. The organization is automatically linked to\nthe authenticated partner client. Requires partner authentication\n(obtain a token via `POST /v0/token`).\n\nThis endpoint creates only the organization. Create the first company\nunder it as a separate step with\n`POST /v2/organizations/{organization_id}/companies` — the partner\nbootstrap path, which returns the new company's company-scoped OAuth\nclient. (`POST /v2/companies` also creates companies, but it derives the\norganizatio"
+        },
+        {
+          "info": {
+            "name": "Get an organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/organizations/:organization_id",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the Organization."
+              }
+            ]
+          },
+          "docs": "Get an organization. Accepts both company-scoped tokens and partner\ntokens (obtained via `POST /v0/token` with the respective\ncredentials). The organization must be one the caller has access to —\nfor partners, one they created via `POST /v2/organizations` or were\ngranted access to. Useful for verifying an existing organization\nbefore creating companies under it.\n"
+        },
+        {
+          "info": {
+            "name": "List users attached to an organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/organizations/:organization_id/users",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the Organization."
+              },
+              {
+                "name": "name",
+                "value": "",
+                "type": "query",
+                "description": "The name of the user. This is a case-insensitive match."
+              },
+              {
+                "name": "name_contains",
+                "value": "",
+                "type": "query",
+                "description": "The name of the user contains the value specified. This is a\ncase-insensitive match.\n"
+              },
+              {
+                "name": "email",
+                "value": "",
+                "type": "query",
+                "description": "The user has the email address. This is a case-insensitive match.\n"
+              },
+              {
+                "name": "email_contains",
+                "value": "",
+                "type": "query",
+                "description": "The email of the user contains the value specified. This is a\ncase-insensitive match.\n"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List users attached to an organization."
+        },
+        {
+          "info": {
+            "name": "Create and attach user to an organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v2/organizations/:organization_id/users",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create and attach a user to an organization. If the user already exists,\nuse the `attachUserToOrganizationV2` (`POST /v2/organizations/{organization_id}/users/attach`)\noperation instead.\n"
+        },
+        {
+          "info": {
+            "name": "Attach an existing user to an organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v2/organizations/:organization_id/users/attach",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Attaches an existing user to an organization. You may provide the\n`user_id` or `email`. If the user does not exist, you will need to use\nthe `createOrganizationUserV2` operation.\n"
+        },
+        {
+          "info": {
+            "name": "Remove user from organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.no.stage.vic.ai/v2/organizations/:organization_id/users/:user_id",
+            "params": [
+              {
+                "name": "organization_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the organization."
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user."
+              }
+            ]
+          },
+          "docs": "Removes the user from the organization. **NOTE**: This will remove the\nuser from __ALL__ of the companies within the organization.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

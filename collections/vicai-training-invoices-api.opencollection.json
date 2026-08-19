@@ -1,0 +1,152 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vic.ai Accounts Training Invoices API",
+    "version": "v10.40.4"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Training Invoices",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all training invoices",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/trainingInvoices",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "How many items to return at one time (max 100) (default 100)"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Which item to start from. See [Pagination](#section/Pagination) for more information."
+              },
+              {
+                "name": "since",
+                "value": "",
+                "type": "query",
+                "description": "Datetime value for incremental updates.\n**NOTE**: For external datetimes, the expected format is not in UTC. for\nvic-internal datetimes (see `SinceIsExternal`) the format is UTC.\n"
+              },
+              {
+                "name": "sortOrder",
+                "value": "",
+                "type": "query",
+                "description": "what sort order should be used for queries"
+              }
+            ]
+          },
+          "docs": "Use this request to query the training invoice data that are stored in Vic.ai.\n"
+        },
+        {
+          "info": {
+            "name": "Info for a specific training invoice",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/trainingInvoices/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the database entry"
+              }
+            ]
+          },
+          "docs": "Use this request to get data for a single training invoice that is\nstored in Vic.ai\n"
+        },
+        {
+          "info": {
+            "name": "Upserts a training invoice",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.no.stage.vic.ai/v0/trainingInvoices/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the database entry"
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "invoiceData",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "invoiceDocument",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Use this request to *upsert* training invoice data for one invoice into\nVic.ai.\n\nWhen putting a new invoice into the system, an `invoiceDocument` will be\nrequired. If the training invoice already exists, an `invoiceDocument`\nwill not be required.\n\nAll requests that need to have the `invoiceDocument` updated should have\na `multipart/form-data` content type.\n\nIf the training invoice just needs to be updated without a document\nspecified a content type of `application/json` is permitted.\n\nIf the inv"
+        },
+        {
+          "info": {
+            "name": "Deletes a training invoice",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.no.stage.vic.ai/v0/trainingInvoices/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the database entry"
+              }
+            ]
+          },
+          "docs": "Use this request to delete data for a single training invoice that is\nstored in Vic.ai\n"
+        },
+        {
+          "info": {
+            "name": "Document for a specific training invoice",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/trainingInvoices/:id/document",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the database entry"
+              }
+            ]
+          },
+          "docs": "Use this request to get the document associated with a training invoice\nthat is stored in Vic.ai\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

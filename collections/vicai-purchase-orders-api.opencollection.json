@@ -1,0 +1,247 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vic.ai Accounts Purchase Orders API",
+    "version": "v10.40.4"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Purchase Orders",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List purchase orders",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/purchaseOrders",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "How many items to return at one time (max 100) (default 100)"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Which item to start from. See [Pagination](#section/Pagination) for more information."
+              },
+              {
+                "name": "since",
+                "value": "",
+                "type": "query",
+                "description": "Datetime value for incremental updates.\n**NOTE**: For external datetimes, the expected format is not in UTC. for\nvic-internal datetimes (see `SinceIsExternal`) the format is UTC.\n"
+              },
+              {
+                "name": "upto",
+                "value": "",
+                "type": "query",
+                "description": "Datetime value for decremental updates.\n"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "selects the status of purchase orders which are to be searched"
+              }
+            ]
+          },
+          "docs": "List purchase orders."
+        },
+        {
+          "info": {
+            "name": "Create a purchase order",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/purchaseOrders",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a purchase order in the Vic.ai system.\n\nYou are responsible for setting the `amount` on the purchase order which is the\nsummation of all the purchase order line items.\n\nOptionally, to set a requestor, you can pass a `requestor` object with `email`\nor `name`.\n\nOptionally, to set a site owner, you can pass a `siteOwner` object with `email`\nor `name`.\n"
+        },
+        {
+          "info": {
+            "name": "Synchronize Purchase Orders",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/purchaseOrders/synchronize"
+          },
+          "docs": "Tells the ERP to synchronize the Purchase Orders resource. If the ERP is\nusing the API, the call will be sent via the normal webhook methods. If\nthe ERP is not using this API then this will call the native\nintegration's synchronize functionality.\n"
+        },
+        {
+          "info": {
+            "name": "Get a purchase order",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/purchaseOrders/:purchaseOrderId",
+            "params": [
+              {
+                "name": "purchaseOrderId",
+                "value": "",
+                "type": "path",
+                "description": "The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ]
+          },
+          "docs": "Get a purchase order."
+        },
+        {
+          "info": {
+            "name": "Update a purchase order",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.no.stage.vic.ai/v0/purchaseOrders/:purchaseOrderId",
+            "params": [
+              {
+                "name": "purchaseOrderId",
+                "value": "",
+                "type": "path",
+                "description": "The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a purchase order.\n\nAfter the update is accepted, Vic automatically schedules purchase order\nprocessing. You do not need to call `processPurchaseOrder` manually unless you\nneed to trigger processing immediately.\n\nIf the purchase order has matches to invoices that have been transmitted or are\ncurrently being posted, and the fields `vendor`, `poNumber`, or `matchingType`\nare being changed, you will not be able to update the purchase order -\nan `UnprocessableEntityResponse` will be returned.\n"
+        },
+        {
+          "info": {
+            "name": "Delete a purchase order",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.no.stage.vic.ai/v0/purchaseOrders/:purchaseOrderId",
+            "params": [
+              {
+                "name": "purchaseOrderId",
+                "value": "",
+                "type": "path",
+                "description": "The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ]
+          },
+          "docs": "Delete a purchase order.\n\nIf there are existing matches made to an invoice that has been transmitted, or\nthat is currently being posted, you will not be able to delete the purchase\norder - an `UnprocessableEntityResponse` will be returned.\n"
+        },
+        {
+          "info": {
+            "name": "Process the purchase order",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/purchaseOrders/:purchaseOrderId/process",
+            "params": [
+              {
+                "name": "purchaseOrderId",
+                "value": "",
+                "type": "path",
+                "description": "The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ]
+          },
+          "docs": "NOTE: Manually calling this endpoint is generally not required. Purchase order\nprocessing is automatically scheduled after any of the following operations:\n\n  - createPurchaseOrder\n  - updatePurchaseOrder\n  - openPurchaseOrder\n  - createPurchaseOrderLineItem\n  - updatePurchaseOrderLineItem\n  - deletePurchaseOrderLineItem\n  - openPurchaseOrderLineItem\n\nProcessing uses a trailing-edge debounce mechanism: the 15-second timer resets\nafter each operation, and processing will be queued 15 seconds afte"
+        },
+        {
+          "info": {
+            "name": "Close a purchase order",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/purchaseOrders/:purchaseOrderId/close",
+            "params": [
+              {
+                "name": "purchaseOrderId",
+                "value": "",
+                "type": "path",
+                "description": "The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ]
+          },
+          "docs": "Closes a purchase order."
+        },
+        {
+          "info": {
+            "name": "Opens a purchase order",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/purchaseOrders/:purchaseOrderId/open",
+            "params": [
+              {
+                "name": "purchaseOrderId",
+                "value": "",
+                "type": "path",
+                "description": "The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ]
+          },
+          "docs": "Opens a purchase order."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

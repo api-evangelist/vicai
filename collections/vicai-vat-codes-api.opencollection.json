@@ -1,0 +1,163 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vic.ai Accounts VAT Codes API",
+    "version": "v10.40.4"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "VAT Codes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all VAT codes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/vatCodes",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "How many items to return at one time (max 100) (default 100)"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Which item to start from. See [Pagination](#section/Pagination) for more information."
+              },
+              {
+                "name": "since",
+                "value": "",
+                "type": "query",
+                "description": "Datetime value for incremental updates.\n**NOTE**: For external datetimes, the expected format is not in UTC. for\nvic-internal datetimes (see `SinceIsExternal`) the format is UTC.\n"
+              },
+              {
+                "name": "sortOrder",
+                "value": "",
+                "type": "query",
+                "description": "what sort order should be used for queries"
+              },
+              {
+                "name": "vatCode",
+                "value": "",
+                "type": "query",
+                "description": "selects the VAT code which is to be displayed"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ]
+          },
+          "docs": "Use this request to query all the VAT code data that are stored in\nVic.ai.\n"
+        },
+        {
+          "info": {
+            "name": "Synchronize Vat Codes",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/vatCodes/synchronize"
+          },
+          "docs": "Tells the ERP to synchronize the Vat Code resource. If the ERP is using\nthe API, the call will be sent via the normal webhook methods. If the\nERP is not using this API then this will call the native integration's\nsynchronize functionality.\n"
+        },
+        {
+          "info": {
+            "name": "Info for a specific VAT code",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/vatCodes/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the database entry"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ]
+          },
+          "docs": "Use this request to get data for a single VAT code that is stored in\nVic.ai\n"
+        },
+        {
+          "info": {
+            "name": "Upserts a VAT code",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.no.stage.vic.ai/v0/vatCodes/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the database entry"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Use this request to *upsert* VAT code into Vic.ai.\nThe request body should contain the VAT code object as JSON.\nIf the VAT code is known by Vic.ai, the id supplied will be used to\nresolve the VAT code and perform an update of the data, otherwise, a new\nVAT code will be inserted.\n"
+        },
+        {
+          "info": {
+            "name": "Deletes a VAT code",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.no.stage.vic.ai/v0/vatCodes/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the database entry"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ]
+          },
+          "docs": "Use this request to delete data for a single VAT code that is stored in\nVic.ai\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

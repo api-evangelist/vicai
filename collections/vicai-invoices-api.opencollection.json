@@ -1,0 +1,624 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vic.ai Accounts Invoices API",
+    "version": "v10.40.4"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Invoices",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all invoices",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/invoices",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "How many items to return at one time (max 100) (default 100)"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Which item to start from. See [Pagination](#section/Pagination) for more information."
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              },
+              {
+                "name": "since",
+                "value": "",
+                "type": "query",
+                "description": "Datetime value for incremental updates.\n**NOTE**: For external datetimes, the expected format is not in UTC. for\nvic-internal datetimes (see `SinceIsExternal`) the format is UTC.\n"
+              },
+              {
+                "name": "sortOrder",
+                "value": "",
+                "type": "query",
+                "description": "what sort order should be used for queries"
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query",
+                "description": "selects the state of invoices which are to be searched\n(defaults to `POSTED`)\n"
+              },
+              {
+                "name": "markedAs",
+                "value": "",
+                "type": "query",
+                "description": "selects the marked as of invoices which are to be searched\n(defaults to `ALL`)\n"
+              },
+              {
+                "name": "billStatus",
+                "value": "",
+                "type": "query",
+                "description": "selects the bill status of invoices as which are to be searched\n(defaults to `ALL`)\n"
+              }
+            ]
+          },
+          "docs": "Use this request to query the invoice data that are stored in Vic.ai.\n"
+        },
+        {
+          "info": {
+            "name": "Create an invoice.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/invoices",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "When creating an invoice, there are three steps to follow:\n\n1. Create the invoice with a POST to `/invoices`\n2. Upload the document with a POST to `/invoice/{id}/document`\n3. Process the document with a POST to `/invoice/{id}/process`\n\nYou can make the id the internal id (from vic.ai) or the external id (from your system).\n\n> #### Note\n> The maximum file size allowed to upload is 100MB.\n"
+        },
+        {
+          "info": {
+            "name": "Info for a specific invoice",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/invoices/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the database entry"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ]
+          },
+          "docs": "Use this request to get data for a single invoice that is stored in\nVic.ai\n"
+        },
+        {
+          "info": {
+            "name": "Asynchronous reply to invoice post or invoice transfer",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.no.stage.vic.ai/v0/invoices/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The `internalId` of the invoice which should be confirmed.\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Use this request to indicate that an invoice has been posted or\ntransferred to the ERP system, in the case where you have not activated\na subscription, or you have responded to the subscription with a\n202-asynchronous response.\nNote that this operation can either be a confirmation, or a rejection,\ndepending on the shape of the payload.\nPossible payloads:\n- InvoiceConfirm: used to confirm that the invoice data have been\n  successfully posted to the ERP, possibly including a postingError.\n  - Use "
+        },
+        {
+          "info": {
+            "name": "Deletes an invoice",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.no.stage.vic.ai/v0/invoices/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the database entry"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              },
+              {
+                "name": "comment",
+                "value": "",
+                "type": "query",
+                "description": "selects the comment which is to be displayed"
+              }
+            ]
+          },
+          "docs": "Use this request to delete data for a single invoice that is stored in\nVic.ai\n\nAn invoice that is currently in an approval flow, or that has already\nbeen posted, transferred, or submitted, cannot be deleted and is\nrejected with `422 Unprocessable Entity`. Resolve the approval or\ntransmission first, then retry the deletion.\n"
+        },
+        {
+          "info": {
+            "name": "Start the invoice processing.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/invoices/:id/process",
+            "params": [
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The Invoice internal id or external id."
+              }
+            ]
+          },
+          "docs": "Tells Vic that the invoice is ready to start being processed. Once this\nis called, it may not be called again.\n"
+        },
+        {
+          "info": {
+            "name": "Document for a specific invoice",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/invoices/:id/document",
+            "params": [
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The Invoice internal id or external id."
+              }
+            ]
+          },
+          "docs": "Use this request to get the document associated with a single invoice\nthat is stored in Vic.ai\n"
+        },
+        {
+          "info": {
+            "name": "Upload document invoice",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/invoices/:id/document",
+            "params": [
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The Invoice internal id or external id."
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "document",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "This attaches a document to the invoice for processing. An external id\nmust be specified for an invoice prior to calling this.\n* Once an invoice has been processed, you may not attach a new document.\n* Once a document has been attached to an invoice, it may not be\n  changed.\n**NOTE:** The maximum file size allowed is 100MB.\n"
+        },
+        {
+          "info": {
+            "name": "List supporting attachments for an invoice",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/invoices/:id/supporting-attachments",
+            "params": [
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The Invoice internal id or external id."
+              }
+            ]
+          },
+          "docs": "List the supporting attachments that have been uploaded to an invoice.\n\nSupporting attachments are auxiliary files (contracts, packing slips,\ncorrespondence, etc.) that accompany an invoice but are not the invoice\ndocument itself. For the primary invoice document see\n`GET /v0/invoices/{id}/document`.\n"
+        },
+        {
+          "info": {
+            "name": "Upload a supporting attachment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/invoices/:id/supporting-attachments",
+            "params": [
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The Invoice internal id or external id."
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "file",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Upload a supporting attachment to an invoice.\n\nSupporting attachments are auxiliary files (contracts, packing slips,\ncorrespondence, etc.) that accompany an invoice but are not the invoice\ndocument itself. For uploading the primary invoice document see\n`POST /v0/invoices/{id}/document`.\n\nThe request must be sent as `multipart/form-data` with the file in a\nform field named **`file`** (note: this differs from the invoice\ndocument endpoint, which uses the field name `document`).\n\n**Supported conten"
+        },
+        {
+          "info": {
+            "name": "Delete a supporting attachment",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.no.stage.vic.ai/v0/invoices/:id/supporting-attachments/:attachment_id",
+            "params": [
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The Invoice internal id or external id."
+              },
+              {
+                "name": "attachment_id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the supporting attachment (returned by the list endpoint)."
+              }
+            ]
+          },
+          "docs": "Soft-delete a supporting attachment from an invoice. The attachment is\nretained internally for audit purposes but is no longer returned by\n`GET /v0/invoices/{id}/supporting-attachments` and its download URL is\ninvalidated.\n\nThe request succeeds with `204 No Content`. If `attachment_id` does\nnot belong to the given invoice the endpoint responds with\n`404 Not Found`.\n\n**Immutability:** deletions are rejected with `422` when the invoice\nis in an immutable state (for example already posted or transm"
+        },
+        {
+          "info": {
+            "name": "List invoices",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/invoices",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company in Vic.ai."
+              },
+              {
+                "name": "updated_after",
+                "value": "",
+                "type": "query",
+                "description": "Only return invoices changed strictly after this timestamp. Applies\nto whichever timestamp `system` selects.\n"
+              },
+              {
+                "name": "system",
+                "value": "",
+                "type": "query",
+                "description": "Which timestamp `updated_after` filters on and the page is ordered\nby. `internal` (default) uses the time Vic.ai last changed the\ninvoice; `external` uses the upstream system's last-updated time.\n"
+              },
+              {
+                "name": "sort_order",
+                "value": "",
+                "type": "query",
+                "description": "Direction the page is ordered by the selected timestamp."
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by workflow status."
+              },
+              {
+                "name": "marked_as",
+                "value": "",
+                "type": "query",
+                "description": "Filter by manual payment marking."
+              },
+              {
+                "name": "bill_status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by bill payment status."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Lists a company's invoices. By default returns posted invoices ordered\nby the time Vic.ai last changed them, oldest change first — pass\n`updated_after` (with `system`) to walk a change feed incrementally.\nUse `status`, `marked_as`, and `bill_status` to narrow the results.\n"
+        },
+        {
+          "info": {
+            "name": "Get an invoice",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/invoices/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the invoice in Vic.ai."
+              }
+            ]
+          },
+          "docs": "Get a single invoice by its Vic.ai ID.\n"
+        },
+        {
+          "info": {
+            "name": "Delete an invoice",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.no.stage.vic.ai/v2/invoices/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the invoice in Vic.ai."
+              },
+              {
+                "name": "comment",
+                "value": "",
+                "type": "query",
+                "description": "selects the comment which is to be displayed"
+              }
+            ]
+          },
+          "docs": "Delete a single invoice by its Vic.ai ID.\n\nAn invoice that is currently in an approval flow, or that has already\nbeen posted, transferred, or submitted, cannot be deleted and is\nrejected with `422 Unprocessable Entity`. Resolve the approval or\ntransmission first, then retry the deletion.\n"
+        },
+        {
+          "info": {
+            "name": "Get invoice document",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/invoices/:id/document",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the invoice in Vic.ai."
+              }
+            ]
+          },
+          "docs": "Get the PDF document for a specific invoice.\n\nThis endpoint returns the invoice document if it has been generated.\nIf the document is not yet available (pdf_path is not set), the endpoint\nwill return a 202 (Accepted) status and enqueue a background job to generate\nthe document. The client should retry the request after a short delay.\n\nThe document generation typically completes within a few seconds, but may\ntake longer for complex invoices or during high system load.\n"
+        },
+        {
+          "info": {
+            "name": "Asynchronous reply to invoice post or invoice transfer",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/invoices/:id/confirm",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The `internalId` of the invoice which should be confirmed.\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Used to confirm that the invoice data have been successfully posted to\nthe ERP, possibly including a `postingError`.\nUse of this `postingError` means that the invoice data are posted, but\nsome secondary content needs amendation in the ERP that cannot be\nperformed from the vic user interface (for example: a problem\nuploading the posted document).\nNote: `id` *must* be the `internalId` of the invoice.\n\n**Submit flow timeout:** When an invoice is submitted via the\n`invoice_submitted` webhook, if Vic"
+        },
+        {
+          "info": {
+            "name": "Asynchronous reply to invoice post",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/invoices/:id/reject",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The `internalId` of the invoice which should be confirmed.\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Used to communicate that the invoice data have **NOT** been\nsuccessfully posted to the ERP, due to invalid data. This should **NOT**\nbe used to communicate an error in posting due to a general failure\nsuch as a network issue or an availability issue with the ERP, in\nthose or similar cases, a retry should be performed without notifying the vic system.\nNote: `id` *must* be the `internalId` of the invoice.\n"
+        },
+        {
+          "info": {
+            "name": "List all line items for a specific invoice",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/invoices/:id/lineItems",
+            "params": [
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The Invoice internal id or external id."
+              }
+            ]
+          },
+          "docs": "List all of the line items for the invoice.\nNOTE: They are ungrouped so that you may inspect and modify them as\nnecessary.\n"
+        },
+        {
+          "info": {
+            "name": "Update a specific invoice line item",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.no.stage.vic.ai/v0/invoiceItems/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the database entry"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates an individual invoice line item. This allows you to modify\nthe properties of a specific line item within an invoice, including\namounts, tax information, cost accounts, and dimensions.\n"
+        },
+        {
+          "info": {
+            "name": "Update invoice external fields",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.no.stage.vic.ai/v0/invoices/:id/external",
+            "params": [
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The Invoice internal id or external id."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates an invoices external fields.\n\nThe following fields are only available to customers with invoice\nexternal payment fields enabled:\n\n- `externalPaymentAmount`\n- `externalPaymentCurrencyId`\n- `externalPaymentDate`\n- `externalPaymentNumber`\n- `externalPaymentSource`\n- `externalPaymentStatus`\n- `externalPaymentTotalPaid`\n- `externalPaymentType`\n\nWhen setting the `externalPaymentStatus` to `voided` you may use the `externalPaymentDate` to represent when it was voided.\n"
+        },
+        {
+          "info": {
+            "name": "Bulk submit invoices for approval",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/invoices/submit",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Marks one or more invoices as submitted for downstream approval workflows\n(e.g. NetSuite approval queue) before they are locked as posted. Records\nthe `submit, started` transmission state via the same pipeline that\nnative integrations use, and enqueues the `invoice_submitted` webhook\nfor each invoice.\n\nIf any invoice is ineligible (already posted, transferred, or submitted,\nmissing required fields, soft-deleted vendor, etc.) or authorization\nfails, the entire batch is aborted with no partial sta"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

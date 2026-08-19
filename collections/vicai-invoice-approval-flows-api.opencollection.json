@@ -1,0 +1,150 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vic.ai Accounts Invoice Approval Flows API",
+    "version": "v10.40.4"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Invoice Approval Flows",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List invoice approval flows",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/invoice_approval_flows",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Lists invoice approval flows for a company. Returns a paginated list of\napproval flows with their selection rules and steps.\n"
+        },
+        {
+          "info": {
+            "name": "Create an invoice approval flow",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/invoice_approval_flows",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "## Creating a Flow with Selection Rules\n\nWhen you create an approval flow (see the main invoice approval flow endpoint documentation for the request/response contract), you can define the selection rules that determine which invoices will be routed through that flow and its steps. The sections below describe the structure and semantics for those selection rules so you can include them in the `InvoiceApprovalFlowInputV2` payload.\n\n**Request Body:** `InvoiceApprovalFlowInputV2`\n\n**Response:** `201"
+        },
+        {
+          "info": {
+            "name": "Get an invoice approval flow",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/invoice_approval_flows/:id",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the invoice approval flow. Can be either:\n- An integer ID (the internal database ID)\n- A `remote_id` (a string identifier used to look up the flow)\n\nIf the value is a valid integer, the system will first attempt to find the flow by its integer ID.\nIf not found or if the value is not a valid integer, it will attempt to find the flow by `remote_id`.\n"
+              }
+            ]
+          },
+          "docs": "Returns the approval flow with the given ID if it exists and the OAuth client\nhas access to the company.\n"
+        },
+        {
+          "info": {
+            "name": "Update an invoice approval flow",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/invoice_approval_flows/:id",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the invoice approval flow. Can be either:\n- An integer ID (the internal database ID)\n- A `remote_id` (a string identifier used to look up the flow)\n\nIf the value is a valid integer, the system will first attempt to find the flow by its integer ID.\nIf not found or if the value is not a valid integer, it will attempt to find the flow by `remote_id`.\n\nYou can also provide an integer ID in the URL and update the `remote_id` field in the request body.\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates an existing approval flow with selection rules and steps.\nThe flow must belong to the company associated with the OAuth client.\n\nThe request body structure and selection rules are the same as the POST endpoint\nfor creating an approval flow. See the POST endpoint documentation for complete\ndetails on flow structure, selection rules, steps, and approver selection rules.\n"
+        },
+        {
+          "info": {
+            "name": "Delete an invoice approval flow",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.no.stage.vic.ai/v2/companies/:company_id/invoice_approval_flows/:id",
+            "params": [
+              {
+                "name": "company_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the company"
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the invoice approval flow. Can be either:\n- An integer ID (the internal database ID)\n- A `remote_id` (a string identifier used to look up the flow)\n\nIf the value is a valid integer, the system will first attempt to find the flow by its integer ID.\nIf not found or if the value is not a valid integer, it will attempt to find the flow by `remote_id`.\n"
+              }
+            ]
+          },
+          "docs": "Deletes an invoice approval flow. Performs a soft delete by setting the\ndeleted_at timestamp. Returns 204 No Content on success.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

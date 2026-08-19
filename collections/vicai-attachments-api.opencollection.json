@@ -1,0 +1,63 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vic.ai Accounts Attachments API",
+    "version": "v10.40.4"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Attachments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Upload an attachment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/attachments",
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "file",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Use this to upload an attachment to Vic.ai. The attachment will be\ncreated and processing enqueued automatically.\n\nThe response is a 201 with the attachment ID.\n"
+        },
+        {
+          "info": {
+            "name": "Get attachment processing status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/attachments/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Returns the processing status of an uploaded attachment, and the ids of\nany invoices created from it.\n\nProcessing is asynchronous: a `201` from the upload only confirms the\nfile was received and queued. Poll this endpoint to learn whether\nprocessing completed (`status: processed`) or failed (`status: failed`).\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

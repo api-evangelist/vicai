@@ -1,0 +1,140 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vic.ai Accounts Payment Terms API",
+    "version": "v10.40.4"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Payment Terms",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a list of payment terms",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/paymentTerms"
+          },
+          "docs": "Get a list of payment terms.\n"
+        },
+        {
+          "info": {
+            "name": "Create a new payment term",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/paymentTerms",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new payment term.\n"
+        },
+        {
+          "info": {
+            "name": "Synchronize Payment Terms",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.no.stage.vic.ai/v0/paymentTerms/synchronize"
+          },
+          "docs": "Tells the ERP to synchronize the Payment Terms resource. If the ERP is\nusing the API, the call will be sent via the normal webhook methods. If\nthe ERP is not using this API then this will call the native\nintegration's synchronize functionality.\n"
+        },
+        {
+          "info": {
+            "name": "Get a payment term",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/paymentTerms/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the database entry"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ]
+          },
+          "docs": "Get a payment term.\nThe `id` in the path can be either the Payment Term's internal ID or its\nexternal ID when `useSystem=external` is included in the query string.\n"
+        },
+        {
+          "info": {
+            "name": "Update a payment term",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.no.stage.vic.ai/v0/paymentTerms/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the database entry"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a payment term.\nThe `id` in the path can be either the Payment Term's internal ID or its\nexternal ID when `useSystem=external` is included in the request. The\nPayment Term's external ID can be updated by including `externalId={value}`\nin the request body. If the `externalId` key is present without a value,\nthe Payment Term's `externalId` **WILL** be cleared.\n"
+        },
+        {
+          "info": {
+            "name": "Delete a payment term",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.no.stage.vic.ai/v0/paymentTerms/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The id of the database entry"
+              },
+              {
+                "name": "useSystem",
+                "value": "",
+                "type": "query",
+                "description": "Which system to use for id or updatedAt filters.\n"
+              }
+            ]
+          },
+          "docs": "Delete a payment term.\nThe `id` in the path can be either the Payment Term's internal ID or its\nexternal ID when `useSystem=external` is included in the query string.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

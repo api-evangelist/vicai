@@ -877,3 +877,9 @@ tools:
   source_operation: openapi/vicai-openapi-original.json#getCompanyWebhookEventV2
   method: GET
   path: /v2/companies/{company_id}/webhook/events/{event_id}
+deployment:
+  mode: none
+  verified: derived
+  tools: 173
+  checked: '2026-08-12'
+  source: catalog MCP census

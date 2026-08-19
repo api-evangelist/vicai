@@ -1,0 +1,602 @@
+{
+  "item": [
+    {
+      "id": "a2febb16-a929-4c64-8d33-a9e316b082b9",
+      "name": "Bills",
+      "description": {
+        "content": "Bills are imported invoices that can be created and updated through the API.\nThese operations allow you to create new bills and update existing ones\nthat were previously imported via the API.\n",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "481a1ad7-e76a-4a7b-9a38-fe5831a49781",
+          "name": "Create a new imported bill",
+          "request": {
+            "name": "Create a new imported bill",
+            "description": {
+              "content": "Create a new imported bill with the given `remote_id`. If a bill with the\nsame `remote_id` already exists, returns an error.\n\nImported bills are automatically set to \"posted\" status.\n\n**Document Upload**: You can upload a document along with the bill data using multipart/form-data.\nWhen using multipart, send the bill data fields directly and the file as `document`.\n\n**VAT Handling**: If `total_vat_amount` is provided and greater than zero, the system\nwill automatically create a hidden VAT line item in addition to the provided line items.\n\n**Note**: Only bills imported via the API can be updated later using the update endpoint.\n\n**Required Configuration**: This endpoint requires the \"Allow bills to be imported via public API\"\ncompany configuration to be enabled. Returns 403 Forbidden if not enabled.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "bills"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "multipart/form-data"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "ref_number",
+                  "value": "<string>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "vendor_remote_id",
+                  "value": "<string>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "transaction_type",
+                  "value": "<string>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "remote_updated_at",
+                  "value": "<dateTime>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "remote_id",
+                  "value": "<string>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "document",
+                  "type": "file",
+                  "description": "The bill document file (PDF, image, etc.)."
+                },
+                {
+                  "key": "account_number",
+                  "value": "<string,null>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "issue_date",
+                  "value": "<string,null-date>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "due_date",
+                  "value": "<string,null-date>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "currency",
+                  "value": "<string,null-ISO-4217>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "description",
+                  "value": "<string,null>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "gl_date",
+                  "value": "<string,null-date>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "language",
+                  "value": "<string,null>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "po_number",
+                  "value": "<string,null>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "service_period_start",
+                  "value": "<string,null-date>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "service_period_end",
+                  "value": "<string,null-date>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "total_amount",
+                  "value": "<string,null-decimal>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "total_vat_amount",
+                  "value": "<string,null-decimal>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "payment_term_id",
+                  "value": "<string,null-uuid>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "payment_info",
+                  "value": "{\"bank_account_number\":\"<string,null>\",\"bankgiro\":\"<string,null>\",\"plusgiro\":\"<string,null>\",\"bban\":\"<string,null>\",\"default_method\":\"<string,null>\",\"international_bank_account\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"}}",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "credit_account",
+                  "value": "{\"kid\":\"<string,null>\",\"credit_account_remote_id\":\"<string,null>\",\"credit_account_id\":\"<string,null>\"}",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "fields",
+                  "value": "[{\"label\":\"<string>\",\"value\":\"<string,null>\"},{\"label\":\"<string>\",\"value\":\"<string,null>\"}]",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "purchase_order_numbers",
+                  "value": "[\"<string>\",\"<string>\"]",
+                  "type": "text",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "f4bb1004-6906-4d28-8669-4de3d1cabdac",
+              "name": "Bill was created successfully.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "bills"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"legacy_id\": \"12345\",\n    \"ref_number\": \"INV-2024-001\",\n    \"remote_id\": \"remote-123\",\n    \"status\": \"posted\",\n    \"transaction_type\": \"invoice\",\n    \"ui_status\": \"export_failed\",\n    \"vendor\": {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"legacy_id\": \"12345\",\n      \"remote_id\": \"vendor-123\",\n      \"name\": \"Acme Corp\",\n      \"org_number\": \"987654321\"\n    },\n    \"company\": {\n      \"id\": \"32dce5e0-62f6-ba5e-ddf1-731e54b3372f\",\n      \"name\": \"string\",\n      \"remote_id\": \"company-123\"\n    },\n    \"currency\": \"USD\",\n    \"description\": \"Monthly service fee\",\n    \"issue_date\": \"2024-01-15\",\n    \"due_date\": \"2024-02-15\",\n    \"gl_date\": \"2024-01-15\",\n    \"language\": \"en\",\n    \"line_items\": [\n      {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n        \"index\": 1,\n        \"amount_sum\": \"100.00\",\n        \"amount_tax\": \"20.00\",\n        \"amount_net\": \"80.00\",\n        \"amount_vat\": \"20.00\",\n        \"amount_vat_reclaimable\": \"16.00\",\n        \"amount_vat_reduced\": \"4.00\",\n        \"vat_reduction_percent\": \"20.00\",\n        \"amount_freight\": \"5.00\",\n        \"comment\": \"Urgent delivery required\",\n        \"unit_price\": \"25.00\",\n        \"cost_account\": {\n          \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n          \"legacy_id\": \"12345\",\n          \"name\": \"Office Expenses\",\n          \"number\": \"6100\",\n          \"remote_id\": \"ext-cost-123\",\n          \"sub_type\": \"expense\",\n          \"remote_updated_at\": \"2024-01-15T10:30:00Z\"\n        },\n        \"description\": \"Monthly software license\",\n        \"billable\": false,\n        \"po_number\": \"PO-2024-001\",\n        \"po_line_number\": 2336,\n        \"quantity_invoiced\": \"1.0\",\n        \"line_type\": \"expense\",\n        \"number\": \"ITEM-001\",\n        \"vat_code\": {\n          \"id\": \"2c9d21c2-d3e7-f938-b186-4a7fbc6cc0e8\",\n          \"remote_id\": \"string\",\n          \"code\": \"25\",\n          \"rate\": \"0.25\",\n          \"description\": \"string\"\n        },\n        \"tax_code\": {\n          \"id\": \"f671e99a-5ea0-2964-9e8c-ed03dfe2a05c\",\n          \"code\": \"string\",\n          \"description\": \"string\",\n          \"rate\": \"string\"\n        },\n        \"accrual\": {\n          \"start\": \"2024-01-01\",\n          \"count\": 12,\n          \"unit\": \"MONTHS\"\n        },\n        \"child_items\": [\n          {\n            \"id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"index\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"description\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"number\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"quantity_invoiced\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"unit_price\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_tax\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_net\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_sum\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_vat\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_freight\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"tax_code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"vat_code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"index\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"description\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"number\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"quantity_invoiced\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"unit_price\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_tax\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_net\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_sum\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_vat\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_freight\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"tax_code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"vat_code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ]\n      },\n      {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n        \"index\": 1,\n        \"amount_sum\": \"100.00\",\n        \"amount_tax\": \"20.00\",\n        \"amount_net\": \"80.00\",\n        \"amount_vat\": \"20.00\",\n        \"amount_vat_reclaimable\": \"16.00\",\n        \"amount_vat_reduced\": \"4.00\",\n        \"vat_reduction_percent\": \"20.00\",\n        \"amount_freight\": \"5.00\",\n        \"comment\": \"Urgent delivery required\",\n        \"unit_price\": \"25.00\",\n        \"cost_account\": {\n          \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n          \"legacy_id\": \"12345\",\n          \"name\": \"Office Expenses\",\n          \"number\": \"6100\",\n          \"remote_id\": \"ext-cost-123\",\n          \"sub_type\": \"expense\",\n          \"remote_updated_at\": \"2024-01-15T10:30:00Z\"\n        },\n        \"description\": \"Monthly software license\",\n        \"billable\": false,\n        \"po_number\": \"PO-2024-001\",\n        \"po_line_number\": 2779,\n        \"quantity_invoiced\": \"1.0\",\n        \"line_type\": \"expense\",\n        \"number\": \"ITEM-001\",\n        \"vat_code\": {\n          \"id\": \"d4c6eee2-105b-e8ed-93cf-f6270dd546e5\",\n          \"remote_id\": \"string\",\n          \"code\": \"25\",\n          \"rate\": \"0.25\",\n          \"description\": \"string\"\n        },\n        \"tax_code\": {\n          \"id\": \"e35f4d4b-b070-d443-bffb-4194a9dff57d\",\n          \"code\": \"string\",\n          \"description\": \"string\",\n          \"rate\": \"string\"\n        },\n        \"accrual\": {\n          \"start\": \"2024-01-01\",\n          \"count\": 12,\n          \"unit\": \"MONTHS\"\n        },\n        \"child_items\": [\n          {\n            \"id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"index\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"description\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"number\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"quantity_invoiced\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"unit_price\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_tax\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_net\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_sum\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_vat\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_freight\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"tax_code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"vat_code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"index\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"description\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"number\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"quantity_invoiced\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"unit_price\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_tax\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_net\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_sum\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_vat\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_freight\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"tax_code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"vat_code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ]\n      }\n    ],\n    \"payment_info\": {\n      \"bank_account_number\": \"1234567890\",\n      \"bic\": \"DNBANOKKXXX\",\n      \"iban\": \"NO9386011117947\",\n      \"bankgiro\": \"123456789\",\n      \"plusgiro\": \"123456789\"\n    },\n    \"remote_updated_at\": \"2018-03-31T21:23:25.444Z\",\n    \"account_number\": \"ACC-1001\",\n    \"amount_freight\": \"15.00\",\n    \"amount_net\": \"100.00\",\n    \"amount_sum\": \"135.00\",\n    \"amount_tax\": \"20.00\",\n    \"amount_vat\": \"20.00\",\n    \"automated_at\": \"2024-01-15T10:30:00Z\",\n    \"bill_status\": \"unpaid\",\n    \"credit_account\": {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"legacy_id\": \"12345\",\n      \"name\": \"Office Expenses\",\n      \"number\": \"6100\",\n      \"remote_id\": \"ext-cost-123\",\n      \"sub_type\": \"expense\",\n      \"remote_updated_at\": \"2024-01-15T10:30:00Z\"\n    },\n    \"document_url\": \"https://example.com/documents/bill.pdf\",\n    \"external_payment_amount\": null,\n    \"external_payment_currency_id\": null,\n    \"external_payment_date\": \"2024-02-01\",\n    \"external_payment_number\": null,\n    \"external_payment_status\": null,\n    \"external_payment_type\": null,\n    \"external_payment_source\": null,\n    \"external_payment_total_paid\": null,\n    \"kid\": \"1234567890123\",\n    \"marked_as\": \"reviewed\",\n    \"payment_term_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"payment_term\": {\n      \"id\": \"e733e7a3-79d5-4516-32a8-e65d6453bf13\",\n      \"name\": \"string\",\n      \"description\": \"string\",\n      \"days_to_pay\": 9694,\n      \"days_to_pay_condition\": \"string\",\n      \"discount_percentage\": \"string\",\n      \"discount_days\": 310,\n      \"discount_days_condition\": \"string\",\n      \"remote_id\": \"string\"\n    },\n    \"po_number\": \"PO-2024-001\",\n    \"purchase_order_numbers\": [\n      \"PO-1001\",\n      \"PO-1002\"\n    ],\n    \"posting_error\": \"Connection timeout\",\n    \"remote_data\": {\n      \"key_0\": 8396,\n      \"key_1\": false,\n      \"key_2\": \"string\",\n      \"key_3\": \"string\",\n      \"key_4\": 2341.2456896663157\n    },\n    \"self_assessed_use_tax_account\": \"USE-TAX-001\",\n    \"self_assessed_use_tax_amount\": \"5.00\",\n    \"service_period_end\": \"2024-01-31\",\n    \"service_period_start\": \"2024-01-01\",\n    \"source\": \"EHF\",\n    \"inserted_at\": \"2024-01-15T10:30:00Z\",\n    \"updated_at\": \"2024-01-15T10:30:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b6bcf807-a163-4c89-8e6e-1968f5287856",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "bills"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    },\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1d30eea8-fdb0-4163-b014-a38ff8c360c3",
+          "name": "Update an existing imported bill",
+          "request": {
+            "name": "Update an existing imported bill",
+            "description": {
+              "content": "Update an existing imported bill with the given `id`. If no bill\nwith the `id` exists, returns an error.\n\nOnly bills that were previously imported via the API can be updated.\nAttempting to update a bill that was not imported via the API will result in an error.\n\n**Document Upload**: You can upload a new document along with the bill data using multipart/form-data.\nWhen using multipart, send the bill data fields directly and the file as `document`.\n\n**VAT Handling**: If `total_vat_amount` is provided and greater than zero, the system\nwill automatically create a hidden VAT line item in addition to the provided line items.\n\n**Note**: This is a full replacement operation. All fields unspecified will be\ntreated as if they were `null` and will be cleared on the bill.\n\n**Required Configuration**: This endpoint requires the \"Allow bills to be imported via public API\"\ncompany configuration to be enabled. Returns 403 Forbidden if not enabled.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v2",
+                "bills",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The ID of the bill in the Vic system."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "multipart/form-data"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "ref_number",
+                  "value": "<string>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "vendor_remote_id",
+                  "value": "<string>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "transaction_type",
+                  "value": "<string>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "remote_updated_at",
+                  "value": "<dateTime>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "remote_id",
+                  "value": "<string>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "document",
+                  "type": "file",
+                  "description": "The bill document file (PDF, image, etc.)."
+                },
+                {
+                  "key": "account_number",
+                  "value": "<string,null>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "issue_date",
+                  "value": "<string,null-date>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "due_date",
+                  "value": "<string,null-date>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "currency",
+                  "value": "<string,null-ISO-4217>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "description",
+                  "value": "<string,null>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "gl_date",
+                  "value": "<string,null-date>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "language",
+                  "value": "<string,null>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "po_number",
+                  "value": "<string,null>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "service_period_start",
+                  "value": "<string,null-date>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "service_period_end",
+                  "value": "<string,null-date>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "total_amount",
+                  "value": "<string,null-decimal>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "total_vat_amount",
+                  "value": "<string,null-decimal>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "payment_term_id",
+                  "value": "<string,null-uuid>",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "payment_info",
+                  "value": "{\"bank_account_number\":\"<string,null>\",\"bankgiro\":\"<string,null>\",\"plusgiro\":\"<string,null>\",\"bban\":\"<string,null>\",\"default_method\":\"<string,null>\",\"international_bank_account\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"}}",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "credit_account",
+                  "value": "{\"kid\":\"<string,null>\",\"credit_account_remote_id\":\"<string,null>\",\"credit_account_id\":\"<string,null>\"}",
+                  "type": "text",
+                  "description": ""
+                },
+                {
+                  "key": "fields",
+                  "value": "[{\"label\":\"<string>\",\"value\":\"<string,null>\"},{\"label\":\"<string>\",\"value\":\"<string,null>\"}]",
+                  "type": "text",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "0dd53539-9112-468f-8514-332770e9af96",
+              "name": "Bill was updated successfully.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "bills",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The ID of the bill in the Vic system."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"legacy_id\": \"12345\",\n    \"ref_number\": \"INV-2024-001\",\n    \"remote_id\": \"remote-123\",\n    \"status\": \"posted\",\n    \"transaction_type\": \"invoice\",\n    \"ui_status\": \"export_failed\",\n    \"vendor\": {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"legacy_id\": \"12345\",\n      \"remote_id\": \"vendor-123\",\n      \"name\": \"Acme Corp\",\n      \"org_number\": \"987654321\"\n    },\n    \"company\": {\n      \"id\": \"32dce5e0-62f6-ba5e-ddf1-731e54b3372f\",\n      \"name\": \"string\",\n      \"remote_id\": \"company-123\"\n    },\n    \"currency\": \"USD\",\n    \"description\": \"Monthly service fee\",\n    \"issue_date\": \"2024-01-15\",\n    \"due_date\": \"2024-02-15\",\n    \"gl_date\": \"2024-01-15\",\n    \"language\": \"en\",\n    \"line_items\": [\n      {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n        \"index\": 1,\n        \"amount_sum\": \"100.00\",\n        \"amount_tax\": \"20.00\",\n        \"amount_net\": \"80.00\",\n        \"amount_vat\": \"20.00\",\n        \"amount_vat_reclaimable\": \"16.00\",\n        \"amount_vat_reduced\": \"4.00\",\n        \"vat_reduction_percent\": \"20.00\",\n        \"amount_freight\": \"5.00\",\n        \"comment\": \"Urgent delivery required\",\n        \"unit_price\": \"25.00\",\n        \"cost_account\": {\n          \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n          \"legacy_id\": \"12345\",\n          \"name\": \"Office Expenses\",\n          \"number\": \"6100\",\n          \"remote_id\": \"ext-cost-123\",\n          \"sub_type\": \"expense\",\n          \"remote_updated_at\": \"2024-01-15T10:30:00Z\"\n        },\n        \"description\": \"Monthly software license\",\n        \"billable\": false,\n        \"po_number\": \"PO-2024-001\",\n        \"po_line_number\": 2336,\n        \"quantity_invoiced\": \"1.0\",\n        \"line_type\": \"expense\",\n        \"number\": \"ITEM-001\",\n        \"vat_code\": {\n          \"id\": \"2c9d21c2-d3e7-f938-b186-4a7fbc6cc0e8\",\n          \"remote_id\": \"string\",\n          \"code\": \"25\",\n          \"rate\": \"0.25\",\n          \"description\": \"string\"\n        },\n        \"tax_code\": {\n          \"id\": \"f671e99a-5ea0-2964-9e8c-ed03dfe2a05c\",\n          \"code\": \"string\",\n          \"description\": \"string\",\n          \"rate\": \"string\"\n        },\n        \"accrual\": {\n          \"start\": \"2024-01-01\",\n          \"count\": 12,\n          \"unit\": \"MONTHS\"\n        },\n        \"child_items\": [\n          {\n            \"id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"index\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"description\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"number\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"quantity_invoiced\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"unit_price\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_tax\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_net\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_sum\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_vat\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_freight\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"tax_code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"vat_code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"index\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"description\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"number\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"quantity_invoiced\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"unit_price\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_tax\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_net\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_sum\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_vat\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_freight\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"tax_code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"vat_code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ]\n      },\n      {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n        \"index\": 1,\n        \"amount_sum\": \"100.00\",\n        \"amount_tax\": \"20.00\",\n        \"amount_net\": \"80.00\",\n        \"amount_vat\": \"20.00\",\n        \"amount_vat_reclaimable\": \"16.00\",\n        \"amount_vat_reduced\": \"4.00\",\n        \"vat_reduction_percent\": \"20.00\",\n        \"amount_freight\": \"5.00\",\n        \"comment\": \"Urgent delivery required\",\n        \"unit_price\": \"25.00\",\n        \"cost_account\": {\n          \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n          \"legacy_id\": \"12345\",\n          \"name\": \"Office Expenses\",\n          \"number\": \"6100\",\n          \"remote_id\": \"ext-cost-123\",\n          \"sub_type\": \"expense\",\n          \"remote_updated_at\": \"2024-01-15T10:30:00Z\"\n        },\n        \"description\": \"Monthly software license\",\n        \"billable\": false,\n        \"po_number\": \"PO-2024-001\",\n        \"po_line_number\": 2779,\n        \"quantity_invoiced\": \"1.0\",\n        \"line_type\": \"expense\",\n        \"number\": \"ITEM-001\",\n        \"vat_code\": {\n          \"id\": \"d4c6eee2-105b-e8ed-93cf-f6270dd546e5\",\n          \"remote_id\": \"string\",\n          \"code\": \"25\",\n          \"rate\": \"0.25\",\n          \"description\": \"string\"\n        },\n        \"tax_code\": {\n          \"id\": \"e35f4d4b-b070-d443-bffb-4194a9dff57d\",\n          \"code\": \"string\",\n          \"description\": \"string\",\n          \"rate\": \"string\"\n        },\n        \"accrual\": {\n          \"start\": \"2024-01-01\",\n          \"count\": 12,\n          \"unit\": \"MONTHS\"\n        },\n        \"child_items\": [\n          {\n            \"id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"index\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"description\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"number\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"quantity_invoiced\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"unit_price\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_tax\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_net\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_sum\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_vat\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_freight\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"tax_code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"vat_code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"id\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"index\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"description\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"number\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"quantity_invoiced\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"unit_price\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_tax\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_net\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_sum\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_vat\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amount_freight\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"tax_code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"vat_code\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ]\n      }\n    ],\n    \"payment_info\": {\n      \"bank_account_number\": \"1234567890\",\n      \"bic\": \"DNBANOKKXXX\",\n      \"iban\": \"NO9386011117947\",\n      \"bankgiro\": \"123456789\",\n      \"plusgiro\": \"123456789\"\n    },\n    \"remote_updated_at\": \"2018-03-31T21:23:25.444Z\",\n    \"account_number\": \"ACC-1001\",\n    \"amount_freight\": \"15.00\",\n    \"amount_net\": \"100.00\",\n    \"amount_sum\": \"135.00\",\n    \"amount_tax\": \"20.00\",\n    \"amount_vat\": \"20.00\",\n    \"automated_at\": \"2024-01-15T10:30:00Z\",\n    \"bill_status\": \"unpaid\",\n    \"credit_account\": {\n      \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"legacy_id\": \"12345\",\n      \"name\": \"Office Expenses\",\n      \"number\": \"6100\",\n      \"remote_id\": \"ext-cost-123\",\n      \"sub_type\": \"expense\",\n      \"remote_updated_at\": \"2024-01-15T10:30:00Z\"\n    },\n    \"document_url\": \"https://example.com/documents/bill.pdf\",\n    \"external_payment_amount\": null,\n    \"external_payment_currency_id\": null,\n    \"external_payment_date\": \"2024-02-01\",\n    \"external_payment_number\": null,\n    \"external_payment_status\": null,\n    \"external_payment_type\": null,\n    \"external_payment_source\": null,\n    \"external_payment_total_paid\": null,\n    \"kid\": \"1234567890123\",\n    \"marked_as\": \"reviewed\",\n    \"payment_term_id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"payment_term\": {\n      \"id\": \"e733e7a3-79d5-4516-32a8-e65d6453bf13\",\n      \"name\": \"string\",\n      \"description\": \"string\",\n      \"days_to_pay\": 9694,\n      \"days_to_pay_condition\": \"string\",\n      \"discount_percentage\": \"string\",\n      \"discount_days\": 310,\n      \"discount_days_condition\": \"string\",\n      \"remote_id\": \"string\"\n    },\n    \"po_number\": \"PO-2024-001\",\n    \"purchase_order_numbers\": [\n      \"PO-1001\",\n      \"PO-1002\"\n    ],\n    \"posting_error\": \"Connection timeout\",\n    \"remote_data\": {\n      \"key_0\": 8396,\n      \"key_1\": false,\n      \"key_2\": \"string\",\n      \"key_3\": \"string\",\n      \"key_4\": 2341.2456896663157\n    },\n    \"self_assessed_use_tax_account\": \"USE-TAX-001\",\n    \"self_assessed_use_tax_amount\": \"5.00\",\n    \"service_period_end\": \"2024-01-31\",\n    \"service_period_start\": \"2024-01-01\",\n    \"source\": \"EHF\",\n    \"inserted_at\": \"2024-01-15T10:30:00Z\",\n    \"updated_at\": \"2024-01-15T10:30:00Z\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e7402c2d-4678-4a7a-9ef9-7bf54cb66cf5",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v2",
+                    "bills",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The ID of the bill in the Vic system."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errors\": [\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    },\n    {\n      \"message\": \"string\",\n      \"field\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.no.stage.vic.ai",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "6dd01a91-8897-4965-973c-97aceb2d608a",
+    "name": "Vic.ai Accounts Bills API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "## Introduction\n\nThe Vic.ai API provides a seamless connection between your Enterprise Resource\nPlanning (ERP) system and the Vic.ai product suite.\n\nThe API is designed to offer three main areas of functionality:\n\n- **Syncing master data:** This refers to the data in your ERP that Vic.ai\n  interacts with. You are required to supply and update this data in Vic.ai, and\n  you also have the option to verify the copy of the masterdata in Vic.ai.\n\n- **Syncing training data:** We need historical data to train your AI model. To\n  that end, the API provides endpoints to sync historical invoices into Vic.ai\n  and to confirm their presence.\n\n- **Subscribing to and receiving webhooks:** Webhooks enable users or automated\n  tasks to interact with your ERP through various actions in the Vic.ai product\n  suite, such as posting an invoice, payment or purchase order or requesting\n  synchronization. You will receive a notification via a webhook when these\n  actions occur.\n\n\nFor US-based integrations, please use the following base API URL:\n\n```\nhttps://api.us.vic.ai\n```\n\nFor integrations based in Norway, use the following base API URL:\n\n```\nhttps://api.no.vic.ai\n```\n\nAll paths mentioned in this documentation should use one of these URLs as the\nbase.\n\nExample:\n\n```bash\ncurl https://api.us.vic.ai/v0/healthCheck \\\n    -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\"\n```\n\n## Getting Started\n\nTo begin interacting with the Vic.ai API, you will need the following\ncredentials:\n\n* A Vic.ai client ID\n* A Vic.ai client secret.\n\nThese can be provided to you securely by a Vic.ai representative\n[upon request](https://www.vic.ai/book-a-demo).\n\n**Please note:** These credentials are essentially the keys to your ERP\nintegration. If they fall into the wrong hands, unauthorized parties could\nimpersonate you, gain access to sensitive data, and potentially perform\nmalicious actions. Therefore, it's crucial to keep these credentials safe at all\ntimes to protect your application's integrity and your clients' data.\n\n### Limitations\n\nThe Vic.ai API has the following limitations:\n\n**Rate Limiting:** The API is rate-limited to 500 requests per 10-second time\nframe. If you exceed this limit, you will receive a `429 Too Many Requests`\nresponse. The limit is per Oauth client ID. If you continue to receive `429`s,\nplease contact support with a request id from the response headers.\n",
+      "type": "text/plain"
+    }
+  }
+}

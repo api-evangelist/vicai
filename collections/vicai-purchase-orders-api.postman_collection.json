@@ -1,0 +1,2384 @@
+{
+  "item": [
+    {
+      "id": "1f284e86-b48a-46cd-88f5-cf331f24c195",
+      "name": "Purchase Orders",
+      "description": {
+        "content": "The purchase orders.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "ad50d517-c863-45e1-8dca-5cd21a830559",
+          "name": "List purchase orders",
+          "request": {
+            "name": "List purchase orders",
+            "description": {
+              "content": "List purchase orders.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "purchaseOrders"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "<integer>",
+                  "description": "How many items to return at one time (max 100) (default 100)"
+                },
+                {
+                  "disabled": false,
+                  "key": "cursor",
+                  "value": "<string>",
+                  "description": "Which item to start from. See [Pagination](#section/Pagination) for more information."
+                },
+                {
+                  "disabled": false,
+                  "key": "since",
+                  "value": "<dateTime>",
+                  "description": "Datetime value for incremental updates.\n**NOTE**: For external datetimes, the expected format is not in UTC. for\nvic-internal datetimes (see `SinceIsExternal`) the format is UTC.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "upto",
+                  "value": "<dateTime>",
+                  "description": "Datetime value for decremental updates.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "open",
+                  "description": "selects the status of purchase orders which are to be searched"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "5f17a998-1abc-477e-970b-0b03763c187d",
+              "name": "A paged array of purchase orders",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "since",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "upto",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "open"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "A link to the next page of responses",
+                  "key": "x-next",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"internalId\": \"string\",\n    \"internalUpdatedAt\": \"1993-08-27T08:42:24.840Z\",\n    \"status\": \"open\",\n    \"lineItems\": [\n      {\n        \"internalId\": \"string\",\n        \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n        \"productNumber\": \"string\",\n        \"productDescription\": \"string\",\n        \"unitOfMeasure\": \"kg\",\n        \"quantityAccepted\": \"1.0\",\n        \"quantityRequested\": \"1.0\",\n        \"quantityReceived\": \"1.0\",\n        \"matchingType\": \"three_way\",\n        \"unitAmount\": \"1.00\",\n        \"lineItemTotal\": \"1.00\",\n        \"lineNumber\": 5690,\n        \"dimensions\": [\n          {\n            \"internalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"externalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"typeExternalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"internalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"externalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"typeExternalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ],\n        \"invoiceItemsMatched\": [\n          {\n            \"invoiceItemId\": \"string\",\n            \"purchaseOrderItemId\": \"string\",\n            \"quantityMatched\": \"string\",\n            \"purchaseOrderItemLineNumber\": \"string\",\n            \"productNumber\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"unitOfMeasure\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amountMatched\": \"string\"\n          }\n        ],\n        \"receiptMatches\": [\n          {\n            \"invoiceItemId\": \"string\",\n            \"purchaseOrderItemId\": \"string\",\n            \"purchaseOrderReceiptLineId\": \"string\",\n            \"quantityMatched\": \"string\",\n            \"amountMatched\": \"string\"\n          }\n        ],\n        \"memo\": \"string\",\n        \"status\": \"open\",\n        \"fields\": [\n          {\n            \"label\": \"string\",\n            \"title\": \"string\",\n            \"type\": \"string\",\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"label\": \"string\",\n            \"title\": \"string\",\n            \"type\": \"string\",\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ],\n        \"receiptLines\": [\n          {\n            \"internalId\": \"5c20f288-fbef-c1b8-0bd4-7505ea6bae97\",\n            \"receiptLineRemoteId\": \"string\",\n            \"receiptLineNumber\": 3543,\n            \"poLineNumber\": 3220,\n            \"poScheduleLineRemoteId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"poScheduleLineNumber\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"itemId\": \"string\",\n            \"uomCode\": \"string\",\n            \"receivedQuantity\": \"1.0\",\n            \"acceptedQuantity\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"receivedDate\": \"2024-12-22\",\n            \"createdOn\": \"1966-02-18\",\n            \"createdBy\": \"string\",\n            \"warehouse\": \"string\",\n            \"billOfLading\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"deliveryNote\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"status\": \"closed\"\n          },\n          {\n            \"internalId\": \"c7c888f4-604b-008b-9585-075556532413\",\n            \"receiptLineRemoteId\": \"string\",\n            \"receiptLineNumber\": 1095,\n            \"poLineNumber\": 4971,\n            \"poScheduleLineRemoteId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"poScheduleLineNumber\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"itemId\": \"string\",\n            \"uomCode\": \"string\",\n            \"receivedQuantity\": \"1.0\",\n            \"acceptedQuantity\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"receivedDate\": \"1999-09-27\",\n            \"createdOn\": \"1954-07-15\",\n            \"createdBy\": \"string\",\n            \"warehouse\": \"string\",\n            \"billOfLading\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"deliveryNote\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"status\": \"closed\"\n          }\n        ],\n        \"scheduleLines\": [\n          {\n            \"internalId\": \"44f13659-4104-f9cb-0aec-ccd9f1a56d51\",\n            \"poScheduleLineRemoteId\": \"string\",\n            \"poScheduleLineNumber\": 3592,\n            \"poLineNumber\": 6900,\n            \"itemId\": \"string\",\n            \"uomCode\": \"string\",\n            \"plannedQuantity\": \"1.0\",\n            \"promisedDeliveryStartDate\": \"1991-10-16\",\n            \"promisedDeliveryEndDate\": \"1979-08-18\",\n            \"createdOn\": \"1980-05-18\",\n            \"shipToLocation\": \"string\"\n          },\n          {\n            \"internalId\": \"3f3d4200-8342-4be0-bec5-7a7d4e5d7cb3\",\n            \"poScheduleLineRemoteId\": \"string\",\n            \"poScheduleLineNumber\": 6072,\n            \"poLineNumber\": 5464,\n            \"itemId\": \"string\",\n            \"uomCode\": \"string\",\n            \"plannedQuantity\": \"1.0\",\n            \"promisedDeliveryStartDate\": \"2023-12-12\",\n            \"promisedDeliveryEndDate\": \"2024-06-21\",\n            \"createdOn\": \"1950-04-08\",\n            \"shipToLocation\": \"string\"\n          }\n        ]\n      },\n      {\n        \"internalId\": \"string\",\n        \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n        \"productNumber\": \"string\",\n        \"productDescription\": \"string\",\n        \"unitOfMeasure\": \"kg\",\n        \"quantityAccepted\": \"1.0\",\n        \"quantityRequested\": \"1.0\",\n        \"quantityReceived\": \"1.0\",\n        \"matchingType\": \"three_way\",\n        \"unitAmount\": \"1.00\",\n        \"lineItemTotal\": \"1.00\",\n        \"lineNumber\": 9033,\n        \"dimensions\": [\n          {\n            \"internalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"externalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"typeExternalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"internalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"externalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"typeExternalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ],\n        \"invoiceItemsMatched\": [\n          {\n            \"invoiceItemId\": \"string\",\n            \"purchaseOrderItemId\": \"string\",\n            \"quantityMatched\": \"string\",\n            \"purchaseOrderItemLineNumber\": \"string\",\n            \"productNumber\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"unitOfMeasure\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amountMatched\": \"string\"\n          }\n        ],\n        \"receiptMatches\": [\n          {\n            \"invoiceItemId\": \"string\",\n            \"purchaseOrderItemId\": \"string\",\n            \"purchaseOrderReceiptLineId\": \"string\",\n            \"quantityMatched\": \"string\",\n            \"amountMatched\": \"string\"\n          }\n        ],\n        \"memo\": \"string\",\n        \"status\": \"open\",\n        \"fields\": [\n          {\n            \"label\": \"string\",\n            \"title\": \"string\",\n            \"type\": \"string\",\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"label\": \"string\",\n            \"title\": \"string\",\n            \"type\": \"string\",\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ],\n        \"receiptLines\": [\n          {\n            \"internalId\": \"fc2de5c1-7ea8-1d44-d630-48b6c28c8301\",\n            \"receiptLineRemoteId\": \"string\",\n            \"receiptLineNumber\": 4071,\n            \"poLineNumber\": 2471,\n            \"poScheduleLineRemoteId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"poScheduleLineNumber\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"itemId\": \"string\",\n            \"uomCode\": \"string\",\n            \"receivedQuantity\": \"1.0\",\n            \"acceptedQuantity\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"receivedDate\": \"1973-05-09\",\n            \"createdOn\": \"1980-09-15\",\n            \"createdBy\": \"string\",\n            \"warehouse\": \"string\",\n            \"billOfLading\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"deliveryNote\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"status\": \"open\"\n          },\n          {\n            \"internalId\": \"2f801019-44b7-8ea4-ad85-24266a8c155a\",\n            \"receiptLineRemoteId\": \"string\",\n            \"receiptLineNumber\": 2499,\n            \"poLineNumber\": 8672,\n            \"poScheduleLineRemoteId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"poScheduleLineNumber\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"itemId\": \"string\",\n            \"uomCode\": \"string\",\n            \"receivedQuantity\": \"1.0\",\n            \"acceptedQuantity\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"receivedDate\": \"2024-03-04\",\n            \"createdOn\": \"1954-05-18\",\n            \"createdBy\": \"string\",\n            \"warehouse\": \"string\",\n            \"billOfLading\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"deliveryNote\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"status\": \"closed\"\n          }\n        ],\n        \"scheduleLines\": [\n          {\n            \"internalId\": \"c99605d3-bbc5-05eb-9f81-0b59480484cf\",\n            \"poScheduleLineRemoteId\": \"string\",\n            \"poScheduleLineNumber\": 257,\n            \"poLineNumber\": 9274,\n            \"itemId\": \"string\",\n            \"uomCode\": \"string\",\n            \"plannedQuantity\": \"1.0\",\n            \"promisedDeliveryStartDate\": \"2009-05-20\",\n            \"promisedDeliveryEndDate\": \"2023-05-04\",\n            \"createdOn\": \"1973-05-06\",\n            \"shipToLocation\": \"string\"\n          },\n          {\n            \"internalId\": \"2678c25e-c899-8201-5d9d-9f82e0656b1b\",\n            \"poScheduleLineRemoteId\": \"string\",\n            \"poScheduleLineNumber\": 1201,\n            \"poLineNumber\": 4127,\n            \"itemId\": \"string\",\n            \"uomCode\": \"string\",\n            \"plannedQuantity\": \"1.0\",\n            \"promisedDeliveryStartDate\": \"1956-03-03\",\n            \"promisedDeliveryEndDate\": \"1978-11-25\",\n            \"createdOn\": \"1950-11-30\",\n            \"shipToLocation\": \"string\"\n          }\n        ]\n      }\n    ],\n    \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n    \"vendor\": {\n      \"internalId\": \"47\",\n      \"internalUpdatedAt\": \"1995-03-08T02:04:11.160Z\",\n      \"name\": \"string\",\n      \"email\": \"vZ-LUrtDiMzUs3j@jRnkqJxd.kj\",\n      \"phone\": \"string\",\n      \"addressStreet\": \"string\",\n      \"addressCity\": \"string\",\n      \"addressState\": \"string\",\n      \"addressPostalCode\": \"string\",\n      \"countryCode\": \"US\",\n      \"companyId\": \"12345\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"externalUpdatedAt\": \"1989-08-21T00:13:27.973Z\",\n      \"description\": \"string\",\n      \"currency\": \"USD\",\n      \"confirmedAt\": \"2006-03-02T05:08:33.500Z\",\n      \"state\": \"CONFIRMED\",\n      \"taxInfo\": {\n        \"taxId\": \"string\",\n        \"taxIdType\": \"other\",\n        \"is1099vendor\": true,\n        \"orgNumber\": \"string\"\n      },\n      \"defaultPaymentInfo\": {\n        \"bankAccountNum\": \"string\",\n        \"bankCode\": \"string\",\n        \"paymentTerm\": {\n          \"count\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"unit\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"bankGiro\": \"string\",\n        \"plusGiro\": \"string\",\n        \"bban\": \"string\",\n        \"internationalBankAccount\": {\n          \"iban\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"bic\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"defaultMethod\": \"BBAN\"\n      },\n      \"paymentTermId\": \"e108df4b-9c48-0bd2-b8ae-eb9b50a47074\",\n      \"poMatchingDocumentLevel\": false,\n      \"vendorGroupId\": \"02421ef3-cc95-2dbc-7c33-63dfa8d39f93\",\n      \"tags\": [\n        {\n          \"value\": \"string\",\n          \"id\": \"string\"\n        },\n        {\n          \"value\": \"string\",\n          \"id\": \"string\"\n        }\n      ],\n      \"externalData\": {},\n      \"errors\": {}\n    },\n    \"issuedOn\": \"1964-06-21\",\n    \"createdOn\": \"1961-02-06\",\n    \"poNumber\": \"string\",\n    \"deliverOn\": \"1972-09-08\",\n    \"amount\": \"1.00\",\n    \"currencyId\": \"USD\",\n    \"matchingType\": \"line\",\n    \"type\": \"normal\",\n    \"description\": \"string\",\n    \"requestor\": {\n      \"email\": \"k9h4h7C4r8C@OSTYyGROuqcYfdKQHairiLZVwdXRQcRCp.mx\",\n      \"name\": \"string\"\n    },\n    \"siteOwner\": {\n      \"email\": \"2gmrymhviN3tYO@lNqNuixgDUKXwsmZLvkdKXkLX.kytf\",\n      \"name\": \"string\"\n    },\n    \"paymentTermId\": \"a6d6c98e-6337-974b-0888-2a97a2f0cec9\"\n  },\n  {\n    \"internalId\": \"string\",\n    \"internalUpdatedAt\": \"1996-08-14T11:08:16.993Z\",\n    \"status\": \"open\",\n    \"lineItems\": [\n      {\n        \"internalId\": \"string\",\n        \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n        \"productNumber\": \"string\",\n        \"productDescription\": \"string\",\n        \"unitOfMeasure\": \"kg\",\n        \"quantityAccepted\": \"1.0\",\n        \"quantityRequested\": \"1.0\",\n        \"quantityReceived\": \"1.0\",\n        \"matchingType\": \"three_way\",\n        \"unitAmount\": \"1.00\",\n        \"lineItemTotal\": \"1.00\",\n        \"lineNumber\": 1166,\n        \"dimensions\": [\n          {\n            \"internalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"externalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"typeExternalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"internalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"externalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"typeExternalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ],\n        \"invoiceItemsMatched\": [\n          {\n            \"invoiceItemId\": \"string\",\n            \"purchaseOrderItemId\": \"string\",\n            \"quantityMatched\": \"string\",\n            \"purchaseOrderItemLineNumber\": \"string\",\n            \"productNumber\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"unitOfMeasure\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amountMatched\": \"string\"\n          }\n        ],\n        \"receiptMatches\": [\n          {\n            \"invoiceItemId\": \"string\",\n            \"purchaseOrderItemId\": \"string\",\n            \"purchaseOrderReceiptLineId\": \"string\",\n            \"quantityMatched\": \"string\",\n            \"amountMatched\": \"string\"\n          }\n        ],\n        \"memo\": \"string\",\n        \"status\": \"open\",\n        \"fields\": [\n          {\n            \"label\": \"string\",\n            \"title\": \"string\",\n            \"type\": \"string\",\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"label\": \"string\",\n            \"title\": \"string\",\n            \"type\": \"string\",\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ],\n        \"receiptLines\": [\n          {\n            \"internalId\": \"902fbf8a-6ab0-0a3d-b1c1-e3fa32757bbb\",\n            \"receiptLineRemoteId\": \"string\",\n            \"receiptLineNumber\": 769,\n            \"poLineNumber\": 7846,\n            \"poScheduleLineRemoteId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"poScheduleLineNumber\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"itemId\": \"string\",\n            \"uomCode\": \"string\",\n            \"receivedQuantity\": \"1.0\",\n            \"acceptedQuantity\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"receivedDate\": \"1962-05-01\",\n            \"createdOn\": \"1987-08-16\",\n            \"createdBy\": \"string\",\n            \"warehouse\": \"string\",\n            \"billOfLading\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"deliveryNote\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"status\": \"closed\"\n          },\n          {\n            \"internalId\": \"dca67555-1634-b9f1-dde8-a3d2846b198b\",\n            \"receiptLineRemoteId\": \"string\",\n            \"receiptLineNumber\": 2343,\n            \"poLineNumber\": 3087,\n            \"poScheduleLineRemoteId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"poScheduleLineNumber\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"itemId\": \"string\",\n            \"uomCode\": \"string\",\n            \"receivedQuantity\": \"1.0\",\n            \"acceptedQuantity\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"receivedDate\": \"1980-04-10\",\n            \"createdOn\": \"1950-08-18\",\n            \"createdBy\": \"string\",\n            \"warehouse\": \"string\",\n            \"billOfLading\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"deliveryNote\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"status\": \"closed\"\n          }\n        ],\n        \"scheduleLines\": [\n          {\n            \"internalId\": \"efab6bc2-ab42-ddc0-423e-72614d96155b\",\n            \"poScheduleLineRemoteId\": \"string\",\n            \"poScheduleLineNumber\": 8802,\n            \"poLineNumber\": 9774,\n            \"itemId\": \"string\",\n            \"uomCode\": \"string\",\n            \"plannedQuantity\": \"1.0\",\n            \"promisedDeliveryStartDate\": \"2012-01-16\",\n            \"promisedDeliveryEndDate\": \"1949-10-03\",\n            \"createdOn\": \"2005-10-07\",\n            \"shipToLocation\": \"string\"\n          },\n          {\n            \"internalId\": \"4074fb21-fd74-d75b-b192-aa25adf80366\",\n            \"poScheduleLineRemoteId\": \"string\",\n            \"poScheduleLineNumber\": 2763,\n            \"poLineNumber\": 3321,\n            \"itemId\": \"string\",\n            \"uomCode\": \"string\",\n            \"plannedQuantity\": \"1.0\",\n            \"promisedDeliveryStartDate\": \"1990-06-25\",\n            \"promisedDeliveryEndDate\": \"1995-11-25\",\n            \"createdOn\": \"1966-05-07\",\n            \"shipToLocation\": \"string\"\n          }\n        ]\n      },\n      {\n        \"internalId\": \"string\",\n        \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n        \"productNumber\": \"string\",\n        \"productDescription\": \"string\",\n        \"unitOfMeasure\": \"kg\",\n        \"quantityAccepted\": \"1.0\",\n        \"quantityRequested\": \"1.0\",\n        \"quantityReceived\": \"1.0\",\n        \"matchingType\": \"three_way\",\n        \"unitAmount\": \"1.00\",\n        \"lineItemTotal\": \"1.00\",\n        \"lineNumber\": 7302,\n        \"dimensions\": [\n          {\n            \"internalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"externalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"typeExternalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"internalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"externalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"name\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"typeExternalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ],\n        \"invoiceItemsMatched\": [\n          {\n            \"invoiceItemId\": \"string\",\n            \"purchaseOrderItemId\": \"string\",\n            \"quantityMatched\": \"string\",\n            \"purchaseOrderItemLineNumber\": \"string\",\n            \"productNumber\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"unitOfMeasure\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amountMatched\": \"string\"\n          }\n        ],\n        \"receiptMatches\": [\n          {\n            \"invoiceItemId\": \"string\",\n            \"purchaseOrderItemId\": \"string\",\n            \"purchaseOrderReceiptLineId\": \"string\",\n            \"quantityMatched\": \"string\",\n            \"amountMatched\": \"string\"\n          }\n        ],\n        \"memo\": \"string\",\n        \"status\": \"open\",\n        \"fields\": [\n          {\n            \"label\": \"string\",\n            \"title\": \"string\",\n            \"type\": \"string\",\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"label\": \"string\",\n            \"title\": \"string\",\n            \"type\": \"string\",\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ],\n        \"receiptLines\": [\n          {\n            \"internalId\": \"497e9d8b-7603-a0a4-1158-5e94c7f18aa9\",\n            \"receiptLineRemoteId\": \"string\",\n            \"receiptLineNumber\": 8815,\n            \"poLineNumber\": 2540,\n            \"poScheduleLineRemoteId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"poScheduleLineNumber\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"itemId\": \"string\",\n            \"uomCode\": \"string\",\n            \"receivedQuantity\": \"1.0\",\n            \"acceptedQuantity\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"receivedDate\": \"1951-06-05\",\n            \"createdOn\": \"2013-07-23\",\n            \"createdBy\": \"string\",\n            \"warehouse\": \"string\",\n            \"billOfLading\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"deliveryNote\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"status\": \"open\"\n          },\n          {\n            \"internalId\": \"e8f0b52f-cdab-8a36-a9fa-28dfd150321b\",\n            \"receiptLineRemoteId\": \"string\",\n            \"receiptLineNumber\": 7591,\n            \"poLineNumber\": 7344,\n            \"poScheduleLineRemoteId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"poScheduleLineNumber\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"itemId\": \"string\",\n            \"uomCode\": \"string\",\n            \"receivedQuantity\": \"1.0\",\n            \"acceptedQuantity\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"receivedDate\": \"1949-02-07\",\n            \"createdOn\": \"2002-11-29\",\n            \"createdBy\": \"string\",\n            \"warehouse\": \"string\",\n            \"billOfLading\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"deliveryNote\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"status\": \"closed\"\n          }\n        ],\n        \"scheduleLines\": [\n          {\n            \"internalId\": \"5c3c039d-e09f-046f-6d1d-26fbf3fbe431\",\n            \"poScheduleLineRemoteId\": \"string\",\n            \"poScheduleLineNumber\": 9444,\n            \"poLineNumber\": 4610,\n            \"itemId\": \"string\",\n            \"uomCode\": \"string\",\n            \"plannedQuantity\": \"1.0\",\n            \"promisedDeliveryStartDate\": \"1951-08-23\",\n            \"promisedDeliveryEndDate\": \"1958-07-17\",\n            \"createdOn\": \"1973-11-05\",\n            \"shipToLocation\": \"string\"\n          },\n          {\n            \"internalId\": \"4cda8934-0fb1-f496-b8be-5758d9722d1c\",\n            \"poScheduleLineRemoteId\": \"string\",\n            \"poScheduleLineNumber\": 8503,\n            \"poLineNumber\": 4026,\n            \"itemId\": \"string\",\n            \"uomCode\": \"string\",\n            \"plannedQuantity\": \"1.0\",\n            \"promisedDeliveryStartDate\": \"1976-04-11\",\n            \"promisedDeliveryEndDate\": \"1970-03-27\",\n            \"createdOn\": \"2015-09-11\",\n            \"shipToLocation\": \"string\"\n          }\n        ]\n      }\n    ],\n    \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n    \"vendor\": {\n      \"internalId\": \"47\",\n      \"internalUpdatedAt\": \"1972-06-26T16:45:53.249Z\",\n      \"name\": \"string\",\n      \"email\": \"VgNf@dFsUEzPF.cv\",\n      \"phone\": \"string\",\n      \"addressStreet\": \"string\",\n      \"addressCity\": \"string\",\n      \"addressState\": \"string\",\n      \"addressPostalCode\": \"string\",\n      \"countryCode\": \"US\",\n      \"companyId\": \"12345\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"externalUpdatedAt\": \"1991-01-28T02:41:16.799Z\",\n      \"description\": \"string\",\n      \"currency\": \"USD\",\n      \"confirmedAt\": \"1965-02-07T15:17:50.475Z\",\n      \"state\": \"CONFIRMED\",\n      \"taxInfo\": {\n        \"taxId\": \"string\",\n        \"taxIdType\": \"ssn\",\n        \"is1099vendor\": true,\n        \"orgNumber\": \"string\"\n      },\n      \"defaultPaymentInfo\": {\n        \"bankAccountNum\": \"string\",\n        \"bankCode\": \"string\",\n        \"paymentTerm\": {\n          \"count\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"unit\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"bankGiro\": \"string\",\n        \"plusGiro\": \"string\",\n        \"bban\": \"string\",\n        \"internationalBankAccount\": {\n          \"iban\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"bic\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"defaultMethod\": \"BBAN\"\n      },\n      \"paymentTermId\": \"7baad257-4011-3d86-3216-9478002acb33\",\n      \"poMatchingDocumentLevel\": false,\n      \"vendorGroupId\": \"1440bbea-e0ec-f10e-7c99-30e99ee538fd\",\n      \"tags\": [\n        {\n          \"value\": \"string\",\n          \"id\": \"string\"\n        },\n        {\n          \"value\": \"string\",\n          \"id\": \"string\"\n        }\n      ],\n      \"externalData\": {},\n      \"errors\": {}\n    },\n    \"issuedOn\": \"1973-11-09\",\n    \"createdOn\": \"2021-03-27\",\n    \"poNumber\": \"string\",\n    \"deliverOn\": \"1953-03-28\",\n    \"amount\": \"1.00\",\n    \"currencyId\": \"USD\",\n    \"matchingType\": \"document\",\n    \"type\": \"normal\",\n    \"description\": \"string\",\n    \"requestor\": {\n      \"email\": \"nsQP@MgEnCCdgTlnKdIOaHimUUqwzDUyENB.dbn\",\n      \"name\": \"string\"\n    },\n    \"siteOwner\": {\n      \"email\": \"JMEZotPGJ@ByKXhKaZhIl.wbo\",\n      \"name\": \"string\"\n    },\n    \"paymentTermId\": \"c98b53de-669d-776e-a7cb-458a158468ca\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "112084ab-2875-4233-8f88-6e73dd1e5632",
+              "name": "HTTP call rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "since",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "upto",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "open"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.",
+                  "key": "Retry-After",
+                  "value": "6705"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 466,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6fa19e74-6532-4c13-97de-0c383c416815",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "since",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "upto",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "open"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 466,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b2e2aad0-3f2a-421d-a6ff-fc4d996ecc13",
+          "name": "Create a purchase order",
+          "request": {
+            "name": "Create a purchase order",
+            "description": {
+              "content": "Creates a purchase order in the Vic.ai system.\n\nYou are responsible for setting the `amount` on the purchase order which is the\nsummation of all the purchase order line items.\n\nOptionally, to set a requestor, you can pass a `requestor` object with `email`\nor `name`.\n\nOptionally, to set a site owner, you can pass a `siteOwner` object with `email`\nor `name`.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "purchaseOrders"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"poNumber\": \"<string>\",\n  \"amount\": \"<decimal>\",\n  \"vendor\": {\n    \"internalId\": \"<string>\"\n  },\n  \"lineItems\": [\n    {\n      \"productNumber\": \"<string>\",\n      \"quantityRequested\": \"<decimal>\",\n      \"unitAmount\": \"<decimal>\",\n      \"lineItemTotal\": \"<decimal>\",\n      \"lineNumber\": \"<integer>\",\n      \"productDescription\": \"<string>\",\n      \"unitOfMeasure\": \"<string>\",\n      \"quantityAccepted\": \"<decimal>\",\n      \"quantityReceived\": \"<decimal>\",\n      \"matchingType\": \"three_way\",\n      \"externalId\": \"<string>\",\n      \"memo\": \"<string>\",\n      \"dimensions\": [\n        {\n          \"internalId\": \"<string>\",\n          \"externalId\": \"<string>\",\n          \"name\": \"<string>\",\n          \"typeExternalId\": \"<string>\"\n        },\n        {\n          \"internalId\": \"<string>\",\n          \"externalId\": \"<string>\",\n          \"name\": \"<string>\",\n          \"typeExternalId\": \"<string>\"\n        }\n      ],\n      \"status\": \"open\",\n      \"fields\": [\n        {\n          \"label\": \"<string>\",\n          \"value\": \"<string>\"\n        },\n        {\n          \"label\": \"<string>\",\n          \"value\": \"<string>\"\n        }\n      ],\n      \"receiptLines\": [\n        {\n          \"receiptLineRemoteId\": \"<string>\",\n          \"receiptLineNumber\": \"<integer>\",\n          \"poLineNumber\": \"<integer>\",\n          \"itemId\": \"<string>\",\n          \"uomCode\": \"<string>\",\n          \"receivedQuantity\": \"<decimal>\",\n          \"receivedDate\": \"<date>\",\n          \"createdBy\": \"<string>\",\n          \"warehouse\": \"<string>\",\n          \"createdOn\": \"<date>\",\n          \"status\": \"<string>\",\n          \"internalId\": \"<uuid>\",\n          \"poScheduleLineRemoteId\": \"<string>\",\n          \"poScheduleLineNumber\": \"<integer>\",\n          \"acceptedQuantity\": \"<decimal>\",\n          \"billOfLading\": \"<string>\",\n          \"deliveryNote\": \"<string>\"\n        },\n        {\n          \"receiptLineRemoteId\": \"<string>\",\n          \"receiptLineNumber\": \"<integer>\",\n          \"poLineNumber\": \"<integer>\",\n          \"itemId\": \"<string>\",\n          \"uomCode\": \"<string>\",\n          \"receivedQuantity\": \"<decimal>\",\n          \"receivedDate\": \"<date>\",\n          \"createdBy\": \"<string>\",\n          \"warehouse\": \"<string>\",\n          \"createdOn\": \"<date>\",\n          \"status\": \"<string>\",\n          \"internalId\": \"<uuid>\",\n          \"poScheduleLineRemoteId\": \"<string>\",\n          \"poScheduleLineNumber\": \"<integer>\",\n          \"acceptedQuantity\": \"<decimal>\",\n          \"billOfLading\": \"<string>\",\n          \"deliveryNote\": \"<string>\"\n        }\n      ],\n      \"scheduleLines\": [\n        {\n          \"poScheduleLineRemoteId\": \"<string>\",\n          \"poLineNumber\": \"<integer>\",\n          \"poScheduleLineNumber\": \"<integer>\",\n          \"itemId\": \"<string>\",\n          \"uomCode\": \"<string>\",\n          \"plannedQuantity\": \"<decimal>\",\n          \"promisedDeliveryStartDate\": \"<date>\",\n          \"promisedDeliveryEndDate\": \"<date>\",\n          \"shipToLocation\": \"<string>\",\n          \"createdOn\": \"<date>\",\n          \"internalId\": \"<uuid>\"\n        },\n        {\n          \"poScheduleLineRemoteId\": \"<string>\",\n          \"poLineNumber\": \"<integer>\",\n          \"poScheduleLineNumber\": \"<integer>\",\n          \"itemId\": \"<string>\",\n          \"uomCode\": \"<string>\",\n          \"plannedQuantity\": \"<decimal>\",\n          \"promisedDeliveryStartDate\": \"<date>\",\n          \"promisedDeliveryEndDate\": \"<date>\",\n          \"shipToLocation\": \"<string>\",\n          \"createdOn\": \"<date>\",\n          \"internalId\": \"<uuid>\"\n        }\n      ]\n    },\n    {\n      \"productNumber\": \"<string>\",\n      \"quantityRequested\": \"<decimal>\",\n      \"unitAmount\": \"<decimal>\",\n      \"lineItemTotal\": \"<decimal>\",\n      \"lineNumber\": \"<integer>\",\n      \"productDescription\": \"<string>\",\n      \"unitOfMeasure\": \"<string>\",\n      \"quantityAccepted\": \"<decimal>\",\n      \"quantityReceived\": \"<decimal>\",\n      \"matchingType\": \"three_way\",\n      \"externalId\": \"<string>\",\n      \"memo\": \"<string>\",\n      \"dimensions\": [\n        {\n          \"internalId\": \"<string>\",\n          \"externalId\": \"<string>\",\n          \"name\": \"<string>\",\n          \"typeExternalId\": \"<string>\"\n        },\n        {\n          \"internalId\": \"<string>\",\n          \"externalId\": \"<string>\",\n          \"name\": \"<string>\",\n          \"typeExternalId\": \"<string>\"\n        }\n      ],\n      \"status\": \"open\",\n      \"fields\": [\n        {\n          \"label\": \"<string>\",\n          \"value\": \"<string>\"\n        },\n        {\n          \"label\": \"<string>\",\n          \"value\": \"<string>\"\n        }\n      ],\n      \"receiptLines\": [\n        {\n          \"receiptLineRemoteId\": \"<string>\",\n          \"receiptLineNumber\": \"<integer>\",\n          \"poLineNumber\": \"<integer>\",\n          \"itemId\": \"<string>\",\n          \"uomCode\": \"<string>\",\n          \"receivedQuantity\": \"<decimal>\",\n          \"receivedDate\": \"<date>\",\n          \"createdBy\": \"<string>\",\n          \"warehouse\": \"<string>\",\n          \"createdOn\": \"<date>\",\n          \"status\": \"<string>\",\n          \"internalId\": \"<uuid>\",\n          \"poScheduleLineRemoteId\": \"<string>\",\n          \"poScheduleLineNumber\": \"<integer>\",\n          \"acceptedQuantity\": \"<decimal>\",\n          \"billOfLading\": \"<string>\",\n          \"deliveryNote\": \"<string>\"\n        },\n        {\n          \"receiptLineRemoteId\": \"<string>\",\n          \"receiptLineNumber\": \"<integer>\",\n          \"poLineNumber\": \"<integer>\",\n          \"itemId\": \"<string>\",\n          \"uomCode\": \"<string>\",\n          \"receivedQuantity\": \"<decimal>\",\n          \"receivedDate\": \"<date>\",\n          \"createdBy\": \"<string>\",\n          \"warehouse\": \"<string>\",\n          \"createdOn\": \"<date>\",\n          \"status\": \"<string>\",\n          \"internalId\": \"<uuid>\",\n          \"poScheduleLineRemoteId\": \"<string>\",\n          \"poScheduleLineNumber\": \"<integer>\",\n          \"acceptedQuantity\": \"<decimal>\",\n          \"billOfLading\": \"<string>\",\n          \"deliveryNote\": \"<string>\"\n        }\n      ],\n      \"scheduleLines\": [\n        {\n          \"poScheduleLineRemoteId\": \"<string>\",\n          \"poLineNumber\": \"<integer>\",\n          \"poScheduleLineNumber\": \"<integer>\",\n          \"itemId\": \"<string>\",\n          \"uomCode\": \"<string>\",\n          \"plannedQuantity\": \"<decimal>\",\n          \"promisedDeliveryStartDate\": \"<date>\",\n          \"promisedDeliveryEndDate\": \"<date>\",\n          \"shipToLocation\": \"<string>\",\n          \"createdOn\": \"<date>\",\n          \"internalId\": \"<uuid>\"\n        },\n        {\n          \"poScheduleLineRemoteId\": \"<string>\",\n          \"poLineNumber\": \"<integer>\",\n          \"poScheduleLineNumber\": \"<integer>\",\n          \"itemId\": \"<string>\",\n          \"uomCode\": \"<string>\",\n          \"plannedQuantity\": \"<decimal>\",\n          \"promisedDeliveryStartDate\": \"<date>\",\n          \"promisedDeliveryEndDate\": \"<date>\",\n          \"shipToLocation\": \"<string>\",\n          \"createdOn\": \"<date>\",\n          \"internalId\": \"<uuid>\"\n        }\n      ]\n    }\n  ],\n  \"issuedOn\": \"<date>\",\n  \"externalId\": \"<string>\",\n  \"deliverOn\": \"<date>\",\n  \"currencyId\": \"<ISO-4217>\",\n  \"description\": \"<string>\",\n  \"requestor\": {\n    \"email\": \"<email>\",\n    \"name\": \"<string>\"\n  },\n  \"siteOwner\": {\n    \"email\": \"<email>\",\n    \"name\": \"<string>\"\n  },\n  \"createdOn\": \"<date>\",\n  \"matchingType\": \"<string>\",\n  \"type\": \"normal\",\n  \"paymentTermId\": \"<uuid>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "0eb27445-1e70-4792-b0f2-c51885eb0f9e",
+              "name": "The purchase order.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"internalId\": \"string\",\n  \"internalUpdatedAt\": \"1955-11-13T02:35:19.880Z\",\n  \"status\": \"open\",\n  \"lineItems\": [\n    {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"productNumber\": \"string\",\n      \"productDescription\": \"string\",\n      \"unitOfMeasure\": \"kg\",\n      \"quantityAccepted\": \"1.0\",\n      \"quantityRequested\": \"1.0\",\n      \"quantityReceived\": \"1.0\",\n      \"matchingType\": \"three_way\",\n      \"unitAmount\": \"1.00\",\n      \"lineItemTotal\": \"1.00\",\n      \"lineNumber\": 5468,\n      \"dimensions\": [\n        {\n          \"internalId\": \"string\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"name\": \"string\",\n          \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n        },\n        {\n          \"internalId\": \"string\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"name\": \"string\",\n          \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n        }\n      ],\n      \"invoiceItemsMatched\": [\n        {\n          \"invoiceItemId\": \"string\",\n          \"purchaseOrderItemId\": \"string\",\n          \"quantityMatched\": \"string\",\n          \"purchaseOrderItemLineNumber\": \"string\",\n          \"productNumber\": \"string\",\n          \"unitOfMeasure\": \"string\",\n          \"amountMatched\": \"string\"\n        }\n      ],\n      \"receiptMatches\": [\n        {\n          \"invoiceItemId\": \"string\",\n          \"purchaseOrderItemId\": \"string\",\n          \"purchaseOrderReceiptLineId\": \"string\",\n          \"quantityMatched\": \"string\",\n          \"amountMatched\": \"string\"\n        }\n      ],\n      \"memo\": \"string\",\n      \"status\": \"open\",\n      \"fields\": [\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"string\",\n          \"value\": \"string\"\n        }\n      ],\n      \"receiptLines\": [\n        {\n          \"internalId\": \"68986226-c07b-913e-cee4-7ca96c833743\",\n          \"receiptLineRemoteId\": \"string\",\n          \"receiptLineNumber\": 2338,\n          \"poLineNumber\": 9035,\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 3999,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"receivedQuantity\": \"1.0\",\n          \"acceptedQuantity\": \"string\",\n          \"receivedDate\": \"2010-11-05\",\n          \"createdOn\": \"1987-05-23\",\n          \"createdBy\": \"string\",\n          \"warehouse\": \"string\",\n          \"billOfLading\": \"string\",\n          \"deliveryNote\": \"string\",\n          \"status\": \"closed\"\n        },\n        {\n          \"internalId\": \"83762eb6-defb-0f2b-c7b2-f01d7975df2e\",\n          \"receiptLineRemoteId\": \"string\",\n          \"receiptLineNumber\": 2766,\n          \"poLineNumber\": 1669,\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 1208,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"receivedQuantity\": \"1.0\",\n          \"acceptedQuantity\": \"string\",\n          \"receivedDate\": \"1980-02-07\",\n          \"createdOn\": \"2010-09-13\",\n          \"createdBy\": \"string\",\n          \"warehouse\": \"string\",\n          \"billOfLading\": \"string\",\n          \"deliveryNote\": \"string\",\n          \"status\": \"closed\"\n        }\n      ],\n      \"scheduleLines\": [\n        {\n          \"internalId\": \"1d1932c9-ee1c-b11a-eae4-cbcea2a6840f\",\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 2257,\n          \"poLineNumber\": 3122,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"plannedQuantity\": \"1.0\",\n          \"promisedDeliveryStartDate\": \"1985-08-19\",\n          \"promisedDeliveryEndDate\": \"1958-08-08\",\n          \"createdOn\": \"2022-09-06\",\n          \"shipToLocation\": \"string\"\n        },\n        {\n          \"internalId\": \"395c7619-9520-5277-1028-ddbc170f6b9b\",\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 9572,\n          \"poLineNumber\": 8443,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"plannedQuantity\": \"1.0\",\n          \"promisedDeliveryStartDate\": \"2020-09-23\",\n          \"promisedDeliveryEndDate\": \"1982-12-04\",\n          \"createdOn\": \"2021-08-21\",\n          \"shipToLocation\": \"string\"\n        }\n      ]\n    },\n    {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"productNumber\": \"string\",\n      \"productDescription\": \"string\",\n      \"unitOfMeasure\": \"kg\",\n      \"quantityAccepted\": \"1.0\",\n      \"quantityRequested\": \"1.0\",\n      \"quantityReceived\": \"1.0\",\n      \"matchingType\": \"three_way\",\n      \"unitAmount\": \"1.00\",\n      \"lineItemTotal\": \"1.00\",\n      \"lineNumber\": 8168,\n      \"dimensions\": [\n        {\n          \"internalId\": \"string\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"name\": \"string\",\n          \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n        },\n        {\n          \"internalId\": \"string\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"name\": \"string\",\n          \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n        }\n      ],\n      \"invoiceItemsMatched\": [\n        {\n          \"invoiceItemId\": \"string\",\n          \"purchaseOrderItemId\": \"string\",\n          \"quantityMatched\": \"string\",\n          \"purchaseOrderItemLineNumber\": \"string\",\n          \"productNumber\": \"string\",\n          \"unitOfMeasure\": \"string\",\n          \"amountMatched\": \"string\"\n        }\n      ],\n      \"receiptMatches\": [\n        {\n          \"invoiceItemId\": \"string\",\n          \"purchaseOrderItemId\": \"string\",\n          \"purchaseOrderReceiptLineId\": \"string\",\n          \"quantityMatched\": \"string\",\n          \"amountMatched\": \"string\"\n        }\n      ],\n      \"memo\": \"string\",\n      \"status\": \"open\",\n      \"fields\": [\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"string\",\n          \"value\": \"string\"\n        }\n      ],\n      \"receiptLines\": [\n        {\n          \"internalId\": \"8a03e0d4-4143-9868-2684-33971de782c8\",\n          \"receiptLineRemoteId\": \"string\",\n          \"receiptLineNumber\": 3375,\n          \"poLineNumber\": 6488,\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 7981,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"receivedQuantity\": \"1.0\",\n          \"acceptedQuantity\": \"string\",\n          \"receivedDate\": \"1949-09-16\",\n          \"createdOn\": \"2013-09-06\",\n          \"createdBy\": \"string\",\n          \"warehouse\": \"string\",\n          \"billOfLading\": \"string\",\n          \"deliveryNote\": \"string\",\n          \"status\": \"closed\"\n        },\n        {\n          \"internalId\": \"b1cf7a8c-3717-6ad9-3024-4ff548e382a4\",\n          \"receiptLineRemoteId\": \"string\",\n          \"receiptLineNumber\": 8764,\n          \"poLineNumber\": 8432,\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 5889,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"receivedQuantity\": \"1.0\",\n          \"acceptedQuantity\": \"string\",\n          \"receivedDate\": \"1987-07-23\",\n          \"createdOn\": \"1958-10-06\",\n          \"createdBy\": \"string\",\n          \"warehouse\": \"string\",\n          \"billOfLading\": \"string\",\n          \"deliveryNote\": \"string\",\n          \"status\": \"open\"\n        }\n      ],\n      \"scheduleLines\": [\n        {\n          \"internalId\": \"c08c9311-0f97-c2d3-9dce-06fd983dff0a\",\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 1114,\n          \"poLineNumber\": 6973,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"plannedQuantity\": \"1.0\",\n          \"promisedDeliveryStartDate\": \"1976-05-13\",\n          \"promisedDeliveryEndDate\": \"1951-07-09\",\n          \"createdOn\": \"2004-12-19\",\n          \"shipToLocation\": \"string\"\n        },\n        {\n          \"internalId\": \"75a58829-780a-4f0c-21cf-7b8c3d776cd3\",\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 8233,\n          \"poLineNumber\": 7147,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"plannedQuantity\": \"1.0\",\n          \"promisedDeliveryStartDate\": \"2003-09-18\",\n          \"promisedDeliveryEndDate\": \"1994-11-22\",\n          \"createdOn\": \"1969-11-24\",\n          \"shipToLocation\": \"string\"\n        }\n      ]\n    }\n  ],\n  \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n  \"vendor\": {\n    \"internalId\": \"47\",\n    \"internalUpdatedAt\": \"2022-08-27T16:14:05.339Z\",\n    \"name\": \"string\",\n    \"email\": \"UPx7@xuduUSLlhTZFfFOAabVtEjWHHuM.ny\",\n    \"phone\": \"string\",\n    \"addressStreet\": \"string\",\n    \"addressCity\": \"string\",\n    \"addressState\": \"string\",\n    \"addressPostalCode\": \"string\",\n    \"countryCode\": \"US\",\n    \"companyId\": \"12345\",\n    \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n    \"externalUpdatedAt\": \"1980-02-18T17:05:05.618Z\",\n    \"description\": \"string\",\n    \"currency\": \"USD\",\n    \"confirmedAt\": \"2025-01-30T02:29:17.419Z\",\n    \"state\": \"UNCONFIRMED\",\n    \"taxInfo\": {\n      \"taxId\": \"string\",\n      \"taxIdType\": \"ssn\",\n      \"is1099vendor\": true,\n      \"orgNumber\": \"string\"\n    },\n    \"defaultPaymentInfo\": {\n      \"bankAccountNum\": \"string\",\n      \"bankCode\": \"string\",\n      \"paymentTerm\": {\n        \"count\": 434,\n        \"unit\": \"DAYS\"\n      },\n      \"bankGiro\": \"string\",\n      \"plusGiro\": \"string\",\n      \"bban\": \"string\",\n      \"internationalBankAccount\": {\n        \"iban\": \"string\",\n        \"bic\": \"string\"\n      },\n      \"defaultMethod\": \"BANKACCOUNT\"\n    },\n    \"paymentTermId\": \"599a5e0a-d027-3b27-9303-2f8c51b33e6a\",\n    \"poMatchingDocumentLevel\": false,\n    \"vendorGroupId\": \"1f1d51cb-0601-ae74-588b-2495784822d4\",\n    \"tags\": [\n      {\n        \"value\": \"string\",\n        \"id\": \"string\"\n      },\n      {\n        \"value\": \"string\",\n        \"id\": \"string\"\n      }\n    ],\n    \"externalData\": {},\n    \"errors\": {}\n  },\n  \"issuedOn\": \"1982-12-12\",\n  \"createdOn\": \"1980-06-30\",\n  \"poNumber\": \"string\",\n  \"deliverOn\": \"2006-06-25\",\n  \"amount\": \"1.00\",\n  \"currencyId\": \"USD\",\n  \"matchingType\": \"line\",\n  \"type\": \"normal\",\n  \"description\": \"string\",\n  \"requestor\": {\n    \"email\": \"UfkNQwbkLl@mXy.jqi\",\n    \"name\": \"string\"\n  },\n  \"siteOwner\": {\n    \"email\": \"nsWZIRlps8MAWu@ILlyHWsbVoYuCEBjVchq.afr\",\n    \"name\": \"string\"\n  },\n  \"paymentTermId\": \"6f5163d3-8bea-3ca7-123b-69d3ca57393b\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7f6fec26-b069-45e6-96f8-2ace523d1b1d",
+              "name": "The request was forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 466,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1261e531-c0f2-4d5b-b26d-41f96d97734c",
+              "name": "Resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 466,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2c118543-0d63-44dd-bf51-ebb24aa755ef",
+              "name": "Errors with the input are present.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 466,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "448c860f-795c-4957-8291-5b336cf87df6",
+          "name": "Synchronize Purchase Orders",
+          "request": {
+            "name": "Synchronize Purchase Orders",
+            "description": {
+              "content": "Tells the ERP to synchronize the Purchase Orders resource. If the ERP is\nusing the API, the call will be sent via the normal webhook methods. If\nthe ERP is not using this API then this will call the native\nintegration's synchronize functionality.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "purchaseOrders",
+                "synchronize"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "b9b9796d-52dc-4624-a519-e36d9d5f93ac",
+              "name": "A request to synchronize the purchase orders was acknowledged and is in\nthe process of being ran.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders",
+                    "synchronize"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "13344d3c-2abf-4ee9-beb9-818537b1c356",
+              "name": "HTTP call rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders",
+                    "synchronize"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.",
+                  "key": "Retry-After",
+                  "value": "6705"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 466,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ce6ad2f0-6da9-45fa-9899-9e46779b49e8",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders",
+                    "synchronize"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 466,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0bd868c7-2b2a-4a94-b832-bb758d4611fc",
+          "name": "Get a purchase order",
+          "request": {
+            "name": "Get a purchase order",
+            "description": {
+              "content": "Get a purchase order.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "purchaseOrders",
+                ":purchaseOrderId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "useSystem",
+                  "value": "INTERNAL",
+                  "description": "Which system to use for id or updatedAt filters.\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "purchaseOrderId",
+                  "description": "(Required) The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "502a3767-74d8-4d7e-815a-fcb007bfc9c6",
+              "name": "The purchase order.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders",
+                    ":purchaseOrderId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderId",
+                      "description": "(Required) The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"internalId\": \"string\",\n  \"internalUpdatedAt\": \"2025-11-29T16:59:51.953Z\",\n  \"status\": \"open\",\n  \"lineItems\": [\n    {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"productNumber\": \"string\",\n      \"productDescription\": \"string\",\n      \"unitOfMeasure\": \"kg\",\n      \"quantityAccepted\": \"1.0\",\n      \"quantityRequested\": \"1.0\",\n      \"quantityReceived\": \"1.0\",\n      \"matchingType\": \"three_way\",\n      \"unitAmount\": \"1.00\",\n      \"lineItemTotal\": \"1.00\",\n      \"lineNumber\": 6316,\n      \"dimensions\": [\n        {\n          \"internalId\": \"string\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"name\": \"string\",\n          \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n        },\n        {\n          \"internalId\": \"string\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"name\": \"string\",\n          \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n        }\n      ],\n      \"invoiceItemsMatched\": [\n        {\n          \"invoiceItemId\": \"string\",\n          \"purchaseOrderItemId\": \"string\",\n          \"quantityMatched\": \"string\",\n          \"purchaseOrderItemLineNumber\": \"string\",\n          \"productNumber\": \"string\",\n          \"unitOfMeasure\": \"string\",\n          \"amountMatched\": \"string\"\n        }\n      ],\n      \"receiptMatches\": [\n        {\n          \"invoiceItemId\": \"string\",\n          \"purchaseOrderItemId\": \"string\",\n          \"purchaseOrderReceiptLineId\": \"string\",\n          \"quantityMatched\": \"string\",\n          \"amountMatched\": \"string\"\n        }\n      ],\n      \"memo\": \"string\",\n      \"status\": \"open\",\n      \"fields\": [\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"string\",\n          \"value\": \"string\"\n        }\n      ],\n      \"receiptLines\": [\n        {\n          \"internalId\": \"d39fdd95-96f0-e4f9-66a2-82318aab4b84\",\n          \"receiptLineRemoteId\": \"string\",\n          \"receiptLineNumber\": 3446,\n          \"poLineNumber\": 7612,\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 3795,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"receivedQuantity\": \"1.0\",\n          \"acceptedQuantity\": \"string\",\n          \"receivedDate\": \"1984-02-14\",\n          \"createdOn\": \"2026-07-11\",\n          \"createdBy\": \"string\",\n          \"warehouse\": \"string\",\n          \"billOfLading\": \"string\",\n          \"deliveryNote\": \"string\",\n          \"status\": \"open\"\n        },\n        {\n          \"internalId\": \"558a497e-c7bd-7d29-7a53-5cc1b4b1d960\",\n          \"receiptLineRemoteId\": \"string\",\n          \"receiptLineNumber\": 7593,\n          \"poLineNumber\": 8129,\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 7158,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"receivedQuantity\": \"1.0\",\n          \"acceptedQuantity\": \"string\",\n          \"receivedDate\": \"2007-09-22\",\n          \"createdOn\": \"1969-01-29\",\n          \"createdBy\": \"string\",\n          \"warehouse\": \"string\",\n          \"billOfLading\": \"string\",\n          \"deliveryNote\": \"string\",\n          \"status\": \"open\"\n        }\n      ],\n      \"scheduleLines\": [\n        {\n          \"internalId\": \"7eda585d-acb9-f9e0-e54b-a4e78738f259\",\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 2305,\n          \"poLineNumber\": 2398,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"plannedQuantity\": \"1.0\",\n          \"promisedDeliveryStartDate\": \"2010-06-10\",\n          \"promisedDeliveryEndDate\": \"1952-11-02\",\n          \"createdOn\": \"1963-07-16\",\n          \"shipToLocation\": \"string\"\n        },\n        {\n          \"internalId\": \"09a099a9-f190-ee48-911f-6c0351b01109\",\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 4747,\n          \"poLineNumber\": 2114,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"plannedQuantity\": \"1.0\",\n          \"promisedDeliveryStartDate\": \"1955-09-29\",\n          \"promisedDeliveryEndDate\": \"2022-08-04\",\n          \"createdOn\": \"2009-08-19\",\n          \"shipToLocation\": \"string\"\n        }\n      ]\n    },\n    {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"productNumber\": \"string\",\n      \"productDescription\": \"string\",\n      \"unitOfMeasure\": \"kg\",\n      \"quantityAccepted\": \"1.0\",\n      \"quantityRequested\": \"1.0\",\n      \"quantityReceived\": \"1.0\",\n      \"matchingType\": \"three_way\",\n      \"unitAmount\": \"1.00\",\n      \"lineItemTotal\": \"1.00\",\n      \"lineNumber\": 4037,\n      \"dimensions\": [\n        {\n          \"internalId\": \"string\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"name\": \"string\",\n          \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n        },\n        {\n          \"internalId\": \"string\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"name\": \"string\",\n          \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n        }\n      ],\n      \"invoiceItemsMatched\": [\n        {\n          \"invoiceItemId\": \"string\",\n          \"purchaseOrderItemId\": \"string\",\n          \"quantityMatched\": \"string\",\n          \"purchaseOrderItemLineNumber\": \"string\",\n          \"productNumber\": \"string\",\n          \"unitOfMeasure\": \"string\",\n          \"amountMatched\": \"string\"\n        }\n      ],\n      \"receiptMatches\": [\n        {\n          \"invoiceItemId\": \"string\",\n          \"purchaseOrderItemId\": \"string\",\n          \"purchaseOrderReceiptLineId\": \"string\",\n          \"quantityMatched\": \"string\",\n          \"amountMatched\": \"string\"\n        }\n      ],\n      \"memo\": \"string\",\n      \"status\": \"open\",\n      \"fields\": [\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"string\",\n          \"value\": \"string\"\n        }\n      ],\n      \"receiptLines\": [\n        {\n          \"internalId\": \"62793dc2-c06f-9ba3-3bf2-cef7e3b2e5b5\",\n          \"receiptLineRemoteId\": \"string\",\n          \"receiptLineNumber\": 1620,\n          \"poLineNumber\": 591,\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 8609,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"receivedQuantity\": \"1.0\",\n          \"acceptedQuantity\": \"string\",\n          \"receivedDate\": \"1947-09-22\",\n          \"createdOn\": \"2000-02-14\",\n          \"createdBy\": \"string\",\n          \"warehouse\": \"string\",\n          \"billOfLading\": \"string\",\n          \"deliveryNote\": \"string\",\n          \"status\": \"closed\"\n        },\n        {\n          \"internalId\": \"03d4ca5b-ee21-2f1e-bd4f-3dc97eae2fdb\",\n          \"receiptLineRemoteId\": \"string\",\n          \"receiptLineNumber\": 1939,\n          \"poLineNumber\": 1083,\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 1856,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"receivedQuantity\": \"1.0\",\n          \"acceptedQuantity\": \"string\",\n          \"receivedDate\": \"1963-02-09\",\n          \"createdOn\": \"1991-03-06\",\n          \"createdBy\": \"string\",\n          \"warehouse\": \"string\",\n          \"billOfLading\": \"string\",\n          \"deliveryNote\": \"string\",\n          \"status\": \"open\"\n        }\n      ],\n      \"scheduleLines\": [\n        {\n          \"internalId\": \"67d0cf1e-80f2-8e77-f6dc-d6725367deae\",\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 6015,\n          \"poLineNumber\": 9657,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"plannedQuantity\": \"1.0\",\n          \"promisedDeliveryStartDate\": \"1966-05-24\",\n          \"promisedDeliveryEndDate\": \"1957-12-25\",\n          \"createdOn\": \"1976-09-20\",\n          \"shipToLocation\": \"string\"\n        },\n        {\n          \"internalId\": \"15d76cbf-1631-f317-e3b9-d4fc46715de1\",\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 7323,\n          \"poLineNumber\": 7422,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"plannedQuantity\": \"1.0\",\n          \"promisedDeliveryStartDate\": \"1979-11-15\",\n          \"promisedDeliveryEndDate\": \"1981-03-18\",\n          \"createdOn\": \"1992-01-06\",\n          \"shipToLocation\": \"string\"\n        }\n      ]\n    }\n  ],\n  \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n  \"vendor\": {\n    \"internalId\": \"47\",\n    \"internalUpdatedAt\": \"2016-02-10T18:17:03.161Z\",\n    \"name\": \"string\",\n    \"email\": \"WgmJB8@Acd.xurm\",\n    \"phone\": \"string\",\n    \"addressStreet\": \"string\",\n    \"addressCity\": \"string\",\n    \"addressState\": \"string\",\n    \"addressPostalCode\": \"string\",\n    \"countryCode\": \"US\",\n    \"companyId\": \"12345\",\n    \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n    \"externalUpdatedAt\": \"2013-09-05T16:30:16.898Z\",\n    \"description\": \"string\",\n    \"currency\": \"USD\",\n    \"confirmedAt\": \"2022-05-01T06:11:56.617Z\",\n    \"state\": \"CONFIRMED\",\n    \"taxInfo\": {\n      \"taxId\": \"string\",\n      \"taxIdType\": \"ssn\",\n      \"is1099vendor\": true,\n      \"orgNumber\": \"string\"\n    },\n    \"defaultPaymentInfo\": {\n      \"bankAccountNum\": \"string\",\n      \"bankCode\": \"string\",\n      \"paymentTerm\": {\n        \"count\": 5491,\n        \"unit\": \"DAYS\"\n      },\n      \"bankGiro\": \"string\",\n      \"plusGiro\": \"string\",\n      \"bban\": \"string\",\n      \"internationalBankAccount\": {\n        \"iban\": \"string\",\n        \"bic\": \"string\"\n      },\n      \"defaultMethod\": \"IBAN\"\n    },\n    \"paymentTermId\": \"f9cf34b2-ab3b-c4c7-a4f3-702aecaa7b43\",\n    \"poMatchingDocumentLevel\": false,\n    \"vendorGroupId\": \"f3d80d30-35ca-841f-ec72-baee7a87da00\",\n    \"tags\": [\n      {\n        \"value\": \"string\",\n        \"id\": \"string\"\n      },\n      {\n        \"value\": \"string\",\n        \"id\": \"string\"\n      }\n    ],\n    \"externalData\": {},\n    \"errors\": {}\n  },\n  \"issuedOn\": \"1961-03-11\",\n  \"createdOn\": \"1998-04-04\",\n  \"poNumber\": \"string\",\n  \"deliverOn\": \"1978-07-08\",\n  \"amount\": \"1.00\",\n  \"currencyId\": \"USD\",\n  \"matchingType\": \"document\",\n  \"type\": \"normal\",\n  \"description\": \"string\",\n  \"requestor\": {\n    \"email\": \"bbu@QhcDYTPyXjaWSQRSmPGZllRjGZP.spo\",\n    \"name\": \"string\"\n  },\n  \"siteOwner\": {\n    \"email\": \"LiSGqRDqW@CB.jcg\",\n    \"name\": \"string\"\n  },\n  \"paymentTermId\": \"48cc75f0-9f6d-2b90-9859-577eeb0654ba\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9873a169-bfde-460d-89c7-b8c01787ad25",
+              "name": "The request was forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders",
+                    ":purchaseOrderId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderId",
+                      "description": "(Required) The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 466,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "332e3eb5-1b07-4afa-a464-008996d9ae0d",
+              "name": "Resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders",
+                    ":purchaseOrderId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderId",
+                      "description": "(Required) The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 466,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "b0010b17-22eb-41e6-ba44-6b6572496884",
+          "name": "Update a purchase order",
+          "request": {
+            "name": "Update a purchase order",
+            "description": {
+              "content": "Update a purchase order.\n\nAfter the update is accepted, Vic automatically schedules purchase order\nprocessing. You do not need to call `processPurchaseOrder` manually unless you\nneed to trigger processing immediately.\n\nIf the purchase order has matches to invoices that have been transmitted or are\ncurrently being posted, and the fields `vendor`, `poNumber`, or `matchingType`\nare being changed, you will not be able to update the purchase order -\nan `UnprocessableEntityResponse` will be returned.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "purchaseOrders",
+                ":purchaseOrderId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "useSystem",
+                  "value": "INTERNAL",
+                  "description": "Which system to use for id or updatedAt filters.\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "purchaseOrderId",
+                  "description": "(Required) The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"poNumber\": \"<string>\",\n  \"amount\": \"<decimal>\",\n  \"vendor\": {\n    \"internalId\": \"<string>\"\n  },\n  \"externalId\": \"<string>\",\n  \"issuedOn\": \"<date>\",\n  \"deliverOn\": \"<date>\",\n  \"currencyId\": \"<ISO-4217>\",\n  \"description\": \"<string>\",\n  \"requestor\": {\n    \"email\": \"<email>\",\n    \"name\": \"<string>\"\n  },\n  \"siteOwner\": {\n    \"email\": \"<email>\",\n    \"name\": \"<string>\"\n  },\n  \"createdOn\": \"<date>\",\n  \"matchingType\": \"<string>\",\n  \"type\": \"normal\",\n  \"paymentTermId\": \"<uuid>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "24ee281f-8889-4d2c-9f04-cc2868ba3488",
+              "name": "The purchase order.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders",
+                    ":purchaseOrderId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderId",
+                      "description": "(Required) The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"internalId\": \"string\",\n  \"internalUpdatedAt\": \"2025-11-29T16:59:51.953Z\",\n  \"status\": \"open\",\n  \"lineItems\": [\n    {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"productNumber\": \"string\",\n      \"productDescription\": \"string\",\n      \"unitOfMeasure\": \"kg\",\n      \"quantityAccepted\": \"1.0\",\n      \"quantityRequested\": \"1.0\",\n      \"quantityReceived\": \"1.0\",\n      \"matchingType\": \"three_way\",\n      \"unitAmount\": \"1.00\",\n      \"lineItemTotal\": \"1.00\",\n      \"lineNumber\": 6316,\n      \"dimensions\": [\n        {\n          \"internalId\": \"string\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"name\": \"string\",\n          \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n        },\n        {\n          \"internalId\": \"string\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"name\": \"string\",\n          \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n        }\n      ],\n      \"invoiceItemsMatched\": [\n        {\n          \"invoiceItemId\": \"string\",\n          \"purchaseOrderItemId\": \"string\",\n          \"quantityMatched\": \"string\",\n          \"purchaseOrderItemLineNumber\": \"string\",\n          \"productNumber\": \"string\",\n          \"unitOfMeasure\": \"string\",\n          \"amountMatched\": \"string\"\n        }\n      ],\n      \"receiptMatches\": [\n        {\n          \"invoiceItemId\": \"string\",\n          \"purchaseOrderItemId\": \"string\",\n          \"purchaseOrderReceiptLineId\": \"string\",\n          \"quantityMatched\": \"string\",\n          \"amountMatched\": \"string\"\n        }\n      ],\n      \"memo\": \"string\",\n      \"status\": \"open\",\n      \"fields\": [\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"string\",\n          \"value\": \"string\"\n        }\n      ],\n      \"receiptLines\": [\n        {\n          \"internalId\": \"d39fdd95-96f0-e4f9-66a2-82318aab4b84\",\n          \"receiptLineRemoteId\": \"string\",\n          \"receiptLineNumber\": 3446,\n          \"poLineNumber\": 7612,\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 3795,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"receivedQuantity\": \"1.0\",\n          \"acceptedQuantity\": \"string\",\n          \"receivedDate\": \"1984-02-14\",\n          \"createdOn\": \"2026-07-11\",\n          \"createdBy\": \"string\",\n          \"warehouse\": \"string\",\n          \"billOfLading\": \"string\",\n          \"deliveryNote\": \"string\",\n          \"status\": \"open\"\n        },\n        {\n          \"internalId\": \"558a497e-c7bd-7d29-7a53-5cc1b4b1d960\",\n          \"receiptLineRemoteId\": \"string\",\n          \"receiptLineNumber\": 7593,\n          \"poLineNumber\": 8129,\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 7158,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"receivedQuantity\": \"1.0\",\n          \"acceptedQuantity\": \"string\",\n          \"receivedDate\": \"2007-09-22\",\n          \"createdOn\": \"1969-01-29\",\n          \"createdBy\": \"string\",\n          \"warehouse\": \"string\",\n          \"billOfLading\": \"string\",\n          \"deliveryNote\": \"string\",\n          \"status\": \"open\"\n        }\n      ],\n      \"scheduleLines\": [\n        {\n          \"internalId\": \"7eda585d-acb9-f9e0-e54b-a4e78738f259\",\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 2305,\n          \"poLineNumber\": 2398,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"plannedQuantity\": \"1.0\",\n          \"promisedDeliveryStartDate\": \"2010-06-10\",\n          \"promisedDeliveryEndDate\": \"1952-11-02\",\n          \"createdOn\": \"1963-07-16\",\n          \"shipToLocation\": \"string\"\n        },\n        {\n          \"internalId\": \"09a099a9-f190-ee48-911f-6c0351b01109\",\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 4747,\n          \"poLineNumber\": 2114,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"plannedQuantity\": \"1.0\",\n          \"promisedDeliveryStartDate\": \"1955-09-29\",\n          \"promisedDeliveryEndDate\": \"2022-08-04\",\n          \"createdOn\": \"2009-08-19\",\n          \"shipToLocation\": \"string\"\n        }\n      ]\n    },\n    {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"productNumber\": \"string\",\n      \"productDescription\": \"string\",\n      \"unitOfMeasure\": \"kg\",\n      \"quantityAccepted\": \"1.0\",\n      \"quantityRequested\": \"1.0\",\n      \"quantityReceived\": \"1.0\",\n      \"matchingType\": \"three_way\",\n      \"unitAmount\": \"1.00\",\n      \"lineItemTotal\": \"1.00\",\n      \"lineNumber\": 4037,\n      \"dimensions\": [\n        {\n          \"internalId\": \"string\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"name\": \"string\",\n          \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n        },\n        {\n          \"internalId\": \"string\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"name\": \"string\",\n          \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n        }\n      ],\n      \"invoiceItemsMatched\": [\n        {\n          \"invoiceItemId\": \"string\",\n          \"purchaseOrderItemId\": \"string\",\n          \"quantityMatched\": \"string\",\n          \"purchaseOrderItemLineNumber\": \"string\",\n          \"productNumber\": \"string\",\n          \"unitOfMeasure\": \"string\",\n          \"amountMatched\": \"string\"\n        }\n      ],\n      \"receiptMatches\": [\n        {\n          \"invoiceItemId\": \"string\",\n          \"purchaseOrderItemId\": \"string\",\n          \"purchaseOrderReceiptLineId\": \"string\",\n          \"quantityMatched\": \"string\",\n          \"amountMatched\": \"string\"\n        }\n      ],\n      \"memo\": \"string\",\n      \"status\": \"open\",\n      \"fields\": [\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"string\",\n          \"value\": \"string\"\n        }\n      ],\n      \"receiptLines\": [\n        {\n          \"internalId\": \"62793dc2-c06f-9ba3-3bf2-cef7e3b2e5b5\",\n          \"receiptLineRemoteId\": \"string\",\n          \"receiptLineNumber\": 1620,\n          \"poLineNumber\": 591,\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 8609,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"receivedQuantity\": \"1.0\",\n          \"acceptedQuantity\": \"string\",\n          \"receivedDate\": \"1947-09-22\",\n          \"createdOn\": \"2000-02-14\",\n          \"createdBy\": \"string\",\n          \"warehouse\": \"string\",\n          \"billOfLading\": \"string\",\n          \"deliveryNote\": \"string\",\n          \"status\": \"closed\"\n        },\n        {\n          \"internalId\": \"03d4ca5b-ee21-2f1e-bd4f-3dc97eae2fdb\",\n          \"receiptLineRemoteId\": \"string\",\n          \"receiptLineNumber\": 1939,\n          \"poLineNumber\": 1083,\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 1856,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"receivedQuantity\": \"1.0\",\n          \"acceptedQuantity\": \"string\",\n          \"receivedDate\": \"1963-02-09\",\n          \"createdOn\": \"1991-03-06\",\n          \"createdBy\": \"string\",\n          \"warehouse\": \"string\",\n          \"billOfLading\": \"string\",\n          \"deliveryNote\": \"string\",\n          \"status\": \"open\"\n        }\n      ],\n      \"scheduleLines\": [\n        {\n          \"internalId\": \"67d0cf1e-80f2-8e77-f6dc-d6725367deae\",\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 6015,\n          \"poLineNumber\": 9657,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"plannedQuantity\": \"1.0\",\n          \"promisedDeliveryStartDate\": \"1966-05-24\",\n          \"promisedDeliveryEndDate\": \"1957-12-25\",\n          \"createdOn\": \"1976-09-20\",\n          \"shipToLocation\": \"string\"\n        },\n        {\n          \"internalId\": \"15d76cbf-1631-f317-e3b9-d4fc46715de1\",\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 7323,\n          \"poLineNumber\": 7422,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"plannedQuantity\": \"1.0\",\n          \"promisedDeliveryStartDate\": \"1979-11-15\",\n          \"promisedDeliveryEndDate\": \"1981-03-18\",\n          \"createdOn\": \"1992-01-06\",\n          \"shipToLocation\": \"string\"\n        }\n      ]\n    }\n  ],\n  \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n  \"vendor\": {\n    \"internalId\": \"47\",\n    \"internalUpdatedAt\": \"2016-02-10T18:17:03.161Z\",\n    \"name\": \"string\",\n    \"email\": \"WgmJB8@Acd.xurm\",\n    \"phone\": \"string\",\n    \"addressStreet\": \"string\",\n    \"addressCity\": \"string\",\n    \"addressState\": \"string\",\n    \"addressPostalCode\": \"string\",\n    \"countryCode\": \"US\",\n    \"companyId\": \"12345\",\n    \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n    \"externalUpdatedAt\": \"2013-09-05T16:30:16.898Z\",\n    \"description\": \"string\",\n    \"currency\": \"USD\",\n    \"confirmedAt\": \"2022-05-01T06:11:56.617Z\",\n    \"state\": \"CONFIRMED\",\n    \"taxInfo\": {\n      \"taxId\": \"string\",\n      \"taxIdType\": \"ssn\",\n      \"is1099vendor\": true,\n      \"orgNumber\": \"string\"\n    },\n    \"defaultPaymentInfo\": {\n      \"bankAccountNum\": \"string\",\n      \"bankCode\": \"string\",\n      \"paymentTerm\": {\n        \"count\": 5491,\n        \"unit\": \"DAYS\"\n      },\n      \"bankGiro\": \"string\",\n      \"plusGiro\": \"string\",\n      \"bban\": \"string\",\n      \"internationalBankAccount\": {\n        \"iban\": \"string\",\n        \"bic\": \"string\"\n      },\n      \"defaultMethod\": \"IBAN\"\n    },\n    \"paymentTermId\": \"f9cf34b2-ab3b-c4c7-a4f3-702aecaa7b43\",\n    \"poMatchingDocumentLevel\": false,\n    \"vendorGroupId\": \"f3d80d30-35ca-841f-ec72-baee7a87da00\",\n    \"tags\": [\n      {\n        \"value\": \"string\",\n        \"id\": \"string\"\n      },\n      {\n        \"value\": \"string\",\n        \"id\": \"string\"\n      }\n    ],\n    \"externalData\": {},\n    \"errors\": {}\n  },\n  \"issuedOn\": \"1961-03-11\",\n  \"createdOn\": \"1998-04-04\",\n  \"poNumber\": \"string\",\n  \"deliverOn\": \"1978-07-08\",\n  \"amount\": \"1.00\",\n  \"currencyId\": \"USD\",\n  \"matchingType\": \"document\",\n  \"type\": \"normal\",\n  \"description\": \"string\",\n  \"requestor\": {\n    \"email\": \"bbu@QhcDYTPyXjaWSQRSmPGZllRjGZP.spo\",\n    \"name\": \"string\"\n  },\n  \"siteOwner\": {\n    \"email\": \"LiSGqRDqW@CB.jcg\",\n    \"name\": \"string\"\n  },\n  \"paymentTermId\": \"48cc75f0-9f6d-2b90-9859-577eeb0654ba\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fc5c16c6-b189-4977-9e53-49bf6e2931f3",
+              "name": "The request was forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders",
+                    ":purchaseOrderId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderId",
+                      "description": "(Required) The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 466,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e5e5ecee-20d0-4f1e-9cb3-93507ee4c9c5",
+              "name": "Resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders",
+                    ":purchaseOrderId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderId",
+                      "description": "(Required) The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 466,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e16a2fd7-c963-44e4-b0fd-f1b26eea2220",
+              "name": "Errors with the input are present.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders",
+                    ":purchaseOrderId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderId",
+                      "description": "(Required) The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 466,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "7a7664fd-856d-4d45-8cfd-96e63fd74004",
+          "name": "Delete a purchase order",
+          "request": {
+            "name": "Delete a purchase order",
+            "description": {
+              "content": "Delete a purchase order.\n\nIf there are existing matches made to an invoice that has been transmitted, or\nthat is currently being posted, you will not be able to delete the purchase\norder - an `UnprocessableEntityResponse` will be returned.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "purchaseOrders",
+                ":purchaseOrderId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "useSystem",
+                  "value": "INTERNAL",
+                  "description": "Which system to use for id or updatedAt filters.\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "purchaseOrderId",
+                  "description": "(Required) The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "f2285fe6-c1b8-4986-a273-31fd013d25a7",
+              "name": "Purchase order was successfully deleted.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders",
+                    ":purchaseOrderId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderId",
+                      "description": "(Required) The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "8dbd2808-9483-4091-be0e-55009e84e580",
+              "name": "The request was forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders",
+                    ":purchaseOrderId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderId",
+                      "description": "(Required) The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 466,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8b1ddb86-3d98-4009-9e94-27693d10383c",
+              "name": "Resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders",
+                    ":purchaseOrderId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderId",
+                      "description": "(Required) The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 466,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b7344481-738b-4c94-bf8c-79ad4d4525f6",
+              "name": "Errors with the input are present.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders",
+                    ":purchaseOrderId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderId",
+                      "description": "(Required) The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 466,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0323c4c2-cf60-4052-9fb7-7ffebee18e94",
+          "name": "Process the purchase order",
+          "request": {
+            "name": "Process the purchase order",
+            "description": {
+              "content": "NOTE: Manually calling this endpoint is generally not required. Purchase order\nprocessing is automatically scheduled after any of the following operations:\n\n  - createPurchaseOrder\n  - updatePurchaseOrder\n  - openPurchaseOrder\n  - createPurchaseOrderLineItem\n  - updatePurchaseOrderLineItem\n  - deletePurchaseOrderLineItem\n  - openPurchaseOrderLineItem\n\nProcessing uses a trailing-edge debounce mechanism: the 15-second timer resets\nafter each operation, and processing will be queued 15 seconds after the *last*\nchange.\n\nProcessing will be skipped if updatePurchaseOrder or updatePurchaseOrderLineItem\nare invoked but do not result in any actual changes.\n\nCalling the processPurchaseOrder endpoint will also schedule processing; however,\nthis is only necessary when no prior operation from the list above has been\ncalled recently (i.e., when no automatic scheduling would otherwise occur).\n\nWhen the purchase order modifications are completed use this operation to let\nVic know that it is ready to be processed.\nOnce a purchase order is being processed, it can not be modified until\ncompleted.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "purchaseOrders",
+                ":purchaseOrderId",
+                "process"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "useSystem",
+                  "value": "INTERNAL",
+                  "description": "Which system to use for id or updatedAt filters.\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "purchaseOrderId",
+                  "description": "(Required) The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "21254cc4-071f-4ee6-8020-cc1d5d94b0e4",
+              "name": "The purchase order.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders",
+                    ":purchaseOrderId",
+                    "process"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderId",
+                      "description": "(Required) The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"internalId\": \"string\",\n  \"internalUpdatedAt\": \"2025-11-29T16:59:51.953Z\",\n  \"status\": \"open\",\n  \"lineItems\": [\n    {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"productNumber\": \"string\",\n      \"productDescription\": \"string\",\n      \"unitOfMeasure\": \"kg\",\n      \"quantityAccepted\": \"1.0\",\n      \"quantityRequested\": \"1.0\",\n      \"quantityReceived\": \"1.0\",\n      \"matchingType\": \"three_way\",\n      \"unitAmount\": \"1.00\",\n      \"lineItemTotal\": \"1.00\",\n      \"lineNumber\": 6316,\n      \"dimensions\": [\n        {\n          \"internalId\": \"string\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"name\": \"string\",\n          \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n        },\n        {\n          \"internalId\": \"string\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"name\": \"string\",\n          \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n        }\n      ],\n      \"invoiceItemsMatched\": [\n        {\n          \"invoiceItemId\": \"string\",\n          \"purchaseOrderItemId\": \"string\",\n          \"quantityMatched\": \"string\",\n          \"purchaseOrderItemLineNumber\": \"string\",\n          \"productNumber\": \"string\",\n          \"unitOfMeasure\": \"string\",\n          \"amountMatched\": \"string\"\n        }\n      ],\n      \"receiptMatches\": [\n        {\n          \"invoiceItemId\": \"string\",\n          \"purchaseOrderItemId\": \"string\",\n          \"purchaseOrderReceiptLineId\": \"string\",\n          \"quantityMatched\": \"string\",\n          \"amountMatched\": \"string\"\n        }\n      ],\n      \"memo\": \"string\",\n      \"status\": \"open\",\n      \"fields\": [\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"string\",\n          \"value\": \"string\"\n        }\n      ],\n      \"receiptLines\": [\n        {\n          \"internalId\": \"d39fdd95-96f0-e4f9-66a2-82318aab4b84\",\n          \"receiptLineRemoteId\": \"string\",\n          \"receiptLineNumber\": 3446,\n          \"poLineNumber\": 7612,\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 3795,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"receivedQuantity\": \"1.0\",\n          \"acceptedQuantity\": \"string\",\n          \"receivedDate\": \"1984-02-14\",\n          \"createdOn\": \"2026-07-11\",\n          \"createdBy\": \"string\",\n          \"warehouse\": \"string\",\n          \"billOfLading\": \"string\",\n          \"deliveryNote\": \"string\",\n          \"status\": \"open\"\n        },\n        {\n          \"internalId\": \"558a497e-c7bd-7d29-7a53-5cc1b4b1d960\",\n          \"receiptLineRemoteId\": \"string\",\n          \"receiptLineNumber\": 7593,\n          \"poLineNumber\": 8129,\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 7158,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"receivedQuantity\": \"1.0\",\n          \"acceptedQuantity\": \"string\",\n          \"receivedDate\": \"2007-09-22\",\n          \"createdOn\": \"1969-01-29\",\n          \"createdBy\": \"string\",\n          \"warehouse\": \"string\",\n          \"billOfLading\": \"string\",\n          \"deliveryNote\": \"string\",\n          \"status\": \"open\"\n        }\n      ],\n      \"scheduleLines\": [\n        {\n          \"internalId\": \"7eda585d-acb9-f9e0-e54b-a4e78738f259\",\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 2305,\n          \"poLineNumber\": 2398,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"plannedQuantity\": \"1.0\",\n          \"promisedDeliveryStartDate\": \"2010-06-10\",\n          \"promisedDeliveryEndDate\": \"1952-11-02\",\n          \"createdOn\": \"1963-07-16\",\n          \"shipToLocation\": \"string\"\n        },\n        {\n          \"internalId\": \"09a099a9-f190-ee48-911f-6c0351b01109\",\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 4747,\n          \"poLineNumber\": 2114,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"plannedQuantity\": \"1.0\",\n          \"promisedDeliveryStartDate\": \"1955-09-29\",\n          \"promisedDeliveryEndDate\": \"2022-08-04\",\n          \"createdOn\": \"2009-08-19\",\n          \"shipToLocation\": \"string\"\n        }\n      ]\n    },\n    {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"productNumber\": \"string\",\n      \"productDescription\": \"string\",\n      \"unitOfMeasure\": \"kg\",\n      \"quantityAccepted\": \"1.0\",\n      \"quantityRequested\": \"1.0\",\n      \"quantityReceived\": \"1.0\",\n      \"matchingType\": \"three_way\",\n      \"unitAmount\": \"1.00\",\n      \"lineItemTotal\": \"1.00\",\n      \"lineNumber\": 4037,\n      \"dimensions\": [\n        {\n          \"internalId\": \"string\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"name\": \"string\",\n          \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n        },\n        {\n          \"internalId\": \"string\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"name\": \"string\",\n          \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n        }\n      ],\n      \"invoiceItemsMatched\": [\n        {\n          \"invoiceItemId\": \"string\",\n          \"purchaseOrderItemId\": \"string\",\n          \"quantityMatched\": \"string\",\n          \"purchaseOrderItemLineNumber\": \"string\",\n          \"productNumber\": \"string\",\n          \"unitOfMeasure\": \"string\",\n          \"amountMatched\": \"string\"\n        }\n      ],\n      \"receiptMatches\": [\n        {\n          \"invoiceItemId\": \"string\",\n          \"purchaseOrderItemId\": \"string\",\n          \"purchaseOrderReceiptLineId\": \"string\",\n          \"quantityMatched\": \"string\",\n          \"amountMatched\": \"string\"\n        }\n      ],\n      \"memo\": \"string\",\n      \"status\": \"open\",\n      \"fields\": [\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"string\",\n          \"value\": \"string\"\n        }\n      ],\n      \"receiptLines\": [\n        {\n          \"internalId\": \"62793dc2-c06f-9ba3-3bf2-cef7e3b2e5b5\",\n          \"receiptLineRemoteId\": \"string\",\n          \"receiptLineNumber\": 1620,\n          \"poLineNumber\": 591,\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 8609,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"receivedQuantity\": \"1.0\",\n          \"acceptedQuantity\": \"string\",\n          \"receivedDate\": \"1947-09-22\",\n          \"createdOn\": \"2000-02-14\",\n          \"createdBy\": \"string\",\n          \"warehouse\": \"string\",\n          \"billOfLading\": \"string\",\n          \"deliveryNote\": \"string\",\n          \"status\": \"closed\"\n        },\n        {\n          \"internalId\": \"03d4ca5b-ee21-2f1e-bd4f-3dc97eae2fdb\",\n          \"receiptLineRemoteId\": \"string\",\n          \"receiptLineNumber\": 1939,\n          \"poLineNumber\": 1083,\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 1856,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"receivedQuantity\": \"1.0\",\n          \"acceptedQuantity\": \"string\",\n          \"receivedDate\": \"1963-02-09\",\n          \"createdOn\": \"1991-03-06\",\n          \"createdBy\": \"string\",\n          \"warehouse\": \"string\",\n          \"billOfLading\": \"string\",\n          \"deliveryNote\": \"string\",\n          \"status\": \"open\"\n        }\n      ],\n      \"scheduleLines\": [\n        {\n          \"internalId\": \"67d0cf1e-80f2-8e77-f6dc-d6725367deae\",\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 6015,\n          \"poLineNumber\": 9657,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"plannedQuantity\": \"1.0\",\n          \"promisedDeliveryStartDate\": \"1966-05-24\",\n          \"promisedDeliveryEndDate\": \"1957-12-25\",\n          \"createdOn\": \"1976-09-20\",\n          \"shipToLocation\": \"string\"\n        },\n        {\n          \"internalId\": \"15d76cbf-1631-f317-e3b9-d4fc46715de1\",\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 7323,\n          \"poLineNumber\": 7422,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"plannedQuantity\": \"1.0\",\n          \"promisedDeliveryStartDate\": \"1979-11-15\",\n          \"promisedDeliveryEndDate\": \"1981-03-18\",\n          \"createdOn\": \"1992-01-06\",\n          \"shipToLocation\": \"string\"\n        }\n      ]\n    }\n  ],\n  \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n  \"vendor\": {\n    \"internalId\": \"47\",\n    \"internalUpdatedAt\": \"2016-02-10T18:17:03.161Z\",\n    \"name\": \"string\",\n    \"email\": \"WgmJB8@Acd.xurm\",\n    \"phone\": \"string\",\n    \"addressStreet\": \"string\",\n    \"addressCity\": \"string\",\n    \"addressState\": \"string\",\n    \"addressPostalCode\": \"string\",\n    \"countryCode\": \"US\",\n    \"companyId\": \"12345\",\n    \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n    \"externalUpdatedAt\": \"2013-09-05T16:30:16.898Z\",\n    \"description\": \"string\",\n    \"currency\": \"USD\",\n    \"confirmedAt\": \"2022-05-01T06:11:56.617Z\",\n    \"state\": \"CONFIRMED\",\n    \"taxInfo\": {\n      \"taxId\": \"string\",\n      \"taxIdType\": \"ssn\",\n      \"is1099vendor\": true,\n      \"orgNumber\": \"string\"\n    },\n    \"defaultPaymentInfo\": {\n      \"bankAccountNum\": \"string\",\n      \"bankCode\": \"string\",\n      \"paymentTerm\": {\n        \"count\": 5491,\n        \"unit\": \"DAYS\"\n      },\n      \"bankGiro\": \"string\",\n      \"plusGiro\": \"string\",\n      \"bban\": \"string\",\n      \"internationalBankAccount\": {\n        \"iban\": \"string\",\n        \"bic\": \"string\"\n      },\n      \"defaultMethod\": \"IBAN\"\n    },\n    \"paymentTermId\": \"f9cf34b2-ab3b-c4c7-a4f3-702aecaa7b43\",\n    \"poMatchingDocumentLevel\": false,\n    \"vendorGroupId\": \"f3d80d30-35ca-841f-ec72-baee7a87da00\",\n    \"tags\": [\n      {\n        \"value\": \"string\",\n        \"id\": \"string\"\n      },\n      {\n        \"value\": \"string\",\n        \"id\": \"string\"\n      }\n    ],\n    \"externalData\": {},\n    \"errors\": {}\n  },\n  \"issuedOn\": \"1961-03-11\",\n  \"createdOn\": \"1998-04-04\",\n  \"poNumber\": \"string\",\n  \"deliverOn\": \"1978-07-08\",\n  \"amount\": \"1.00\",\n  \"currencyId\": \"USD\",\n  \"matchingType\": \"document\",\n  \"type\": \"normal\",\n  \"description\": \"string\",\n  \"requestor\": {\n    \"email\": \"bbu@QhcDYTPyXjaWSQRSmPGZllRjGZP.spo\",\n    \"name\": \"string\"\n  },\n  \"siteOwner\": {\n    \"email\": \"LiSGqRDqW@CB.jcg\",\n    \"name\": \"string\"\n  },\n  \"paymentTermId\": \"48cc75f0-9f6d-2b90-9859-577eeb0654ba\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4225ab97-5c22-499d-b8fe-f309a05a0e86",
+              "name": "The request was forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders",
+                    ":purchaseOrderId",
+                    "process"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderId",
+                      "description": "(Required) The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 466,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8c786289-609f-4f92-abf4-7346da16b854",
+              "name": "Resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders",
+                    ":purchaseOrderId",
+                    "process"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderId",
+                      "description": "(Required) The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 466,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4ce8c0e6-8890-488b-bb94-1e0a8a0dd8b4",
+              "name": "Errors with the input are present.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders",
+                    ":purchaseOrderId",
+                    "process"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderId",
+                      "description": "(Required) The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 466,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "4b19e8c1-61be-4f78-b7df-5814a83892c5",
+          "name": "Close a purchase order",
+          "request": {
+            "name": "Close a purchase order",
+            "description": {
+              "content": "Closes a purchase order.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "purchaseOrders",
+                ":purchaseOrderId",
+                "close"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "useSystem",
+                  "value": "INTERNAL",
+                  "description": "Which system to use for id or updatedAt filters.\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "purchaseOrderId",
+                  "description": "(Required) The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "8e25810d-33a2-43b8-99d4-6593bb856d97",
+              "name": "The purchase order.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders",
+                    ":purchaseOrderId",
+                    "close"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderId",
+                      "description": "(Required) The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"internalId\": \"string\",\n  \"internalUpdatedAt\": \"2025-11-29T16:59:51.953Z\",\n  \"status\": \"open\",\n  \"lineItems\": [\n    {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"productNumber\": \"string\",\n      \"productDescription\": \"string\",\n      \"unitOfMeasure\": \"kg\",\n      \"quantityAccepted\": \"1.0\",\n      \"quantityRequested\": \"1.0\",\n      \"quantityReceived\": \"1.0\",\n      \"matchingType\": \"three_way\",\n      \"unitAmount\": \"1.00\",\n      \"lineItemTotal\": \"1.00\",\n      \"lineNumber\": 6316,\n      \"dimensions\": [\n        {\n          \"internalId\": \"string\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"name\": \"string\",\n          \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n        },\n        {\n          \"internalId\": \"string\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"name\": \"string\",\n          \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n        }\n      ],\n      \"invoiceItemsMatched\": [\n        {\n          \"invoiceItemId\": \"string\",\n          \"purchaseOrderItemId\": \"string\",\n          \"quantityMatched\": \"string\",\n          \"purchaseOrderItemLineNumber\": \"string\",\n          \"productNumber\": \"string\",\n          \"unitOfMeasure\": \"string\",\n          \"amountMatched\": \"string\"\n        }\n      ],\n      \"receiptMatches\": [\n        {\n          \"invoiceItemId\": \"string\",\n          \"purchaseOrderItemId\": \"string\",\n          \"purchaseOrderReceiptLineId\": \"string\",\n          \"quantityMatched\": \"string\",\n          \"amountMatched\": \"string\"\n        }\n      ],\n      \"memo\": \"string\",\n      \"status\": \"open\",\n      \"fields\": [\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"string\",\n          \"value\": \"string\"\n        }\n      ],\n      \"receiptLines\": [\n        {\n          \"internalId\": \"d39fdd95-96f0-e4f9-66a2-82318aab4b84\",\n          \"receiptLineRemoteId\": \"string\",\n          \"receiptLineNumber\": 3446,\n          \"poLineNumber\": 7612,\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 3795,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"receivedQuantity\": \"1.0\",\n          \"acceptedQuantity\": \"string\",\n          \"receivedDate\": \"1984-02-14\",\n          \"createdOn\": \"2026-07-11\",\n          \"createdBy\": \"string\",\n          \"warehouse\": \"string\",\n          \"billOfLading\": \"string\",\n          \"deliveryNote\": \"string\",\n          \"status\": \"open\"\n        },\n        {\n          \"internalId\": \"558a497e-c7bd-7d29-7a53-5cc1b4b1d960\",\n          \"receiptLineRemoteId\": \"string\",\n          \"receiptLineNumber\": 7593,\n          \"poLineNumber\": 8129,\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 7158,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"receivedQuantity\": \"1.0\",\n          \"acceptedQuantity\": \"string\",\n          \"receivedDate\": \"2007-09-22\",\n          \"createdOn\": \"1969-01-29\",\n          \"createdBy\": \"string\",\n          \"warehouse\": \"string\",\n          \"billOfLading\": \"string\",\n          \"deliveryNote\": \"string\",\n          \"status\": \"open\"\n        }\n      ],\n      \"scheduleLines\": [\n        {\n          \"internalId\": \"7eda585d-acb9-f9e0-e54b-a4e78738f259\",\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 2305,\n          \"poLineNumber\": 2398,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"plannedQuantity\": \"1.0\",\n          \"promisedDeliveryStartDate\": \"2010-06-10\",\n          \"promisedDeliveryEndDate\": \"1952-11-02\",\n          \"createdOn\": \"1963-07-16\",\n          \"shipToLocation\": \"string\"\n        },\n        {\n          \"internalId\": \"09a099a9-f190-ee48-911f-6c0351b01109\",\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 4747,\n          \"poLineNumber\": 2114,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"plannedQuantity\": \"1.0\",\n          \"promisedDeliveryStartDate\": \"1955-09-29\",\n          \"promisedDeliveryEndDate\": \"2022-08-04\",\n          \"createdOn\": \"2009-08-19\",\n          \"shipToLocation\": \"string\"\n        }\n      ]\n    },\n    {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"productNumber\": \"string\",\n      \"productDescription\": \"string\",\n      \"unitOfMeasure\": \"kg\",\n      \"quantityAccepted\": \"1.0\",\n      \"quantityRequested\": \"1.0\",\n      \"quantityReceived\": \"1.0\",\n      \"matchingType\": \"three_way\",\n      \"unitAmount\": \"1.00\",\n      \"lineItemTotal\": \"1.00\",\n      \"lineNumber\": 4037,\n      \"dimensions\": [\n        {\n          \"internalId\": \"string\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"name\": \"string\",\n          \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n        },\n        {\n          \"internalId\": \"string\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"name\": \"string\",\n          \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n        }\n      ],\n      \"invoiceItemsMatched\": [\n        {\n          \"invoiceItemId\": \"string\",\n          \"purchaseOrderItemId\": \"string\",\n          \"quantityMatched\": \"string\",\n          \"purchaseOrderItemLineNumber\": \"string\",\n          \"productNumber\": \"string\",\n          \"unitOfMeasure\": \"string\",\n          \"amountMatched\": \"string\"\n        }\n      ],\n      \"receiptMatches\": [\n        {\n          \"invoiceItemId\": \"string\",\n          \"purchaseOrderItemId\": \"string\",\n          \"purchaseOrderReceiptLineId\": \"string\",\n          \"quantityMatched\": \"string\",\n          \"amountMatched\": \"string\"\n        }\n      ],\n      \"memo\": \"string\",\n      \"status\": \"open\",\n      \"fields\": [\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"string\",\n          \"value\": \"string\"\n        }\n      ],\n      \"receiptLines\": [\n        {\n          \"internalId\": \"62793dc2-c06f-9ba3-3bf2-cef7e3b2e5b5\",\n          \"receiptLineRemoteId\": \"string\",\n          \"receiptLineNumber\": 1620,\n          \"poLineNumber\": 591,\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 8609,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"receivedQuantity\": \"1.0\",\n          \"acceptedQuantity\": \"string\",\n          \"receivedDate\": \"1947-09-22\",\n          \"createdOn\": \"2000-02-14\",\n          \"createdBy\": \"string\",\n          \"warehouse\": \"string\",\n          \"billOfLading\": \"string\",\n          \"deliveryNote\": \"string\",\n          \"status\": \"closed\"\n        },\n        {\n          \"internalId\": \"03d4ca5b-ee21-2f1e-bd4f-3dc97eae2fdb\",\n          \"receiptLineRemoteId\": \"string\",\n          \"receiptLineNumber\": 1939,\n          \"poLineNumber\": 1083,\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 1856,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"receivedQuantity\": \"1.0\",\n          \"acceptedQuantity\": \"string\",\n          \"receivedDate\": \"1963-02-09\",\n          \"createdOn\": \"1991-03-06\",\n          \"createdBy\": \"string\",\n          \"warehouse\": \"string\",\n          \"billOfLading\": \"string\",\n          \"deliveryNote\": \"string\",\n          \"status\": \"open\"\n        }\n      ],\n      \"scheduleLines\": [\n        {\n          \"internalId\": \"67d0cf1e-80f2-8e77-f6dc-d6725367deae\",\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 6015,\n          \"poLineNumber\": 9657,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"plannedQuantity\": \"1.0\",\n          \"promisedDeliveryStartDate\": \"1966-05-24\",\n          \"promisedDeliveryEndDate\": \"1957-12-25\",\n          \"createdOn\": \"1976-09-20\",\n          \"shipToLocation\": \"string\"\n        },\n        {\n          \"internalId\": \"15d76cbf-1631-f317-e3b9-d4fc46715de1\",\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 7323,\n          \"poLineNumber\": 7422,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"plannedQuantity\": \"1.0\",\n          \"promisedDeliveryStartDate\": \"1979-11-15\",\n          \"promisedDeliveryEndDate\": \"1981-03-18\",\n          \"createdOn\": \"1992-01-06\",\n          \"shipToLocation\": \"string\"\n        }\n      ]\n    }\n  ],\n  \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n  \"vendor\": {\n    \"internalId\": \"47\",\n    \"internalUpdatedAt\": \"2016-02-10T18:17:03.161Z\",\n    \"name\": \"string\",\n    \"email\": \"WgmJB8@Acd.xurm\",\n    \"phone\": \"string\",\n    \"addressStreet\": \"string\",\n    \"addressCity\": \"string\",\n    \"addressState\": \"string\",\n    \"addressPostalCode\": \"string\",\n    \"countryCode\": \"US\",\n    \"companyId\": \"12345\",\n    \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n    \"externalUpdatedAt\": \"2013-09-05T16:30:16.898Z\",\n    \"description\": \"string\",\n    \"currency\": \"USD\",\n    \"confirmedAt\": \"2022-05-01T06:11:56.617Z\",\n    \"state\": \"CONFIRMED\",\n    \"taxInfo\": {\n      \"taxId\": \"string\",\n      \"taxIdType\": \"ssn\",\n      \"is1099vendor\": true,\n      \"orgNumber\": \"string\"\n    },\n    \"defaultPaymentInfo\": {\n      \"bankAccountNum\": \"string\",\n      \"bankCode\": \"string\",\n      \"paymentTerm\": {\n        \"count\": 5491,\n        \"unit\": \"DAYS\"\n      },\n      \"bankGiro\": \"string\",\n      \"plusGiro\": \"string\",\n      \"bban\": \"string\",\n      \"internationalBankAccount\": {\n        \"iban\": \"string\",\n        \"bic\": \"string\"\n      },\n      \"defaultMethod\": \"IBAN\"\n    },\n    \"paymentTermId\": \"f9cf34b2-ab3b-c4c7-a4f3-702aecaa7b43\",\n    \"poMatchingDocumentLevel\": false,\n    \"vendorGroupId\": \"f3d80d30-35ca-841f-ec72-baee7a87da00\",\n    \"tags\": [\n      {\n        \"value\": \"string\",\n        \"id\": \"string\"\n      },\n      {\n        \"value\": \"string\",\n        \"id\": \"string\"\n      }\n    ],\n    \"externalData\": {},\n    \"errors\": {}\n  },\n  \"issuedOn\": \"1961-03-11\",\n  \"createdOn\": \"1998-04-04\",\n  \"poNumber\": \"string\",\n  \"deliverOn\": \"1978-07-08\",\n  \"amount\": \"1.00\",\n  \"currencyId\": \"USD\",\n  \"matchingType\": \"document\",\n  \"type\": \"normal\",\n  \"description\": \"string\",\n  \"requestor\": {\n    \"email\": \"bbu@QhcDYTPyXjaWSQRSmPGZllRjGZP.spo\",\n    \"name\": \"string\"\n  },\n  \"siteOwner\": {\n    \"email\": \"LiSGqRDqW@CB.jcg\",\n    \"name\": \"string\"\n  },\n  \"paymentTermId\": \"48cc75f0-9f6d-2b90-9859-577eeb0654ba\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "aea239bf-2b42-4218-8980-62c3f3b6ee4d",
+              "name": "The request was forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders",
+                    ":purchaseOrderId",
+                    "close"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderId",
+                      "description": "(Required) The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 466,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "12dbdc0a-eca7-438a-a932-5892917f2c70",
+              "name": "Resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders",
+                    ":purchaseOrderId",
+                    "close"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderId",
+                      "description": "(Required) The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 466,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "78e9290b-b649-4fb2-80de-bcc6ff747762",
+              "name": "Errors with the input are present.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders",
+                    ":purchaseOrderId",
+                    "close"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderId",
+                      "description": "(Required) The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 466,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "28394d88-0e91-4494-ac74-1a1fa183272e",
+          "name": "Opens a purchase order",
+          "request": {
+            "name": "Opens a purchase order",
+            "description": {
+              "content": "Opens a purchase order.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "purchaseOrders",
+                ":purchaseOrderId",
+                "open"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "useSystem",
+                  "value": "INTERNAL",
+                  "description": "Which system to use for id or updatedAt filters.\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "purchaseOrderId",
+                  "description": "(Required) The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "af9b5046-7683-4d2b-9587-38a1048e00a2",
+              "name": "The purchase order.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders",
+                    ":purchaseOrderId",
+                    "open"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderId",
+                      "description": "(Required) The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"internalId\": \"string\",\n  \"internalUpdatedAt\": \"2025-11-29T16:59:51.953Z\",\n  \"status\": \"open\",\n  \"lineItems\": [\n    {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"productNumber\": \"string\",\n      \"productDescription\": \"string\",\n      \"unitOfMeasure\": \"kg\",\n      \"quantityAccepted\": \"1.0\",\n      \"quantityRequested\": \"1.0\",\n      \"quantityReceived\": \"1.0\",\n      \"matchingType\": \"three_way\",\n      \"unitAmount\": \"1.00\",\n      \"lineItemTotal\": \"1.00\",\n      \"lineNumber\": 6316,\n      \"dimensions\": [\n        {\n          \"internalId\": \"string\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"name\": \"string\",\n          \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n        },\n        {\n          \"internalId\": \"string\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"name\": \"string\",\n          \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n        }\n      ],\n      \"invoiceItemsMatched\": [\n        {\n          \"invoiceItemId\": \"string\",\n          \"purchaseOrderItemId\": \"string\",\n          \"quantityMatched\": \"string\",\n          \"purchaseOrderItemLineNumber\": \"string\",\n          \"productNumber\": \"string\",\n          \"unitOfMeasure\": \"string\",\n          \"amountMatched\": \"string\"\n        }\n      ],\n      \"receiptMatches\": [\n        {\n          \"invoiceItemId\": \"string\",\n          \"purchaseOrderItemId\": \"string\",\n          \"purchaseOrderReceiptLineId\": \"string\",\n          \"quantityMatched\": \"string\",\n          \"amountMatched\": \"string\"\n        }\n      ],\n      \"memo\": \"string\",\n      \"status\": \"open\",\n      \"fields\": [\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"string\",\n          \"value\": \"string\"\n        }\n      ],\n      \"receiptLines\": [\n        {\n          \"internalId\": \"d39fdd95-96f0-e4f9-66a2-82318aab4b84\",\n          \"receiptLineRemoteId\": \"string\",\n          \"receiptLineNumber\": 3446,\n          \"poLineNumber\": 7612,\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 3795,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"receivedQuantity\": \"1.0\",\n          \"acceptedQuantity\": \"string\",\n          \"receivedDate\": \"1984-02-14\",\n          \"createdOn\": \"2026-07-11\",\n          \"createdBy\": \"string\",\n          \"warehouse\": \"string\",\n          \"billOfLading\": \"string\",\n          \"deliveryNote\": \"string\",\n          \"status\": \"open\"\n        },\n        {\n          \"internalId\": \"558a497e-c7bd-7d29-7a53-5cc1b4b1d960\",\n          \"receiptLineRemoteId\": \"string\",\n          \"receiptLineNumber\": 7593,\n          \"poLineNumber\": 8129,\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 7158,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"receivedQuantity\": \"1.0\",\n          \"acceptedQuantity\": \"string\",\n          \"receivedDate\": \"2007-09-22\",\n          \"createdOn\": \"1969-01-29\",\n          \"createdBy\": \"string\",\n          \"warehouse\": \"string\",\n          \"billOfLading\": \"string\",\n          \"deliveryNote\": \"string\",\n          \"status\": \"open\"\n        }\n      ],\n      \"scheduleLines\": [\n        {\n          \"internalId\": \"7eda585d-acb9-f9e0-e54b-a4e78738f259\",\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 2305,\n          \"poLineNumber\": 2398,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"plannedQuantity\": \"1.0\",\n          \"promisedDeliveryStartDate\": \"2010-06-10\",\n          \"promisedDeliveryEndDate\": \"1952-11-02\",\n          \"createdOn\": \"1963-07-16\",\n          \"shipToLocation\": \"string\"\n        },\n        {\n          \"internalId\": \"09a099a9-f190-ee48-911f-6c0351b01109\",\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 4747,\n          \"poLineNumber\": 2114,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"plannedQuantity\": \"1.0\",\n          \"promisedDeliveryStartDate\": \"1955-09-29\",\n          \"promisedDeliveryEndDate\": \"2022-08-04\",\n          \"createdOn\": \"2009-08-19\",\n          \"shipToLocation\": \"string\"\n        }\n      ]\n    },\n    {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"productNumber\": \"string\",\n      \"productDescription\": \"string\",\n      \"unitOfMeasure\": \"kg\",\n      \"quantityAccepted\": \"1.0\",\n      \"quantityRequested\": \"1.0\",\n      \"quantityReceived\": \"1.0\",\n      \"matchingType\": \"three_way\",\n      \"unitAmount\": \"1.00\",\n      \"lineItemTotal\": \"1.00\",\n      \"lineNumber\": 4037,\n      \"dimensions\": [\n        {\n          \"internalId\": \"string\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"name\": \"string\",\n          \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n        },\n        {\n          \"internalId\": \"string\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"name\": \"string\",\n          \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n        }\n      ],\n      \"invoiceItemsMatched\": [\n        {\n          \"invoiceItemId\": \"string\",\n          \"purchaseOrderItemId\": \"string\",\n          \"quantityMatched\": \"string\",\n          \"purchaseOrderItemLineNumber\": \"string\",\n          \"productNumber\": \"string\",\n          \"unitOfMeasure\": \"string\",\n          \"amountMatched\": \"string\"\n        }\n      ],\n      \"receiptMatches\": [\n        {\n          \"invoiceItemId\": \"string\",\n          \"purchaseOrderItemId\": \"string\",\n          \"purchaseOrderReceiptLineId\": \"string\",\n          \"quantityMatched\": \"string\",\n          \"amountMatched\": \"string\"\n        }\n      ],\n      \"memo\": \"string\",\n      \"status\": \"open\",\n      \"fields\": [\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"string\",\n          \"value\": \"string\"\n        }\n      ],\n      \"receiptLines\": [\n        {\n          \"internalId\": \"62793dc2-c06f-9ba3-3bf2-cef7e3b2e5b5\",\n          \"receiptLineRemoteId\": \"string\",\n          \"receiptLineNumber\": 1620,\n          \"poLineNumber\": 591,\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 8609,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"receivedQuantity\": \"1.0\",\n          \"acceptedQuantity\": \"string\",\n          \"receivedDate\": \"1947-09-22\",\n          \"createdOn\": \"2000-02-14\",\n          \"createdBy\": \"string\",\n          \"warehouse\": \"string\",\n          \"billOfLading\": \"string\",\n          \"deliveryNote\": \"string\",\n          \"status\": \"closed\"\n        },\n        {\n          \"internalId\": \"03d4ca5b-ee21-2f1e-bd4f-3dc97eae2fdb\",\n          \"receiptLineRemoteId\": \"string\",\n          \"receiptLineNumber\": 1939,\n          \"poLineNumber\": 1083,\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 1856,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"receivedQuantity\": \"1.0\",\n          \"acceptedQuantity\": \"string\",\n          \"receivedDate\": \"1963-02-09\",\n          \"createdOn\": \"1991-03-06\",\n          \"createdBy\": \"string\",\n          \"warehouse\": \"string\",\n          \"billOfLading\": \"string\",\n          \"deliveryNote\": \"string\",\n          \"status\": \"open\"\n        }\n      ],\n      \"scheduleLines\": [\n        {\n          \"internalId\": \"67d0cf1e-80f2-8e77-f6dc-d6725367deae\",\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 6015,\n          \"poLineNumber\": 9657,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"plannedQuantity\": \"1.0\",\n          \"promisedDeliveryStartDate\": \"1966-05-24\",\n          \"promisedDeliveryEndDate\": \"1957-12-25\",\n          \"createdOn\": \"1976-09-20\",\n          \"shipToLocation\": \"string\"\n        },\n        {\n          \"internalId\": \"15d76cbf-1631-f317-e3b9-d4fc46715de1\",\n          \"poScheduleLineRemoteId\": \"string\",\n          \"poScheduleLineNumber\": 7323,\n          \"poLineNumber\": 7422,\n          \"itemId\": \"string\",\n          \"uomCode\": \"string\",\n          \"plannedQuantity\": \"1.0\",\n          \"promisedDeliveryStartDate\": \"1979-11-15\",\n          \"promisedDeliveryEndDate\": \"1981-03-18\",\n          \"createdOn\": \"1992-01-06\",\n          \"shipToLocation\": \"string\"\n        }\n      ]\n    }\n  ],\n  \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n  \"vendor\": {\n    \"internalId\": \"47\",\n    \"internalUpdatedAt\": \"2016-02-10T18:17:03.161Z\",\n    \"name\": \"string\",\n    \"email\": \"WgmJB8@Acd.xurm\",\n    \"phone\": \"string\",\n    \"addressStreet\": \"string\",\n    \"addressCity\": \"string\",\n    \"addressState\": \"string\",\n    \"addressPostalCode\": \"string\",\n    \"countryCode\": \"US\",\n    \"companyId\": \"12345\",\n    \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n    \"externalUpdatedAt\": \"2013-09-05T16:30:16.898Z\",\n    \"description\": \"string\",\n    \"currency\": \"USD\",\n    \"confirmedAt\": \"2022-05-01T06:11:56.617Z\",\n    \"state\": \"CONFIRMED\",\n    \"taxInfo\": {\n      \"taxId\": \"string\",\n      \"taxIdType\": \"ssn\",\n      \"is1099vendor\": true,\n      \"orgNumber\": \"string\"\n    },\n    \"defaultPaymentInfo\": {\n      \"bankAccountNum\": \"string\",\n      \"bankCode\": \"string\",\n      \"paymentTerm\": {\n        \"count\": 5491,\n        \"unit\": \"DAYS\"\n      },\n      \"bankGiro\": \"string\",\n      \"plusGiro\": \"string\",\n      \"bban\": \"string\",\n      \"internationalBankAccount\": {\n        \"iban\": \"string\",\n        \"bic\": \"string\"\n      },\n      \"defaultMethod\": \"IBAN\"\n    },\n    \"paymentTermId\": \"f9cf34b2-ab3b-c4c7-a4f3-702aecaa7b43\",\n    \"poMatchingDocumentLevel\": false,\n    \"vendorGroupId\": \"f3d80d30-35ca-841f-ec72-baee7a87da00\",\n    \"tags\": [\n      {\n        \"value\": \"string\",\n        \"id\": \"string\"\n      },\n      {\n        \"value\": \"string\",\n        \"id\": \"string\"\n      }\n    ],\n    \"externalData\": {},\n    \"errors\": {}\n  },\n  \"issuedOn\": \"1961-03-11\",\n  \"createdOn\": \"1998-04-04\",\n  \"poNumber\": \"string\",\n  \"deliverOn\": \"1978-07-08\",\n  \"amount\": \"1.00\",\n  \"currencyId\": \"USD\",\n  \"matchingType\": \"document\",\n  \"type\": \"normal\",\n  \"description\": \"string\",\n  \"requestor\": {\n    \"email\": \"bbu@QhcDYTPyXjaWSQRSmPGZllRjGZP.spo\",\n    \"name\": \"string\"\n  },\n  \"siteOwner\": {\n    \"email\": \"LiSGqRDqW@CB.jcg\",\n    \"name\": \"string\"\n  },\n  \"paymentTermId\": \"48cc75f0-9f6d-2b90-9859-577eeb0654ba\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9a259b18-4894-4371-9c3a-6f1ffbe123d1",
+              "name": "The request was forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders",
+                    ":purchaseOrderId",
+                    "open"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderId",
+                      "description": "(Required) The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 466,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "07763a6f-e0a1-42e0-bdeb-27563af0576c",
+              "name": "Resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders",
+                    ":purchaseOrderId",
+                    "open"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderId",
+                      "description": "(Required) The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 466,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4e2f56bf-c8a9-4638-8509-ced396e686df",
+              "name": "Errors with the input are present.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrders",
+                    ":purchaseOrderId",
+                    "open"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderId",
+                      "description": "(Required) The internal id or external id of the purchase order. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 466,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.no.stage.vic.ai",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "814e8b1d-10de-42f6-90b9-5cfafea01297",
+    "name": "Vic.ai Accounts Purchase Orders API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "## Introduction\n\nThe Vic.ai API provides a seamless connection between your Enterprise Resource\nPlanning (ERP) system and the Vic.ai product suite.\n\nThe API is designed to offer three main areas of functionality:\n\n- **Syncing master data:** This refers to the data in your ERP that Vic.ai\n  interacts with. You are required to supply and update this data in Vic.ai, and\n  you also have the option to verify the copy of the masterdata in Vic.ai.\n\n- **Syncing training data:** We need historical data to train your AI model. To\n  that end, the API provides endpoints to sync historical invoices into Vic.ai\n  and to confirm their presence.\n\n- **Subscribing to and receiving webhooks:** Webhooks enable users or automated\n  tasks to interact with your ERP through various actions in the Vic.ai product\n  suite, such as posting an invoice, payment or purchase order or requesting\n  synchronization. You will receive a notification via a webhook when these\n  actions occur.\n\n\nFor US-based integrations, please use the following base API URL:\n\n```\nhttps://api.us.vic.ai\n```\n\nFor integrations based in Norway, use the following base API URL:\n\n```\nhttps://api.no.vic.ai\n```\n\nAll paths mentioned in this documentation should use one of these URLs as the\nbase.\n\nExample:\n\n```bash\ncurl https://api.us.vic.ai/v0/healthCheck \\\n    -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\"\n```\n\n## Getting Started\n\nTo begin interacting with the Vic.ai API, you will need the following\ncredentials:\n\n* A Vic.ai client ID\n* A Vic.ai client secret.\n\nThese can be provided to you securely by a Vic.ai representative\n[upon request](https://www.vic.ai/book-a-demo).\n\n**Please note:** These credentials are essentially the keys to your ERP\nintegration. If they fall into the wrong hands, unauthorized parties could\nimpersonate you, gain access to sensitive data, and potentially perform\nmalicious actions. Therefore, it's crucial to keep these credentials safe at all\ntimes to protect your application's integrity and your clients' data.\n\n### Limitations\n\nThe Vic.ai API has the following limitations:\n\n**Rate Limiting:** The API is rate-limited to 500 requests per 10-second time\nframe. If you exceed this limit, you will receive a `429 Too Many Requests`\nresponse. The limit is per Oauth client ID. If you continue to receive `429`s,\nplease contact support with a request id from the response headers.\n",
+      "type": "text/plain"
+    }
+  }
+}

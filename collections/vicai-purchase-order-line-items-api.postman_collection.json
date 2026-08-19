@@ -1,0 +1,1705 @@
+{
+  "item": [
+    {
+      "id": "a065cece-ace8-43cb-9d3d-32229cd15d50",
+      "name": "Purchase Order Line Items",
+      "description": {
+        "content": "Manage individual line items within a purchase order.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "3b993406-6f2c-4dc1-bbed-373d0233ed26",
+          "name": "Add a line item to a purchase order.",
+          "request": {
+            "name": "Add a line item to a purchase order.",
+            "description": {
+              "content": "Create a purchase order's line item.\n\nCaution should be taken when creating a new line item in a purchase order. Each\npurchase order line item must have a line number and it must be unique among the\nother line items. It should be a non negative value.\n\nNote: This action will change purchase order `status` from `closed` to `open`,\nif the purchase order is `closed`.\n\nAfter creating the new purchase order line item, you **must** update the the\npurchase order's `amount` field. This should be done once you are finished\nmanipulating all of the line items.\n\nAfter the line item is created, Vic automatically schedules purchase order\nprocessing. You do not need to call `processPurchaseOrder` manually unless you\nneed to trigger processing immediately.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "purchaseOrderLineItems"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"purchaseOrderId\": \"<string>\",\n  \"productNumber\": \"<string>\",\n  \"quantityRequested\": \"<decimal>\",\n  \"unitAmount\": \"<decimal>\",\n  \"lineItemTotal\": \"<decimal>\",\n  \"lineNumber\": \"<integer>\",\n  \"productDescription\": \"<string>\",\n  \"unitOfMeasure\": \"<string>\",\n  \"quantityAccepted\": \"<decimal>\",\n  \"quantityReceived\": \"<decimal>\",\n  \"matchingType\": \"three_way\",\n  \"dimensions\": [\n    {\n      \"internalId\": \"<string>\",\n      \"externalId\": \"<string>\",\n      \"name\": \"<string>\",\n      \"typeExternalId\": \"<string>\"\n    },\n    {\n      \"internalId\": \"<string>\",\n      \"externalId\": \"<string>\",\n      \"name\": \"<string>\",\n      \"typeExternalId\": \"<string>\"\n    }\n  ],\n  \"externalId\": \"<string>\",\n  \"memo\": \"<string>\",\n  \"status\": \"open\",\n  \"fields\": [\n    {\n      \"label\": \"<string>\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"label\": \"<string>\",\n      \"value\": \"<string>\"\n    }\n  ],\n  \"receiptLines\": [\n    {\n      \"receiptLineRemoteId\": \"<string>\",\n      \"receiptLineNumber\": \"<integer>\",\n      \"poLineNumber\": \"<integer>\",\n      \"itemId\": \"<string>\",\n      \"uomCode\": \"<string>\",\n      \"receivedQuantity\": \"<decimal>\",\n      \"receivedDate\": \"<date>\",\n      \"createdBy\": \"<string>\",\n      \"warehouse\": \"<string>\",\n      \"createdOn\": \"<date>\",\n      \"status\": \"<string>\",\n      \"internalId\": \"<uuid>\",\n      \"poScheduleLineRemoteId\": \"<string>\",\n      \"poScheduleLineNumber\": \"<integer>\",\n      \"acceptedQuantity\": \"<decimal>\",\n      \"billOfLading\": \"<string>\",\n      \"deliveryNote\": \"<string>\"\n    },\n    {\n      \"receiptLineRemoteId\": \"<string>\",\n      \"receiptLineNumber\": \"<integer>\",\n      \"poLineNumber\": \"<integer>\",\n      \"itemId\": \"<string>\",\n      \"uomCode\": \"<string>\",\n      \"receivedQuantity\": \"<decimal>\",\n      \"receivedDate\": \"<date>\",\n      \"createdBy\": \"<string>\",\n      \"warehouse\": \"<string>\",\n      \"createdOn\": \"<date>\",\n      \"status\": \"<string>\",\n      \"internalId\": \"<uuid>\",\n      \"poScheduleLineRemoteId\": \"<string>\",\n      \"poScheduleLineNumber\": \"<integer>\",\n      \"acceptedQuantity\": \"<decimal>\",\n      \"billOfLading\": \"<string>\",\n      \"deliveryNote\": \"<string>\"\n    }\n  ],\n  \"scheduleLines\": [\n    {\n      \"poScheduleLineRemoteId\": \"<string>\",\n      \"poLineNumber\": \"<integer>\",\n      \"poScheduleLineNumber\": \"<integer>\",\n      \"itemId\": \"<string>\",\n      \"uomCode\": \"<string>\",\n      \"plannedQuantity\": \"<decimal>\",\n      \"promisedDeliveryStartDate\": \"<date>\",\n      \"promisedDeliveryEndDate\": \"<date>\",\n      \"shipToLocation\": \"<string>\",\n      \"createdOn\": \"<date>\",\n      \"internalId\": \"<uuid>\"\n    },\n    {\n      \"poScheduleLineRemoteId\": \"<string>\",\n      \"poLineNumber\": \"<integer>\",\n      \"poScheduleLineNumber\": \"<integer>\",\n      \"itemId\": \"<string>\",\n      \"uomCode\": \"<string>\",\n      \"plannedQuantity\": \"<decimal>\",\n      \"promisedDeliveryStartDate\": \"<date>\",\n      \"promisedDeliveryEndDate\": \"<date>\",\n      \"shipToLocation\": \"<string>\",\n      \"createdOn\": \"<date>\",\n      \"internalId\": \"<uuid>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "c0abbcab-3afa-4d9a-99b5-c473d8ca39d3",
+              "name": "The purchase order line item.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrderLineItems"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"internalId\": \"string\",\n  \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n  \"productNumber\": \"string\",\n  \"productDescription\": \"string\",\n  \"unitOfMeasure\": \"kg\",\n  \"quantityAccepted\": \"1.0\",\n  \"quantityRequested\": \"1.0\",\n  \"quantityReceived\": \"1.0\",\n  \"matchingType\": \"three_way\",\n  \"unitAmount\": \"1.00\",\n  \"lineItemTotal\": \"1.00\",\n  \"lineNumber\": 7518,\n  \"dimensions\": [\n    {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"name\": \"string\",\n      \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n    },\n    {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"name\": \"string\",\n      \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n    }\n  ],\n  \"invoiceItemsMatched\": [\n    {\n      \"invoiceItemId\": \"string\",\n      \"purchaseOrderItemId\": \"string\",\n      \"quantityMatched\": \"string\",\n      \"purchaseOrderItemLineNumber\": \"string\",\n      \"productNumber\": \"string\",\n      \"unitOfMeasure\": \"string\",\n      \"amountMatched\": \"string\"\n    }\n  ],\n  \"receiptMatches\": [\n    {\n      \"invoiceItemId\": \"string\",\n      \"purchaseOrderItemId\": \"string\",\n      \"purchaseOrderReceiptLineId\": \"string\",\n      \"quantityMatched\": \"string\",\n      \"amountMatched\": \"string\"\n    }\n  ],\n  \"memo\": \"string\",\n  \"status\": \"open\",\n  \"fields\": [\n    {\n      \"label\": \"string\",\n      \"title\": \"string\",\n      \"type\": \"string\",\n      \"value\": \"string\"\n    },\n    {\n      \"label\": \"string\",\n      \"title\": \"string\",\n      \"type\": \"string\",\n      \"value\": \"string\"\n    }\n  ],\n  \"receiptLines\": [\n    {\n      \"internalId\": \"497de1e0-33a3-f3d6-dbac-8c97f8e177a7\",\n      \"receiptLineRemoteId\": \"string\",\n      \"receiptLineNumber\": 4302,\n      \"poLineNumber\": 9589,\n      \"poScheduleLineRemoteId\": \"string\",\n      \"poScheduleLineNumber\": 2316,\n      \"itemId\": \"string\",\n      \"uomCode\": \"string\",\n      \"receivedQuantity\": \"1.0\",\n      \"acceptedQuantity\": \"string\",\n      \"receivedDate\": \"2024-02-24\",\n      \"createdOn\": \"1976-12-09\",\n      \"createdBy\": \"string\",\n      \"warehouse\": \"string\",\n      \"billOfLading\": \"string\",\n      \"deliveryNote\": \"string\",\n      \"status\": \"closed\"\n    },\n    {\n      \"internalId\": \"494af86f-f36d-ff3c-1225-6a4eeea646c8\",\n      \"receiptLineRemoteId\": \"string\",\n      \"receiptLineNumber\": 5532,\n      \"poLineNumber\": 8122,\n      \"poScheduleLineRemoteId\": \"string\",\n      \"poScheduleLineNumber\": 7222,\n      \"itemId\": \"string\",\n      \"uomCode\": \"string\",\n      \"receivedQuantity\": \"1.0\",\n      \"acceptedQuantity\": \"string\",\n      \"receivedDate\": \"1992-03-11\",\n      \"createdOn\": \"2015-03-23\",\n      \"createdBy\": \"string\",\n      \"warehouse\": \"string\",\n      \"billOfLading\": \"string\",\n      \"deliveryNote\": \"string\",\n      \"status\": \"open\"\n    }\n  ],\n  \"scheduleLines\": [\n    {\n      \"internalId\": \"f5e3d7fc-b35c-385b-11ae-990a46c370b3\",\n      \"poScheduleLineRemoteId\": \"string\",\n      \"poScheduleLineNumber\": 1666,\n      \"poLineNumber\": 7391,\n      \"itemId\": \"string\",\n      \"uomCode\": \"string\",\n      \"plannedQuantity\": \"1.0\",\n      \"promisedDeliveryStartDate\": \"2017-10-03\",\n      \"promisedDeliveryEndDate\": \"1966-01-28\",\n      \"createdOn\": \"1963-04-17\",\n      \"shipToLocation\": \"string\"\n    },\n    {\n      \"internalId\": \"d76d2361-3cc2-38fa-80f7-96c5d9b5bcdf\",\n      \"poScheduleLineRemoteId\": \"string\",\n      \"poScheduleLineNumber\": 6348,\n      \"poLineNumber\": 4184,\n      \"itemId\": \"string\",\n      \"uomCode\": \"string\",\n      \"plannedQuantity\": \"1.0\",\n      \"promisedDeliveryStartDate\": \"1981-03-20\",\n      \"promisedDeliveryEndDate\": \"1990-07-02\",\n      \"createdOn\": \"2019-07-01\",\n      \"shipToLocation\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "da486bcc-845b-4034-8560-ec72f6d23d0d",
+              "name": "The request was forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrderLineItems"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 321,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "979074c9-0e08-4d01-b2ad-2e9add6c5208",
+              "name": "Resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrderLineItems"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 321,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "35f4b2bb-5110-4e57-a838-2c48693accf5",
+              "name": "Errors with the input are present.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrderLineItems"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 321,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "4f7358df-e614-4465-b2be-fe9a643f79bb",
+          "name": "Get a purchase order's line item",
+          "request": {
+            "name": "Get a purchase order's line item",
+            "description": {
+              "content": "Get a purchase order's line item.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "purchaseOrderLineItems",
+                ":purchaseOrderLineItemId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "useSystem",
+                  "value": "INTERNAL",
+                  "description": "Which system to use for id or updatedAt filters.\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "purchaseOrderLineItemId",
+                  "description": "(Required) The internal id or external id of the purchase order line item. If using\nthe external id, you **must** pass `useSystem=external`.\n"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "c3738a32-ef3d-4245-af29-0cf4926547f7",
+              "name": "The purchase order line item.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrderLineItems",
+                    ":purchaseOrderLineItemId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderLineItemId",
+                      "description": "(Required) The internal id or external id of the purchase order line item. If using\nthe external id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"internalId\": \"string\",\n  \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n  \"productNumber\": \"string\",\n  \"productDescription\": \"string\",\n  \"unitOfMeasure\": \"kg\",\n  \"quantityAccepted\": \"1.0\",\n  \"quantityRequested\": \"1.0\",\n  \"quantityReceived\": \"1.0\",\n  \"matchingType\": \"three_way\",\n  \"unitAmount\": \"1.00\",\n  \"lineItemTotal\": \"1.00\",\n  \"lineNumber\": 9689,\n  \"dimensions\": [\n    {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"name\": \"string\",\n      \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n    },\n    {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"name\": \"string\",\n      \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n    }\n  ],\n  \"invoiceItemsMatched\": [\n    {\n      \"invoiceItemId\": \"string\",\n      \"purchaseOrderItemId\": \"string\",\n      \"quantityMatched\": \"string\",\n      \"purchaseOrderItemLineNumber\": \"string\",\n      \"productNumber\": \"string\",\n      \"unitOfMeasure\": \"string\",\n      \"amountMatched\": \"string\"\n    }\n  ],\n  \"receiptMatches\": [\n    {\n      \"invoiceItemId\": \"string\",\n      \"purchaseOrderItemId\": \"string\",\n      \"purchaseOrderReceiptLineId\": \"string\",\n      \"quantityMatched\": \"string\",\n      \"amountMatched\": \"string\"\n    }\n  ],\n  \"memo\": \"string\",\n  \"status\": \"open\",\n  \"fields\": [\n    {\n      \"label\": \"string\",\n      \"title\": \"string\",\n      \"type\": \"string\",\n      \"value\": \"string\"\n    },\n    {\n      \"label\": \"string\",\n      \"title\": \"string\",\n      \"type\": \"string\",\n      \"value\": \"string\"\n    }\n  ],\n  \"receiptLines\": [\n    {\n      \"internalId\": \"afe95dd4-ffd0-4071-756c-00b19937da69\",\n      \"receiptLineRemoteId\": \"string\",\n      \"receiptLineNumber\": 1786,\n      \"poLineNumber\": 985,\n      \"poScheduleLineRemoteId\": \"string\",\n      \"poScheduleLineNumber\": 5062,\n      \"itemId\": \"string\",\n      \"uomCode\": \"string\",\n      \"receivedQuantity\": \"1.0\",\n      \"acceptedQuantity\": \"string\",\n      \"receivedDate\": \"1987-06-13\",\n      \"createdOn\": \"1990-09-13\",\n      \"createdBy\": \"string\",\n      \"warehouse\": \"string\",\n      \"billOfLading\": \"string\",\n      \"deliveryNote\": \"string\",\n      \"status\": \"closed\"\n    },\n    {\n      \"internalId\": \"4bb354c2-27d8-f0fc-f86f-28d40e15cd71\",\n      \"receiptLineRemoteId\": \"string\",\n      \"receiptLineNumber\": 2260,\n      \"poLineNumber\": 3022,\n      \"poScheduleLineRemoteId\": \"string\",\n      \"poScheduleLineNumber\": 1040,\n      \"itemId\": \"string\",\n      \"uomCode\": \"string\",\n      \"receivedQuantity\": \"1.0\",\n      \"acceptedQuantity\": \"string\",\n      \"receivedDate\": \"2009-03-07\",\n      \"createdOn\": \"2005-11-03\",\n      \"createdBy\": \"string\",\n      \"warehouse\": \"string\",\n      \"billOfLading\": \"string\",\n      \"deliveryNote\": \"string\",\n      \"status\": \"closed\"\n    }\n  ],\n  \"scheduleLines\": [\n    {\n      \"internalId\": \"7f9b2e40-d2b6-3d41-4271-bb8a4ba6c5c9\",\n      \"poScheduleLineRemoteId\": \"string\",\n      \"poScheduleLineNumber\": 289,\n      \"poLineNumber\": 717,\n      \"itemId\": \"string\",\n      \"uomCode\": \"string\",\n      \"plannedQuantity\": \"1.0\",\n      \"promisedDeliveryStartDate\": \"1997-08-15\",\n      \"promisedDeliveryEndDate\": \"1990-09-14\",\n      \"createdOn\": \"1999-05-02\",\n      \"shipToLocation\": \"string\"\n    },\n    {\n      \"internalId\": \"59edcd4b-c35c-4a17-c43f-28b1a09a3023\",\n      \"poScheduleLineRemoteId\": \"string\",\n      \"poScheduleLineNumber\": 3128,\n      \"poLineNumber\": 2811,\n      \"itemId\": \"string\",\n      \"uomCode\": \"string\",\n      \"plannedQuantity\": \"1.0\",\n      \"promisedDeliveryStartDate\": \"2019-03-08\",\n      \"promisedDeliveryEndDate\": \"2005-06-21\",\n      \"createdOn\": \"1978-07-15\",\n      \"shipToLocation\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4ab38996-ff3a-47ce-98aa-013f492fc6c2",
+              "name": "The request was forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrderLineItems",
+                    ":purchaseOrderLineItemId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderLineItemId",
+                      "description": "(Required) The internal id or external id of the purchase order line item. If using\nthe external id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 321,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "982c6724-a65b-4fd9-aa8d-c04825281855",
+              "name": "Resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrderLineItems",
+                    ":purchaseOrderLineItemId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderLineItemId",
+                      "description": "(Required) The internal id or external id of the purchase order line item. If using\nthe external id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 321,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0b178cb2-361a-4d09-bcf4-d97b038a50e9",
+              "name": "Errors with the input are present.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrderLineItems",
+                    ":purchaseOrderLineItemId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderLineItemId",
+                      "description": "(Required) The internal id or external id of the purchase order line item. If using\nthe external id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 321,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "280386d3-e916-47ce-8f18-430050dc1512",
+          "name": "Update a purchase order's line item",
+          "request": {
+            "name": "Update a purchase order's line item",
+            "description": {
+              "content": "Updates a purchase order's line item.\n\nIf there are existing matches made to an invoice that has been transmitted, or\nthat is currently being posted, you will not be able to update the purchase order\nline item if any of the following fields are being changed:\n\n- `lineNumber`\n- `matchingType`\n- `productDescription`\n- `productNumber`\n- `unitAmount`\n\nAdditionally, for the fields `lineItemTotal`, `quantityAccepted`, `quantityRequested`,\nand `quantityReceived`, updates are only allowed if the new values are increased.\nIf these fields are cleared or their values are decreased,\nan `UnprocessableEntityResponse` will be returned.\n\nNote: Enabling the company configuration `purchase_order_item_update_with_transferred_matches`\nallows updating those fields for purchase order line items with matched transmitted invoices.\n\nIf you update `lineItemTotal` you **must** update the purchase order's `amount`\nfield which is the summation of all the line items. This should be done once you\nare finished manipulating all of the line items.\n\nAfter the update is accepted, Vic automatically schedules purchase order\nprocessing. You do not need to call `processPurchaseOrder` manually unless you\nneed to trigger processing immediately.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "purchaseOrderLineItems",
+                ":purchaseOrderLineItemId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "useSystem",
+                  "value": "INTERNAL",
+                  "description": "Which system to use for id or updatedAt filters.\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "purchaseOrderLineItemId",
+                  "description": "(Required) The internal id or external id of the purchase order line item. If using\nthe external id, you **must** pass `useSystem=external`.\n"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productNumber\": \"<string>\",\n  \"quantityRequested\": \"<decimal>\",\n  \"unitAmount\": \"<decimal>\",\n  \"lineItemTotal\": \"<decimal>\",\n  \"lineNumber\": \"<integer>\",\n  \"productDescription\": \"<string>\",\n  \"unitOfMeasure\": \"<string>\",\n  \"quantityAccepted\": \"<decimal>\",\n  \"quantityReceived\": \"<decimal>\",\n  \"matchingType\": \"three_way\",\n  \"externalId\": \"<string>\",\n  \"memo\": \"<string>\",\n  \"dimensions\": [\n    {\n      \"internalId\": \"<string>\",\n      \"externalId\": \"<string>\",\n      \"name\": \"<string>\",\n      \"typeExternalId\": \"<string>\"\n    },\n    {\n      \"internalId\": \"<string>\",\n      \"externalId\": \"<string>\",\n      \"name\": \"<string>\",\n      \"typeExternalId\": \"<string>\"\n    }\n  ],\n  \"status\": \"open\",\n  \"fields\": [\n    {\n      \"label\": \"<string>\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"label\": \"<string>\",\n      \"value\": \"<string>\"\n    }\n  ],\n  \"receiptLines\": [\n    {\n      \"receiptLineRemoteId\": \"<string>\",\n      \"receiptLineNumber\": \"<integer>\",\n      \"poLineNumber\": \"<integer>\",\n      \"itemId\": \"<string>\",\n      \"uomCode\": \"<string>\",\n      \"receivedQuantity\": \"<decimal>\",\n      \"receivedDate\": \"<date>\",\n      \"createdBy\": \"<string>\",\n      \"warehouse\": \"<string>\",\n      \"createdOn\": \"<date>\",\n      \"status\": \"<string>\",\n      \"internalId\": \"<uuid>\",\n      \"poScheduleLineRemoteId\": \"<string>\",\n      \"poScheduleLineNumber\": \"<integer>\",\n      \"acceptedQuantity\": \"<decimal>\",\n      \"billOfLading\": \"<string>\",\n      \"deliveryNote\": \"<string>\"\n    },\n    {\n      \"receiptLineRemoteId\": \"<string>\",\n      \"receiptLineNumber\": \"<integer>\",\n      \"poLineNumber\": \"<integer>\",\n      \"itemId\": \"<string>\",\n      \"uomCode\": \"<string>\",\n      \"receivedQuantity\": \"<decimal>\",\n      \"receivedDate\": \"<date>\",\n      \"createdBy\": \"<string>\",\n      \"warehouse\": \"<string>\",\n      \"createdOn\": \"<date>\",\n      \"status\": \"<string>\",\n      \"internalId\": \"<uuid>\",\n      \"poScheduleLineRemoteId\": \"<string>\",\n      \"poScheduleLineNumber\": \"<integer>\",\n      \"acceptedQuantity\": \"<decimal>\",\n      \"billOfLading\": \"<string>\",\n      \"deliveryNote\": \"<string>\"\n    }\n  ],\n  \"scheduleLines\": [\n    {\n      \"poScheduleLineRemoteId\": \"<string>\",\n      \"poLineNumber\": \"<integer>\",\n      \"poScheduleLineNumber\": \"<integer>\",\n      \"itemId\": \"<string>\",\n      \"uomCode\": \"<string>\",\n      \"plannedQuantity\": \"<decimal>\",\n      \"promisedDeliveryStartDate\": \"<date>\",\n      \"promisedDeliveryEndDate\": \"<date>\",\n      \"shipToLocation\": \"<string>\",\n      \"createdOn\": \"<date>\",\n      \"internalId\": \"<uuid>\"\n    },\n    {\n      \"poScheduleLineRemoteId\": \"<string>\",\n      \"poLineNumber\": \"<integer>\",\n      \"poScheduleLineNumber\": \"<integer>\",\n      \"itemId\": \"<string>\",\n      \"uomCode\": \"<string>\",\n      \"plannedQuantity\": \"<decimal>\",\n      \"promisedDeliveryStartDate\": \"<date>\",\n      \"promisedDeliveryEndDate\": \"<date>\",\n      \"shipToLocation\": \"<string>\",\n      \"createdOn\": \"<date>\",\n      \"internalId\": \"<uuid>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "b9648348-ce3a-4c0b-ab0a-831763b08a74",
+              "name": "The purchase order line item.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrderLineItems",
+                    ":purchaseOrderLineItemId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderLineItemId",
+                      "description": "(Required) The internal id or external id of the purchase order line item. If using\nthe external id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"internalId\": \"string\",\n  \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n  \"productNumber\": \"string\",\n  \"productDescription\": \"string\",\n  \"unitOfMeasure\": \"kg\",\n  \"quantityAccepted\": \"1.0\",\n  \"quantityRequested\": \"1.0\",\n  \"quantityReceived\": \"1.0\",\n  \"matchingType\": \"three_way\",\n  \"unitAmount\": \"1.00\",\n  \"lineItemTotal\": \"1.00\",\n  \"lineNumber\": 9689,\n  \"dimensions\": [\n    {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"name\": \"string\",\n      \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n    },\n    {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"name\": \"string\",\n      \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n    }\n  ],\n  \"invoiceItemsMatched\": [\n    {\n      \"invoiceItemId\": \"string\",\n      \"purchaseOrderItemId\": \"string\",\n      \"quantityMatched\": \"string\",\n      \"purchaseOrderItemLineNumber\": \"string\",\n      \"productNumber\": \"string\",\n      \"unitOfMeasure\": \"string\",\n      \"amountMatched\": \"string\"\n    }\n  ],\n  \"receiptMatches\": [\n    {\n      \"invoiceItemId\": \"string\",\n      \"purchaseOrderItemId\": \"string\",\n      \"purchaseOrderReceiptLineId\": \"string\",\n      \"quantityMatched\": \"string\",\n      \"amountMatched\": \"string\"\n    }\n  ],\n  \"memo\": \"string\",\n  \"status\": \"open\",\n  \"fields\": [\n    {\n      \"label\": \"string\",\n      \"title\": \"string\",\n      \"type\": \"string\",\n      \"value\": \"string\"\n    },\n    {\n      \"label\": \"string\",\n      \"title\": \"string\",\n      \"type\": \"string\",\n      \"value\": \"string\"\n    }\n  ],\n  \"receiptLines\": [\n    {\n      \"internalId\": \"afe95dd4-ffd0-4071-756c-00b19937da69\",\n      \"receiptLineRemoteId\": \"string\",\n      \"receiptLineNumber\": 1786,\n      \"poLineNumber\": 985,\n      \"poScheduleLineRemoteId\": \"string\",\n      \"poScheduleLineNumber\": 5062,\n      \"itemId\": \"string\",\n      \"uomCode\": \"string\",\n      \"receivedQuantity\": \"1.0\",\n      \"acceptedQuantity\": \"string\",\n      \"receivedDate\": \"1987-06-13\",\n      \"createdOn\": \"1990-09-13\",\n      \"createdBy\": \"string\",\n      \"warehouse\": \"string\",\n      \"billOfLading\": \"string\",\n      \"deliveryNote\": \"string\",\n      \"status\": \"closed\"\n    },\n    {\n      \"internalId\": \"4bb354c2-27d8-f0fc-f86f-28d40e15cd71\",\n      \"receiptLineRemoteId\": \"string\",\n      \"receiptLineNumber\": 2260,\n      \"poLineNumber\": 3022,\n      \"poScheduleLineRemoteId\": \"string\",\n      \"poScheduleLineNumber\": 1040,\n      \"itemId\": \"string\",\n      \"uomCode\": \"string\",\n      \"receivedQuantity\": \"1.0\",\n      \"acceptedQuantity\": \"string\",\n      \"receivedDate\": \"2009-03-07\",\n      \"createdOn\": \"2005-11-03\",\n      \"createdBy\": \"string\",\n      \"warehouse\": \"string\",\n      \"billOfLading\": \"string\",\n      \"deliveryNote\": \"string\",\n      \"status\": \"closed\"\n    }\n  ],\n  \"scheduleLines\": [\n    {\n      \"internalId\": \"7f9b2e40-d2b6-3d41-4271-bb8a4ba6c5c9\",\n      \"poScheduleLineRemoteId\": \"string\",\n      \"poScheduleLineNumber\": 289,\n      \"poLineNumber\": 717,\n      \"itemId\": \"string\",\n      \"uomCode\": \"string\",\n      \"plannedQuantity\": \"1.0\",\n      \"promisedDeliveryStartDate\": \"1997-08-15\",\n      \"promisedDeliveryEndDate\": \"1990-09-14\",\n      \"createdOn\": \"1999-05-02\",\n      \"shipToLocation\": \"string\"\n    },\n    {\n      \"internalId\": \"59edcd4b-c35c-4a17-c43f-28b1a09a3023\",\n      \"poScheduleLineRemoteId\": \"string\",\n      \"poScheduleLineNumber\": 3128,\n      \"poLineNumber\": 2811,\n      \"itemId\": \"string\",\n      \"uomCode\": \"string\",\n      \"plannedQuantity\": \"1.0\",\n      \"promisedDeliveryStartDate\": \"2019-03-08\",\n      \"promisedDeliveryEndDate\": \"2005-06-21\",\n      \"createdOn\": \"1978-07-15\",\n      \"shipToLocation\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9397013b-d703-454c-a543-edc66dc0b095",
+              "name": "The request was forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrderLineItems",
+                    ":purchaseOrderLineItemId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderLineItemId",
+                      "description": "(Required) The internal id or external id of the purchase order line item. If using\nthe external id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 321,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "13c940c9-01bd-4f43-93f5-9fc5c6492e25",
+              "name": "Resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrderLineItems",
+                    ":purchaseOrderLineItemId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderLineItemId",
+                      "description": "(Required) The internal id or external id of the purchase order line item. If using\nthe external id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 321,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "65bc737b-382d-487e-99b9-da703f17c690",
+              "name": "Errors with the input are present.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrderLineItems",
+                    ":purchaseOrderLineItemId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderLineItemId",
+                      "description": "(Required) The internal id or external id of the purchase order line item. If using\nthe external id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 321,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "61a07718-5c96-485f-8b4f-5186b8b70647",
+          "name": "Delete a purchase order's line item",
+          "request": {
+            "name": "Delete a purchase order's line item",
+            "description": {
+              "content": "Delete a purchase order's line item.\n\nIf there are existing matches made to an invoice that has been transmitted, or\nthat is currently being posted, you will not be able to delete the purchase\norder line item - an `UnprocessableEntityResponse` will be returned.\n\nAfter deleting the purchase order line item, you **must** update the the\npurchase order's `amount` field. This should be done once you are finished\nmanipulating all of the line items.\n\nAfter the line item is deleted, Vic automatically schedules purchase order\nprocessing. You do not need to call `processPurchaseOrder` manually unless you\nneed to trigger processing immediately.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "purchaseOrderLineItems",
+                ":purchaseOrderLineItemId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "useSystem",
+                  "value": "INTERNAL",
+                  "description": "Which system to use for id or updatedAt filters.\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "purchaseOrderLineItemId",
+                  "description": "(Required) The internal id or external id of the purchase order line item. If using\nthe external id, you **must** pass `useSystem=external`.\n"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "580d1802-724a-4b4e-8ffd-b03f570aa7e2",
+              "name": "Purchase order line item was successfully deleted.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrderLineItems",
+                    ":purchaseOrderLineItemId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderLineItemId",
+                      "description": "(Required) The internal id or external id of the purchase order line item. If using\nthe external id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "6112205d-3c82-493b-811a-4cec5ba14903",
+              "name": "The request was forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrderLineItems",
+                    ":purchaseOrderLineItemId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderLineItemId",
+                      "description": "(Required) The internal id or external id of the purchase order line item. If using\nthe external id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 321,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3f193b58-edba-4be9-bccd-b43d1dacf206",
+              "name": "Resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrderLineItems",
+                    ":purchaseOrderLineItemId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderLineItemId",
+                      "description": "(Required) The internal id or external id of the purchase order line item. If using\nthe external id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 321,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0f5ac838-8aa7-4760-8961-b0fdb5416268",
+              "name": "Errors with the input are present.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrderLineItems",
+                    ":purchaseOrderLineItemId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderLineItemId",
+                      "description": "(Required) The internal id or external id of the purchase order line item. If using\nthe external id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 321,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "33eb85d0-47a6-4446-9ef3-f8f1525b907b",
+          "name": "Close a purchase order's line item",
+          "request": {
+            "name": "Close a purchase order's line item",
+            "description": {
+              "content": "Closes a purchase order's line item.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "purchaseOrderLineItems",
+                ":purchaseOrderLineItemId",
+                "close"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "useSystem",
+                  "value": "INTERNAL",
+                  "description": "Which system to use for id or updatedAt filters.\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "purchaseOrderLineItemId",
+                  "description": "(Required) The internal id or external id of the purchase order line item. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "9d3b74db-cff7-4baf-acca-8d2e0ea0f70f",
+              "name": "The purchase order line item.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrderLineItems",
+                    ":purchaseOrderLineItemId",
+                    "close"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderLineItemId",
+                      "description": "(Required) The internal id or external id of the purchase order line item. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"internalId\": \"string\",\n  \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n  \"productNumber\": \"string\",\n  \"productDescription\": \"string\",\n  \"unitOfMeasure\": \"kg\",\n  \"quantityAccepted\": \"1.0\",\n  \"quantityRequested\": \"1.0\",\n  \"quantityReceived\": \"1.0\",\n  \"matchingType\": \"three_way\",\n  \"unitAmount\": \"1.00\",\n  \"lineItemTotal\": \"1.00\",\n  \"lineNumber\": 9689,\n  \"dimensions\": [\n    {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"name\": \"string\",\n      \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n    },\n    {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"name\": \"string\",\n      \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n    }\n  ],\n  \"invoiceItemsMatched\": [\n    {\n      \"invoiceItemId\": \"string\",\n      \"purchaseOrderItemId\": \"string\",\n      \"quantityMatched\": \"string\",\n      \"purchaseOrderItemLineNumber\": \"string\",\n      \"productNumber\": \"string\",\n      \"unitOfMeasure\": \"string\",\n      \"amountMatched\": \"string\"\n    }\n  ],\n  \"receiptMatches\": [\n    {\n      \"invoiceItemId\": \"string\",\n      \"purchaseOrderItemId\": \"string\",\n      \"purchaseOrderReceiptLineId\": \"string\",\n      \"quantityMatched\": \"string\",\n      \"amountMatched\": \"string\"\n    }\n  ],\n  \"memo\": \"string\",\n  \"status\": \"open\",\n  \"fields\": [\n    {\n      \"label\": \"string\",\n      \"title\": \"string\",\n      \"type\": \"string\",\n      \"value\": \"string\"\n    },\n    {\n      \"label\": \"string\",\n      \"title\": \"string\",\n      \"type\": \"string\",\n      \"value\": \"string\"\n    }\n  ],\n  \"receiptLines\": [\n    {\n      \"internalId\": \"afe95dd4-ffd0-4071-756c-00b19937da69\",\n      \"receiptLineRemoteId\": \"string\",\n      \"receiptLineNumber\": 1786,\n      \"poLineNumber\": 985,\n      \"poScheduleLineRemoteId\": \"string\",\n      \"poScheduleLineNumber\": 5062,\n      \"itemId\": \"string\",\n      \"uomCode\": \"string\",\n      \"receivedQuantity\": \"1.0\",\n      \"acceptedQuantity\": \"string\",\n      \"receivedDate\": \"1987-06-13\",\n      \"createdOn\": \"1990-09-13\",\n      \"createdBy\": \"string\",\n      \"warehouse\": \"string\",\n      \"billOfLading\": \"string\",\n      \"deliveryNote\": \"string\",\n      \"status\": \"closed\"\n    },\n    {\n      \"internalId\": \"4bb354c2-27d8-f0fc-f86f-28d40e15cd71\",\n      \"receiptLineRemoteId\": \"string\",\n      \"receiptLineNumber\": 2260,\n      \"poLineNumber\": 3022,\n      \"poScheduleLineRemoteId\": \"string\",\n      \"poScheduleLineNumber\": 1040,\n      \"itemId\": \"string\",\n      \"uomCode\": \"string\",\n      \"receivedQuantity\": \"1.0\",\n      \"acceptedQuantity\": \"string\",\n      \"receivedDate\": \"2009-03-07\",\n      \"createdOn\": \"2005-11-03\",\n      \"createdBy\": \"string\",\n      \"warehouse\": \"string\",\n      \"billOfLading\": \"string\",\n      \"deliveryNote\": \"string\",\n      \"status\": \"closed\"\n    }\n  ],\n  \"scheduleLines\": [\n    {\n      \"internalId\": \"7f9b2e40-d2b6-3d41-4271-bb8a4ba6c5c9\",\n      \"poScheduleLineRemoteId\": \"string\",\n      \"poScheduleLineNumber\": 289,\n      \"poLineNumber\": 717,\n      \"itemId\": \"string\",\n      \"uomCode\": \"string\",\n      \"plannedQuantity\": \"1.0\",\n      \"promisedDeliveryStartDate\": \"1997-08-15\",\n      \"promisedDeliveryEndDate\": \"1990-09-14\",\n      \"createdOn\": \"1999-05-02\",\n      \"shipToLocation\": \"string\"\n    },\n    {\n      \"internalId\": \"59edcd4b-c35c-4a17-c43f-28b1a09a3023\",\n      \"poScheduleLineRemoteId\": \"string\",\n      \"poScheduleLineNumber\": 3128,\n      \"poLineNumber\": 2811,\n      \"itemId\": \"string\",\n      \"uomCode\": \"string\",\n      \"plannedQuantity\": \"1.0\",\n      \"promisedDeliveryStartDate\": \"2019-03-08\",\n      \"promisedDeliveryEndDate\": \"2005-06-21\",\n      \"createdOn\": \"1978-07-15\",\n      \"shipToLocation\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1cebccd6-deff-4e9c-a40c-950ab2db1cf8",
+              "name": "The request was forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrderLineItems",
+                    ":purchaseOrderLineItemId",
+                    "close"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderLineItemId",
+                      "description": "(Required) The internal id or external id of the purchase order line item. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 321,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "af69f757-4148-491a-9770-d1f65bdd358e",
+              "name": "Resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrderLineItems",
+                    ":purchaseOrderLineItemId",
+                    "close"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderLineItemId",
+                      "description": "(Required) The internal id or external id of the purchase order line item. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 321,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4d4bb357-fc16-4e23-bb54-0709330eb2a6",
+              "name": "Errors with the input are present.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrderLineItems",
+                    ":purchaseOrderLineItemId",
+                    "close"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderLineItemId",
+                      "description": "(Required) The internal id or external id of the purchase order line item. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 321,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "c4db7546-377f-4ddd-b4be-27689ae5a308",
+          "name": "Opens a purchase order's line item",
+          "request": {
+            "name": "Opens a purchase order's line item",
+            "description": {
+              "content": "Opens a purchase order's line item.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "purchaseOrderLineItems",
+                ":purchaseOrderLineItemId",
+                "open"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "useSystem",
+                  "value": "INTERNAL",
+                  "description": "Which system to use for id or updatedAt filters.\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "purchaseOrderLineItemId",
+                  "description": "(Required) The internal id or external id of the purchase order line item. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "e35b9867-e5ee-46f0-853c-1e22d4422b5f",
+              "name": "The purchase order line item.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrderLineItems",
+                    ":purchaseOrderLineItemId",
+                    "open"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderLineItemId",
+                      "description": "(Required) The internal id or external id of the purchase order line item. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"internalId\": \"string\",\n  \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n  \"productNumber\": \"string\",\n  \"productDescription\": \"string\",\n  \"unitOfMeasure\": \"kg\",\n  \"quantityAccepted\": \"1.0\",\n  \"quantityRequested\": \"1.0\",\n  \"quantityReceived\": \"1.0\",\n  \"matchingType\": \"three_way\",\n  \"unitAmount\": \"1.00\",\n  \"lineItemTotal\": \"1.00\",\n  \"lineNumber\": 9689,\n  \"dimensions\": [\n    {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"name\": \"string\",\n      \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n    },\n    {\n      \"internalId\": \"string\",\n      \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"name\": \"string\",\n      \"typeExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n    }\n  ],\n  \"invoiceItemsMatched\": [\n    {\n      \"invoiceItemId\": \"string\",\n      \"purchaseOrderItemId\": \"string\",\n      \"quantityMatched\": \"string\",\n      \"purchaseOrderItemLineNumber\": \"string\",\n      \"productNumber\": \"string\",\n      \"unitOfMeasure\": \"string\",\n      \"amountMatched\": \"string\"\n    }\n  ],\n  \"receiptMatches\": [\n    {\n      \"invoiceItemId\": \"string\",\n      \"purchaseOrderItemId\": \"string\",\n      \"purchaseOrderReceiptLineId\": \"string\",\n      \"quantityMatched\": \"string\",\n      \"amountMatched\": \"string\"\n    }\n  ],\n  \"memo\": \"string\",\n  \"status\": \"open\",\n  \"fields\": [\n    {\n      \"label\": \"string\",\n      \"title\": \"string\",\n      \"type\": \"string\",\n      \"value\": \"string\"\n    },\n    {\n      \"label\": \"string\",\n      \"title\": \"string\",\n      \"type\": \"string\",\n      \"value\": \"string\"\n    }\n  ],\n  \"receiptLines\": [\n    {\n      \"internalId\": \"afe95dd4-ffd0-4071-756c-00b19937da69\",\n      \"receiptLineRemoteId\": \"string\",\n      \"receiptLineNumber\": 1786,\n      \"poLineNumber\": 985,\n      \"poScheduleLineRemoteId\": \"string\",\n      \"poScheduleLineNumber\": 5062,\n      \"itemId\": \"string\",\n      \"uomCode\": \"string\",\n      \"receivedQuantity\": \"1.0\",\n      \"acceptedQuantity\": \"string\",\n      \"receivedDate\": \"1987-06-13\",\n      \"createdOn\": \"1990-09-13\",\n      \"createdBy\": \"string\",\n      \"warehouse\": \"string\",\n      \"billOfLading\": \"string\",\n      \"deliveryNote\": \"string\",\n      \"status\": \"closed\"\n    },\n    {\n      \"internalId\": \"4bb354c2-27d8-f0fc-f86f-28d40e15cd71\",\n      \"receiptLineRemoteId\": \"string\",\n      \"receiptLineNumber\": 2260,\n      \"poLineNumber\": 3022,\n      \"poScheduleLineRemoteId\": \"string\",\n      \"poScheduleLineNumber\": 1040,\n      \"itemId\": \"string\",\n      \"uomCode\": \"string\",\n      \"receivedQuantity\": \"1.0\",\n      \"acceptedQuantity\": \"string\",\n      \"receivedDate\": \"2009-03-07\",\n      \"createdOn\": \"2005-11-03\",\n      \"createdBy\": \"string\",\n      \"warehouse\": \"string\",\n      \"billOfLading\": \"string\",\n      \"deliveryNote\": \"string\",\n      \"status\": \"closed\"\n    }\n  ],\n  \"scheduleLines\": [\n    {\n      \"internalId\": \"7f9b2e40-d2b6-3d41-4271-bb8a4ba6c5c9\",\n      \"poScheduleLineRemoteId\": \"string\",\n      \"poScheduleLineNumber\": 289,\n      \"poLineNumber\": 717,\n      \"itemId\": \"string\",\n      \"uomCode\": \"string\",\n      \"plannedQuantity\": \"1.0\",\n      \"promisedDeliveryStartDate\": \"1997-08-15\",\n      \"promisedDeliveryEndDate\": \"1990-09-14\",\n      \"createdOn\": \"1999-05-02\",\n      \"shipToLocation\": \"string\"\n    },\n    {\n      \"internalId\": \"59edcd4b-c35c-4a17-c43f-28b1a09a3023\",\n      \"poScheduleLineRemoteId\": \"string\",\n      \"poScheduleLineNumber\": 3128,\n      \"poLineNumber\": 2811,\n      \"itemId\": \"string\",\n      \"uomCode\": \"string\",\n      \"plannedQuantity\": \"1.0\",\n      \"promisedDeliveryStartDate\": \"2019-03-08\",\n      \"promisedDeliveryEndDate\": \"2005-06-21\",\n      \"createdOn\": \"1978-07-15\",\n      \"shipToLocation\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "aaaa8cb0-ced0-414e-9227-4bfc6c7d0f88",
+              "name": "The request was forbidden.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrderLineItems",
+                    ":purchaseOrderLineItemId",
+                    "open"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderLineItemId",
+                      "description": "(Required) The internal id or external id of the purchase order line item. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 321,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "60027286-776c-4a33-9210-3894709eadcc",
+              "name": "Resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrderLineItems",
+                    ":purchaseOrderLineItemId",
+                    "open"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderLineItemId",
+                      "description": "(Required) The internal id or external id of the purchase order line item. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 321,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5a3de5da-58d5-4ed6-ae1b-aee623fdbd97",
+              "name": "Errors with the input are present.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "purchaseOrderLineItems",
+                    ":purchaseOrderLineItemId",
+                    "open"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "useSystem",
+                      "value": "INTERNAL"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "purchaseOrderLineItemId",
+                      "description": "(Required) The internal id or external id of the purchase order line item. If using the\nexternal id, you **must** pass `useSystem=external`.\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 321,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.no.stage.vic.ai",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "b219e399-5bac-4689-85ae-0a0283f61fff",
+    "name": "Vic.ai Accounts Purchase Order Line Items API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "## Introduction\n\nThe Vic.ai API provides a seamless connection between your Enterprise Resource\nPlanning (ERP) system and the Vic.ai product suite.\n\nThe API is designed to offer three main areas of functionality:\n\n- **Syncing master data:** This refers to the data in your ERP that Vic.ai\n  interacts with. You are required to supply and update this data in Vic.ai, and\n  you also have the option to verify the copy of the masterdata in Vic.ai.\n\n- **Syncing training data:** We need historical data to train your AI model. To\n  that end, the API provides endpoints to sync historical invoices into Vic.ai\n  and to confirm their presence.\n\n- **Subscribing to and receiving webhooks:** Webhooks enable users or automated\n  tasks to interact with your ERP through various actions in the Vic.ai product\n  suite, such as posting an invoice, payment or purchase order or requesting\n  synchronization. You will receive a notification via a webhook when these\n  actions occur.\n\n\nFor US-based integrations, please use the following base API URL:\n\n```\nhttps://api.us.vic.ai\n```\n\nFor integrations based in Norway, use the following base API URL:\n\n```\nhttps://api.no.vic.ai\n```\n\nAll paths mentioned in this documentation should use one of these URLs as the\nbase.\n\nExample:\n\n```bash\ncurl https://api.us.vic.ai/v0/healthCheck \\\n    -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\"\n```\n\n## Getting Started\n\nTo begin interacting with the Vic.ai API, you will need the following\ncredentials:\n\n* A Vic.ai client ID\n* A Vic.ai client secret.\n\nThese can be provided to you securely by a Vic.ai representative\n[upon request](https://www.vic.ai/book-a-demo).\n\n**Please note:** These credentials are essentially the keys to your ERP\nintegration. If they fall into the wrong hands, unauthorized parties could\nimpersonate you, gain access to sensitive data, and potentially perform\nmalicious actions. Therefore, it's crucial to keep these credentials safe at all\ntimes to protect your application's integrity and your clients' data.\n\n### Limitations\n\nThe Vic.ai API has the following limitations:\n\n**Rate Limiting:** The API is rate-limited to 500 requests per 10-second time\nframe. If you exceed this limit, you will receive a `429 Too Many Requests`\nresponse. The limit is per Oauth client ID. If you continue to receive `429`s,\nplease contact support with a request id from the response headers.\n",
+      "type": "text/plain"
+    }
+  }
+}

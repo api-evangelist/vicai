@@ -1,0 +1,86 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vic.ai Accounts Payment Batches API",
+    "version": "v10.40.4"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Payment Batches",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all payment batches",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/paymentBatches",
+            "params": [
+              {
+                "name": "completedAtOrAfter",
+                "value": "",
+                "type": "query",
+                "description": "Filter batches that were completed at or after the date time\nprovided. This can be used in combination with `completedAtOrBefore`.\n"
+              },
+              {
+                "name": "completedAtOrBefore",
+                "value": "",
+                "type": "query",
+                "description": "Filter batches that were completed at or before the date time\nprovided. This can be used in combination with `completedAtOrAfter`.\n"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Selects the payment batches that match the status provided. When left\nunspecified, it is the same as if `all` was specified.\n"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "How many items to return at one time (max 100) (default 100)"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Which item to start from. See [Pagination](#section/Pagination) for more information."
+              }
+            ]
+          },
+          "docs": "List all payment batches."
+        },
+        {
+          "info": {
+            "name": "Get a payment batch",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.no.stage.vic.ai/v0/paymentBatches/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the payment batch."
+              }
+            ]
+          },
+          "docs": "The batches returned may include payments and credits that could be\nrejected or voided. This is by design. If you are synchronizing with\nan ERP, discard the rejected and voided payments or credits on successful\npayment batches. When payments or credits are voided, this can happen for\na variety of reasons, such as:<br />\n- The payment provider cannot process that payment due to an error.\n- The vendor attached to that payment is missing required information or\nis no longer valid.\n- A stop payment "
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

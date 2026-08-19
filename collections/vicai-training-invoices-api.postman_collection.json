@@ -1,0 +1,1235 @@
+{
+  "item": [
+    {
+      "id": "d18d6360-46db-4f8b-810b-68ef4632be2c",
+      "name": "Training Invoices",
+      "description": {
+        "content": "Training invoices are historical invoices used to train your company's\nAI model. By providing past invoices with their correct GL coding,\nvendor assignments, Vic.ai learns your\naccounting patterns and can automatically code future invoices.\n\nThese endpoints allow you to sync historical invoice data into Vic.ai\nand verify that training data has been received correctly.\n",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "d3a58ead-634d-4f2f-a525-8300803609d7",
+          "name": "List all training invoices",
+          "request": {
+            "name": "List all training invoices",
+            "description": {
+              "content": "Use this request to query the training invoice data that are stored in Vic.ai.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "trainingInvoices"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "<integer>",
+                  "description": "How many items to return at one time (max 100) (default 100)"
+                },
+                {
+                  "disabled": false,
+                  "key": "cursor",
+                  "value": "<string>",
+                  "description": "Which item to start from. See [Pagination](#section/Pagination) for more information."
+                },
+                {
+                  "disabled": false,
+                  "key": "since",
+                  "value": "<dateTime>",
+                  "description": "Datetime value for incremental updates.\n**NOTE**: For external datetimes, the expected format is not in UTC. for\nvic-internal datetimes (see `SinceIsExternal`) the format is UTC.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "sortOrder",
+                  "value": "ASCENDING",
+                  "description": "what sort order should be used for queries"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "87983818-7d16-453a-b496-253267b53bcc",
+              "name": "A paged array of training invoices.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "trainingInvoices"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "since",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "ASCENDING"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "A link to the next page of responses",
+                  "key": "x-next",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"currency\": \"string\",\n    \"description\": \"string\",\n    \"language\": \"en\",\n    \"lineItems\": [\n      {\n        \"costAccountExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n        \"dimensionsExternalIds\": [\n          \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n        ],\n        \"amount\": 1941.183914586001,\n        \"index\": 8750,\n        \"internalId\": \"47\",\n        \"amountTax\": \"1.00\",\n        \"amountNet\": \"1.00\",\n        \"amountSum\": \"1.00\",\n        \"amountFreight\": \"1.00\",\n        \"description\": \"string\",\n        \"comment\": \"string\",\n        \"billable\": false,\n        \"accrual\": {\n          \"start\": \"1947-04-23\",\n          \"count\": 8285,\n          \"unit\": \"MONTHS\"\n        },\n        \"invoiceLineItemInfo\": {\n          \"vatCode\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"vatAmount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"vatRate\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"vat\": {\n          \"internalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"externalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"rate\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"taxCode\": {\n          \"id\": \"a9ece2f9-2778-d6ce-7c11-aa7f61a8c819\",\n          \"code\": \"string\",\n          \"description\": \"Tax code description\",\n          \"rate\": \"0.25\"\n        },\n        \"costAccountInternalId\": \"47\",\n        \"costAccount\": {\n          \"internalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"externalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"number\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"dimensions\": [\n          {\n            \"name\": \"string\",\n            \"type\": \"string\",\n            \"typeName\": \"string\",\n            \"typeExternalId\": \"string\",\n            \"shortName\": \"string\",\n            \"externalData\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"displayName\": \"string\",\n            \"internalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"internalUpdatedAt\": \"2017-05-19T06:06:07.068Z\",\n            \"externalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"externalUpdatedAt\": \"2009-10-09T13:44:47.545Z\"\n          },\n          {\n            \"name\": \"string\",\n            \"type\": \"string\",\n            \"typeName\": \"string\",\n            \"typeExternalId\": \"string\",\n            \"shortName\": \"string\",\n            \"externalData\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"displayName\": \"string\",\n            \"internalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"internalUpdatedAt\": \"1992-08-03T07:04:25.527Z\",\n            \"externalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"externalUpdatedAt\": \"1969-06-12T20:37:35.972Z\"\n          }\n        ],\n        \"dimensionsInternalIds\": [\n          \"47\",\n          \"47\"\n        ],\n        \"quantityInvoiced\": \"string\",\n        \"lineItemTotal\": \"1.00\",\n        \"lineType\": \"expense\",\n        \"poLineNumber\": 3665,\n        \"poNumber\": \"string\",\n        \"poItemsMatched\": [\n          {\n            \"invoiceItemId\": \"string\",\n            \"purchaseOrderItemId\": \"string\",\n            \"quantityMatched\": \"string\",\n            \"purchaseOrderItemLineNumber\": \"string\",\n            \"productNumber\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"unitOfMeasure\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amountMatched\": \"string\"\n          }\n        ],\n        \"poReceiptLinesMatched\": [\n          {\n            \"invoiceItemId\": \"string\",\n            \"purchaseOrderItemId\": \"string\",\n            \"purchaseOrderReceiptLineId\": \"string\",\n            \"quantityMatched\": \"string\",\n            \"amountMatched\": \"string\"\n          }\n        ],\n        \"unitPrice\": \"1.00\",\n        \"number\": \"string\",\n        \"lineFields\": [\n          {\n            \"label\": \"string\",\n            \"title\": \"string\",\n            \"type\": \"select\",\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"label\": \"string\",\n            \"title\": \"string\",\n            \"type\": \"date\",\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ],\n        \"fields\": [\n          {\n            \"label\": \"string\",\n            \"title\": \"string\",\n            \"type\": \"text\",\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"label\": \"string\",\n            \"title\": \"string\",\n            \"type\": \"date\",\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ],\n        \"childItems\": [\n          {\n            \"index\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"description\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"number\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"quantityInvoiced\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"unitPrice\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amountTax\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amountNet\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amountSum\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amountFreight\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"internalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"taxCode\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"vat\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"index\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"description\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"number\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"quantityInvoiced\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"unitPrice\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amountTax\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amountNet\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amountSum\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amountFreight\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"internalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"taxCode\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"vat\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ]\n      }\n    ],\n    \"poNumber\": \"string\",\n    \"refNumber\": \"string\",\n    \"transactionType\": \"INVOICE\",\n    \"vendorExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n    \"companyId\": \"12345\",\n    \"amountTax\": \"1.00\",\n    \"amountNet\": \"1.00\",\n    \"amountVat\": \"1.00\",\n    \"amountSum\": \"1.00\",\n    \"amountFreight\": \"1.00\",\n    \"issueDate\": \"1953-12-01\",\n    \"glDate\": \"1996-07-21\",\n    \"dueDate\": \"1993-12-27\",\n    \"servicePeriodStart\": \"1963-10-25\",\n    \"servicePeriodEnd\": \"2002-09-30\",\n    \"paymentInfo\": {\n      \"bankAccountNum\": \"string\",\n      \"bankCode\": \"string\",\n      \"paymentTerm\": {\n        \"count\": 1404,\n        \"unit\": \"DAYS\"\n      },\n      \"bankGiro\": \"string\",\n      \"plusGiro\": \"string\",\n      \"bban\": \"string\",\n      \"internationalBankAccount\": {\n        \"iban\": \"string\",\n        \"bic\": \"string\"\n      },\n      \"defaultMethod\": \"BANKGIRO\"\n    },\n    \"invoiceInfo\": {\n      \"kid\": \"string\",\n      \"creditAccountExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"creditAccountInternalId\": \"string\"\n    },\n    \"externalData\": {},\n    \"externalUpdatedAt\": \"1956-09-15T03:11:38.918Z\",\n    \"bolNumbers\": [\n      {\n        \"bolNumber\": \"BOL-123456\"\n      },\n      {\n        \"bolNumber\": \"BOL-123456\"\n      }\n    ],\n    \"fields\": [\n      {\n        \"label\": \"string\",\n        \"title\": \"string\",\n        \"type\": \"text\",\n        \"value\": \"string\"\n      },\n      {\n        \"label\": \"string\",\n        \"title\": \"string\",\n        \"type\": \"text\",\n        \"value\": \"string\"\n      }\n    ]\n  },\n  {\n    \"currency\": \"string\",\n    \"description\": \"string\",\n    \"language\": \"en\",\n    \"lineItems\": [\n      {\n        \"costAccountExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n        \"dimensionsExternalIds\": [\n          \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n        ],\n        \"amount\": 2172.553792223949,\n        \"index\": 8487,\n        \"internalId\": \"47\",\n        \"amountTax\": \"1.00\",\n        \"amountNet\": \"1.00\",\n        \"amountSum\": \"1.00\",\n        \"amountFreight\": \"1.00\",\n        \"description\": \"string\",\n        \"comment\": \"string\",\n        \"billable\": false,\n        \"accrual\": {\n          \"start\": \"2005-09-20\",\n          \"count\": 500,\n          \"unit\": \"MONTHS\"\n        },\n        \"invoiceLineItemInfo\": {\n          \"vatCode\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"vatAmount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"vatRate\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"vat\": {\n          \"internalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"externalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"code\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"amount\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"rate\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"taxCode\": {\n          \"id\": \"64a6cf07-d778-809e-09e3-17ba0f67c421\",\n          \"code\": \"string\",\n          \"description\": \"Tax code description\",\n          \"rate\": \"0.25\"\n        },\n        \"costAccountInternalId\": \"47\",\n        \"costAccount\": {\n          \"internalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"externalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"number\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        \"dimensions\": [\n          {\n            \"name\": \"string\",\n            \"type\": \"string\",\n            \"typeName\": \"string\",\n            \"typeExternalId\": \"string\",\n            \"shortName\": \"string\",\n            \"externalData\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"displayName\": \"string\",\n            \"internalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"internalUpdatedAt\": \"1966-03-23T10:48:47.502Z\",\n            \"externalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"externalUpdatedAt\": \"1949-02-21T11:40:16.608Z\"\n          },\n          {\n            \"name\": \"string\",\n            \"type\": \"string\",\n            \"typeName\": \"string\",\n            \"typeExternalId\": \"string\",\n            \"shortName\": \"string\",\n            \"externalData\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"displayName\": \"string\",\n            \"internalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"internalUpdatedAt\": \"1955-10-20T17:28:34.092Z\",\n            \"externalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"externalUpdatedAt\": \"1962-06-29T10:17:08.927Z\"\n          }\n        ],\n        \"dimensionsInternalIds\": [\n          \"47\",\n          \"47\"\n        ],\n        \"quantityInvoiced\": \"string\",\n        \"lineItemTotal\": \"1.00\",\n        \"lineType\": \"expense\",\n        \"poLineNumber\": 794,\n        \"poNumber\": \"string\",\n        \"poItemsMatched\": [\n          {\n            \"invoiceItemId\": \"string\",\n            \"purchaseOrderItemId\": \"string\",\n            \"quantityMatched\": \"string\",\n            \"purchaseOrderItemLineNumber\": \"string\",\n            \"productNumber\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"unitOfMeasure\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amountMatched\": \"string\"\n          }\n        ],\n        \"poReceiptLinesMatched\": [\n          {\n            \"invoiceItemId\": \"string\",\n            \"purchaseOrderItemId\": \"string\",\n            \"purchaseOrderReceiptLineId\": \"string\",\n            \"quantityMatched\": \"string\",\n            \"amountMatched\": \"string\"\n          }\n        ],\n        \"unitPrice\": \"1.00\",\n        \"number\": \"string\",\n        \"lineFields\": [\n          {\n            \"label\": \"string\",\n            \"title\": \"string\",\n            \"type\": \"select\",\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"label\": \"string\",\n            \"title\": \"string\",\n            \"type\": \"select\",\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ],\n        \"fields\": [\n          {\n            \"label\": \"string\",\n            \"title\": \"string\",\n            \"type\": \"date\",\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"label\": \"string\",\n            \"title\": \"string\",\n            \"type\": \"text\",\n            \"value\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ],\n        \"childItems\": [\n          {\n            \"index\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"description\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"number\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"quantityInvoiced\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"unitPrice\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amountTax\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amountNet\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amountSum\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amountFreight\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"internalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"taxCode\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"vat\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          },\n          {\n            \"index\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"description\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"number\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"quantityInvoiced\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"unitPrice\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amountTax\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amountNet\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amountSum\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"amountFreight\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"internalId\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"taxCode\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"vat\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        ]\n      }\n    ],\n    \"poNumber\": \"string\",\n    \"refNumber\": \"string\",\n    \"transactionType\": \"INVOICE\",\n    \"vendorExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n    \"companyId\": \"12345\",\n    \"amountTax\": \"1.00\",\n    \"amountNet\": \"1.00\",\n    \"amountVat\": \"1.00\",\n    \"amountSum\": \"1.00\",\n    \"amountFreight\": \"1.00\",\n    \"issueDate\": \"1990-03-24\",\n    \"glDate\": \"1953-09-15\",\n    \"dueDate\": \"1961-07-03\",\n    \"servicePeriodStart\": \"1968-08-18\",\n    \"servicePeriodEnd\": \"1948-03-28\",\n    \"paymentInfo\": {\n      \"bankAccountNum\": \"string\",\n      \"bankCode\": \"string\",\n      \"paymentTerm\": {\n        \"count\": 6886,\n        \"unit\": \"DAYS\"\n      },\n      \"bankGiro\": \"string\",\n      \"plusGiro\": \"string\",\n      \"bban\": \"string\",\n      \"internationalBankAccount\": {\n        \"iban\": \"string\",\n        \"bic\": \"string\"\n      },\n      \"defaultMethod\": \"BANKGIRO\"\n    },\n    \"invoiceInfo\": {\n      \"kid\": \"string\",\n      \"creditAccountExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"creditAccountInternalId\": \"string\"\n    },\n    \"externalData\": {},\n    \"externalUpdatedAt\": \"1981-06-19T21:04:08.473Z\",\n    \"bolNumbers\": [\n      {\n        \"bolNumber\": \"BOL-123456\"\n      },\n      {\n        \"bolNumber\": \"BOL-123456\"\n      }\n    ],\n    \"fields\": [\n      {\n        \"label\": \"string\",\n        \"title\": \"string\",\n        \"type\": \"select\",\n        \"value\": \"string\"\n      },\n      {\n        \"label\": \"string\",\n        \"title\": \"string\",\n        \"type\": \"select\",\n        \"value\": \"string\"\n      }\n    ]\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "066c53d6-d7d1-46cc-91da-5756c2f4f345",
+              "name": "HTTP call rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "trainingInvoices"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "since",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "ASCENDING"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.",
+                  "key": "Retry-After",
+                  "value": "4958"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 306,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b26ed26c-619e-4df6-8572-84dba393b422",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "trainingInvoices"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "since",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "ASCENDING"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 306,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f90ff883-7049-47c0-9030-00386d854dc7",
+          "name": "Info for a specific training invoice",
+          "request": {
+            "name": "Info for a specific training invoice",
+            "description": {
+              "content": "Use this request to get data for a single training invoice that is\nstored in Vic.ai\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "trainingInvoices",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The id of the database entry"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "1d9f0ba3-50ef-4835-8ef7-4e419be2ecbe",
+              "name": "A single training invoice.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "trainingInvoices",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of the database entry"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"currency\": \"string\",\n  \"description\": \"string\",\n  \"language\": \"en\",\n  \"lineItems\": [\n    {\n      \"costAccountExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"dimensionsExternalIds\": [\n        \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n        \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n      ],\n      \"amount\": 209.1921446192102,\n      \"index\": 5074,\n      \"internalId\": \"47\",\n      \"amountTax\": \"1.00\",\n      \"amountNet\": \"1.00\",\n      \"amountSum\": \"1.00\",\n      \"amountFreight\": \"1.00\",\n      \"description\": \"string\",\n      \"comment\": \"string\",\n      \"billable\": false,\n      \"accrual\": {\n        \"start\": \"1956-06-22\",\n        \"count\": 4794,\n        \"unit\": \"MONTHS\"\n      },\n      \"invoiceLineItemInfo\": {\n        \"vatCode\": \"string\",\n        \"vatAmount\": 7817.538064736331,\n        \"vatRate\": \"1.00\"\n      },\n      \"vat\": {\n        \"internalId\": \"string\",\n        \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n        \"code\": \"string\",\n        \"amount\": \"1.00\",\n        \"rate\": \"1.00\"\n      },\n      \"taxCode\": {\n        \"id\": \"b6f89c3d-4918-cc8b-c08c-4fa8033a5b35\",\n        \"code\": \"string\",\n        \"description\": \"Tax code description\",\n        \"rate\": \"0.25\"\n      },\n      \"costAccountInternalId\": \"47\",\n      \"costAccount\": {\n        \"internalId\": \"string\",\n        \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n        \"number\": \"string\"\n      },\n      \"dimensions\": [\n        {\n          \"name\": \"string\",\n          \"type\": \"string\",\n          \"typeName\": \"string\",\n          \"typeExternalId\": \"string\",\n          \"shortName\": \"string\",\n          \"externalData\": {},\n          \"displayName\": \"string\",\n          \"internalId\": \"47\",\n          \"internalUpdatedAt\": \"1961-08-20T14:03:45.849Z\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"externalUpdatedAt\": \"1981-12-24T22:57:19.898Z\"\n        },\n        {\n          \"name\": \"string\",\n          \"type\": \"string\",\n          \"typeName\": \"string\",\n          \"typeExternalId\": \"string\",\n          \"shortName\": \"string\",\n          \"externalData\": {},\n          \"displayName\": \"string\",\n          \"internalId\": \"47\",\n          \"internalUpdatedAt\": \"2020-01-25T07:14:19.781Z\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"externalUpdatedAt\": \"1991-09-12T16:25:04.751Z\"\n        }\n      ],\n      \"dimensionsInternalIds\": [\n        \"47\",\n        \"47\"\n      ],\n      \"quantityInvoiced\": \"string\",\n      \"lineItemTotal\": \"1.00\",\n      \"lineType\": \"expense\",\n      \"poLineNumber\": 8180,\n      \"poNumber\": \"string\",\n      \"poItemsMatched\": [\n        {\n          \"invoiceItemId\": \"string\",\n          \"purchaseOrderItemId\": \"string\",\n          \"quantityMatched\": \"string\",\n          \"purchaseOrderItemLineNumber\": \"string\",\n          \"productNumber\": \"string\",\n          \"unitOfMeasure\": \"string\",\n          \"amountMatched\": \"string\"\n        }\n      ],\n      \"poReceiptLinesMatched\": [\n        {\n          \"invoiceItemId\": \"string\",\n          \"purchaseOrderItemId\": \"string\",\n          \"purchaseOrderReceiptLineId\": \"string\",\n          \"quantityMatched\": \"string\",\n          \"amountMatched\": \"string\"\n        }\n      ],\n      \"unitPrice\": \"1.00\",\n      \"number\": \"string\",\n      \"lineFields\": [\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"text\",\n          \"value\": \"string\"\n        },\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"date\",\n          \"value\": \"string\"\n        }\n      ],\n      \"fields\": [\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"text\",\n          \"value\": \"string\"\n        },\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"select\",\n          \"value\": \"string\"\n        }\n      ],\n      \"childItems\": [\n        {\n          \"index\": 6998,\n          \"description\": \"string\",\n          \"number\": \"string\",\n          \"quantityInvoiced\": \"string\",\n          \"unitPrice\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"amountTax\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"amountNet\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"amountSum\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"amountFreight\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"internalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"taxCode\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"vat\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"index\": 8473,\n          \"description\": \"string\",\n          \"number\": \"string\",\n          \"quantityInvoiced\": \"string\",\n          \"unitPrice\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"amountTax\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"amountNet\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"amountSum\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"amountFreight\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"internalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"taxCode\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"vat\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ]\n    }\n  ],\n  \"poNumber\": \"string\",\n  \"refNumber\": \"string\",\n  \"transactionType\": \"INVOICE\",\n  \"vendorExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n  \"companyId\": \"12345\",\n  \"amountTax\": \"1.00\",\n  \"amountNet\": \"1.00\",\n  \"amountVat\": \"1.00\",\n  \"amountSum\": \"1.00\",\n  \"amountFreight\": \"1.00\",\n  \"issueDate\": \"2020-05-12\",\n  \"glDate\": \"1983-07-25\",\n  \"dueDate\": \"2012-07-12\",\n  \"servicePeriodStart\": \"1987-01-15\",\n  \"servicePeriodEnd\": \"2002-03-17\",\n  \"paymentInfo\": {\n    \"bankAccountNum\": \"string\",\n    \"bankCode\": \"string\",\n    \"paymentTerm\": {\n      \"count\": 6819,\n      \"unit\": \"DAYS\"\n    },\n    \"bankGiro\": \"string\",\n    \"plusGiro\": \"string\",\n    \"bban\": \"string\",\n    \"internationalBankAccount\": {\n      \"iban\": \"string\",\n      \"bic\": \"string\"\n    },\n    \"defaultMethod\": \"BANKACCOUNT\"\n  },\n  \"invoiceInfo\": {\n    \"kid\": \"string\",\n    \"creditAccountExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n    \"creditAccountInternalId\": \"string\"\n  },\n  \"externalData\": {},\n  \"externalUpdatedAt\": \"2010-10-09T01:39:50.938Z\",\n  \"bolNumbers\": [\n    {\n      \"bolNumber\": \"BOL-123456\"\n    },\n    {\n      \"bolNumber\": \"BOL-123456\"\n    }\n  ],\n  \"fields\": [\n    {\n      \"label\": \"string\",\n      \"title\": \"string\",\n      \"type\": \"date\",\n      \"value\": \"string\"\n    },\n    {\n      \"label\": \"string\",\n      \"title\": \"string\",\n      \"type\": \"select\",\n      \"value\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8395bfef-d9c0-429b-9538-8e99531be247",
+              "name": "HTTP call rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "trainingInvoices",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of the database entry"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.",
+                  "key": "Retry-After",
+                  "value": "4958"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 306,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4607984b-357a-4d43-8eac-cb43df41d48b",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "trainingInvoices",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of the database entry"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 306,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d34888c3-24e8-4726-91ae-6164bcc98d03",
+          "name": "Upserts a training invoice",
+          "request": {
+            "name": "Upserts a training invoice",
+            "description": {
+              "content": "Use this request to *upsert* training invoice data for one invoice into\nVic.ai.\n\nWhen putting a new invoice into the system, an `invoiceDocument` will be\nrequired. If the training invoice already exists, an `invoiceDocument`\nwill not be required.\n\nAll requests that need to have the `invoiceDocument` updated should have\na `multipart/form-data` content type.\n\nIf the training invoice just needs to be updated without a document\nspecified a content type of `application/json` is permitted.\n\nIf the invoice is known by Vic.ai, the `externalId` supplied will be\nused to resolve the invoice and perform an update of the data,\notherwise, a new invoice will be created.\n\nWhen updating a training invoice, the `invoiceDocument` is no longer required,\nand the `Content-Type` can be `application/json`\n\nIf the training invoice needs the underlying document updated, use a\n`multipart/form-data` to accomplish this. It will have the same format as the\ninsert described above.\n\nSome things to note about updating existing invoices.\n\n* The line items passed will be set as the desired state of the invoice.\n* Empty list of line items will cause all line items to be deleted.\n* Existing line items passed will be matched as best as possible. If they can\n  not be matched they will be deleted and replaced with the desired items.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "trainingInvoices",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The id of the database entry"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "multipart/form-data"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "invoiceData",
+                  "value": "{\"transactionType\":\"INVOICE\",\"vendorExternalId\":\"<string>\",\"externalUpdatedAt\":\"<dateTime>\",\"refNumber\":\"<string>\",\"poNumber\":\"<string>\",\"description\":\"<string>\",\"currency\":\"<ISO-4217>\",\"language\":\"<string>\",\"issueDate\":\"<date>\",\"glDate\":\"<date>\",\"dueDate\":\"<date>\",\"accountNumber\":\"<string>\",\"servicePeriodStart\":\"<date>\",\"servicePeriodEnd\":\"<date>\",\"paymentInfo\":{\"bankAccountNum\":\"<string>\",\"bankCode\":\"<string>\",\"paymentTerm\":{\"count\":\"<integer>\",\"unit\":\"<string>\"},\"bankGiro\":\"<string>\",\"plusGiro\":\"<string>\",\"bban\":\"<string>\",\"internationalBankAccount\":{\"iban\":\"<string>\",\"bic\":\"<string>\"},\"defaultMethod\":\"<string>\"},\"invoiceInfo\":{\"kid\":\"<string>\",\"creditAccountExternalId\":\"<string>\",\"creditAccountInternalId\":\"<string>\"},\"totalAmount\":\"<decimal>\",\"totalVatAmount\":\"<decimal>\",\"lineItems\":[{\"amount\":\"<number>\",\"index\":\"<integer>\",\"amountTax\":\"<decimal>\",\"amountFreight\":\"<decimal>\",\"description\":\"<string>\",\"comment\":\"<string>\",\"billable\":false,\"accrual\":{\"start\":\"<date>\",\"count\":\"<integer>\",\"unit\":\"<string>\"},\"invoiceLineItemInfo\":{\"vatCode\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"vatAmount\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"vatRate\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"}},\"costAccountExternalId\":\"<string>\",\"dimensionsExternalIds\":[\"<string>\",\"<string>\"],\"dimensions\":[{\"internalId\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"externalId\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"name\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"typeExternalId\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"}},{\"internalId\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"externalId\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"name\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"typeExternalId\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"}}],\"lineItemIsVatOnly\":false,\"lineType\":\"expense\",\"quantityInvoiced\":\"<decimal>\",\"unitPrice\":\"<decimal>\",\"number\":\"<string>\",\"taxCodeId\":\"<uuid>\"}],\"externalData\":\"<object>\",\"externalId\":\"<string>\",\"bolNumbers\":[{\"bolNumber\":\"<string>\"},{\"bolNumber\":\"<string>\"}],\"fields\":[{\"label\":\"<string>\",\"value\":\"<string,null>\"},{\"label\":\"<string>\",\"value\":\"<string,null>\"}]}",
+                  "type": "text",
+                  "contentType": "application/json",
+                  "description": "(Required) "
+                },
+                {
+                  "key": "invoiceDocument",
+                  "type": "file",
+                  "contentType": "application/pdf, image/gif, image/jpeg, image/jpg, image/png, image/tiff,\napplication/vnd.openxmlformats-officedocument.wordprocessingml.document\n",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "6205ffa9-e4f9-4efa-9493-4bb3b9beccb2",
+              "name": "Training invoice was successfully upserted.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "trainingInvoices",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of the database entry"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "invoiceData",
+                      "value": "{\"transactionType\":\"INVOICE\",\"vendorExternalId\":\"21b31bc7-1267-4335-893c-d7fe4706a238\",\"externalUpdatedAt\":\"1971-02-02T05:56:06.952Z\",\"refNumber\":\"string\",\"poNumber\":\"string\",\"description\":\"string\",\"currency\":\"USD\",\"language\":\"en\",\"issueDate\":\"2021-09-04\",\"glDate\":\"2000-03-22\",\"dueDate\":\"2018-06-13\",\"accountNumber\":\"string\",\"servicePeriodStart\":\"2001-05-29\",\"servicePeriodEnd\":\"1992-04-15\",\"paymentInfo\":{\"bankAccountNum\":\"string\",\"bankCode\":\"string\",\"paymentTerm\":{\"count\":7628,\"unit\":\"DAYS\"},\"bankGiro\":\"string\",\"plusGiro\":\"string\",\"bban\":\"string\",\"internationalBankAccount\":{\"iban\":\"string\",\"bic\":\"string\"},\"defaultMethod\":\"BANKACCOUNT\"},\"invoiceInfo\":{\"kid\":\"string\",\"creditAccountExternalId\":\"21b31bc7-1267-4335-893c-d7fe4706a238\",\"creditAccountInternalId\":\"string\"},\"totalAmount\":\"1.00\",\"totalVatAmount\":\"1.00\",\"lineItems\":[{\"amount\":6332.827670264294,\"index\":7984,\"amountTax\":\"1.00\",\"amountFreight\":\"1.00\",\"description\":\"string\",\"comment\":\"string\",\"billable\":false,\"accrual\":{\"start\":\"1996-09-08\",\"count\":5814,\"unit\":\"MONTHS\"},\"invoiceLineItemInfo\":{\"vatCode\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"vatAmount\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"vatRate\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"}},\"costAccountExternalId\":\"21b31bc7-1267-4335-893c-d7fe4706a238\",\"dimensionsExternalIds\":[\"21b31bc7-1267-4335-893c-d7fe4706a238\",\"21b31bc7-1267-4335-893c-d7fe4706a238\"],\"dimensions\":[{\"internalId\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"externalId\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"name\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"typeExternalId\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"}},{\"internalId\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"externalId\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"name\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"typeExternalId\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"}}],\"lineItemIsVatOnly\":false,\"lineType\":\"expense\",\"quantityInvoiced\":\"string\",\"unitPrice\":\"1.00\",\"number\":\"string\",\"taxCodeId\":\"e042e1d6-8be3-d9fd-7adf-f74794f49038\"}],\"externalData\":{},\"externalId\":\"21b31bc7-1267-4335-893c-d7fe4706a238\",\"bolNumbers\":[{\"bolNumber\":\"BOL-123456\"},{\"bolNumber\":\"BOL-123456\"}],\"fields\":[{\"label\":\"Project Code\",\"value\":\"PRJ-2024-001\"},{\"label\":\"Project Code\",\"value\":\"PRJ-2024-001\"}]}",
+                      "type": "text",
+                      "contentType": "application/json"
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "key": "invoiceDocument",
+                      "value": "<binary>",
+                      "type": "text",
+                      "contentType": "application/pdf, image/gif, image/jpeg, image/jpg, image/png, image/tiff,\napplication/vnd.openxmlformats-officedocument.wordprocessingml.document\n"
+                    }
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"currency\": \"string\",\n  \"description\": \"string\",\n  \"language\": \"en\",\n  \"lineItems\": [\n    {\n      \"costAccountExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"dimensionsExternalIds\": [\n        \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n        \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n      ],\n      \"amount\": 209.1921446192102,\n      \"index\": 5074,\n      \"internalId\": \"47\",\n      \"amountTax\": \"1.00\",\n      \"amountNet\": \"1.00\",\n      \"amountSum\": \"1.00\",\n      \"amountFreight\": \"1.00\",\n      \"description\": \"string\",\n      \"comment\": \"string\",\n      \"billable\": false,\n      \"accrual\": {\n        \"start\": \"1956-06-22\",\n        \"count\": 4794,\n        \"unit\": \"MONTHS\"\n      },\n      \"invoiceLineItemInfo\": {\n        \"vatCode\": \"string\",\n        \"vatAmount\": 7817.538064736331,\n        \"vatRate\": \"1.00\"\n      },\n      \"vat\": {\n        \"internalId\": \"string\",\n        \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n        \"code\": \"string\",\n        \"amount\": \"1.00\",\n        \"rate\": \"1.00\"\n      },\n      \"taxCode\": {\n        \"id\": \"b6f89c3d-4918-cc8b-c08c-4fa8033a5b35\",\n        \"code\": \"string\",\n        \"description\": \"Tax code description\",\n        \"rate\": \"0.25\"\n      },\n      \"costAccountInternalId\": \"47\",\n      \"costAccount\": {\n        \"internalId\": \"string\",\n        \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n        \"number\": \"string\"\n      },\n      \"dimensions\": [\n        {\n          \"name\": \"string\",\n          \"type\": \"string\",\n          \"typeName\": \"string\",\n          \"typeExternalId\": \"string\",\n          \"shortName\": \"string\",\n          \"externalData\": {},\n          \"displayName\": \"string\",\n          \"internalId\": \"47\",\n          \"internalUpdatedAt\": \"1961-08-20T14:03:45.849Z\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"externalUpdatedAt\": \"1981-12-24T22:57:19.898Z\"\n        },\n        {\n          \"name\": \"string\",\n          \"type\": \"string\",\n          \"typeName\": \"string\",\n          \"typeExternalId\": \"string\",\n          \"shortName\": \"string\",\n          \"externalData\": {},\n          \"displayName\": \"string\",\n          \"internalId\": \"47\",\n          \"internalUpdatedAt\": \"2020-01-25T07:14:19.781Z\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"externalUpdatedAt\": \"1991-09-12T16:25:04.751Z\"\n        }\n      ],\n      \"dimensionsInternalIds\": [\n        \"47\",\n        \"47\"\n      ],\n      \"quantityInvoiced\": \"string\",\n      \"lineItemTotal\": \"1.00\",\n      \"lineType\": \"expense\",\n      \"poLineNumber\": 8180,\n      \"poNumber\": \"string\",\n      \"poItemsMatched\": [\n        {\n          \"invoiceItemId\": \"string\",\n          \"purchaseOrderItemId\": \"string\",\n          \"quantityMatched\": \"string\",\n          \"purchaseOrderItemLineNumber\": \"string\",\n          \"productNumber\": \"string\",\n          \"unitOfMeasure\": \"string\",\n          \"amountMatched\": \"string\"\n        }\n      ],\n      \"poReceiptLinesMatched\": [\n        {\n          \"invoiceItemId\": \"string\",\n          \"purchaseOrderItemId\": \"string\",\n          \"purchaseOrderReceiptLineId\": \"string\",\n          \"quantityMatched\": \"string\",\n          \"amountMatched\": \"string\"\n        }\n      ],\n      \"unitPrice\": \"1.00\",\n      \"number\": \"string\",\n      \"lineFields\": [\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"text\",\n          \"value\": \"string\"\n        },\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"date\",\n          \"value\": \"string\"\n        }\n      ],\n      \"fields\": [\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"text\",\n          \"value\": \"string\"\n        },\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"select\",\n          \"value\": \"string\"\n        }\n      ],\n      \"childItems\": [\n        {\n          \"index\": 6998,\n          \"description\": \"string\",\n          \"number\": \"string\",\n          \"quantityInvoiced\": \"string\",\n          \"unitPrice\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"amountTax\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"amountNet\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"amountSum\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"amountFreight\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"internalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"taxCode\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"vat\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"index\": 8473,\n          \"description\": \"string\",\n          \"number\": \"string\",\n          \"quantityInvoiced\": \"string\",\n          \"unitPrice\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"amountTax\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"amountNet\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"amountSum\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"amountFreight\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"internalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"taxCode\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"vat\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ]\n    }\n  ],\n  \"poNumber\": \"string\",\n  \"refNumber\": \"string\",\n  \"transactionType\": \"INVOICE\",\n  \"vendorExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n  \"companyId\": \"12345\",\n  \"amountTax\": \"1.00\",\n  \"amountNet\": \"1.00\",\n  \"amountVat\": \"1.00\",\n  \"amountSum\": \"1.00\",\n  \"amountFreight\": \"1.00\",\n  \"issueDate\": \"2020-05-12\",\n  \"glDate\": \"1983-07-25\",\n  \"dueDate\": \"2012-07-12\",\n  \"servicePeriodStart\": \"1987-01-15\",\n  \"servicePeriodEnd\": \"2002-03-17\",\n  \"paymentInfo\": {\n    \"bankAccountNum\": \"string\",\n    \"bankCode\": \"string\",\n    \"paymentTerm\": {\n      \"count\": 6819,\n      \"unit\": \"DAYS\"\n    },\n    \"bankGiro\": \"string\",\n    \"plusGiro\": \"string\",\n    \"bban\": \"string\",\n    \"internationalBankAccount\": {\n      \"iban\": \"string\",\n      \"bic\": \"string\"\n    },\n    \"defaultMethod\": \"BANKACCOUNT\"\n  },\n  \"invoiceInfo\": {\n    \"kid\": \"string\",\n    \"creditAccountExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n    \"creditAccountInternalId\": \"string\"\n  },\n  \"externalData\": {},\n  \"externalUpdatedAt\": \"2010-10-09T01:39:50.938Z\",\n  \"bolNumbers\": [\n    {\n      \"bolNumber\": \"BOL-123456\"\n    },\n    {\n      \"bolNumber\": \"BOL-123456\"\n    }\n  ],\n  \"fields\": [\n    {\n      \"label\": \"string\",\n      \"title\": \"string\",\n      \"type\": \"date\",\n      \"value\": \"string\"\n    },\n    {\n      \"label\": \"string\",\n      \"title\": \"string\",\n      \"type\": \"select\",\n      \"value\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "cbd3be61-b95e-432a-8140-9f67e7cca5ac",
+              "name": "HTTP call rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "trainingInvoices",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of the database entry"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "invoiceData",
+                      "value": "{\"transactionType\":\"INVOICE\",\"vendorExternalId\":\"21b31bc7-1267-4335-893c-d7fe4706a238\",\"externalUpdatedAt\":\"1965-10-06T09:29:06.675Z\",\"refNumber\":\"string\",\"poNumber\":\"string\",\"description\":\"string\",\"currency\":\"USD\",\"language\":\"en\",\"issueDate\":\"1987-11-30\",\"glDate\":\"1962-05-18\",\"dueDate\":\"1993-12-08\",\"accountNumber\":\"string\",\"servicePeriodStart\":\"1965-03-16\",\"servicePeriodEnd\":\"2009-12-02\",\"paymentInfo\":{\"bankAccountNum\":\"string\",\"bankCode\":\"string\",\"paymentTerm\":{\"count\":6589,\"unit\":\"DAYS\"},\"bankGiro\":\"string\",\"plusGiro\":\"string\",\"bban\":\"string\",\"internationalBankAccount\":{\"iban\":\"string\",\"bic\":\"string\"},\"defaultMethod\":\"IBAN\"},\"invoiceInfo\":{\"kid\":\"string\",\"creditAccountExternalId\":\"21b31bc7-1267-4335-893c-d7fe4706a238\",\"creditAccountInternalId\":\"string\"},\"totalAmount\":\"1.00\",\"totalVatAmount\":\"1.00\",\"lineItems\":[{\"amount\":9222.523521553694,\"index\":7710,\"amountTax\":\"1.00\",\"amountFreight\":\"1.00\",\"description\":\"string\",\"comment\":\"string\",\"billable\":false,\"accrual\":{\"start\":\"1958-01-04\",\"count\":5352,\"unit\":\"MONTHS\"},\"invoiceLineItemInfo\":{\"vatCode\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"vatAmount\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"vatRate\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"}},\"costAccountExternalId\":\"21b31bc7-1267-4335-893c-d7fe4706a238\",\"dimensionsExternalIds\":[\"21b31bc7-1267-4335-893c-d7fe4706a238\",\"21b31bc7-1267-4335-893c-d7fe4706a238\"],\"dimensions\":[{\"internalId\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"externalId\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"name\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"typeExternalId\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"}},{\"internalId\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"externalId\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"name\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"typeExternalId\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"}}],\"lineItemIsVatOnly\":false,\"lineType\":\"expense\",\"quantityInvoiced\":\"string\",\"unitPrice\":\"1.00\",\"number\":\"string\",\"taxCodeId\":\"770d3385-b80c-951f-578b-17885a7f5f84\"}],\"externalData\":{},\"externalId\":\"21b31bc7-1267-4335-893c-d7fe4706a238\",\"bolNumbers\":[{\"bolNumber\":\"BOL-123456\"},{\"bolNumber\":\"BOL-123456\"}],\"fields\":[{\"label\":\"Project Code\",\"value\":\"PRJ-2024-001\"},{\"label\":\"Project Code\",\"value\":\"PRJ-2024-001\"}]}",
+                      "type": "text",
+                      "contentType": "application/json"
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "key": "invoiceDocument",
+                      "value": "<binary>",
+                      "type": "text",
+                      "contentType": "application/pdf, image/gif, image/jpeg, image/jpg, image/png, image/tiff,\napplication/vnd.openxmlformats-officedocument.wordprocessingml.document\n"
+                    }
+                  ]
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.",
+                  "key": "Retry-After",
+                  "value": "4958"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 306,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6349abfd-8db8-4dab-be65-74e188e0ab48",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "trainingInvoices",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of the database entry"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "description": {
+                        "content": "(Required) ",
+                        "type": "text/plain"
+                      },
+                      "key": "invoiceData",
+                      "value": "{\"transactionType\":\"INVOICE\",\"vendorExternalId\":\"21b31bc7-1267-4335-893c-d7fe4706a238\",\"externalUpdatedAt\":\"1965-10-06T09:29:06.675Z\",\"refNumber\":\"string\",\"poNumber\":\"string\",\"description\":\"string\",\"currency\":\"USD\",\"language\":\"en\",\"issueDate\":\"1987-11-30\",\"glDate\":\"1962-05-18\",\"dueDate\":\"1993-12-08\",\"accountNumber\":\"string\",\"servicePeriodStart\":\"1965-03-16\",\"servicePeriodEnd\":\"2009-12-02\",\"paymentInfo\":{\"bankAccountNum\":\"string\",\"bankCode\":\"string\",\"paymentTerm\":{\"count\":6589,\"unit\":\"DAYS\"},\"bankGiro\":\"string\",\"plusGiro\":\"string\",\"bban\":\"string\",\"internationalBankAccount\":{\"iban\":\"string\",\"bic\":\"string\"},\"defaultMethod\":\"IBAN\"},\"invoiceInfo\":{\"kid\":\"string\",\"creditAccountExternalId\":\"21b31bc7-1267-4335-893c-d7fe4706a238\",\"creditAccountInternalId\":\"string\"},\"totalAmount\":\"1.00\",\"totalVatAmount\":\"1.00\",\"lineItems\":[{\"amount\":9222.523521553694,\"index\":7710,\"amountTax\":\"1.00\",\"amountFreight\":\"1.00\",\"description\":\"string\",\"comment\":\"string\",\"billable\":false,\"accrual\":{\"start\":\"1958-01-04\",\"count\":5352,\"unit\":\"MONTHS\"},\"invoiceLineItemInfo\":{\"vatCode\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"vatAmount\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"vatRate\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"}},\"costAccountExternalId\":\"21b31bc7-1267-4335-893c-d7fe4706a238\",\"dimensionsExternalIds\":[\"21b31bc7-1267-4335-893c-d7fe4706a238\",\"21b31bc7-1267-4335-893c-d7fe4706a238\"],\"dimensions\":[{\"internalId\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"externalId\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"name\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"typeExternalId\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"}},{\"internalId\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"externalId\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"name\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"},\"typeExternalId\":{\"value\":\"<Error: Too many levels of nesting to fake this schema>\"}}],\"lineItemIsVatOnly\":false,\"lineType\":\"expense\",\"quantityInvoiced\":\"string\",\"unitPrice\":\"1.00\",\"number\":\"string\",\"taxCodeId\":\"770d3385-b80c-951f-578b-17885a7f5f84\"}],\"externalData\":{},\"externalId\":\"21b31bc7-1267-4335-893c-d7fe4706a238\",\"bolNumbers\":[{\"bolNumber\":\"BOL-123456\"},{\"bolNumber\":\"BOL-123456\"}],\"fields\":[{\"label\":\"Project Code\",\"value\":\"PRJ-2024-001\"},{\"label\":\"Project Code\",\"value\":\"PRJ-2024-001\"}]}",
+                      "type": "text",
+                      "contentType": "application/json"
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "key": "invoiceDocument",
+                      "value": "<binary>",
+                      "type": "text",
+                      "contentType": "application/pdf, image/gif, image/jpeg, image/jpg, image/png, image/tiff,\napplication/vnd.openxmlformats-officedocument.wordprocessingml.document\n"
+                    }
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 306,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "03fce9bd-5b2d-4051-a8b8-86a7021c4e42",
+          "name": "Deletes a training invoice",
+          "request": {
+            "name": "Deletes a training invoice",
+            "description": {
+              "content": "Use this request to delete data for a single training invoice that is\nstored in Vic.ai\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "trainingInvoices",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The id of the database entry"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ca19f983-5a6d-4f88-9e77-1ed0dd8adec3",
+              "name": "Training invoice was successfully deleted.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "trainingInvoices",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of the database entry"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"currency\": \"string\",\n  \"description\": \"string\",\n  \"language\": \"en\",\n  \"lineItems\": [\n    {\n      \"costAccountExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n      \"dimensionsExternalIds\": [\n        \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n        \"21b31bc7-1267-4335-893c-d7fe4706a238\"\n      ],\n      \"amount\": 209.1921446192102,\n      \"index\": 5074,\n      \"internalId\": \"47\",\n      \"amountTax\": \"1.00\",\n      \"amountNet\": \"1.00\",\n      \"amountSum\": \"1.00\",\n      \"amountFreight\": \"1.00\",\n      \"description\": \"string\",\n      \"comment\": \"string\",\n      \"billable\": false,\n      \"accrual\": {\n        \"start\": \"1956-06-22\",\n        \"count\": 4794,\n        \"unit\": \"MONTHS\"\n      },\n      \"invoiceLineItemInfo\": {\n        \"vatCode\": \"string\",\n        \"vatAmount\": 7817.538064736331,\n        \"vatRate\": \"1.00\"\n      },\n      \"vat\": {\n        \"internalId\": \"string\",\n        \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n        \"code\": \"string\",\n        \"amount\": \"1.00\",\n        \"rate\": \"1.00\"\n      },\n      \"taxCode\": {\n        \"id\": \"b6f89c3d-4918-cc8b-c08c-4fa8033a5b35\",\n        \"code\": \"string\",\n        \"description\": \"Tax code description\",\n        \"rate\": \"0.25\"\n      },\n      \"costAccountInternalId\": \"47\",\n      \"costAccount\": {\n        \"internalId\": \"string\",\n        \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n        \"number\": \"string\"\n      },\n      \"dimensions\": [\n        {\n          \"name\": \"string\",\n          \"type\": \"string\",\n          \"typeName\": \"string\",\n          \"typeExternalId\": \"string\",\n          \"shortName\": \"string\",\n          \"externalData\": {},\n          \"displayName\": \"string\",\n          \"internalId\": \"47\",\n          \"internalUpdatedAt\": \"1961-08-20T14:03:45.849Z\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"externalUpdatedAt\": \"1981-12-24T22:57:19.898Z\"\n        },\n        {\n          \"name\": \"string\",\n          \"type\": \"string\",\n          \"typeName\": \"string\",\n          \"typeExternalId\": \"string\",\n          \"shortName\": \"string\",\n          \"externalData\": {},\n          \"displayName\": \"string\",\n          \"internalId\": \"47\",\n          \"internalUpdatedAt\": \"2020-01-25T07:14:19.781Z\",\n          \"externalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n          \"externalUpdatedAt\": \"1991-09-12T16:25:04.751Z\"\n        }\n      ],\n      \"dimensionsInternalIds\": [\n        \"47\",\n        \"47\"\n      ],\n      \"quantityInvoiced\": \"string\",\n      \"lineItemTotal\": \"1.00\",\n      \"lineType\": \"expense\",\n      \"poLineNumber\": 8180,\n      \"poNumber\": \"string\",\n      \"poItemsMatched\": [\n        {\n          \"invoiceItemId\": \"string\",\n          \"purchaseOrderItemId\": \"string\",\n          \"quantityMatched\": \"string\",\n          \"purchaseOrderItemLineNumber\": \"string\",\n          \"productNumber\": \"string\",\n          \"unitOfMeasure\": \"string\",\n          \"amountMatched\": \"string\"\n        }\n      ],\n      \"poReceiptLinesMatched\": [\n        {\n          \"invoiceItemId\": \"string\",\n          \"purchaseOrderItemId\": \"string\",\n          \"purchaseOrderReceiptLineId\": \"string\",\n          \"quantityMatched\": \"string\",\n          \"amountMatched\": \"string\"\n        }\n      ],\n      \"unitPrice\": \"1.00\",\n      \"number\": \"string\",\n      \"lineFields\": [\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"text\",\n          \"value\": \"string\"\n        },\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"date\",\n          \"value\": \"string\"\n        }\n      ],\n      \"fields\": [\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"text\",\n          \"value\": \"string\"\n        },\n        {\n          \"label\": \"string\",\n          \"title\": \"string\",\n          \"type\": \"select\",\n          \"value\": \"string\"\n        }\n      ],\n      \"childItems\": [\n        {\n          \"index\": 6998,\n          \"description\": \"string\",\n          \"number\": \"string\",\n          \"quantityInvoiced\": \"string\",\n          \"unitPrice\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"amountTax\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"amountNet\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"amountSum\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"amountFreight\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"internalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"taxCode\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"vat\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"index\": 8473,\n          \"description\": \"string\",\n          \"number\": \"string\",\n          \"quantityInvoiced\": \"string\",\n          \"unitPrice\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"amountTax\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"amountNet\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"amountSum\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"amountFreight\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"internalId\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"taxCode\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"vat\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ]\n    }\n  ],\n  \"poNumber\": \"string\",\n  \"refNumber\": \"string\",\n  \"transactionType\": \"INVOICE\",\n  \"vendorExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n  \"companyId\": \"12345\",\n  \"amountTax\": \"1.00\",\n  \"amountNet\": \"1.00\",\n  \"amountVat\": \"1.00\",\n  \"amountSum\": \"1.00\",\n  \"amountFreight\": \"1.00\",\n  \"issueDate\": \"2020-05-12\",\n  \"glDate\": \"1983-07-25\",\n  \"dueDate\": \"2012-07-12\",\n  \"servicePeriodStart\": \"1987-01-15\",\n  \"servicePeriodEnd\": \"2002-03-17\",\n  \"paymentInfo\": {\n    \"bankAccountNum\": \"string\",\n    \"bankCode\": \"string\",\n    \"paymentTerm\": {\n      \"count\": 6819,\n      \"unit\": \"DAYS\"\n    },\n    \"bankGiro\": \"string\",\n    \"plusGiro\": \"string\",\n    \"bban\": \"string\",\n    \"internationalBankAccount\": {\n      \"iban\": \"string\",\n      \"bic\": \"string\"\n    },\n    \"defaultMethod\": \"BANKACCOUNT\"\n  },\n  \"invoiceInfo\": {\n    \"kid\": \"string\",\n    \"creditAccountExternalId\": \"21b31bc7-1267-4335-893c-d7fe4706a238\",\n    \"creditAccountInternalId\": \"string\"\n  },\n  \"externalData\": {},\n  \"externalUpdatedAt\": \"2010-10-09T01:39:50.938Z\",\n  \"bolNumbers\": [\n    {\n      \"bolNumber\": \"BOL-123456\"\n    },\n    {\n      \"bolNumber\": \"BOL-123456\"\n    }\n  ],\n  \"fields\": [\n    {\n      \"label\": \"string\",\n      \"title\": \"string\",\n      \"type\": \"date\",\n      \"value\": \"string\"\n    },\n    {\n      \"label\": \"string\",\n      \"title\": \"string\",\n      \"type\": \"select\",\n      \"value\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e9b8d098-ca47-4838-9d7f-a2c3098fcaf7",
+              "name": "HTTP call rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "trainingInvoices",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of the database entry"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.",
+                  "key": "Retry-After",
+                  "value": "4958"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 306,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b5cb4e57-d64a-4d43-af47-39a91be4e4e8",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "trainingInvoices",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of the database entry"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 306,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1bd384b3-a2be-4c4f-85a9-fdca4a37bd3b",
+          "name": "Document for a specific training invoice",
+          "request": {
+            "name": "Document for a specific training invoice",
+            "description": {
+              "content": "Use this request to get the document associated with a training invoice\nthat is stored in Vic.ai\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v0",
+                "trainingInvoices",
+                ":id",
+                "document"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) The id of the database entry"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/pdf"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "3a02a389-fa99-40e8-9f8f-07956a5e1895",
+              "name": "The document attached to the training invoice.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "trainingInvoices",
+                    ":id",
+                    "document"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of the database entry"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/pdf"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/pdf"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "657729a3-10bf-44aa-9bf9-533b6b095c7c",
+              "name": "HTTP call rate limit exceeded.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "trainingInvoices",
+                    ":id",
+                    "document"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of the database entry"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.",
+                  "key": "Retry-After",
+                  "value": "4958"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 306,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d02acf5d-5103-4e29-bb78-f5dc365634db",
+              "name": "An unexpected error has occurred. Check the body for more details.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v0",
+                    "trainingInvoices",
+                    ":id",
+                    "document"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) The id of the database entry"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 306,\n  \"message\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.no.stage.vic.ai",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "f8708764-2aeb-4fad-b9bb-5ba1d57f4bd6",
+    "name": "Vic.ai Accounts Training Invoices API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "## Introduction\n\nThe Vic.ai API provides a seamless connection between your Enterprise Resource\nPlanning (ERP) system and the Vic.ai product suite.\n\nThe API is designed to offer three main areas of functionality:\n\n- **Syncing master data:** This refers to the data in your ERP that Vic.ai\n  interacts with. You are required to supply and update this data in Vic.ai, and\n  you also have the option to verify the copy of the masterdata in Vic.ai.\n\n- **Syncing training data:** We need historical data to train your AI model. To\n  that end, the API provides endpoints to sync historical invoices into Vic.ai\n  and to confirm their presence.\n\n- **Subscribing to and receiving webhooks:** Webhooks enable users or automated\n  tasks to interact with your ERP through various actions in the Vic.ai product\n  suite, such as posting an invoice, payment or purchase order or requesting\n  synchronization. You will receive a notification via a webhook when these\n  actions occur.\n\n\nFor US-based integrations, please use the following base API URL:\n\n```\nhttps://api.us.vic.ai\n```\n\nFor integrations based in Norway, use the following base API URL:\n\n```\nhttps://api.no.vic.ai\n```\n\nAll paths mentioned in this documentation should use one of these URLs as the\nbase.\n\nExample:\n\n```bash\ncurl https://api.us.vic.ai/v0/healthCheck \\\n    -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\"\n```\n\n## Getting Started\n\nTo begin interacting with the Vic.ai API, you will need the following\ncredentials:\n\n* A Vic.ai client ID\n* A Vic.ai client secret.\n\nThese can be provided to you securely by a Vic.ai representative\n[upon request](https://www.vic.ai/book-a-demo).\n\n**Please note:** These credentials are essentially the keys to your ERP\nintegration. If they fall into the wrong hands, unauthorized parties could\nimpersonate you, gain access to sensitive data, and potentially perform\nmalicious actions. Therefore, it's crucial to keep these credentials safe at all\ntimes to protect your application's integrity and your clients' data.\n\n### Limitations\n\nThe Vic.ai API has the following limitations:\n\n**Rate Limiting:** The API is rate-limited to 500 requests per 10-second time\nframe. If you exceed this limit, you will receive a `429 Too Many Requests`\nresponse. The limit is per Oauth client ID. If you continue to receive `429`s,\nplease contact support with a request id from the response headers.\n",
+      "type": "text/plain"
+    }
+  }
+}
