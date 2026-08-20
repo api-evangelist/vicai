@@ -40,6 +40,16 @@ tags:
 - Invoicing
 - Payments
 - ERP Integration
+- Artificial Intelligence
+- Finance Automation
+- Webhook
+tags_raw:
+- Company
+- Fintech
+- Accounts Payable
+- Invoicing
+- Payments
+- ERP Integration
 - AI
 - Finance Automation
 - Webhooks
@@ -57,6 +67,8 @@ apis:
   humanURL: https://docs.vic.ai
   baseURL: https://api.us.vic.ai
   tags:
+  - Account
+  tags_raw:
   - Accounts
   properties:
   - type: OpenAPI
@@ -403,6 +415,8 @@ apis:
   humanURL: https://docs.vic.ai
   baseURL: https://api.us.vic.ai
   tags:
+  - Organization
+  tags_raw:
   - Organizations
   properties:
   - type: OpenAPI
@@ -627,6 +641,8 @@ apis:
   humanURL: https://docs.vic.ai
   baseURL: https://api.us.vic.ai
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
