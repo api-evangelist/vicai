@@ -104,6 +104,8 @@ apis:
   humanURL: https://docs.vic.ai
   baseURL: https://api.us.vic.ai
   tags:
+  - ALLOWED SENDERS
+  tags_raw:
   - Allowed Senders
   properties:
   - type: OpenAPI
