@@ -1,0 +1,148 @@
+slug: vicai
+provider: Vic.ai
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 13
+edges:
+- tag: Invoices
+  spec_file: vicai-invoices-api-openapi.yml
+  capability_id: BC-200.20
+  capability_id_l1: BC-200
+  capability_name: Accounts Payable Management
+  confidence: 0.95
+  evidence: POST /v0/invoices createInvoice Create an invoice; schemas MatchedPurchaseOrder, VendorLookupByOrgNumberAndBankAccount,
+    InvoicePaymentTerm
+  reason: 'Core supplier-invoice lifecycle for an AP automation product: create/list invoices, upload
+    invoice documents and supporting attachments, PO matching and vendor lookup — invoice processing and
+    vendor accounting.'
+- tag: Bills
+  spec_file: vicai-bills-api-openapi.yml
+  capability_id: BC-200.20
+  capability_id_l1: BC-200
+  capability_name: Accounts Payable Management
+  confidence: 0.9
+  evidence: '"Create a new imported bill", "Update an existing imported bill"; schemas "BillLineItemV2",
+    "SparseVendorV2", "InvoicePaymentInputV2"'
+  reason: Operations create and update vendor bills with line items, vendor and payment data in an AP
+    automation product — invoice processing and vendor accounting, i.e. Accounts Payable Management.
+- tag: Purchase Orders
+  spec_file: vicai-purchase-orders-api-openapi.yml
+  capability_id: BC-500.30
+  capability_id_l1: BC-500
+  capability_name: Purchase Order Management
+  confidence: 0.9
+  evidence: POST /v0/purchaseOrders 'Create a purchase order'; 'Process the purchase order'; 'Close a
+    purchase order'
+  reason: Full PO lifecycle CRUD, process, open/close with vendor lookup — Purchase Order Management.
+- tag: Invoice Approval Flows
+  spec_file: vicai-invoice-approval-flows-api-openapi.yml
+  capability_id: BC-200.20
+  capability_id_l1: BC-200
+  capability_name: Accounts Payable Management
+  confidence: 0.88
+  evidence: POST /v2/companies/{company_id}/invoice_approval_flows createInvoiceApprovalFlowV2 Create
+    an invoice approval flow; schema InvoiceApprovalFlowApproverSelectionRuleV2
+  reason: Defines multi-step approver selection rules and reminder notifications for supplier invoice
+    approval — the approval-routing element of accounts payable invoice processing.
+- tag: Payment Confirmations
+  spec_file: vicai-payment-confirmations-api-openapi.yml
+  capability_id: BC-200.20
+  capability_id_l1: BC-200
+  capability_name: Accounts Payable Management
+  confidence: 0.88
+  evidence: POST /v0/payments/{id}/confirm confirmPayment Confirm a payment; POST /v0/payments/{id}/fail
+    failPayment Mark payment as failed
+  reason: Confirm/fail acknowledgement of vendor payments against invoices between ERP and the AP product;
+    schemas VendorRef, InvoiceRef, PaymentMethod ground this as accounts payable payment processing rather
+    than generic payment acceptance.
+- tag: Credit Confirmations
+  spec_file: vicai-credit-confirmations-api-openapi.yml
+  capability_id: BC-200.20
+  capability_id_l1: BC-200
+  capability_name: Accounts Payable Management
+  confidence: 0.85
+  evidence: 'POST /v0/credits/{id}/confirm confirmCredit Confirm a credit ... schemas: VendorRef, InvoiceRef,
+    PaymentMethod, CostAccountRef'
+  reason: Confirm/fail acknowledgements for vendor credit notes flowing between the ERP and the AP automation
+    product; schemas reference vendors, invoices and payment methods, placing this squarely in accounts
+    payable / vendor accounting.
+- tag: Payment Batches
+  spec_file: vicai-payment-batches-api-openapi.yml
+  capability_id: BC-200.20
+  capability_id_l1: BC-200
+  capability_name: Accounts Payable Management
+  confidence: 0.85
+  evidence: GET /v0/paymentBatches listPaymentBatches List all payment batches; schemas Payment, PaymentBatchStatus,
+    VendorRef, InvoiceRef
+  reason: Read access to batches of vendor payments tied to invoices — the payment-run element of accounts
+    payable operations.
+- tag: Purchase Order Line Items
+  spec_file: vicai-purchase-order-line-items-api-openapi.yml
+  capability_id: BC-500.30
+  capability_id_l1: BC-500
+  capability_name: Purchase Order Management
+  confidence: 0.85
+  evidence: POST /v0/purchaseOrderLineItems 'Add a line item to a purchase order.'; closePurchaseOrderLineItem;
+    schemas PurchaseOrderReceiptMatch, PurchaseOrderLineItemStatus
+  reason: Operations create, update, close and open purchase order line items with receipt matching —
+    purchase order management.
+- tag: Payment Terms
+  spec_file: vicai-payment-terms-api-openapi.yml
+  capability_id: BC-200.20
+  capability_id_l1: BC-200
+  capability_name: Accounts Payable Management
+  confidence: 0.75
+  evidence: GET /v0/paymentTerms listPaymentTerms 'Get a list of payment terms'; schemas PaymentTerm,
+    PaymentTermCondition; vendor 'enterprise Accounts Payable ... bill pay and vendor portals'
+  reason: Payment terms master data synced from the ERP for AP invoice processing/payment; supports Accounts
+    Payable Management. Slight ambiguity as this is master-data sync, hence 0.75.
+- tag: Users
+  spec_file: vicai-users-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.75
+  evidence: POST /v2/companies/{company_id}/users/{user_id}/roles updateCompanyUserRolesV2 'Update a user's
+    roles in a company'; 'Attach an existing user to an organization'; 'Remove user from company'
+  reason: User provisioning/deprovisioning and role assignment across organizations and companies — identity
+    and access management, not HR records (though a manager field exists).
+- tag: Tax Codes
+  spec_file: vicai-tax-codes-api-openapi.yml
+  capability_id: BC-220.20
+  capability_id_l1: BC-220
+  capability_name: Indirect Tax Management
+  confidence: 0.7
+  evidence: POST /v0/taxCodes createTaxCode 'Creates a company's tax code'; GET /v0/taxCodes 'Get the
+    list of tax codes for a company'
+  reason: Tax code master data used to determine indirect tax on AP invoices; supports indirect tax handling.
+    Thin evidence (master-data only), hence moderate confidence.
+- tag: Training Invoices
+  spec_file: vicai-training-invoices-api-openapi.yml
+  capability_id: BC-200.20
+  capability_id_l1: BC-200
+  capability_name: Accounts Payable Management
+  confidence: 0.7
+  evidence: 'GET /v0/trainingInvoices ''List all training invoices''; vendor: ''We need historical data
+    to train your AI model ... sync historical invoices into Vic.ai''; schemas InvoiceLineItemInfo, CostAccountInfo,
+    PaymentInfo'
+  reason: Historical AP invoice records (with GL coding, payment info, PO receipt matching) synced to
+    train the AP automation model — supports Accounts Payable invoice processing, though its immediate
+    purpose is AI model training.
+- tag: VAT Codes
+  spec_file: vicai-vat-codes-api-openapi.yml
+  capability_id: BC-220.20
+  capability_id_l1: BC-220
+  capability_name: Indirect Tax Management
+  confidence: 0.7
+  evidence: GET /v0/vatCodes 'List all VAT codes'; PUT /v0/vatCodes/{id} 'Upserts a VAT code'
+  reason: VAT code master data for invoice tax treatment — indirect tax (VAT/GST) management. Master-data
+    sync nature limits confidence.
