@@ -1,9 +1,14 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   version: v10.40.4
   contact: {}
-  title: Vic.ai Accounts Tags API
-  description: "## Introduction\n\nThe Vic.ai API provides a seamless connection between your Enterprise Resource\nPlanning (ERP) system and the Vic.ai product suite.\n\nThe API is designed to offer three main areas of functionality:\n\n- **Syncing master data:** This refers to the data in your ERP that Vic.ai\n  interacts with. You are required to supply and update this data in Vic.ai, and\n  you also have the option to verify the copy of the masterdata in Vic.ai.\n\n- **Syncing training data:** We need historical data to train your AI model. To\n  that end, the API provides endpoints to sync historical invoices into Vic.ai\n  and to confirm their presence.\n\n- **Subscribing to and receiving webhooks:** Webhooks enable users or automated\n  tasks to interact with your ERP through various actions in the Vic.ai product\n  suite, such as posting an invoice, payment or purchase order or requesting\n  synchronization. You will receive a notification via a webhook when these\n  actions occur.\n\n\nFor US-based integrations, please use the following base API URL:\n\n```\nhttps://api.us.vic.ai\n```\n\nFor integrations based in Norway, use the following base API URL:\n\n```\nhttps://api.no.vic.ai\n```\n\nAll paths mentioned in this documentation should use one of these URLs as the\nbase.\n\nExample:\n\n```bash\ncurl https://api.us.vic.ai/v0/healthCheck \\\n    -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\"\n```\n\n## Getting Started\n\nTo begin interacting with the Vic.ai API, you will need the following\ncredentials:\n\n* A Vic.ai client ID\n* A Vic.ai client secret.\n\nThese can be provided to you securely by a Vic.ai representative\n[upon request](https://www.vic.ai/book-a-demo).\n\n**Please note:** These credentials are essentially the keys to your ERP\nintegration. If they fall into the wrong hands, unauthorized parties could\nimpersonate you, gain access to sensitive data, and potentially perform\nmalicious actions. Therefore, it's crucial to keep these credentials safe at all\ntimes to protect your application's integrity and your clients' data.\n\n### Limitations\n\nThe Vic.ai API has the following limitations:\n\n**Rate Limiting:** The API is rate-limited to 500 requests per 10-second time\nframe. If you exceed this limit, you will receive a `429 Too Many Requests`\nresponse. The limit is per Oauth client ID. If you continue to receive `429`s,\nplease contact support with a request id from the response headers.\n"
+  title: Vic.ai Tags API
+  description: '## Introduction
+
+
+    The Vic.ai API provides a seamless connection between your Enterprise Resource
+
+    Planning (ERP) system and the Vic.ai product suite.'
 servers:
 - url: https://api.no.stage.vic.ai
   description: staging server, NO
@@ -17,9 +22,7 @@ tags:
 - name: Tags
   description: 'Tags are part of your *ERP* **Masterdata**, and represent business
 
-    categories that are associated with certain entities, like Vendor.
-
-    '
+    categories that are associated with certain entities, like Vendor.'
 paths:
   /v0/tags:
     get:
@@ -29,9 +32,7 @@ paths:
 
         taggable are Vendors using the `/vendorTags` endpoint. These are not the
 
-        tags that are used to describe a group of companies.
-
-        '
+        tags that are used to describe a group of companies.'
       summary: Get a list of tags
       operationId: listTags
       tags:
@@ -82,9 +83,7 @@ paths:
     delete:
       description: 'Delete a tag. If you delete a tag, any entities that the tags is
 
-        attached to will be deleted as well. This action can not be undone.
-
-        '
+        attached to will be deleted as well. This action can not be undone.'
       summary: Delete a tag
       operationId: deleteTag
       tags:
@@ -99,6 +98,53 @@ paths:
         4XX:
           $ref: '#/components/responses/ErrorResponse'
 components:
+  responses:
+    TagListResponse:
+      description: A list of tags.
+      headers:
+        x-next:
+          $ref: '#/components/headers/NextPageToken'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Tags'
+    TagDeletedResponse:
+      description: Tag was successfully deleted.
+    TooManyRequestsResponse:
+      description: HTTP call rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ForbiddenResponse:
+      description: The request was forbidden.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TagResponse:
+      description: A single tag.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Tag'
+    ErrorResponse:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UnprocessableEntityResponse:
+      description: Errors with the input are present.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
     UpdateTag:
       type: object
@@ -108,6 +154,28 @@ components:
         value:
           type: string
           maxLength: 255
+    Tag:
+      type: object
+      required:
+      - value
+      properties:
+        id:
+          type: string
+        value:
+          type: string
+          maxLength: 255
+    CreateTag:
+      type: object
+      required:
+      - value
+      properties:
+        value:
+          type: string
+          maxLength: 255
+    Tags:
+      type: array
+      items:
+        $ref: '#/components/schemas/Tag'
     ErrorString:
       type: string
       maxLength: 255
@@ -128,76 +196,15 @@ components:
           maximum: 599
         message:
           $ref: '#/components/schemas/ErrorString'
-    CreateTag:
-      type: object
-      required:
-      - value
-      properties:
-        value:
-          type: string
-          maxLength: 255
-    Tags:
-      type: array
-      items:
-        $ref: '#/components/schemas/Tag'
-    Tag:
-      type: object
-      required:
-      - value
-      properties:
-        id:
-          type: string
-        value:
-          type: string
-          maxLength: 255
-  responses:
-    TagListResponse:
-      description: A list of tags.
-      headers:
-        x-next:
-          $ref: '#/components/headers/NextPageToken'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Tags'
-    TagResponse:
-      description: A single tag.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Tag'
-    ErrorResponse:
-      description: An unexpected error has occurred. Check the body for more details.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    TooManyRequestsResponse:
-      description: HTTP call rate limit exceeded.
-      headers:
-        Retry-After:
-          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
-          schema:
-            type: integer
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    TagDeletedResponse:
-      description: Tag was successfully deleted.
-    UnprocessableEntityResponse:
-      description: Errors with the input are present.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    ForbiddenResponse:
-      description: The request was forbidden.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   parameters:
+    TagId:
+      name: tag_id
+      in: path
+      required: true
+      description: The id of the tag
+      schema:
+        type: string
+        format: uuid
     PagingLimit:
       name: limit
       in: query
@@ -207,14 +214,6 @@ components:
         type: integer
         minimum: 1
         maximum: 100
-    TagId:
-      name: tag_id
-      in: path
-      required: true
-      description: The id of the tag
-      schema:
-        type: string
-        format: uuid
     PagingCursor:
       name: cursor
       in: query

@@ -1,9 +1,14 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   version: v10.40.4
   contact: {}
-  title: Vic.ai Accounts Allowed Senders API
-  description: "## Introduction\n\nThe Vic.ai API provides a seamless connection between your Enterprise Resource\nPlanning (ERP) system and the Vic.ai product suite.\n\nThe API is designed to offer three main areas of functionality:\n\n- **Syncing master data:** This refers to the data in your ERP that Vic.ai\n  interacts with. You are required to supply and update this data in Vic.ai, and\n  you also have the option to verify the copy of the masterdata in Vic.ai.\n\n- **Syncing training data:** We need historical data to train your AI model. To\n  that end, the API provides endpoints to sync historical invoices into Vic.ai\n  and to confirm their presence.\n\n- **Subscribing to and receiving webhooks:** Webhooks enable users or automated\n  tasks to interact with your ERP through various actions in the Vic.ai product\n  suite, such as posting an invoice, payment or purchase order or requesting\n  synchronization. You will receive a notification via a webhook when these\n  actions occur.\n\n\nFor US-based integrations, please use the following base API URL:\n\n```\nhttps://api.us.vic.ai\n```\n\nFor integrations based in Norway, use the following base API URL:\n\n```\nhttps://api.no.vic.ai\n```\n\nAll paths mentioned in this documentation should use one of these URLs as the\nbase.\n\nExample:\n\n```bash\ncurl https://api.us.vic.ai/v0/healthCheck \\\n    -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\"\n```\n\n## Getting Started\n\nTo begin interacting with the Vic.ai API, you will need the following\ncredentials:\n\n* A Vic.ai client ID\n* A Vic.ai client secret.\n\nThese can be provided to you securely by a Vic.ai representative\n[upon request](https://www.vic.ai/book-a-demo).\n\n**Please note:** These credentials are essentially the keys to your ERP\nintegration. If they fall into the wrong hands, unauthorized parties could\nimpersonate you, gain access to sensitive data, and potentially perform\nmalicious actions. Therefore, it's crucial to keep these credentials safe at all\ntimes to protect your application's integrity and your clients' data.\n\n### Limitations\n\nThe Vic.ai API has the following limitations:\n\n**Rate Limiting:** The API is rate-limited to 500 requests per 10-second time\nframe. If you exceed this limit, you will receive a `429 Too Many Requests`\nresponse. The limit is per Oauth client ID. If you continue to receive `429`s,\nplease contact support with a request id from the response headers.\n"
+  title: Vic.ai Allowed Senders API
+  description: '## Introduction
+
+
+    The Vic.ai API provides a seamless connection between your Enterprise Resource
+
+    Planning (ERP) system and the Vic.ai product suite.'
 servers:
 - url: https://api.no.stage.vic.ai
   description: staging server, NO
@@ -23,9 +28,7 @@ tags:
 
     and an inbound email''s sender does not match any entry, the email is
 
-    rejected and not processed.
-
-    '
+    rejected and not processed.'
 paths:
   /v2/email_endpoints/{email_endpoint_id}/allowed_senders:
     get:
@@ -60,9 +63,7 @@ paths:
 
         Up to 20 entries per request. Duplicate `(match_type,
 
-        sender_pattern)` pairs within a request are rejected.
-
-        '
+        sender_pattern)` pairs within a request are rejected.'
       summary: Add allowed senders
       operationId: createEmailEndpointAllowedSendersV2
       tags:
@@ -123,6 +124,12 @@ paths:
         4XX:
           $ref: '#/components/responses/ErrorResponseV2'
 components:
+  parameters:
+    PaginationV2:
+      name: page
+      in: query
+      schema:
+        $ref: '#/components/schemas/PaginationV2'
   schemas:
     AllowedSenderV2:
       type: object
@@ -191,23 +198,6 @@ components:
                 - domain
               sender_pattern:
                 type: string
-    AllowedSendersResponseV2:
-      type: object
-      required:
-      - meta
-      - data
-      properties:
-        meta:
-          type: object
-          required:
-          - page
-          properties:
-            page:
-              $ref: '#/components/schemas/PaginationMetaV2'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/AllowedSenderV2'
     PaginationV2:
       type: object
       properties:
@@ -219,15 +209,6 @@ components:
         cursor:
           type: string
           description: The cursor to use to get the next page of results.
-    AllowedSendersCreateResponseV2:
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/AllowedSenderV2'
     ErrorV2:
       type: object
       required:
@@ -245,12 +226,32 @@ components:
         message:
           description: A description of the error.
           type: string
-  parameters:
-    PaginationV2:
-      name: page
-      in: query
-      schema:
-        $ref: '#/components/schemas/PaginationV2'
+    AllowedSendersResponseV2:
+      type: object
+      required:
+      - meta
+      - data
+      properties:
+        meta:
+          type: object
+          required:
+          - page
+          properties:
+            page:
+              $ref: '#/components/schemas/PaginationMetaV2'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AllowedSenderV2'
+    AllowedSendersCreateResponseV2:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AllowedSenderV2'
   responses:
     ErrorResponseV2:
       description: An unexpected error has occurred. Check the body for more details.

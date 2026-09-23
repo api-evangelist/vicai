@@ -1,9 +1,14 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   version: v10.40.4
   contact: {}
-  title: Vic.ai Accounts Partners API
-  description: "## Introduction\n\nThe Vic.ai API provides a seamless connection between your Enterprise Resource\nPlanning (ERP) system and the Vic.ai product suite.\n\nThe API is designed to offer three main areas of functionality:\n\n- **Syncing master data:** This refers to the data in your ERP that Vic.ai\n  interacts with. You are required to supply and update this data in Vic.ai, and\n  you also have the option to verify the copy of the masterdata in Vic.ai.\n\n- **Syncing training data:** We need historical data to train your AI model. To\n  that end, the API provides endpoints to sync historical invoices into Vic.ai\n  and to confirm their presence.\n\n- **Subscribing to and receiving webhooks:** Webhooks enable users or automated\n  tasks to interact with your ERP through various actions in the Vic.ai product\n  suite, such as posting an invoice, payment or purchase order or requesting\n  synchronization. You will receive a notification via a webhook when these\n  actions occur.\n\n\nFor US-based integrations, please use the following base API URL:\n\n```\nhttps://api.us.vic.ai\n```\n\nFor integrations based in Norway, use the following base API URL:\n\n```\nhttps://api.no.vic.ai\n```\n\nAll paths mentioned in this documentation should use one of these URLs as the\nbase.\n\nExample:\n\n```bash\ncurl https://api.us.vic.ai/v0/healthCheck \\\n    -H \"Content-Type: application/json\" \\\n    -H \"Authorization: Bearer YOUR_ACCESS_TOKEN\"\n```\n\n## Getting Started\n\nTo begin interacting with the Vic.ai API, you will need the following\ncredentials:\n\n* A Vic.ai client ID\n* A Vic.ai client secret.\n\nThese can be provided to you securely by a Vic.ai representative\n[upon request](https://www.vic.ai/book-a-demo).\n\n**Please note:** These credentials are essentially the keys to your ERP\nintegration. If they fall into the wrong hands, unauthorized parties could\nimpersonate you, gain access to sensitive data, and potentially perform\nmalicious actions. Therefore, it's crucial to keep these credentials safe at all\ntimes to protect your application's integrity and your clients' data.\n\n### Limitations\n\nThe Vic.ai API has the following limitations:\n\n**Rate Limiting:** The API is rate-limited to 500 requests per 10-second time\nframe. If you exceed this limit, you will receive a `429 Too Many Requests`\nresponse. The limit is per Oauth client ID. If you continue to receive `429`s,\nplease contact support with a request id from the response headers.\n"
+  title: Vic.ai Partners API
+  description: '## Introduction
+
+
+    The Vic.ai API provides a seamless connection between your Enterprise Resource
+
+    Planning (ERP) system and the Vic.ai product suite.'
 servers:
 - url: https://api.no.stage.vic.ai
   description: staging server, NO
@@ -17,9 +22,7 @@ tags:
 - name: Partners
   description: 'Partner API for integration providers to provision new organizations
 
-    and companies. Requires partner-level credentials obtained from Vic.
-
-    '
+    and companies. Requires partner-level credentials obtained from Vic.'
 paths:
   /v2/organizations:
     get:
@@ -29,9 +32,7 @@ paths:
 
         respective credentials). Partners see the organizations they created
 
-        via `POST /v2/organizations` or were granted access to.
-
-        '
+        via `POST /v2/organizations` or were granted access to.'
       summary: Search and list organizations accessible
       operationId: listOrganizationsV2
       tags:
@@ -76,9 +77,7 @@ paths:
 
         organization from the calling client''s existing primary company, so it
 
-        cannot bootstrap the very first company under a brand-new organization.)
-
-        '
+        cannot bootstrap the very first company under a brand-new organization.)'
       summary: Create an organization
       operationId: createOrganizationV2
       tags:
@@ -117,9 +116,7 @@ paths:
 
         granted access to. Useful for verifying an existing organization
 
-        before creating companies under it.
-
-        '
+        before creating companies under it.'
       summary: Get an organization
       operationId: getOrganizationV2
       tags:
@@ -165,9 +162,7 @@ paths:
 
         Use this to create the first company under a newly-created organization,
 
-        where no company-scoped client exists yet to call `POST /v2/companies`.
-
-        '
+        where no company-scoped client exists yet to call `POST /v2/companies`.'
       summary: Create a company under an organization
       operationId: createOrganizationCompanyV2
       tags:
@@ -195,9 +190,7 @@ paths:
     get:
       description: 'List the tags assigned to a company. Requires partner authentication;
 
-        the company must belong to an organization the partner can access.
-
-        '
+        the company must belong to an organization the partner can access.'
       summary: List a company's tags
       operationId: listCompanyTagsV2
       tags:
@@ -236,15 +229,13 @@ paths:
 
         Tags are how Vic expresses **company grouping**: mark the parent company
 
-        of a group with the `group-leader` tag and a shared `group:<key>` tag,
+        of a group with the `group-leader` tag and a shared `group:` tag,
 
-        and mark each member company with the same `group:<key>` tag. Assigning
+        and mark each member company with the same `group:` tag. Assigning
 
         a `group:`/`group-leader` tag also enables company groups on the
 
-        organization. Re-assigning an existing tag is idempotent.
-
-        '
+        organization. Re-assigning an existing tag is idempotent.'
       summary: Assign a tag to a company
       operationId: createCompanyTagV2
       tags:
@@ -296,9 +287,7 @@ paths:
 
         `POST /v0/token` with partner credentials); the partner must
 
-        have provisioned or been linked to the company.
-
-        '
+        have provisioned or been linked to the company.'
       summary: Get company settings
       operationId: getCompanySettingsV2
       tags:
@@ -333,9 +322,7 @@ paths:
 
         `POST /v0/token` with partner credentials); the partner must
 
-        have provisioned or been linked to the company.
-
-        '
+        have provisioned or been linked to the company.'
       summary: Update company settings
       operationId: updateCompanySettingsV2
       tags:
@@ -352,98 +339,139 @@ paths:
         4XX:
           $ref: '#/components/responses/ErrorResponseV2'
 components:
-  responses:
-    ListOrganizationsResponseV2:
-      description: A successful list of organizations
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              meta:
-                $ref: '#/components/schemas/PaginationMetaV2'
-              data:
-                type: array
-                items:
-                  $ref: '#/components/schemas/OrganizationV2'
-    CompanySettingsResponseV2:
-      description: The effective settings map for the company.
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-            - data
-            properties:
-              data:
-                $ref: '#/components/schemas/CompanySettingsV2'
-    ErrorResponseV2:
-      description: An unexpected error has occurred. Check the body for more details.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              errors:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ErrorV2'
-    CreateCompanyResponseV2:
-      description: 'A single newly-created company including a company-scoped OAuth
-
-        client. The `client_secret` is exposed only at creation time and
-
-        cannot be retrieved later.
-
-        '
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              data:
-                $ref: '#/components/schemas/CreatedCompanyV2'
-    GetOrganizationResponseV2:
-      description: A single organization.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              data:
-                $ref: '#/components/schemas/OrganizationV2'
-  parameters:
-    CompanyId:
-      name: company_id
-      in: path
-      required: true
-      description: The ID of the company
-      schema:
-        type: string
-        format: uuid
-    PaginationV2:
-      name: page
-      in: query
-      schema:
-        $ref: '#/components/schemas/PaginationV2'
   schemas:
-    ErrorV2:
+    OrganizationV2:
       type: object
       required:
-      - message
+      - id
       properties:
-        field:
-          description: 'The field that the error occurred on. This field may not always be
-
-            present.
-
-            '
-          oneOf:
-          - type: string
-          - type: 'null'
-        message:
-          description: A description of the error.
+        id:
           type: string
+        name:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    CreateOrganizationV2:
+      type: object
+      required:
+      - name
+      - billing_timezone
+      properties:
+        name:
+          type: string
+          description: Display name for the organization.
+        billing_timezone:
+          type: string
+          description: IANA timezone identifier.
+          example: America/New_York
+        remote_id:
+          type: string
+          description: External identifier from the partner's system.
+    CompanyTagV2:
+      type: object
+      required:
+      - tag
+      properties:
+        tag:
+          type: string
+          description: The tag value assigned to the company.
+          example: group:acme
+    UpdateCompanySettingsV2:
+      type: object
+      description: 'Partial update for company settings. All fields are optional; only
+
+        fields included in the body are modified. Shape and types mirror
+
+        `CompanySettingsV2`. Unknown fields and invalid values produce a
+
+        422 error listing every offending key.
+
+        '
+      properties:
+        backend_mode:
+          type: string
+          enum:
+          - default
+          - stub
+        approval_flow_engine_enabled:
+          type: boolean
+        approval_flow_engine_user_edits_allowed:
+          type: boolean
+        invoice_automation_enabled:
+          type: boolean
+        invoice_automated_next_step:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - start_approval
+            - post
+            - export
+            - submit
+        invoice_approval_next_step:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - post
+            - export
+            - submit
+        po_invoice_automation_enabled:
+          type: boolean
+        po_invoice_automated_next_step:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - start_approval
+            - post
+        po_invoice_approval_next_step:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - post
+            - export
+            - submit
+        purchase_order_matching:
+          type: string
+          enum:
+          - none
+          - standard
+          - implicit
+          - explicit
+        purchase_order_matching_level:
+          type: string
+          enum:
+          - document
+          - line
+        purchase_order_require_matching_to_post:
+          type: boolean
+        aaf_ignores_po_invoice_items:
+          type: boolean
+        enable_posting:
+          type: boolean
+        tax_handling:
+          type: string
+          enum:
+          - none
+          - tax_engine
+          - tax_codes
+          - tax_expense_line
+          - vat_for_po_invoices
+          - tax_allocation
+        freight_handling:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - expense_line
+            - even_allocation
+            - weighted_allocation
     CreateCompanyV2:
       type: object
       required:
@@ -486,22 +514,6 @@ components:
             Must be an organization the client already has access to.
 
             '
-    CreateOrganizationV2:
-      type: object
-      required:
-      - name
-      - billing_timezone
-      properties:
-        name:
-          type: string
-          description: Display name for the organization.
-        billing_timezone:
-          type: string
-          description: IANA timezone identifier.
-          example: America/New_York
-        remote_id:
-          type: string
-          description: External identifier from the partner's system.
     CompanySettingsV2:
       type: object
       description: 'A company''s configuration options. Every available setting is
@@ -715,59 +727,23 @@ components:
             - expense_line
             - even_allocation
             - weighted_allocation
-    CreateCompanyTagV2:
+    ErrorV2:
       type: object
       required:
-      - tag
+      - message
       properties:
-        tag:
-          type: string
-          description: 'The tag to assign. For grouping, use `group-leader` on the parent
+        field:
+          description: 'The field that the error occurred on. This field may not always be
 
-            company and a shared `group:<key>` tag on the parent and every
-
-            member.
-
-            '
-          example: group:acme
-    PaginationV2:
-      type: object
-      properties:
-        size:
-          type: integer
-          description: The page size.
-          maximum: 50
-          minimum: 1
-        cursor:
-          type: string
-          description: The cursor to use to get the next page of results.
-    OrganizationV2:
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
-    PaginationMetaV2:
-      type: object
-      properties:
-        cursor:
-          description: 'The cursor to the next page of data. If it is null, that means there
-
-            is no more data to fetch.
+            present.
 
             '
           oneOf:
           - type: string
           - type: 'null'
+        message:
+          description: A description of the error.
+          type: string
     CreatedCompanyV2:
       type: object
       description: 'Sparse company payload returned at company creation time (by
@@ -818,107 +794,44 @@ components:
               type: string
             client_secret:
               type: string
-    CompanyTagV2:
+    CreateCompanyTagV2:
       type: object
       required:
       - tag
       properties:
         tag:
           type: string
-          description: The tag value assigned to the company.
+          description: 'The tag to assign. For grouping, use `group-leader` on the parent
+
+            company and a shared `group:<key>` tag on the parent and every
+
+            member.
+
+            '
           example: group:acme
-    UpdateCompanySettingsV2:
+    PaginationMetaV2:
       type: object
-      description: 'Partial update for company settings. All fields are optional; only
-
-        fields included in the body are modified. Shape and types mirror
-
-        `CompanySettingsV2`. Unknown fields and invalid values produce a
-
-        422 error listing every offending key.
-
-        '
       properties:
-        backend_mode:
+        cursor:
+          description: 'The cursor to the next page of data. If it is null, that means there
+
+            is no more data to fetch.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
+    PaginationV2:
+      type: object
+      properties:
+        size:
+          type: integer
+          description: The page size.
+          maximum: 50
+          minimum: 1
+        cursor:
           type: string
-          enum:
-          - default
-          - stub
-        approval_flow_engine_enabled:
-          type: boolean
-        approval_flow_engine_user_edits_allowed:
-          type: boolean
-        invoice_automation_enabled:
-          type: boolean
-        invoice_automated_next_step:
-          oneOf:
-          - type: 'null'
-          - type: string
-            enum:
-            - start_approval
-            - post
-            - export
-            - submit
-        invoice_approval_next_step:
-          oneOf:
-          - type: 'null'
-          - type: string
-            enum:
-            - post
-            - export
-            - submit
-        po_invoice_automation_enabled:
-          type: boolean
-        po_invoice_automated_next_step:
-          oneOf:
-          - type: 'null'
-          - type: string
-            enum:
-            - start_approval
-            - post
-        po_invoice_approval_next_step:
-          oneOf:
-          - type: 'null'
-          - type: string
-            enum:
-            - post
-            - export
-            - submit
-        purchase_order_matching:
-          type: string
-          enum:
-          - none
-          - standard
-          - implicit
-          - explicit
-        purchase_order_matching_level:
-          type: string
-          enum:
-          - document
-          - line
-        purchase_order_require_matching_to_post:
-          type: boolean
-        aaf_ignores_po_invoice_items:
-          type: boolean
-        enable_posting:
-          type: boolean
-        tax_handling:
-          type: string
-          enum:
-          - none
-          - tax_engine
-          - tax_codes
-          - tax_expense_line
-          - vat_for_po_invoices
-          - tax_allocation
-        freight_handling:
-          oneOf:
-          - type: 'null'
-          - type: string
-            enum:
-            - expense_line
-            - even_allocation
-            - weighted_allocation
+          description: The cursor to use to get the next page of results.
   requestBodies:
     CreateCompanyRequestV2:
       description: Create a new company.
@@ -938,6 +851,80 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/UpdateCompanySettingsV2'
+  responses:
+    ListOrganizationsResponseV2:
+      description: A successful list of organizations
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginationMetaV2'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganizationV2'
+    ErrorResponseV2:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ErrorV2'
+    CompanySettingsResponseV2:
+      description: The effective settings map for the company.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - data
+            properties:
+              data:
+                $ref: '#/components/schemas/CompanySettingsV2'
+    CreateCompanyResponseV2:
+      description: 'A single newly-created company including a company-scoped OAuth
+
+        client. The `client_secret` is exposed only at creation time and
+
+        cannot be retrieved later.
+
+        '
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/CreatedCompanyV2'
+    GetOrganizationResponseV2:
+      description: A single organization.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/OrganizationV2'
+  parameters:
+    CompanyId:
+      name: company_id
+      in: path
+      required: true
+      description: The ID of the company
+      schema:
+        type: string
+        format: uuid
+    PaginationV2:
+      name: page
+      in: query
+      schema:
+        $ref: '#/components/schemas/PaginationV2'
   securitySchemes:
     BearerAuth:
       type: http
