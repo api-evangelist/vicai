@@ -50,51 +50,7 @@ paths:
         4XX:
           $ref: '#/components/responses/ErrorResponse'
 components:
-  requestBodies:
-    CreateTaxCode:
-      description: Create a tax code.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CreateTaxCode'
   schemas:
-    CreateTaxCode:
-      required:
-      - code
-      - description
-      - rate
-      properties:
-        code:
-          type: string
-          maxLength: 255
-        description:
-          type: string
-          maxLength: 255
-          example: Tax code description
-        rate:
-          type: string
-          format: decimal
-          example: '0.25'
-    ErrorString:
-      type: string
-      maxLength: 255
-    Error:
-      description: 'generic error message in JSON format.  Note the ''code'' field should
-
-        match the HTTP status code of the wrapping HTTP request.
-
-        '
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-          minimum: 100
-          maximum: 599
-        message:
-          $ref: '#/components/schemas/ErrorString'
     TaxCode:
       type: object
       properties:
@@ -112,6 +68,50 @@ components:
           type: string
           format: decimal
           example: '0.25'
+    Error:
+      description: 'generic error message in JSON format.  Note the ''code'' field should
+
+        match the HTTP status code of the wrapping HTTP request.
+
+        '
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          minimum: 100
+          maximum: 599
+        message:
+          $ref: '#/components/schemas/ErrorString'
+    ErrorString:
+      type: string
+      maxLength: 255
+    CreateTaxCode:
+      required:
+      - code
+      - description
+      - rate
+      properties:
+        code:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          maxLength: 255
+          example: Tax code description
+        rate:
+          type: string
+          format: decimal
+          example: '0.25'
+  requestBodies:
+    CreateTaxCode:
+      description: Create a tax code.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateTaxCode'
   responses:
     ErrorResponse:
       description: An unexpected error has occurred. Check the body for more details.

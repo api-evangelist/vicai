@@ -77,9 +77,6 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   schemas:
-    ErrorString:
-      type: string
-      maxLength: 255
     GetTokenInput:
       type: object
       required:
@@ -122,6 +119,9 @@ components:
           maximum: 599
         message:
           $ref: '#/components/schemas/ErrorString'
+    ErrorString:
+      type: string
+      maxLength: 255
   responses:
     ErrorResponse:
       description: An unexpected error has occurred. Check the body for more details.

@@ -107,53 +107,6 @@ paths:
         4XX:
           $ref: '#/components/responses/ErrorResponse'
 components:
-  schemas:
-    VendorTags:
-      type: array
-      items:
-        $ref: '#/components/schemas/VendorTag'
-    CreateVendorTag:
-      type: object
-      required:
-      - vendorId
-      - tagId
-      properties:
-        vendorId:
-          type: string
-        tagId:
-          type: string
-    VendorTag:
-      type: object
-      required:
-      - vendorId
-      - tagId
-      properties:
-        id:
-          type: string
-        vendorId:
-          type: string
-        tagId:
-          type: string
-    ErrorString:
-      type: string
-      maxLength: 255
-    Error:
-      description: 'generic error message in JSON format.  Note the ''code'' field should
-
-        match the HTTP status code of the wrapping HTTP request.
-
-        '
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-          minimum: 100
-          maximum: 599
-        message:
-          $ref: '#/components/schemas/ErrorString'
   parameters:
     VendorTagId:
       name: id
@@ -162,14 +115,6 @@ components:
       description: The id of the vendor tag
       schema:
         type: string
-    TagId:
-      name: tag_id
-      in: path
-      required: true
-      description: The id of the tag
-      schema:
-        type: string
-        format: uuid
     PagingLimit:
       name: limit
       in: query
@@ -194,13 +139,6 @@ components:
         - internal
         - external
         default: EXTERNAL
-    VendorId:
-      name: vendor_id
-      in: path
-      required: true
-      description: The id of the vendor
-      schema:
-        type: string
     PagingCursor:
       name: cursor
       in: query
@@ -208,13 +146,69 @@ components:
       required: false
       schema:
         type: string
+    VendorId:
+      name: vendor_id
+      in: path
+      required: true
+      description: The id of the vendor
+      schema:
+        type: string
+    TagId:
+      name: tag_id
+      in: path
+      required: true
+      description: The id of the tag
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    VendorTag:
+      type: object
+      required:
+      - vendorId
+      - tagId
+      properties:
+        id:
+          type: string
+        vendorId:
+          type: string
+        tagId:
+          type: string
+    VendorTags:
+      type: array
+      items:
+        $ref: '#/components/schemas/VendorTag'
+    CreateVendorTag:
+      type: object
+      required:
+      - vendorId
+      - tagId
+      properties:
+        vendorId:
+          type: string
+        tagId:
+          type: string
+    Error:
+      description: 'generic error message in JSON format.  Note the ''code'' field should
+
+        match the HTTP status code of the wrapping HTTP request.
+
+        '
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          minimum: 100
+          maximum: 599
+        message:
+          $ref: '#/components/schemas/ErrorString'
+    ErrorString:
+      type: string
+      maxLength: 255
   responses:
-    ResourceNotFoundResponse:
-      description: Resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     TooManyRequestsResponse:
       description: HTTP call rate limit exceeded.
       headers:
@@ -226,25 +220,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    ForbiddenResponse:
-      description: The request was forbidden.
+    VendorTagResponse:
+      description: A single vendor tag.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
-    VendorTagDeletedResponse:
-      description: Vendor tag was successfully deleted.
-    VendorTagListResponse:
-      description: A list of vendor tags.
-      headers:
-        x-next:
-          $ref: '#/components/headers/NextPageToken'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/VendorTags'
-    ErrorResponse:
-      description: An unexpected error has occurred. Check the body for more details.
+            $ref: '#/components/schemas/VendorTag'
+    ResourceNotFoundResponse:
+      description: Resource was not found.
       content:
         application/json:
           schema:
@@ -255,12 +238,29 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    VendorTagResponse:
-      description: A single vendor tag.
+    ForbiddenResponse:
+      description: The request was forbidden.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/VendorTag'
+            $ref: '#/components/schemas/Error'
+    ErrorResponse:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    VendorTagListResponse:
+      description: A list of vendor tags.
+      headers:
+        x-next:
+          $ref: '#/components/headers/NextPageToken'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VendorTags'
+    VendorTagDeletedResponse:
+      description: Vendor tag was successfully deleted.
   headers:
     NextPageToken:
       description: A link to the next page of responses

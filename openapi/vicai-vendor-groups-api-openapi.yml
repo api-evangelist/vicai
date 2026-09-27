@@ -104,75 +104,24 @@ paths:
         4XX:
           $ref: '#/components/responses/ErrorResponse'
 components:
-  requestBodies:
-    UpdateVendorGroupRequest:
-      description: Update a vendor group.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UpdateVendorGroup'
-    CreateVendorGroupRequest:
-      description: Create a vendor group.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CreateVendorGroup'
-  schemas:
-    ErrorString:
-      type: string
-      maxLength: 255
-    CreateVendorGroup:
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          description: The name of the vendor group
-    UpdateVendorGroup:
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          description: The name of the vendor group
-    VendorGroups:
-      type: array
-      items:
-        $ref: '#/components/schemas/VendorGroup'
-    Error:
-      description: 'generic error message in JSON format.  Note the ''code'' field should
-
-        match the HTTP status code of the wrapping HTTP request.
-
-        '
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-          minimum: 100
-          maximum: 599
-        message:
-          $ref: '#/components/schemas/ErrorString'
-    VendorGroup:
-      type: object
-      required:
-      - id
-      - name
-      properties:
-        id:
-          type: string
-          description: The id of the vendor group.
-        name:
-          type: string
-          description: The name of the vendor group
+  parameters:
+    PagingLimit:
+      name: limit
+      in: query
+      description: How many items to return at one time (max 100) (default 100)
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+    PagingCursor:
+      name: cursor
+      in: query
+      description: Which item to start from. See [Pagination](#section/Pagination) for more information.
+      required: false
+      schema:
+        type: string
   responses:
-    VendorGroupDeletedResponse:
-      description: Vendor group was successfully deleted.
     VendorGroupResponse:
       description: List of vendor groups.
       headers:
@@ -182,15 +131,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/VendorGroup'
-    VendorGroupsResponse:
-      description: List of vendor groups.
-      headers:
-        x-next:
-          $ref: '#/components/headers/NextPageToken'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/VendorGroups'
+    VendorGroupDeletedResponse:
+      description: Vendor group was successfully deleted.
     ErrorResponse:
       description: An unexpected error has occurred. Check the body for more details.
       content:
@@ -208,23 +150,81 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-  parameters:
-    PagingCursor:
-      name: cursor
-      in: query
-      description: Which item to start from. See [Pagination](#section/Pagination) for more information.
-      required: false
-      schema:
-        type: string
-    PagingLimit:
-      name: limit
-      in: query
-      description: How many items to return at one time (max 100) (default 100)
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
+    VendorGroupsResponse:
+      description: List of vendor groups.
+      headers:
+        x-next:
+          $ref: '#/components/headers/NextPageToken'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VendorGroups'
+  requestBodies:
+    CreateVendorGroupRequest:
+      description: Create a vendor group.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateVendorGroup'
+    UpdateVendorGroupRequest:
+      description: Update a vendor group.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateVendorGroup'
+  schemas:
+    UpdateVendorGroup:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: The name of the vendor group
+    Error:
+      description: 'generic error message in JSON format.  Note the ''code'' field should
+
+        match the HTTP status code of the wrapping HTTP request.
+
+        '
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          minimum: 100
+          maximum: 599
+        message:
+          $ref: '#/components/schemas/ErrorString'
+    ErrorString:
+      type: string
+      maxLength: 255
+    VendorGroups:
+      type: array
+      items:
+        $ref: '#/components/schemas/VendorGroup'
+    VendorGroup:
+      type: object
+      required:
+      - id
+      - name
+      properties:
+        id:
+          type: string
+          description: The id of the vendor group.
+        name:
+          type: string
+          description: The name of the vendor group
+    CreateVendorGroup:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: The name of the vendor group
   headers:
     NextPageToken:
       description: A link to the next page of responses

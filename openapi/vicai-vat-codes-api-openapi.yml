@@ -137,27 +137,86 @@ paths:
         4XX:
           $ref: '#/components/responses/ErrorResponse'
 components:
+  parameters:
+    VatCodeFilter:
+      name: vatCode
+      in: query
+      description: selects the VAT code which is to be displayed
+      required: false
+      schema:
+        type: string
+    PagingLimit:
+      name: limit
+      in: query
+      description: How many items to return at one time (max 100) (default 100)
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+    PathId:
+      name: id
+      in: path
+      required: true
+      description: The id of the database entry
+      schema:
+        type: string
+    SinceFilter:
+      name: since
+      in: query
+      description: 'Datetime value for incremental updates.
+
+        **NOTE**: For external datetimes, the expected format is not in UTC. for
+
+        vic-internal datetimes (see `SinceIsExternal`) the format is UTC.
+
+        '
+      required: false
+      schema:
+        type: string
+        format: date-time
+    UseSystemDefaultExternal:
+      name: useSystem
+      in: query
+      description: 'Which system to use for id or updatedAt filters.
+
+        '
+      required: false
+      schema:
+        type: string
+        enum:
+        - INTERNAL
+        - EXTERNAL
+        - internal
+        - external
+        default: EXTERNAL
+    PagingCursor:
+      name: cursor
+      in: query
+      description: Which item to start from. See [Pagination](#section/Pagination) for more information.
+      required: false
+      schema:
+        type: string
+    SortOrder:
+      name: sortOrder
+      in: query
+      description: what sort order should be used for queries
+      required: false
+      schema:
+        type: string
+        enum:
+        - ASCENDING
+        - DESCENDING
+        default: ASCENDING
   responses:
-    VatCodesResponse:
-      description: An array of VAT codes
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/VatCodes'
     VatCodeResponse:
       description: A single VAT code.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/VatCode'
-    SynchronizeVatCodesResponse:
-      description: 'A request to synchronize the vat codes was acknowledged and is in the
-
-        process of being ran.
-
-        '
-    VatCodeDeletedResponse:
-      description: Vat code deleted successfully.
+    VatCodeUpsertedResponse:
+      description: Vat code upserted successfully.
       content:
         application/json:
           schema:
@@ -173,24 +232,35 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    SynchronizeVatCodesResponse:
+      description: 'A request to synchronize the vat codes was acknowledged and is in the
+
+        process of being ran.
+
+        '
+    VatCodeDeletedResponse:
+      description: Vat code deleted successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VatCode'
+    VatCodesResponse:
+      description: An array of VAT codes
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VatCodes'
     ErrorResponse:
       description: An unexpected error has occurred. Check the body for more details.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    VatCodeUpsertedResponse:
-      description: Vat code upserted successfully.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/VatCode'
   schemas:
-    InternalId:
-      description: The internal id Vic uses for the record.
-      type: string
-      example: '47'
-      readOnly: true
+    VatCodes:
+      type: array
+      items:
+        $ref: '#/components/schemas/VatCode'
     VatCodeUpsert:
       type: object
       required:
@@ -233,10 +303,40 @@ components:
         vatDebitAccount:
           type: string
           maxLength: 255
-    VatCodes:
-      type: array
-      items:
-        $ref: '#/components/schemas/VatCode'
+    ExternalId:
+      description: 'The external id set by the ERP system. It does not have to be a UUID and
+
+        can be any non empty string desired.
+
+        '
+      type: string
+      example: 21b31bc7-1267-4335-893c-d7fe4706a238
+      maxLength: 255
+    Error:
+      description: 'generic error message in JSON format.  Note the ''code'' field should
+
+        match the HTTP status code of the wrapping HTTP request.
+
+        '
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          minimum: 100
+          maximum: 599
+        message:
+          $ref: '#/components/schemas/ErrorString'
+    InternalId:
+      description: The internal id Vic uses for the record.
+      type: string
+      example: '47'
+      readOnly: true
+    ErrorString:
+      type: string
+      maxLength: 255
     VatCode:
       type: object
       required:
@@ -288,106 +388,6 @@ components:
         vatDebitAccount:
           type: string
           maxLength: 255
-    ExternalId:
-      description: 'The external id set by the ERP system. It does not have to be a UUID and
-
-        can be any non empty string desired.
-
-        '
-      type: string
-      example: 21b31bc7-1267-4335-893c-d7fe4706a238
-      maxLength: 255
-    ErrorString:
-      type: string
-      maxLength: 255
-    Error:
-      description: 'generic error message in JSON format.  Note the ''code'' field should
-
-        match the HTTP status code of the wrapping HTTP request.
-
-        '
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-          minimum: 100
-          maximum: 599
-        message:
-          $ref: '#/components/schemas/ErrorString'
-  parameters:
-    PagingLimit:
-      name: limit
-      in: query
-      description: How many items to return at one time (max 100) (default 100)
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-    UseSystemDefaultExternal:
-      name: useSystem
-      in: query
-      description: 'Which system to use for id or updatedAt filters.
-
-        '
-      required: false
-      schema:
-        type: string
-        enum:
-        - INTERNAL
-        - EXTERNAL
-        - internal
-        - external
-        default: EXTERNAL
-    SortOrder:
-      name: sortOrder
-      in: query
-      description: what sort order should be used for queries
-      required: false
-      schema:
-        type: string
-        enum:
-        - ASCENDING
-        - DESCENDING
-        default: ASCENDING
-    PathId:
-      name: id
-      in: path
-      required: true
-      description: The id of the database entry
-      schema:
-        type: string
-    SinceFilter:
-      name: since
-      in: query
-      description: 'Datetime value for incremental updates.
-
-        **NOTE**: For external datetimes, the expected format is not in UTC. for
-
-        vic-internal datetimes (see `SinceIsExternal`) the format is UTC.
-
-        '
-      required: false
-      schema:
-        type: string
-        format: date-time
-    PagingCursor:
-      name: cursor
-      in: query
-      description: Which item to start from. See [Pagination](#section/Pagination) for more information.
-      required: false
-      schema:
-        type: string
-    VatCodeFilter:
-      name: vatCode
-      in: query
-      description: selects the VAT code which is to be displayed
-      required: false
-      schema:
-        type: string
   securitySchemes:
     BearerAuth:
       type: http

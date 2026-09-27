@@ -355,123 +355,6 @@ components:
         updated_at:
           type: string
           format: date-time
-    CreateOrganizationV2:
-      type: object
-      required:
-      - name
-      - billing_timezone
-      properties:
-        name:
-          type: string
-          description: Display name for the organization.
-        billing_timezone:
-          type: string
-          description: IANA timezone identifier.
-          example: America/New_York
-        remote_id:
-          type: string
-          description: External identifier from the partner's system.
-    CompanyTagV2:
-      type: object
-      required:
-      - tag
-      properties:
-        tag:
-          type: string
-          description: The tag value assigned to the company.
-          example: group:acme
-    UpdateCompanySettingsV2:
-      type: object
-      description: 'Partial update for company settings. All fields are optional; only
-
-        fields included in the body are modified. Shape and types mirror
-
-        `CompanySettingsV2`. Unknown fields and invalid values produce a
-
-        422 error listing every offending key.
-
-        '
-      properties:
-        backend_mode:
-          type: string
-          enum:
-          - default
-          - stub
-        approval_flow_engine_enabled:
-          type: boolean
-        approval_flow_engine_user_edits_allowed:
-          type: boolean
-        invoice_automation_enabled:
-          type: boolean
-        invoice_automated_next_step:
-          oneOf:
-          - type: 'null'
-          - type: string
-            enum:
-            - start_approval
-            - post
-            - export
-            - submit
-        invoice_approval_next_step:
-          oneOf:
-          - type: 'null'
-          - type: string
-            enum:
-            - post
-            - export
-            - submit
-        po_invoice_automation_enabled:
-          type: boolean
-        po_invoice_automated_next_step:
-          oneOf:
-          - type: 'null'
-          - type: string
-            enum:
-            - start_approval
-            - post
-        po_invoice_approval_next_step:
-          oneOf:
-          - type: 'null'
-          - type: string
-            enum:
-            - post
-            - export
-            - submit
-        purchase_order_matching:
-          type: string
-          enum:
-          - none
-          - standard
-          - implicit
-          - explicit
-        purchase_order_matching_level:
-          type: string
-          enum:
-          - document
-          - line
-        purchase_order_require_matching_to_post:
-          type: boolean
-        aaf_ignores_po_invoice_items:
-          type: boolean
-        enable_posting:
-          type: boolean
-        tax_handling:
-          type: string
-          enum:
-          - none
-          - tax_engine
-          - tax_codes
-          - tax_expense_line
-          - vat_for_po_invoices
-          - tax_allocation
-        freight_handling:
-          oneOf:
-          - type: 'null'
-          - type: string
-            enum:
-            - expense_line
-            - even_allocation
-            - weighted_allocation
     CreateCompanyV2:
       type: object
       required:
@@ -514,6 +397,23 @@ components:
             Must be an organization the client already has access to.
 
             '
+    ErrorV2:
+      type: object
+      required:
+      - message
+      properties:
+        field:
+          description: 'The field that the error occurred on. This field may not always be
+
+            present.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
+        message:
+          description: A description of the error.
+          type: string
     CompanySettingsV2:
       type: object
       description: 'A company''s configuration options. Every available setting is
@@ -727,23 +627,60 @@ components:
             - expense_line
             - even_allocation
             - weighted_allocation
-    ErrorV2:
+    PaginationV2:
       type: object
-      required:
-      - message
       properties:
-        field:
-          description: 'The field that the error occurred on. This field may not always be
+        size:
+          type: integer
+          description: The page size.
+          maximum: 50
+          minimum: 1
+        cursor:
+          type: string
+          description: The cursor to use to get the next page of results.
+    PaginationMetaV2:
+      type: object
+      properties:
+        cursor:
+          description: 'The cursor to the next page of data. If it is null, that means there
 
-            present.
+            is no more data to fetch.
 
             '
           oneOf:
           - type: string
           - type: 'null'
-        message:
-          description: A description of the error.
+    CreateCompanyTagV2:
+      type: object
+      required:
+      - tag
+      properties:
+        tag:
           type: string
+          description: 'The tag to assign. For grouping, use `group-leader` on the parent
+
+            company and a shared `group:<key>` tag on the parent and every
+
+            member.
+
+            '
+          example: group:acme
+    CreateOrganizationV2:
+      type: object
+      required:
+      - name
+      - billing_timezone
+      properties:
+        name:
+          type: string
+          description: Display name for the organization.
+        billing_timezone:
+          type: string
+          description: IANA timezone identifier.
+          example: America/New_York
+        remote_id:
+          type: string
+          description: External identifier from the partner's system.
     CreatedCompanyV2:
       type: object
       description: 'Sparse company payload returned at company creation time (by
@@ -794,64 +731,128 @@ components:
               type: string
             client_secret:
               type: string
-    CreateCompanyTagV2:
+    UpdateCompanySettingsV2:
+      type: object
+      description: 'Partial update for company settings. All fields are optional; only
+
+        fields included in the body are modified. Shape and types mirror
+
+        `CompanySettingsV2`. Unknown fields and invalid values produce a
+
+        422 error listing every offending key.
+
+        '
+      properties:
+        backend_mode:
+          type: string
+          enum:
+          - default
+          - stub
+        approval_flow_engine_enabled:
+          type: boolean
+        approval_flow_engine_user_edits_allowed:
+          type: boolean
+        invoice_automation_enabled:
+          type: boolean
+        invoice_automated_next_step:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - start_approval
+            - post
+            - export
+            - submit
+        invoice_approval_next_step:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - post
+            - export
+            - submit
+        po_invoice_automation_enabled:
+          type: boolean
+        po_invoice_automated_next_step:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - start_approval
+            - post
+        po_invoice_approval_next_step:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - post
+            - export
+            - submit
+        purchase_order_matching:
+          type: string
+          enum:
+          - none
+          - standard
+          - implicit
+          - explicit
+        purchase_order_matching_level:
+          type: string
+          enum:
+          - document
+          - line
+        purchase_order_require_matching_to_post:
+          type: boolean
+        aaf_ignores_po_invoice_items:
+          type: boolean
+        enable_posting:
+          type: boolean
+        tax_handling:
+          type: string
+          enum:
+          - none
+          - tax_engine
+          - tax_codes
+          - tax_expense_line
+          - vat_for_po_invoices
+          - tax_allocation
+        freight_handling:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - expense_line
+            - even_allocation
+            - weighted_allocation
+    CompanyTagV2:
       type: object
       required:
       - tag
       properties:
         tag:
           type: string
-          description: 'The tag to assign. For grouping, use `group-leader` on the parent
-
-            company and a shared `group:<key>` tag on the parent and every
-
-            member.
-
-            '
+          description: The tag value assigned to the company.
           example: group:acme
-    PaginationMetaV2:
-      type: object
-      properties:
-        cursor:
-          description: 'The cursor to the next page of data. If it is null, that means there
-
-            is no more data to fetch.
-
-            '
-          oneOf:
-          - type: string
-          - type: 'null'
-    PaginationV2:
-      type: object
-      properties:
-        size:
-          type: integer
-          description: The page size.
-          maximum: 50
-          minimum: 1
-        cursor:
-          type: string
-          description: The cursor to use to get the next page of results.
-  requestBodies:
-    CreateCompanyRequestV2:
-      description: Create a new company.
-      required: true
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CreateCompanyV2'
-    UpdateCompanySettingsRequestV2:
-      description: 'Partial update to the company settings map. Only fields
-
-        included in the body are modified.
-
-        '
-      required: true
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UpdateCompanySettingsV2'
   responses:
+    GetOrganizationResponseV2:
+      description: A single organization.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/OrganizationV2'
+    CompanySettingsResponseV2:
+      description: The effective settings map for the company.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - data
+            properties:
+              data:
+                $ref: '#/components/schemas/CompanySettingsV2'
     ListOrganizationsResponseV2:
       description: A successful list of organizations
       content:
@@ -876,17 +877,6 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/ErrorV2'
-    CompanySettingsResponseV2:
-      description: The effective settings map for the company.
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-            - data
-            properties:
-              data:
-                $ref: '#/components/schemas/CompanySettingsV2'
     CreateCompanyResponseV2:
       description: 'A single newly-created company including a company-scoped OAuth
 
@@ -902,15 +892,25 @@ components:
             properties:
               data:
                 $ref: '#/components/schemas/CreatedCompanyV2'
-    GetOrganizationResponseV2:
-      description: A single organization.
+  requestBodies:
+    CreateCompanyRequestV2:
+      description: Create a new company.
+      required: true
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              data:
-                $ref: '#/components/schemas/OrganizationV2'
+            $ref: '#/components/schemas/CreateCompanyV2'
+    UpdateCompanySettingsRequestV2:
+      description: 'Partial update to the company settings map. Only fields
+
+        included in the body are modified.
+
+        '
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateCompanySettingsV2'
   parameters:
     CompanyId:
       name: company_id

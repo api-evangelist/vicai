@@ -142,55 +142,13 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   schemas:
-    InternalId:
-      description: The internal id Vic uses for the record.
-      type: string
-      example: '47'
-      readOnly: true
-    ExternalData:
-      description: A free form json object that is stored with the record.
-      type: object
-    ExternalId:
-      description: 'The external id set by the ERP system. It does not have to be a UUID and
-
-        can be any non empty string desired.
-
-        '
-      type: string
-      example: 21b31bc7-1267-4335-893c-d7fe4706a238
-      maxLength: 255
-    ErrorString:
-      type: string
-      maxLength: 255
-    AccountUpsert:
-      type: object
-      required:
-      - number
-      - name
-      - externalUpdatedAt
-      properties:
-        externalId:
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-        externalUpdatedAt:
-          type: string
-          format: date-time
-          description: Does not have UTC normalization.
-        number:
-          type: string
-          format: number
-        name:
-          type: string
-          maxLength: 255
-        externalData:
-          oneOf:
-          - $ref: '#/components/schemas/ExternalData'
-          - type: 'null'
     Accounts:
       type: array
       items:
         $ref: '#/components/schemas/Account'
+    ExternalData:
+      description: A free form json object that is stored with the record.
+      type: object
     Account:
       type: object
       required:
@@ -223,6 +181,40 @@ components:
           oneOf:
           - $ref: '#/components/schemas/ExternalData'
           - type: 'null'
+    AccountUpsert:
+      type: object
+      required:
+      - number
+      - name
+      - externalUpdatedAt
+      properties:
+        externalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+        externalUpdatedAt:
+          type: string
+          format: date-time
+          description: Does not have UTC normalization.
+        number:
+          type: string
+          format: number
+        name:
+          type: string
+          maxLength: 255
+        externalData:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalData'
+          - type: 'null'
+    ExternalId:
+      description: 'The external id set by the ERP system. It does not have to be a UUID and
+
+        can be any non empty string desired.
+
+        '
+      type: string
+      example: 21b31bc7-1267-4335-893c-d7fe4706a238
+      maxLength: 255
     Error:
       description: 'generic error message in JSON format.  Note the ''code'' field should
 
@@ -240,15 +232,66 @@ components:
           maximum: 599
         message:
           $ref: '#/components/schemas/ErrorString'
+    InternalId:
+      description: The internal id Vic uses for the record.
+      type: string
+      example: '47'
+      readOnly: true
+    ErrorString:
+      type: string
+      maxLength: 255
+  responses:
+    AccountUpsertedResponse:
+      description: Account was upserted successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Account'
+    TooManyRequestsResponse:
+      description: HTTP call rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    SynchronizeAccountsResponse:
+      description: 'A request to synchronize the GL Accounts was acknowledged and is in the
+
+        process of being ran.
+
+        '
+    AccountsResponse:
+      description: A paged array of accounts
+      headers:
+        x-next:
+          $ref: '#/components/headers/NextPageToken'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Accounts'
+    ErrorResponse:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    AccountDeletedResponse:
+      description: Information for deleted account
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Account'
+    AccountResponse:
+      description: Shows the account.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Account'
   parameters:
-    RequestId:
-      in: header
-      name: X-Request-Id
-      description: token to be able to correctly log associated requests
-      required: false
-      schema:
-        type: string
-        format: uuid
     PagingLimit:
       name: limit
       in: query
@@ -258,32 +301,6 @@ components:
         type: integer
         minimum: 1
         maximum: 100
-    UseSystemDefaultExternal:
-      name: useSystem
-      in: query
-      description: 'Which system to use for id or updatedAt filters.
-
-        '
-      required: false
-      schema:
-        type: string
-        enum:
-        - INTERNAL
-        - EXTERNAL
-        - internal
-        - external
-        default: EXTERNAL
-    SortOrder:
-      name: sortOrder
-      in: query
-      description: what sort order should be used for queries
-      required: false
-      schema:
-        type: string
-        enum:
-        - ASCENDING
-        - DESCENDING
-        default: ASCENDING
     PathId:
       name: id
       in: path
@@ -305,6 +322,21 @@ components:
       schema:
         type: string
         format: date-time
+    UseSystemDefaultExternal:
+      name: useSystem
+      in: query
+      description: 'Which system to use for id or updatedAt filters.
+
+        '
+      required: false
+      schema:
+        type: string
+        enum:
+        - INTERNAL
+        - EXTERNAL
+        - internal
+        - external
+        default: EXTERNAL
     PagingCursor:
       name: cursor
       in: query
@@ -312,57 +344,25 @@ components:
       required: false
       schema:
         type: string
-  responses:
-    AccountsResponse:
-      description: A paged array of accounts
-      headers:
-        x-next:
-          $ref: '#/components/headers/NextPageToken'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Accounts'
-    AccountResponse:
-      description: Shows the account.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Account'
-    AccountUpsertedResponse:
-      description: Account was upserted successfully.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Account'
-    TooManyRequestsResponse:
-      description: HTTP call rate limit exceeded.
-      headers:
-        Retry-After:
-          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
-          schema:
-            type: integer
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    ErrorResponse:
-      description: An unexpected error has occurred. Check the body for more details.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    AccountDeletedResponse:
-      description: Information for deleted account
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Account'
-    SynchronizeAccountsResponse:
-      description: 'A request to synchronize the GL Accounts was acknowledged and is in the
-
-        process of being ran.
-
-        '
+    SortOrder:
+      name: sortOrder
+      in: query
+      description: what sort order should be used for queries
+      required: false
+      schema:
+        type: string
+        enum:
+        - ASCENDING
+        - DESCENDING
+        default: ASCENDING
+    RequestId:
+      in: header
+      name: X-Request-Id
+      description: token to be able to correctly log associated requests
+      required: false
+      schema:
+        type: string
+        format: uuid
   headers:
     NextPageToken:
       description: A link to the next page of responses

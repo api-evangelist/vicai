@@ -124,46 +124,35 @@ paths:
         4XX:
           $ref: '#/components/responses/ErrorResponseV2'
 components:
-  parameters:
-    PaginationV2:
-      name: page
-      in: query
-      schema:
-        $ref: '#/components/schemas/PaginationV2'
   schemas:
-    AllowedSenderV2:
+    AllowedSendersResponseV2:
       type: object
       required:
-      - id
-      - match_type
-      - sender_pattern
-      - created_at
+      - meta
+      - data
       properties:
-        id:
+        meta:
+          type: object
+          required:
+          - page
+          properties:
+            page:
+              $ref: '#/components/schemas/PaginationMetaV2'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AllowedSenderV2'
+    PaginationV2:
+      type: object
+      properties:
+        size:
+          type: integer
+          description: The page size.
+          maximum: 50
+          minimum: 1
+        cursor:
           type: string
-          format: uuid
-        match_type:
-          type: string
-          enum:
-          - exact
-          - domain
-          description: '`exact` matches the full sender email address. `domain`
-
-            matches everything after the `@`.
-
-            '
-        sender_pattern:
-          type: string
-          description: 'For `exact` entries, a full email address (e.g.
-
-            `ap@vendor.com`). For `domain` entries, just the domain
-
-            (e.g. `vendor.com`). Pattern matching is case-insensitive.
-
-            '
-        created_at:
-          type: string
-          format: date-time
+          description: The cursor to use to get the next page of results.
     PaginationMetaV2:
       type: object
       properties:
@@ -198,17 +187,48 @@ components:
                 - domain
               sender_pattern:
                 type: string
-    PaginationV2:
+    AllowedSendersCreateResponseV2:
       type: object
+      required:
+      - data
       properties:
-        size:
-          type: integer
-          description: The page size.
-          maximum: 50
-          minimum: 1
-        cursor:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AllowedSenderV2'
+    AllowedSenderV2:
+      type: object
+      required:
+      - id
+      - match_type
+      - sender_pattern
+      - created_at
+      properties:
+        id:
           type: string
-          description: The cursor to use to get the next page of results.
+          format: uuid
+        match_type:
+          type: string
+          enum:
+          - exact
+          - domain
+          description: '`exact` matches the full sender email address. `domain`
+
+            matches everything after the `@`.
+
+            '
+        sender_pattern:
+          type: string
+          description: 'For `exact` entries, a full email address (e.g.
+
+            `ap@vendor.com`). For `domain` entries, just the domain
+
+            (e.g. `vendor.com`). Pattern matching is case-insensitive.
+
+            '
+        created_at:
+          type: string
+          format: date-time
     ErrorV2:
       type: object
       required:
@@ -226,32 +246,6 @@ components:
         message:
           description: A description of the error.
           type: string
-    AllowedSendersResponseV2:
-      type: object
-      required:
-      - meta
-      - data
-      properties:
-        meta:
-          type: object
-          required:
-          - page
-          properties:
-            page:
-              $ref: '#/components/schemas/PaginationMetaV2'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/AllowedSenderV2'
-    AllowedSendersCreateResponseV2:
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/AllowedSenderV2'
   responses:
     ErrorResponseV2:
       description: An unexpected error has occurred. Check the body for more details.
@@ -264,6 +258,12 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/ErrorV2'
+  parameters:
+    PaginationV2:
+      name: page
+      in: query
+      schema:
+        $ref: '#/components/schemas/PaginationV2'
   securitySchemes:
     BearerAuth:
       type: http

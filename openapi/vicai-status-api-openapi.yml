@@ -37,45 +37,6 @@ paths:
         4XX:
           $ref: '#/components/responses/ErrorResponse'
 components:
-  schemas:
-    HealthCheck:
-      type: object
-      required:
-      - status
-      - version
-      - company
-      properties:
-        status:
-          type: string
-          enum:
-          - PASS
-          - FAIL
-          - WARN
-        version:
-          type: string
-          format: semver
-        company:
-          type: string
-    ErrorString:
-      type: string
-      maxLength: 255
-    Error:
-      description: 'generic error message in JSON format.  Note the ''code'' field should
-
-        match the HTTP status code of the wrapping HTTP request.
-
-        '
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-          minimum: 100
-          maximum: 599
-        message:
-          $ref: '#/components/schemas/ErrorString'
   responses:
     HealthyResponse:
       description: Successful health check response
@@ -100,6 +61,45 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      description: 'generic error message in JSON format.  Note the ''code'' field should
+
+        match the HTTP status code of the wrapping HTTP request.
+
+        '
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          minimum: 100
+          maximum: 599
+        message:
+          $ref: '#/components/schemas/ErrorString'
+    ErrorString:
+      type: string
+      maxLength: 255
+    HealthCheck:
+      type: object
+      required:
+      - status
+      - version
+      - company
+      properties:
+        status:
+          type: string
+          enum:
+          - PASS
+          - FAIL
+          - WARN
+        version:
+          type: string
+          format: semver
+        company:
+          type: string
   securitySchemes:
     BearerAuth:
       type: http
