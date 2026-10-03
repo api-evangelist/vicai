@@ -342,170 +342,122 @@ paths:
         4XX:
           $ref: '#/components/responses/ErrorResponseV2'
 components:
+  responses:
+    UnprocessableEntityResponse:
+      description: Errors with the input are present.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    CreditsBulkConfirmedResponseV2:
+      description: Credits bulk confirmed successfully.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CreditV2'
+    CreditConfirmedResponse:
+      description: Credit confirmed successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Credit'
+    ForbiddenResponse:
+      description: The request was forbidden.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ErrorResponseV2:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ErrorV2'
+    CreditsBulkConfirmedResponse:
+      description: Credits bulk confirmed successfully.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Credit'
+    ErrorResponse:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TooManyRequestsResponse:
+      description: HTTP call rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    CreditsBulkFailedResponse:
+      description: Credits bulk failed successfully.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Credit'
+    CreditFailedResponse:
+      description: Credit marked as failed successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Credit'
+    CreditFailedResponseV2:
+      description: Credit marked as failed successfully.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/CreditV2'
+    CreditsBulkFailedResponseV2:
+      description: Credits bulk failed successfully.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CreditV2'
+    CreditConfirmedResponseV2:
+      description: Credit confirmed successfully.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/CreditV2'
+    ResourceNotFoundResponse:
+      description: Resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    BulkConfirmCreditsInput:
-      type: object
-      description: Input schema for bulk confirming multiple credits.
-      required:
-      - credits
-      properties:
-        credits:
-          type: array
-          minItems: 1
-          description: Array of credit confirmation items. Must contain at least one item.
-          items:
-            type: object
-            required:
-            - id
-            - confirmedAt
-            properties:
-              id:
-                type: string
-                format: uuid
-                description: The UUID of the credit to confirm.
-              confirmedAt:
-                type: string
-                format: date-time
-                description: The datetime when the credit was confirmed in the external system.
-              remoteId:
-                type:
-                - string
-                - 'null'
-                maxLength: 255
-                description: An optional external identifier for the credit in the confirming system.
-    BulkConfirmCreditsInputV2:
-      type: object
-      description: Input schema for bulk confirming multiple credits (V2 API with snake_case fields).
-      required:
-      - credits
-      properties:
-        credits:
-          type: array
-          minItems: 1
-          maxItems: 100
-          description: Array of credit confirmation items. Must contain at least one item and no more than 100 items.
-          items:
-            type: object
-            required:
-            - id
-            - confirmed_at
-            properties:
-              id:
-                type: string
-                format: uuid
-                description: The UUID of the credit to confirm.
-              confirmed_at:
-                type: string
-                format: date-time
-                description: The datetime when the credit was confirmed in the external system.
-              remote_id:
-                type:
-                - string
-                - 'null'
-                maxLength: 255
-                description: An optional external identifier for the credit in the confirming system.
-    InvoiceInternalId:
-      type: string
-      description: The id of the `Invoice` in Vic.
-      maxLength: 255
-    ErrorV2:
-      type: object
-      required:
-      - message
-      properties:
-        field:
-          description: 'The field that the error occurred on. This field may not always be
-
-            present.
-
-            '
-          oneOf:
-          - type: string
-          - type: 'null'
-        message:
-          description: A description of the error.
-          type: string
-    ExternalId:
-      description: 'The external id set by the ERP system. It does not have to be a UUID and
-
-        can be any non empty string desired.
-
-        '
-      type: string
-      example: 21b31bc7-1267-4335-893c-d7fe4706a238
-      maxLength: 255
-    FailCreditInput:
-      type: object
-      description: Input schema for marking a credit as failed.
-      required:
-      - remoteErroredAt
-      - remoteError
-      properties:
-        remoteErroredAt:
-          type: string
-          format: date-time
-          description: The datetime when the credit failed in the external system.
-        remoteError:
-          type: string
-          maxLength: 255
-          description: 'The error message describing why the credit failed. This message will be displayed to
-
-            the user. It should be clear as to what happened so that it can be rectified.
-
-            '
-        remoteId:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-          description: An optional external identifier for the failed credit.
-    PaymentMethod:
-      type: string
-      enum:
-      - ach
-      - card
-      - check
-      - wire
-    CostAccountRef:
-      type: object
-      description: A reference to a `Account`.
-      properties:
-        internalId:
-          oneOf:
-          - type: string
-            maxLength: 255
-            description: The id of the `Account` in Vic.
-          - type: 'null'
-        externalId:
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-    PaymentReferenceId:
-      type: string
-      description: 'The reference id of the payment or credit is associated with. This will
-
-        be the identifier is on the remittance advice sent to the Vendor.
-
-        Example: `P001234`, `A000134`, or `E123456`
-
-        '
-    Error:
-      description: 'generic error message in JSON format.  Note the ''code'' field should
-
-        match the HTTP status code of the wrapping HTTP request.
-
-        '
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-          minimum: 100
-          maximum: 599
-        message:
-          $ref: '#/components/schemas/ErrorString'
     MonetaryValue:
       description: 'The monetary value as a string.
 
@@ -519,6 +471,38 @@ components:
       type: string
       format: decimal
       example: '1.00'
+    InvoiceRef:
+      type: object
+      description: A reference to an `Invoice`.
+      properties:
+        internalId:
+          oneOf:
+          - $ref: '#/components/schemas/InvoiceInternalId'
+          - type: 'null'
+        externalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+        refNumber:
+          type:
+          - string
+          - 'null'
+    ConfirmCreditInput:
+      type: object
+      description: Input schema for confirming a credit.
+      required:
+      - confirmedAt
+      properties:
+        confirmedAt:
+          type: string
+          format: date-time
+          description: The datetime when the credit was confirmed in the external system.
+        remoteId:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+          description: An optional external identifier for the credit in the confirming system.
     BulkFailCreditsInput:
       type: object
       description: Input schema for bulk failing multiple credits.
@@ -559,146 +543,118 @@ components:
                 - 'null'
                 maxLength: 255
                 description: An optional external identifier for the failed credit.
-    BulkFailCreditsInputV2:
+    CreditV2:
       type: object
-      description: Input schema for bulk failing multiple credits (V2 API with snake_case fields).
-      required:
-      - credits
+      description: A credit payment in the V2 API format with snake_case field names.
       properties:
-        credits:
-          type: array
-          minItems: 1
-          maxItems: 100
-          description: Array of credit failure items. Must contain at least one item.
-          items:
-            type: object
-            required:
-            - id
-            - remote_errored_at
-            - remote_error
-            properties:
-              id:
-                type: string
-                format: uuid
-                description: The UUID of the credit to mark as failed.
-              remote_errored_at:
-                type: string
-                format: date-time
-                description: The datetime when the credit failed in the external system.
-              remote_error:
-                type: string
-                maxLength: 255
-                description: 'The error message describing why the credit failed. This message will be displayed
-
-                  to the user. It should be clear as to what happened so that it can be rectified.
-
-                  '
-              remote_id:
-                type:
-                - string
-                - 'null'
-                maxLength: 255
-                description: An optional external identifier for the failed credit.
-    FailCreditInputV2:
-      type: object
-      description: Input schema for marking a credit as failed (V2 API with snake_case fields).
-      required:
-      - remote_errored_at
-      - remote_error
-      properties:
-        remote_errored_at:
+        id:
           type: string
+          format: uuid
+          description: The unique identifier of the credit.
+        amount:
+          type: string
+          description: The credit amount as a decimal string.
+        approved_at:
+          type:
+          - string
+          - 'null'
           format: date-time
-          description: The datetime when the credit failed in the external system.
-        remote_error:
+          description: The datetime when the credit was approved.
+        confirmed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The datetime when the credit was confirmed.
+        currency_id:
           type: string
-          maxLength: 255
-          description: 'The error message describing why the credit failed. This message will be displayed
-
-            to the user. It should be clear as to what happened so that it can be rectified.
-
-            '
+          description: The ISO 4217 currency code.
+        exchange_rate:
+          type:
+          - string
+          - 'null'
+          description: The exchange rate used for the credit.
+        failed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The datetime when the credit failed.
+        failed_reason:
+          type:
+          - string
+          - 'null'
+          description: The reason why the credit failed
+        funded_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The datetime when funding began.
+        accepted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The datetime when the credit was accepted for processing.
+        payment_method:
+          type:
+          - string
+          - 'null'
+          description: The payment method used.
+        reference_id:
+          type:
+          - string
+          - 'null'
+          description: The reference identifier for the credit.
+        rejected_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The datetime when the credit was rejected.
+        remote_error:
+          type:
+          - string
+          - 'null'
+          description: Error message if confirmation failed.
+        remote_errored_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the remote error occurred.
         remote_id:
           type:
           - string
           - 'null'
-          maxLength: 255
-          description: An optional external identifier for the failed credit.
-    ConfirmCreditInput:
-      type: object
-      description: Input schema for confirming a credit.
-      required:
-      - confirmedAt
-      properties:
-        confirmedAt:
+          description: External system identifier for the credit.
+        settlement_amount:
+          type:
+          - string
+          - 'null'
+          description: The settlement amount as a decimal string.
+        settlement_currency_id:
+          type:
+          - string
+          - 'null'
+          description: The settlement currency ISO code.
+        status:
+          $ref: '#/components/schemas/PaymentStatus'
+        voided_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The datetime when the credit was voided.
+        created_at:
           type: string
           format: date-time
-          description: The datetime when the credit was confirmed in the external system.
-        remoteId:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-          description: An optional external identifier for the credit in the confirming system.
-    ErrorString:
-      type: string
-      maxLength: 255
-    PaymentStatus:
-      type: string
-      enum:
-      - pending_approval
-      - rejected
-      - approved
-      - acknowledged
-      - voided
-      - failed
-      description: "The status of the payment.\n- `pending_approval` - The payment is awaiting approval.\n- `approved` - The payment was approved for payment.\n- `rejected` - The payment was rejected and was excluded from being paid.\n- `acknowledged` - The `rejected` payment was acknowledged by the payee.\n- `voided` - The payment was voided for reason.\n- `failed` - The payment failed to be submitted to the payment provider.\n  See the failed reason for more information.\n"
-    CreditStatus:
-      type: string
-      enum:
-      - pending_approval
-      - rejected
-      - approved
-      - acknowledged
-      - voided
-    VendorRef:
-      type: object
-      description: A reference to a `Vendor`.
-      properties:
-        internalId:
-          oneOf:
-          - $ref: '#/components/schemas/VendorInternalId'
-          - type: 'null'
-        externalId:
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-    Currency:
-      description: The ISO-4217 currency code.
-      type: string
-      format: ISO-4217
-      maxLength: 3
-      example: USD
-    VendorInternalId:
-      type: string
-      description: The id of the `Vendor` in Vic.
-      maxLength: 255
-    InvoiceRef:
-      type: object
-      description: A reference to an `Invoice`.
-      properties:
-        internalId:
-          oneOf:
-          - $ref: '#/components/schemas/InvoiceInternalId'
-          - type: 'null'
-        externalId:
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-        refNumber:
-          type:
-          - string
-          - 'null'
+          description: The datetime when the credit was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: The datetime when the credit was last updated.
     Credit:
       type: object
       properties:
@@ -825,6 +781,209 @@ components:
           $ref: '#/components/schemas/CostAccountRef'
         vendor:
           $ref: '#/components/schemas/VendorRef'
+    PaymentMethod:
+      type: string
+      enum:
+      - ach
+      - card
+      - check
+      - wire
+    VendorRef:
+      type: object
+      description: A reference to a `Vendor`.
+      properties:
+        internalId:
+          oneOf:
+          - $ref: '#/components/schemas/VendorInternalId'
+          - type: 'null'
+        externalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+    CostAccountRef:
+      type: object
+      description: A reference to a `Account`.
+      properties:
+        internalId:
+          oneOf:
+          - type: string
+            maxLength: 255
+            description: The id of the `Account` in Vic.
+          - type: 'null'
+        externalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+    Error:
+      description: 'generic error message in JSON format.  Note the ''code'' field should
+
+        match the HTTP status code of the wrapping HTTP request.
+
+        '
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          minimum: 100
+          maximum: 599
+        message:
+          $ref: '#/components/schemas/ErrorString'
+    Currency:
+      description: The ISO-4217 currency code.
+      type: string
+      format: ISO-4217
+      maxLength: 3
+      example: USD
+    BulkFailCreditsInputV2:
+      type: object
+      description: Input schema for bulk failing multiple credits (V2 API with snake_case fields).
+      required:
+      - credits
+      properties:
+        credits:
+          type: array
+          minItems: 1
+          maxItems: 100
+          description: Array of credit failure items. Must contain at least one item.
+          items:
+            type: object
+            required:
+            - id
+            - remote_errored_at
+            - remote_error
+            properties:
+              id:
+                type: string
+                format: uuid
+                description: The UUID of the credit to mark as failed.
+              remote_errored_at:
+                type: string
+                format: date-time
+                description: The datetime when the credit failed in the external system.
+              remote_error:
+                type: string
+                maxLength: 255
+                description: 'The error message describing why the credit failed. This message will be displayed
+
+                  to the user. It should be clear as to what happened so that it can be rectified.
+
+                  '
+              remote_id:
+                type:
+                - string
+                - 'null'
+                maxLength: 255
+                description: An optional external identifier for the failed credit.
+    ExternalId:
+      description: 'The external id set by the ERP system. It does not have to be a UUID and
+
+        can be any non empty string desired.
+
+        '
+      type: string
+      example: 21b31bc7-1267-4335-893c-d7fe4706a238
+      maxLength: 255
+    PaymentStatus:
+      type: string
+      enum:
+      - pending_approval
+      - rejected
+      - approved
+      - acknowledged
+      - voided
+      - failed
+      description: "The status of the payment.\n- `pending_approval` - The payment is awaiting approval.\n- `approved` - The payment was approved for payment.\n- `rejected` - The payment was rejected and was excluded from being paid.\n- `acknowledged` - The `rejected` payment was acknowledged by the payee.\n- `voided` - The payment was voided for reason.\n- `failed` - The payment failed to be submitted to the payment provider.\n  See the failed reason for more information.\n"
+    CreditStatus:
+      type: string
+      enum:
+      - pending_approval
+      - rejected
+      - approved
+      - acknowledged
+      - voided
+    FailCreditInput:
+      type: object
+      description: Input schema for marking a credit as failed.
+      required:
+      - remoteErroredAt
+      - remoteError
+      properties:
+        remoteErroredAt:
+          type: string
+          format: date-time
+          description: The datetime when the credit failed in the external system.
+        remoteError:
+          type: string
+          maxLength: 255
+          description: 'The error message describing why the credit failed. This message will be displayed to
+
+            the user. It should be clear as to what happened so that it can be rectified.
+
+            '
+        remoteId:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+          description: An optional external identifier for the failed credit.
+    VendorInternalId:
+      type: string
+      description: The id of the `Vendor` in Vic.
+      maxLength: 255
+    FailCreditInputV2:
+      type: object
+      description: Input schema for marking a credit as failed (V2 API with snake_case fields).
+      required:
+      - remote_errored_at
+      - remote_error
+      properties:
+        remote_errored_at:
+          type: string
+          format: date-time
+          description: The datetime when the credit failed in the external system.
+        remote_error:
+          type: string
+          maxLength: 255
+          description: 'The error message describing why the credit failed. This message will be displayed
+
+            to the user. It should be clear as to what happened so that it can be rectified.
+
+            '
+        remote_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+          description: An optional external identifier for the failed credit.
+    PaymentReferenceId:
+      type: string
+      description: 'The reference id of the payment or credit is associated with. This will
+
+        be the identifier is on the remittance advice sent to the Vendor.
+
+        Example: `P001234`, `A000134`, or `E123456`
+
+        '
+    ErrorV2:
+      type: object
+      required:
+      - message
+      properties:
+        field:
+          description: 'The field that the error occurred on. This field may not always be
+
+            present.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
+        message:
+          description: A description of the error.
+          type: string
     ConfirmCreditInputV2:
       type: object
       description: Input schema for confirming a credit (V2 API with snake_case fields).
@@ -841,233 +1000,74 @@ components:
           - 'null'
           maxLength: 255
           description: An optional external identifier for the credit in the confirming system.
-    CreditV2:
+    BulkConfirmCreditsInput:
       type: object
-      description: A credit payment in the V2 API format with snake_case field names.
+      description: Input schema for bulk confirming multiple credits.
+      required:
+      - credits
       properties:
-        id:
-          type: string
-          format: uuid
-          description: The unique identifier of the credit.
-        amount:
-          type: string
-          description: The credit amount as a decimal string.
-        approved_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: The datetime when the credit was approved.
-        confirmed_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: The datetime when the credit was confirmed.
-        currency_id:
-          type: string
-          description: The ISO 4217 currency code.
-        exchange_rate:
-          type:
-          - string
-          - 'null'
-          description: The exchange rate used for the credit.
-        failed_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: The datetime when the credit failed.
-        failed_reason:
-          type:
-          - string
-          - 'null'
-          description: The reason why the credit failed
-        funded_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: The datetime when funding began.
-        accepted_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: The datetime when the credit was accepted for processing.
-        payment_method:
-          type:
-          - string
-          - 'null'
-          description: The payment method used.
-        reference_id:
-          type:
-          - string
-          - 'null'
-          description: The reference identifier for the credit.
-        rejected_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: The datetime when the credit was rejected.
-        remote_error:
-          type:
-          - string
-          - 'null'
-          description: Error message if confirmation failed.
-        remote_errored_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: When the remote error occurred.
-        remote_id:
-          type:
-          - string
-          - 'null'
-          description: External system identifier for the credit.
-        settlement_amount:
-          type:
-          - string
-          - 'null'
-          description: The settlement amount as a decimal string.
-        settlement_currency_id:
-          type:
-          - string
-          - 'null'
-          description: The settlement currency ISO code.
-        status:
-          $ref: '#/components/schemas/PaymentStatus'
-        voided_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: The datetime when the credit was voided.
-        created_at:
-          type: string
-          format: date-time
-          description: The datetime when the credit was created.
-        updated_at:
-          type: string
-          format: date-time
-          description: The datetime when the credit was last updated.
-  responses:
-    CreditConfirmedResponse:
-      description: Credit confirmed successfully.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Credit'
-    TooManyRequestsResponse:
-      description: HTTP call rate limit exceeded.
-      headers:
-        Retry-After:
-          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
-          schema:
-            type: integer
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    CreditFailedResponseV2:
-      description: Credit marked as failed successfully.
-      content:
-        application/json:
-          schema:
+        credits:
+          type: array
+          minItems: 1
+          description: Array of credit confirmation items. Must contain at least one item.
+          items:
             type: object
+            required:
+            - id
+            - confirmedAt
             properties:
-              data:
-                $ref: '#/components/schemas/CreditV2'
-    CreditsBulkConfirmedResponseV2:
-      description: Credits bulk confirmed successfully.
-      content:
-        application/json:
-          schema:
+              id:
+                type: string
+                format: uuid
+                description: The UUID of the credit to confirm.
+              confirmedAt:
+                type: string
+                format: date-time
+                description: The datetime when the credit was confirmed in the external system.
+              remoteId:
+                type:
+                - string
+                - 'null'
+                maxLength: 255
+                description: An optional external identifier for the credit in the confirming system.
+    InvoiceInternalId:
+      type: string
+      description: The id of the `Invoice` in Vic.
+      maxLength: 255
+    ErrorString:
+      type: string
+      maxLength: 255
+    BulkConfirmCreditsInputV2:
+      type: object
+      description: Input schema for bulk confirming multiple credits (V2 API with snake_case fields).
+      required:
+      - credits
+      properties:
+        credits:
+          type: array
+          minItems: 1
+          maxItems: 100
+          description: Array of credit confirmation items. Must contain at least one item and no more than 100 items.
+          items:
             type: object
+            required:
+            - id
+            - confirmed_at
             properties:
-              data:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CreditV2'
-    ResourceNotFoundResponse:
-      description: Resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    ErrorResponseV2:
-      description: An unexpected error has occurred. Check the body for more details.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              errors:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ErrorV2'
-    CreditsBulkConfirmedResponse:
-      description: Credits bulk confirmed successfully.
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/Credit'
-    CreditsBulkFailedResponse:
-      description: Credits bulk failed successfully.
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/Credit'
-    UnprocessableEntityResponse:
-      description: Errors with the input are present.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    CreditsBulkFailedResponseV2:
-      description: Credits bulk failed successfully.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              data:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CreditV2'
-    CreditConfirmedResponseV2:
-      description: Credit confirmed successfully.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              data:
-                $ref: '#/components/schemas/CreditV2'
-    ForbiddenResponse:
-      description: The request was forbidden.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    ErrorResponse:
-      description: An unexpected error has occurred. Check the body for more details.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    CreditFailedResponse:
-      description: Credit marked as failed successfully.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Credit'
+              id:
+                type: string
+                format: uuid
+                description: The UUID of the credit to confirm.
+              confirmed_at:
+                type: string
+                format: date-time
+                description: The datetime when the credit was confirmed in the external system.
+              remote_id:
+                type:
+                - string
+                - 'null'
+                maxLength: 255
+                description: An optional external identifier for the credit in the confirming system.
   parameters:
     CompanyId:
       name: company_id

@@ -584,122 +584,58 @@ paths:
           $ref: '#/components/responses/ErrorResponseV2'
 components:
   schemas:
-    PaymentBatchProcessedEvent:
+    SubscriptionUpsert:
       type: object
       required:
-      - event
-      - data
+      - callbackUrl
+      - accessToken
       properties:
-        event:
+        callbackUrl:
           type: string
-          enum:
-          - payment_batch_processed
-        data:
-          $ref: '#/components/schemas/PaymentBatch'
-    InvoiceField:
-      type: object
-      properties:
-        label:
+          format: uri
+          example: https://my.erp.com/vic-callback/
+        accessToken:
           type: string
-          maxLength: 255
-        title:
-          type: string
-          maxLength: 255
-        type:
-          type: string
-          maxLength: 255
-          enum:
-          - text
-          - select
-          - date
-          description: 'How the field''s value should be interpreted by clients.
+          maxLength: 1024
+        events:
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/WebhookEventName'
+          - type: 'null'
+          description: 'The list of events to subscribe to. If you wish to subscribe to all
 
-            `text` accepts any printable string; `select` accepts one of the
+            events simply pass `["all"]`. If you are updating the subscription
 
-            field''s configured options; `date` is stored as an ISO 8601
+            and wish to leave the events subscribed to alone, this field should
 
-            `YYYY-MM-DD` calendar date.
+            be left unspecified or null.
 
             '
-        value:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-    ErrorV2:
-      type: object
-      required:
-      - message
-      properties:
-        field:
-          description: 'The field that the error occurred on. This field may not always be
+    PurchaseOrderLineItemMatchingType:
+      type: string
+      description: 'The type of matching that should be done on the line item. Determines which quantity fields are required.
 
-            present.
+        `two_way` - Only the `quantityRequested` field is required.
 
-            '
-          oneOf:
-          - type: string
-          - type: 'null'
-        message:
-          description: A description of the error.
-          type: string
-    ExternalId:
-      description: 'The external id set by the ERP system. It does not have to be a UUID and
+        `three_way` (default) - The `quantityRequested` and `quantityReceived` fields are required.
 
-        can be any non empty string desired.
+        `four_way` - The `quantityRequested`, `quantityReceived`, and `quantityAccepted` fields are required.
 
         '
+      enum:
+      - two_way
+      - three_way
+      - four_way
+      default: three_way
+    PaymentBatchStatus:
       type: string
-      example: 21b31bc7-1267-4335-893c-d7fe4706a238
-      maxLength: 255
-    InvoiceInfoNO:
-      type: object
-      required:
-      - kid
-      properties:
-        kid:
-          deprecated: true
-          description: '**Deprecated**: The `paymentRef` on the `Invoice` should be used
-
-            instead.
-
-            The KID is a customer identification number that is mandatory for
-
-            invoices in Norway.
-
-            '
-          type: string
-        creditAccountExternalId:
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-        creditAccountInternalId:
-          type: string
-    PurchaseOrderSiteOwner:
-      type: object
-      description: The person or entity who is in charge of the purchase order site. Resolved to a user by email first, then by full name. If the name matches more than one user in the company, the request is rejected with `422 Unprocessable Entity` — provide the email to disambiguate.
-      properties:
-        email:
-          oneOf:
-          - $ref: '#/components/schemas/Email'
-          - type: 'null'
-        name:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-    CustomField:
-      type: object
-      properties:
-        id:
-          type: string
-          maxLength: 255
-        value:
-          type: string
-          maxLength: 255
-        label:
-          type: string
-          maxLength: 255
+      description: The status of the payment batch.
+      enum:
+      - pending_approval
+      - rejected
+      - approved
+      - voided
     MonetaryValue:
       description: 'The monetary value as a string.
 
@@ -713,141 +649,147 @@ components:
       type: string
       format: decimal
       example: '1.00'
-    UnitOfMeasure:
-      type: string
-      example: kg
-      maxLength: 255
-      description: The unit of measure used.
-    VendorRemoteError:
-      description: 'The remote error on a Vendor.
+    VendorError:
+      description: 'Data structure for describing errors when posting a vendor to an
 
-        This is to describe any errors that have happened in the ERP system. If
+        ERP.  Use a string to describe a single error that applies to
 
-        the error that occurred does not pertain to a specific field, then the
+        the entire vendor object, or describes a general error when
 
-        `field` can be left null, or missing all together.
+        attempting to post, e.g. a connection error.  Use an array of
+
+        strings if multiple errors apply to the entire vendor object.
+
+        If errors apply to specific fields in the ERP, in lieu of a string
+
+        return a FieldError object.
 
         '
-      type: object
-      required:
-      - message
-      properties:
-        message:
-          type: string
-          maxLength: 1024
-        field:
-          description: 'The field on the Vic.ai vendor that has the error.
-
-            If the error does not pertain to a specific field, then this will be
-
-            null.
-
-            Example: `{"field": "name"}` or `{"field": "externalUpdatedAt"}`
-
-            '
-          type: string
-          maxLength: 255
-    PurchaseOrder:
-      type: object
-      required:
-      - internalId
-      - internalUpdatedAt
-      - status
-      - lineItems
-      properties:
-        internalId:
-          type: string
-          maxLength: 255
-        externalId:
+      oneOf:
+      - $ref: '#/components/schemas/ErrorString'
+      - type: array
+        maxItems: 64
+        items:
           oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-        vendor:
-          $ref: '#/components/schemas/Vendor'
-        internalUpdatedAt:
-          type: string
-          format: date-time
-        issuedOn:
-          type: string
-          format: date
-        createdOn:
-          type: string
-          format: date
-        poNumber:
-          type: string
-          maxLength: 255
-        deliverOn:
-          type: string
-          format: date
-        amount:
-          oneOf:
-          - $ref: '#/components/schemas/MonetaryValue'
-          - type: 'null'
-        currencyId:
-          oneOf:
-          - $ref: '#/components/schemas/Currency'
-          - type: 'null'
-        status:
-          $ref: '#/components/schemas/PurchaseOrderStatus'
-        matchingType:
-          $ref: '#/components/schemas/PurchaseOrderMatchingType'
-        type:
-          $ref: '#/components/schemas/PurchaseOrderType'
-        description:
-          type: string
-          maxLength: 255
-        requestor:
-          oneOf:
-          - $ref: '#/components/schemas/PurchaseOrderRequestor'
-          - type: 'null'
-        siteOwner:
-          oneOf:
-          - $ref: '#/components/schemas/PurchaseOrderSiteOwner'
-          - type: 'null'
-        lineItems:
-          type: array
-          items:
-            $ref: '#/components/schemas/PurchaseOrderLineItem'
-        paymentTermId:
-          oneOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          description: The id of the `PaymentTerm` a purchase order uses.
-    PurchaseOrderReceiptMatch:
-      type: object
-      required:
-      - invoiceItemId
-      - purchaseOrderItemId
-      - purchaseOrderReceiptLineId
-      - quantityMatched
-      properties:
-        invoiceItemId:
-          type: string
-          description: The invoice item's internal id.
-        purchaseOrderItemId:
-          type: string
-          description: The purchase order item's internal id.
-        purchaseOrderReceiptLineId:
-          type: string
-          description: The purchase order receipt line's internal id.
-        amountMatched:
-          type: string
-        quantityMatched:
-          type: string
+          - $ref: '#/components/schemas/ErrorString'
+          - $ref: '#/components/schemas/FieldError'
     InternalId:
       description: The internal id Vic uses for the record.
       type: string
       example: '47'
       readOnly: true
-    VendorState:
+    Tag:
+      type: object
+      required:
+      - value
+      properties:
+        id:
+          type: string
+        value:
+          type: string
+          maxLength: 255
+    InvoiceStatus:
       type: string
+      description: Contact the support to enable the APPROVED value.
       enum:
-      - CONFIRMED
-      - UNCONFIRMED
-    ErrorString:
-      type: string
-      maxLength: 255
+      - NOT_READY
+      - IN_APPROVALS
+      - APPROVED
+      - READY_FOR_POST
+      - READY_FOR_TRANSFER
+      - POSTED
+      - TRANSFERRED
+    ExternalData:
+      description: A free form json object that is stored with the record.
+      type: object
+    CreditStatusUpdatedEvent:
+      type: object
+      required:
+      - id
+      - occurred_at
+      - event
+      - data
+      properties:
+        id:
+          type: string
+          description: The ID of the event. This is idempotent.
+          format: uuid
+        occurred_at:
+          type: string
+          description: The date and time the outcome occurred.
+          format: date-time
+        event:
+          type: string
+          enum:
+          - credit_status_updated
+        data:
+          allOf:
+          - $ref: '#/components/schemas/Credit'
+          - type: object
+            required:
+            - status
+            - batchId
+            properties:
+              status:
+                type: string
+                enum:
+                - failed
+                - returned
+                - voided
+                description: The terminal outcome that fired the event. Overrides the credit's own status.
+              batchId:
+                type: string
+                format: uuid
+                description: The id of the payment batch the credit belongs to.
+    PurchaseOrderSiteOwner:
+      type: object
+      description: The person or entity who is in charge of the purchase order site. Resolved to a user by email first, then by full name. If the name matches more than one user in the company, the request is rejected with `422 Unprocessable Entity` — provide the email to disambiguate.
+      properties:
+        email:
+          oneOf:
+          - $ref: '#/components/schemas/Email'
+          - type: 'null'
+        name:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+    VendorRef:
+      type: object
+      description: A reference to a `Vendor`.
+      properties:
+        internalId:
+          oneOf:
+          - $ref: '#/components/schemas/VendorInternalId'
+          - type: 'null'
+        externalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+    AccrualInfo:
+      required:
+      - start
+      - count
+      - unit
+      properties:
+        start:
+          type: string
+          format: date
+        count:
+          oneOf:
+          - type: integer
+          - type: 'null'
+          description: 'The number of units from the `start`. The system _may_ have this field as
+
+            `null` due to incomplete information or a user has cleared the information.
+
+            However, when specifying the `count` to the api, it is required to be
+
+            greater than `1`.
+
+            '
+        unit:
+          $ref: '#/components/schemas/AccrualTermUnit'
     PurchaseOrderLineItem:
       type: object
       required:
@@ -939,11 +881,78 @@ components:
           description: Schedule lines associated with this purchase order line item.
           items:
             $ref: '#/components/schemas/PurchaseOrderScheduleLine'
-    Email:
+    MatchItem:
+      type: object
+      required:
+      - invoiceItemId
+      - purchaseOrderItemId
+      - quantityMatched
+      properties:
+        invoiceItemId:
+          type: string
+          description: The invoice item's internal id.
+        purchaseOrderItemId:
+          type: string
+          description: The purchase order item's internal id.
+        purchaseOrderItemLineNumber:
+          type: string
+          description: The purchase order item's line number.
+        productNumber:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          description: The matched purchase order line product number (the human-readable item identifier, also shown as "Item ID" in the Vic.ai UI).
+        unitOfMeasure:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          description: The matched purchase order line unit of measure.
+        amountMatched:
+          type: string
+        quantityMatched:
+          type: string
+    InvoiceLineItemInfo:
+      type: object
+      properties:
+        vatCode:
+          oneOf:
+          - type: string
+          - type: 'null'
+        vatAmount:
+          oneOf:
+          - type: number
+          - type: 'null'
+        vatRate:
+          oneOf:
+          - $ref: '#/components/schemas/MonetaryValue'
+          - type: 'null'
+          description: 'The amount of VAT percentage. If the VAT percentage is unknown, this
+
+            should be left `NULL` or unspecified.
+
+            '
+    Currency:
+      description: The ISO-4217 currency code.
       type: string
-      format: email
+      format: ISO-4217
+      maxLength: 3
+      example: USD
+    ExternalId:
+      description: 'The external id set by the ERP system. It does not have to be a UUID and
+
+        can be any non empty string desired.
+
+        '
+      type: string
+      example: 21b31bc7-1267-4335-893c-d7fe4706a238
       maxLength: 255
-    CreditStatus:
+    Language:
+      type: string
+      maxLength: 2
+      example: en
+    PaymentStatus:
       type: string
       enum:
       - pending_approval
@@ -951,16 +960,620 @@ components:
       - approved
       - acknowledged
       - voided
-    Currency:
-      description: The ISO-4217 currency code.
+      - failed
+      description: "The status of the payment.\n- `pending_approval` - The payment is awaiting approval.\n- `approved` - The payment was approved for payment.\n- `rejected` - The payment was rejected and was excluded from being paid.\n- `acknowledged` - The `rejected` payment was acknowledged by the payee.\n- `voided` - The payment was voided for reason.\n- `failed` - The payment failed to be submitted to the payment provider.\n  See the failed reason for more information.\n"
+    Payment:
+      type: object
+      description: 'The payment made for an `Invoice`. The `Account` assigned to the
+
+        payment is where the funds are being debited from.
+
+        '
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The id of the credit.
+        batchId:
+          type: string
+          format: uuid
+          description: The id of the payment batch the payment belongs to.
+        amount:
+          $ref: '#/components/schemas/MonetaryValue'
+        settlementAmount:
+          $ref: '#/components/schemas/MonetaryValue'
+        discountAmount:
+          description: 'The discount amount applied using the `PaymentTerm` on the vendor.
+
+            The `discountAmount + amount` should be equal to the `Invoice`
+
+            amount due in most cases. Accountants are allowed to make partial
+
+            payments. Typically when partial payments are made, `discountAmount`
+
+            will be `0.00`.
+
+            '
+          oneOf:
+          - $ref: '#/components/schemas/MonetaryValue'
+        currencyId:
+          $ref: '#/components/schemas/Currency'
+        settlementCurrencyId:
+          $ref: '#/components/schemas/Currency'
+        exchangeRate:
+          $ref: '#/components/schemas/MonetaryValue'
+        status:
+          $ref: '#/components/schemas/PaymentStatus'
+        paymentMethod:
+          oneOf:
+          - $ref: '#/components/schemas/PaymentMethod'
+          - type: 'null'
+        referenceId:
+          oneOf:
+          - $ref: '#/components/schemas/PaymentReferenceId'
+          - type: 'null'
+        approvedAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: The payment approver has approved the payment.
+          - type: 'null'
+        failedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the payment was marked as failed.
+        failedReason:
+          type:
+          - string
+          - 'null'
+          description: The reason why the payment failed.
+        fundedAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: 'The date time the payment request began to be processed.
+
+
+              **Note**: This is not the actual date time that the funds were
+
+              withdrawn from the bank. The payment request can take 15
+
+              minutes to 4 hours or more to be processed. See the `acceptedAt`
+
+              field for the date time that the payment was submitted and
+
+              accepted.
+
+              '
+          - type: 'null'
+        acceptedAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: 'The date time the payment request was submitted and accepted
+
+              for processing.
+
+              '
+          - type: 'null'
+        rejectedAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: The payment approver has rejected the payment.
+          - type: 'null'
+        voidedAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: 'This is set when a credit has been voided by the payment processor.
+
+              Generally this would happen due to a `Vendor` missing address
+
+              information or a malformed `Invoice` was trying to be paid. Other
+
+              cases could cause this to be voided due to insufficient funds.
+
+              '
+          - type: 'null'
+        confirmedAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: The datetime when the payment was confirmed in an external system.
+          - type: 'null'
+        remoteId:
+          oneOf:
+          - type: string
+            maxLength: 255
+            description: An external identifier for the payment in the confirming system.
+          - type: 'null'
+        remoteError:
+          oneOf:
+          - type: string
+            description: An error message if the confirmation failed.
+          - type: 'null'
+        remoteErroredAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: When the remote error occurred.
+          - type: 'null'
+        invoice:
+          $ref: '#/components/schemas/InvoiceRef'
+        costAccount:
+          $ref: '#/components/schemas/CostAccountRef'
+        vendor:
+          $ref: '#/components/schemas/VendorRef'
+    UnitOfMeasure:
       type: string
-      format: ISO-4217
-      maxLength: 3
-      example: USD
-    VendorInternalId:
-      type: string
-      description: The id of the `Vendor` in Vic.
+      example: kg
       maxLength: 255
+      description: The unit of measure used.
+    VendorRemoteError:
+      description: 'The remote error on a Vendor.
+
+        This is to describe any errors that have happened in the ERP system. If
+
+        the error that occurred does not pertain to a specific field, then the
+
+        `field` can be left null, or missing all together.
+
+        '
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          maxLength: 1024
+        field:
+          description: 'The field on the Vic.ai vendor that has the error.
+
+            If the error does not pertain to a specific field, then this will be
+
+            null.
+
+            Example: `{"field": "name"}` or `{"field": "externalUpdatedAt"}`
+
+            '
+          type: string
+          maxLength: 255
+    PurchaseOrderReceiptLine:
+      type: object
+      description: A receipt line associated with a purchase order line item.
+      required:
+      - internalId
+      properties:
+        internalId:
+          type: string
+          format: uuid
+          description: The internal ID of the receipt line.
+        receiptLineRemoteId:
+          type: string
+          maxLength: 255
+          description: The receipt line ID from the ERP system.
+        receiptLineNumber:
+          type: integer
+          description: The receipt line number.
+          minimum: 1
+        poLineNumber:
+          type: integer
+          description: The purchase order line number this receipt line is associated with.
+        poScheduleLineRemoteId:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          description: The purchase order schedule line ID (from the ERP) this receipt line is associated with.
+        poScheduleLineNumber:
+          oneOf:
+          - type: integer
+          - type: 'null'
+          description: The purchase order schedule line number this receipt line is associated with.
+        itemId:
+          type: string
+          maxLength: 255
+          description: The item ID from the ERP system.
+        uomCode:
+          type: string
+          maxLength: 255
+          description: The unit of measure code.
+        receivedQuantity:
+          type: string
+          format: decimal
+          description: The quantity received.
+          example: '1.0'
+        acceptedQuantity:
+          oneOf:
+          - type: string
+            format: decimal
+          - type: 'null'
+          description: The quantity accepted.
+          example: '1.0'
+        receivedDate:
+          type: string
+          format: date
+          description: The date the items were received.
+        createdOn:
+          type: string
+          format: date
+          description: When the receipt line was created.
+        createdBy:
+          type: string
+          maxLength: 255
+          description: The user or system that created this receipt line.
+        warehouse:
+          type: string
+          maxLength: 255
+          description: The warehouse where the items were received.
+        billOfLading:
+          description: The bill of lading reference for the goods receipt.
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        deliveryNote:
+          description: The delivery note reference for the goods receipt.
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        status:
+          type: string
+          enum:
+          - open
+          - closed
+          description: The status of the receipt line.
+    SparseVendor:
+      type: object
+      description: A vendor object but sparsely populated.
+      required:
+      - internalId
+      properties:
+        internalId:
+          $ref: '#/components/schemas/InternalId'
+        externalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+        orgNumber:
+          oneOf:
+          - type: string
+          - type: 'null'
+        countryCode:
+          oneOf:
+          - $ref: '#/components/schemas/CountryCode'
+          - type: 'null'
+        name:
+          oneOf:
+          - type: string
+          - type: 'null'
+    PurchaseOrderRequestor:
+      type: object
+      description: The person or entity who requested the purchase order. Resolved to a user by email first, then by full name. If the name matches more than one user in the company, the request is rejected with `422 Unprocessable Entity` — provide the email to disambiguate.
+      properties:
+        email:
+          oneOf:
+          - $ref: '#/components/schemas/Email'
+          - type: 'null'
+        name:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+    DimensionRef:
+      type: object
+      description: 'A reference to a dimension within Vic.
+
+        The `internalId` takes precedence over all fields specified. If a
+
+        dimension is not found matching the `internalId` an error will be
+
+        returned.
+
+        When `externalId` is provided, it takes precedence over `name` and can
+
+        be used in combination with `typeExternalId`.
+
+        If `name` is the only field specified and more than one dimension exists
+
+        with that `name`, then an error will be returned. It can be used in
+
+        combination with `typeExternalId`.
+
+        If `typeExternalId` is specified with `externalId` or `name` and more
+
+        than one dimension exists with those fields, then an error will be
+
+        returned.
+
+        '
+      properties:
+        internalId:
+          oneOf:
+          - type: string
+            maxLength: 255
+            description: 'Vic''s id of the dimension.
+
+              Takes precedence over all other fields. Other fields are ignored if
+
+              this is specified.
+
+              '
+          - type: 'null'
+        externalId:
+          description: 'The id of the dimension in the ERP.
+
+            Takes precedence over `name`. Can be used in combination with
+
+            `typeExternalId`.
+
+            If more than one dimension is found meeting the criteria specified,
+
+            an error will be returned.
+
+            '
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+        name:
+          oneOf:
+          - type: string
+            maxLength: 255
+            description: 'The name of the dimension.
+
+              Can be used in combination with `typeExternalId`.
+
+              If more than one dimension is found meeting the criteria specified,
+
+              an error will be returned.
+
+              '
+          - type: 'null'
+        typeExternalId:
+          description: 'The type id in the ERP.
+
+            This is a supplemental field to be used with `externalId` or `name`.
+
+            '
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+    InvoiceField:
+      type: object
+      properties:
+        label:
+          type: string
+          maxLength: 255
+        title:
+          type: string
+          maxLength: 255
+        type:
+          type: string
+          maxLength: 255
+          enum:
+          - text
+          - select
+          - date
+          description: 'How the field''s value should be interpreted by clients.
+
+            `text` accepts any printable string; `select` accepts one of the
+
+            field''s configured options; `date` is stored as an ISO 8601
+
+            `YYYY-MM-DD` calendar date.
+
+            '
+        value:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+    AccrualTermUnit:
+      type: string
+      description: The accrual term units supported.
+      enum:
+      - MONTHS
+    MatchedPurchaseOrder:
+      type: object
+      required:
+      - internalId
+      - poNumber
+      properties:
+        internalId:
+          description: The purchase order's internal id.
+          type: string
+          maxLength: 255
+        externalId:
+          description: The purchase order's external id.
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+        poNumber:
+          type: string
+          description: The purchase order's po number.
+    VendorTaxInfo:
+      type: object
+      properties:
+        taxId:
+          oneOf:
+          - type: string
+          - type: 'null'
+        taxIdType:
+          oneOf:
+          - type: string
+            enum:
+            - ssn
+            - ein
+            - other
+          - type: 'null'
+          description: The type of tax identifier (SSN, EIN, or other)
+        is1099vendor:
+          type: boolean
+        orgNumber:
+          oneOf:
+          - type: string
+          - type: 'null'
+    PaymentBatch:
+      type: object
+      description: A batch of payments made with Vic.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The id of the payment batch in Vic.
+        name:
+          type: string
+          description: The name of the payment batch that the accountant has set.
+        companyId:
+          type: string
+          description: The id of the `Company` in Vic.
+        processedAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: 'The date time of when the payment was sent to the payment
+
+              processor.
+
+              '
+          - type: 'null'
+        completedAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: 'The date time of when all of the payments have been submitted to
+
+              the bank accounts.
+
+              '
+          - type: 'null'
+        approvedAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: 'The payment approver has approved the batch of payments and will
+
+              be scheduled to be processed.
+
+              '
+          - type: 'null'
+        rejectedAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: 'This is set when the payment approver has rejected the entire
+
+              batch of payments. Each `Payment` and `Credit` will have their
+
+              `rejectedAt` fields also set.
+
+              '
+          - type: 'null'
+        voidedAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: 'This is set when an entire batch of payments was voided.
+
+              Generally this would happen due to a `Vendor` missing address
+
+              information or a malformed `Invoice` was trying to be paid. Other
+
+              cases could cause this to be voided due to insufficient funds.
+
+              '
+          - type: 'null'
+        status:
+          $ref: '#/components/schemas/PaymentBatchStatus'
+        payments:
+          type: array
+          minItems: 1
+          maxItems: 100
+          description: Array of payment confirmation items. Must contain at least one item and no more than 100 items.
+          items:
+            $ref: '#/components/schemas/Payment'
+        credits:
+          type: array
+          minItems: 1
+          maxItems: 100
+          description: Array of credit confirmation items. Must contain at least one item and no more than 100 items.
+          items:
+            $ref: '#/components/schemas/Credit'
+    CreateSubscriptionV2:
+      type: object
+      required:
+      - callback_url
+      - access_token
+      properties:
+        callback_url:
+          type: string
+          format: uri
+          description: The HTTPS URL where webhook events will be sent
+          maxLength: 2048
+          example: https://your-api.example.com/webhooks
+        access_token:
+          type: string
+          description: Access token for authenticating webhook deliveries
+          maxLength: 1024
+          example: your-access-token
+        username:
+          type: string
+          description: Username for Basic authentication (required when auth_method is 'basic')
+          maxLength: 255
+          example: api_user
+        auth_method:
+          type: string
+          enum:
+          - bearer
+          - basic
+          description: Authentication method for webhook delivery
+          default: bearer
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookEventName'
+          description: List of event types to subscribe to.
+          default:
+          - all
+          example:
+          - invoice_posted
+          - invoice_approved
+    InvoiceDeletedEvent:
+      type: object
+      required:
+      - id
+      - occurred_at
+      - event
+      - data
+      properties:
+        id:
+          type: string
+          description: The ID of the event. This is idempotent.
+          format: uuid
+        occurred_at:
+          type: string
+          description: The date and time the event occurred.
+          format: date-time
+        event:
+          type: string
+          enum:
+          - invoice_deleted
+        data:
+          type: object
+          required:
+          - internalId
+          properties:
+            internalId:
+              type: string
+              example: '123'
+            externalId:
+              oneOf:
+              - $ref: '#/components/schemas/ExternalId'
+              - type: 'null'
     InvoiceLineItemChild:
       type: object
       description: 'A child line item within a grouped invoice line item. Contains a subset
@@ -1032,157 +1645,36 @@ components:
             line item before merging.
 
             '
-    InvoiceItemLineType:
-      type: string
-      description: The type of invoice item line.
-      enum:
-      - item
-      - expense
-      default: expense
-    Credit:
+    UpdateSubscriptionV2:
       type: object
       properties:
-        id:
+        callback_url:
           type: string
-          format: uuid
-          description: The id of the credit.
-        batchId:
+          format: uri
+          description: The HTTPS URL where webhook events will be sent
+          maxLength: 2048
+          example: https://your-api.example.com/webhooks
+        access_token:
           type: string
-          format: uuid
-          description: The id of the payment batch the credit belongs to.
-        amount:
-          $ref: '#/components/schemas/MonetaryValue'
-        settlementAmount:
-          $ref: '#/components/schemas/MonetaryValue'
-        currencyId:
-          $ref: '#/components/schemas/Currency'
-        settlementCurrencyId:
-          $ref: '#/components/schemas/Currency'
-        exchangeRate:
-          $ref: '#/components/schemas/MonetaryValue'
-        status:
-          $ref: '#/components/schemas/CreditStatus'
-        paymentMethod:
-          oneOf:
-          - $ref: '#/components/schemas/PaymentMethod'
-          - type: 'null'
-        referenceId:
-          oneOf:
-          - $ref: '#/components/schemas/PaymentReferenceId'
-          - type: 'null'
-        approvedAt:
-          oneOf:
-          - type: string
-            format: date-time
-            description: The payment approver has approved the credit.
-          - type: 'null'
-        fundedAt:
-          oneOf:
-          - type: string
-            format: date-time
-            description: 'The date time the payment request began to be processed.
-
-
-              **Note**: This is not the actual date time that the funds were
-
-              withdrawn from the bank. The payment request can take 15
-
-              minutes to 4 hours or more to be processed. See the `acceptedAt`
-
-              field for the date time that the payment was submitted and
-
-              accepted.
-
-              '
-          - type: 'null'
-        failedAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: When the credit was marked as failed.
-        failedReason:
-          type:
-          - string
-          - 'null'
-          description: The reason why the credit failed.
-        acceptedAt:
-          oneOf:
-          - type: string
-            format: date-time
-            description: 'The date time the payment request was submitted and accepted
-
-              for processing.
-
-              '
-          - type: 'null'
-        rejectedAt:
-          oneOf:
-          - type: string
-            format: date-time
-            description: The payment approver has rejected the credit payment.
-          - type: 'null'
-        voidedAt:
-          oneOf:
-          - type: string
-            format: date-time
-            description: 'This is set when a credit has been voided by the payment processor.
-
-              Generally this would happen due to a `Vendor` missing address
-
-              information or a malformed `Invoice` was trying to be paid. Other
-
-              cases could cause this to be voided due to insufficient funds.
-
-              '
-          - type: 'null'
-        confirmedAt:
-          oneOf:
-          - type: string
-            format: date-time
-            description: The datetime when the credit was confirmed in an external system.
-          - type: 'null'
-        remoteId:
-          oneOf:
-          - type: string
-            maxLength: 255
-            description: An external identifier for the credit in the confirming system.
-          - type: 'null'
-        remoteError:
-          oneOf:
-          - type: string
-            description: An error message if the confirmation failed.
-          - type: 'null'
-        remoteErroredAt:
-          oneOf:
-          - type: string
-            format: date-time
-            description: When the remote error occurred.
-          - type: 'null'
-        invoice:
-          $ref: '#/components/schemas/InvoiceRef'
-        costAccount:
-          $ref: '#/components/schemas/CostAccountRef'
-        vendor:
-          $ref: '#/components/schemas/VendorRef'
-    MatchedPurchaseOrder:
-      type: object
-      required:
-      - internalId
-      - poNumber
-      properties:
-        internalId:
-          description: The purchase order's internal id.
+          description: Access token for authenticating webhook deliveries
+          maxLength: 1024
+          example: your-access-token
+        username:
           type: string
+          description: Username for Basic authentication (required when auth_method is 'basic')
           maxLength: 255
-        externalId:
-          description: The purchase order's external id.
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-        poNumber:
+          example: api_user
+        auth_method:
           type: string
-          description: The purchase order's po number.
+          enum:
+          - bearer
+          - basic
+          description: Authentication method for webhook delivery
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookEventName'
+          description: List of event types to subscribe to. Use ["all"] to subscribe to all events.
     BillOfLadingNumber:
       description: The bill of lading number.
       type: object
@@ -1195,178 +1687,289 @@ components:
           minLength: 1
           maxLength: 255
           example: BOL-123456
-    PurchaseOrderLineField:
-      type: object
-      properties:
-        label:
-          type: string
-          maxLength: 255
-        title:
-          type: string
-          maxLength: 255
-        type:
-          type: string
-          maxLength: 255
-        value:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-    UnsubscribeResult:
+    PurchaseOrderMatchingType:
       type: string
+      description: The matching type of the purchase order.
       enum:
-      - OK
-    Language:
-      type: string
-      maxLength: 2
-      example: en
-    MatchItem:
+      - document
+      - line
+    PaymentInfoTerm:
       type: object
       required:
-      - invoiceItemId
-      - purchaseOrderItemId
-      - quantityMatched
+      - count
+      - unit
       properties:
-        invoiceItemId:
-          type: string
-          description: The invoice item's internal id.
-        purchaseOrderItemId:
-          type: string
-          description: The purchase order item's internal id.
-        purchaseOrderItemLineNumber:
-          type: string
-          description: The purchase order item's line number.
-        productNumber:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          description: The matched purchase order line product number (the human-readable item identifier, also shown as "Item ID" in the Vic.ai UI).
-        unitOfMeasure:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          description: The matched purchase order line unit of measure.
-        amountMatched:
-          type: string
-        quantityMatched:
-          type: string
-    VendorCallback:
+        count:
+          type: integer
+          minimum: 1
+        unit:
+          $ref: '#/components/schemas/PaymentInfoTermUnit'
+    PurchaseOrderScheduleLine:
       type: object
+      description: A schedule line associated with a purchase order line item.
       required:
-      - addressCity
-      - addressPostalCode
-      - addressState
-      - addressStreet
-      - countryCode
-      - email
       - internalId
-      - name
-      - phone
       properties:
         internalId:
-          $ref: '#/components/schemas/InternalId'
-        companyId:
           type: string
-          description: The ID of the company that owns this vendor.
-          example: '12345'
+          format: uuid
+          description: The internal ID of the schedule line.
+        poScheduleLineRemoteId:
+          type: string
+          maxLength: 255
+          description: The purchase order schedule line ID from the ERP system.
+        poScheduleLineNumber:
+          type: integer
+          description: The purchase order schedule line number.
+          minimum: 1
+        poLineNumber:
+          type: integer
+          description: The purchase order line number this schedule line is associated with.
+        itemId:
+          type: string
+          maxLength: 255
+          description: The item ID from the ERP system.
+        uomCode:
+          type: string
+          maxLength: 255
+          description: The unit of measure code.
+        plannedQuantity:
+          type: string
+          format: decimal
+          description: The planned quantity for this schedule line.
+          example: '1.0'
+        promisedDeliveryStartDate:
+          type: string
+          format: date
+          description: The promised delivery start date.
+        promisedDeliveryEndDate:
+          type: string
+          format: date
+          description: The promised delivery end date.
+        createdOn:
+          type: string
+          format: date
+          description: When the schedule line was created.
+        shipToLocation:
+          type: string
+          maxLength: 255
+          description: The location where items should be shipped.
+    PurchaseOrderDeletedEvent:
+      type: object
+      required:
+      - id
+      - occurred_at
+      - event
+      - data
+      properties:
+        id:
+          type: string
+          description: The ID of the event. This is idempotent.
+          format: uuid
+        occurred_at:
+          type: string
+          description: The date and time the event occurred.
+          format: date-time
+        event:
+          type: string
+          enum:
+          - purchase_order_deleted
+        data:
+          type: object
+          required:
+          - internalId
+          properties:
+            internalId:
+              type: string
+              example: dbbfd5b7-8741-42c7-8f3e-39eaafbaf287
+            externalId:
+              oneOf:
+              - $ref: '#/components/schemas/ExternalId'
+              - type: 'null'
+    InvoicePostedEvent:
+      type: object
+      required:
+      - id
+      - occurred_at
+      - event
+      - data
+      properties:
+        id:
+          type: string
+          description: The ID of the event. This is idempotent.
+          format: uuid
+        occurred_at:
+          type: string
+          description: The date and time the event occurred.
+          format: date-time
+        event:
+          type: string
+          enum:
+          - invoice_posted
+        data:
+          $ref: '#/components/schemas/Invoice'
+    VendorState:
+      type: string
+      enum:
+      - CONFIRMED
+      - UNCONFIRMED
+    Dimension:
+      type: object
+      properties:
         name:
           type: string
           maxLength: 255
-        email:
-          oneOf:
-          - $ref: '#/components/schemas/Email'
-          - type: 'null'
-        phone:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-        addressStreet:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-        addressCity:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-        addressState:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-        addressPostalCode:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-        countryCode:
-          oneOf:
-          - $ref: '#/components/schemas/CountryCode'
-          - type: 'null'
-        currency:
-          oneOf:
-          - $ref: '#/components/schemas/Currency'
-          - type: 'null'
-        confirmedAt:
-          oneOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-        state:
-          $ref: '#/components/schemas/VendorState'
-        taxInfo:
-          $ref: '#/components/schemas/VendorTaxInfo'
-        defaultPaymentInfo:
-          $ref: '#/components/schemas/PaymentInfo'
-        paymentTermId:
-          oneOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          description: The id of the `PaymentTerm` a vendor uses.
-        vendorGroupId:
-          oneOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          description: The `VendorGroup` id the vendor is attached to.
+          description: The name of the dimension.
+        type:
+          type: string
+          maxLength: 255
+          description: The dimension type.
+        typeName:
+          type: string
+          maxLength: 255
+          description: The dimension type name. A human friendly type name.
+        typeExternalId:
+          type: string
+          maxLength: 255
+          description: The dimension type's external ID in the ERP system.
+        shortName:
+          type: string
+          maxLength: 255
         externalData:
           oneOf:
           - $ref: '#/components/schemas/ExternalData'
           - type: 'null'
-        errors:
-          description: The errors that occurred in the external ERP system.
-          items:
-            $ref: '#/components/schemas/VendorRemoteError'
-    InvoiceUiStatus:
-      type: string
-      description: 'The invoice''s processing status as shown in the Vic.ai interface.
+        displayName:
+          type: string
+        internalId:
+          $ref: '#/components/schemas/InternalId'
+        internalUpdatedAt:
+          type: string
+          description: Is in UTC.
+          format: date-time
+        externalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+        externalUpdatedAt:
+          type: string
+          format: date-time
+          description: Does not have UTC normalization.
+    NonNegativeMonetaryValue:
+      description: 'The monetary value as a string.
+
+        A float **should not** be used. The api will accept a float and it will be
+
+        transformed into a monetary value, but for best results please use a string
+
+        with the proper decimal precision. **Must be greater than or equal to zero.**
 
         '
+      type: string
+      format: decimal
+      example: '1.00'
+    InvoicePaymentTerm:
+      type: object
+      required:
+      - count
+      - unit
+      properties:
+        count:
+          type: integer
+          minimum: 0
+          description: The number of `unit` for the payment term.
+        unit:
+          $ref: '#/components/schemas/PaymentInfoTermUnit'
+    PaymentBatchProcessedEvent:
+      type: object
+      required:
+      - event
+      - data
+      properties:
+        event:
+          type: string
+          enum:
+          - payment_batch_processed
+        data:
+          $ref: '#/components/schemas/PaymentBatch'
+    TaxCode:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          maxLength: 255
+          example: Tax code description
+        rate:
+          type: string
+          format: decimal
+          example: '0.25'
+    PaymentReferenceId:
+      type: string
+      description: 'The reference id of the payment or credit is associated with. This will
+
+        be the identifier is on the remittance advice sent to the Vendor.
+
+        Example: `P001234`, `A000134`, or `E123456`
+
+        '
+    InvoiceExternalPaymentStatus:
+      type: string
       enum:
-      - duplicate
-      - export_failed
-      - export_in_progress
-      - exported
-      - missing_fields
-      - missing_item_fields
-      - post_failed
-      - post_in_progress
-      - posted
-      - posted_partial
-      - predicted_total_error
-      - reviewed
-      - submit_failed
-      - submit_in_progress
-      - submitted
-      - transfer_failed
-      - transfer_in_progress
-      - transferred
-      - unreviewed
+      - paid
+      - unpaid
+      - voided
+    PurchaseOrderType:
+      type: string
+      description: This has been deprecated. Please use the `matchingType` field.
+      enum:
+      - blanket
+      - normal
+      default: normal
+    InvoiceInternalId:
+      type: string
+      description: The id of the `Invoice` in Vic.
+      maxLength: 255
+    ErrorString:
+      type: string
+      maxLength: 255
+    InvoiceRestoredEvent:
+      type: object
+      required:
+      - id
+      - occurred_at
+      - event
+      - data
+      properties:
+        id:
+          type: string
+          description: The ID of the event. This is idempotent.
+          format: uuid
+        occurred_at:
+          type: string
+          description: The date and time the event occurred.
+          format: date-time
+        event:
+          type: string
+          enum:
+          - invoice_restored
+        data:
+          type: object
+          required:
+          - internalId
+          properties:
+            internalId:
+              type: string
+              example: '123'
+            externalId:
+              oneOf:
+              - $ref: '#/components/schemas/ExternalId'
+              - type: 'null'
     InvoiceConfirm:
       type: object
       required:
@@ -1382,18 +1985,44 @@ components:
           format: date-time
         postingError:
           type: string
-    RequestIdCallback:
+    PaymentInfo:
       type: object
-      required:
-      - requestId
       properties:
-        requestId:
-          type: string
-          format: uuid
-        companyId:
-          type: string
-          description: The ID of the company that is requesting the sync.
-          example: '12345'
+        bankAccountNum:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        bankCode:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        paymentTerm:
+          oneOf:
+          - $ref: '#/components/schemas/PaymentInfoTerm'
+          - type: 'null'
+        bankGiro:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        plusGiro:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        bban:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        internationalBankAccount:
+          oneOf:
+          - $ref: '#/components/schemas/InternationalBankAccount'
+          - type: 'null'
+        defaultMethod:
+          $ref: '#/components/schemas/PaymentInfoMethod'
     Invoice:
       type: object
       required:
@@ -1707,431 +2336,209 @@ components:
           oneOf:
           - type: 'null'
           - $ref: '#/components/schemas/MonetaryValue'
-    FieldError:
-      description: 'Data structure for describing an error associated with a specific
-
-        field in another datastructure.
-
-        - internalField represents the Vic.API field name
-
-        - externalField represents the associated field name in the ERP
-
-        '
+    CustomField:
       type: object
-      required:
-      - internalField
-      - externalField
-      - message
-      properties:
-        internalField:
-          $ref: '#/components/schemas/ErrorString'
-        externalField:
-          $ref: '#/components/schemas/ErrorString'
-        message:
-          $ref: '#/components/schemas/ErrorString'
-    PaymentMethod:
-      type: string
-      enum:
-      - ach
-      - card
-      - check
-      - wire
-    PaymentInfo:
-      type: object
-      properties:
-        bankAccountNum:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-        bankCode:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-        paymentTerm:
-          oneOf:
-          - $ref: '#/components/schemas/PaymentInfoTerm'
-          - type: 'null'
-        bankGiro:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-        plusGiro:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-        bban:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-        internationalBankAccount:
-          oneOf:
-          - $ref: '#/components/schemas/InternationalBankAccount'
-          - type: 'null'
-        defaultMethod:
-          $ref: '#/components/schemas/PaymentInfoMethod'
-    PaymentReferenceId:
-      type: string
-      description: 'The reference id of the payment or credit is associated with. This will
-
-        be the identifier is on the remittance advice sent to the Vendor.
-
-        Example: `P001234`, `A000134`, or `E123456`
-
-        '
-    InvoiceStatus:
-      type: string
-      description: Contact the support to enable the APPROVED value.
-      enum:
-      - NOT_READY
-      - IN_APPROVALS
-      - APPROVED
-      - READY_FOR_POST
-      - READY_FOR_TRANSFER
-      - POSTED
-      - TRANSFERRED
-    InvoicePostEvent:
-      type: object
-      required:
-      - id
-      - occurred_at
-      - event
-      - data
       properties:
         id:
           type: string
-          description: The ID of the event. This is idempotent.
-          format: uuid
-        occurred_at:
+          maxLength: 255
+        value:
           type: string
-          description: The date and time the event occurred.
-          format: date-time
-        event:
+          maxLength: 255
+        label:
           type: string
-          enum:
-          - invoice_post
-        data:
-          $ref: '#/components/schemas/Invoice'
-    LineItemVat:
+          maxLength: 255
+    PurchaseOrderReceiptMatch:
       type: object
+      required:
+      - invoiceItemId
+      - purchaseOrderItemId
+      - purchaseOrderReceiptLineId
+      - quantityMatched
       properties:
-        internalId:
-          oneOf:
-          - type: string
-            maxLength: 255
-            description: 'The internal id of the VAT code. If specified, it will take
+        invoiceItemId:
+          type: string
+          description: The invoice item's internal id.
+        purchaseOrderItemId:
+          type: string
+          description: The purchase order item's internal id.
+        purchaseOrderReceiptLineId:
+          type: string
+          description: The purchase order receipt line's internal id.
+        amountMatched:
+          type: string
+        quantityMatched:
+          type: string
+    InvoiceInfoNO:
+      type: object
+      required:
+      - kid
+      properties:
+        kid:
+          deprecated: true
+          description: '**Deprecated**: The `paymentRef` on the `Invoice` should be used
 
-              precedence over the `externalId` and `code`.
+            instead.
 
-              '
-          - type: 'null'
-        externalId:
-          description: 'The external id of the VAT code. If specified, it will take
+            The KID is a customer identification number that is mandatory for
 
-            precedence over the `code`.
+            invoices in Norway.
 
             '
+          type: string
+        creditAccountExternalId:
           oneOf:
           - $ref: '#/components/schemas/ExternalId'
           - type: 'null'
-        code:
-          oneOf:
-          - type: string
-            maxLength: 255
-            description: The VAT code.
-          - type: 'null'
+        creditAccountInternalId:
+          type: string
+    Credit:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The id of the credit.
+        batchId:
+          type: string
+          format: uuid
+          description: The id of the payment batch the credit belongs to.
         amount:
+          $ref: '#/components/schemas/MonetaryValue'
+        settlementAmount:
+          $ref: '#/components/schemas/MonetaryValue'
+        currencyId:
+          $ref: '#/components/schemas/Currency'
+        settlementCurrencyId:
+          $ref: '#/components/schemas/Currency'
+        exchangeRate:
+          $ref: '#/components/schemas/MonetaryValue'
+        status:
+          $ref: '#/components/schemas/CreditStatus'
+        paymentMethod:
           oneOf:
-          - $ref: '#/components/schemas/MonetaryValue'
+          - $ref: '#/components/schemas/PaymentMethod'
           - type: 'null'
-          description: 'The amount of VAT. This will be added to the line item''s total. If
-
-            the VAT amount is unknown, this should be left `NULL` or
-
-            unspecified.
-
-            '
-        rate:
+        referenceId:
           oneOf:
-          - $ref: '#/components/schemas/MonetaryValue'
+          - $ref: '#/components/schemas/PaymentReferenceId'
           - type: 'null'
-          description: 'The amount of VAT percentage. If the VAT percentage is unknown, this
+        approvedAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: The payment approver has approved the credit.
+          - type: 'null'
+        fundedAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: 'The date time the payment request began to be processed.
 
-            should be left `NULL` or unspecified.
 
-            '
-    SparseVendor:
+              **Note**: This is not the actual date time that the funds were
+
+              withdrawn from the bank. The payment request can take 15
+
+              minutes to 4 hours or more to be processed. See the `acceptedAt`
+
+              field for the date time that the payment was submitted and
+
+              accepted.
+
+              '
+          - type: 'null'
+        failedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the credit was marked as failed.
+        failedReason:
+          type:
+          - string
+          - 'null'
+          description: The reason why the credit failed.
+        acceptedAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: 'The date time the payment request was submitted and accepted
+
+              for processing.
+
+              '
+          - type: 'null'
+        rejectedAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: The payment approver has rejected the credit payment.
+          - type: 'null'
+        voidedAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: 'This is set when a credit has been voided by the payment processor.
+
+              Generally this would happen due to a `Vendor` missing address
+
+              information or a malformed `Invoice` was trying to be paid. Other
+
+              cases could cause this to be voided due to insufficient funds.
+
+              '
+          - type: 'null'
+        confirmedAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: The datetime when the credit was confirmed in an external system.
+          - type: 'null'
+        remoteId:
+          oneOf:
+          - type: string
+            maxLength: 255
+            description: An external identifier for the credit in the confirming system.
+          - type: 'null'
+        remoteError:
+          oneOf:
+          - type: string
+            description: An error message if the confirmation failed.
+          - type: 'null'
+        remoteErroredAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: When the remote error occurred.
+          - type: 'null'
+        invoice:
+          $ref: '#/components/schemas/InvoiceRef'
+        costAccount:
+          $ref: '#/components/schemas/CostAccountRef'
+        vendor:
+          $ref: '#/components/schemas/VendorRef'
+    PurchaseOrderStatus:
+      type: string
+      description: The status of the purchase order.
+      enum:
+      - open
+      - closed
+      default: open
+    VendorConfirm:
       type: object
-      description: A vendor object but sparsely populated.
       required:
-      - internalId
+      - externalId
+      - externalUpdatedAt
       properties:
-        internalId:
-          $ref: '#/components/schemas/InternalId'
         externalId:
           oneOf:
           - $ref: '#/components/schemas/ExternalId'
           - type: 'null'
-        orgNumber:
-          oneOf:
-          - type: string
-          - type: 'null'
-        countryCode:
-          oneOf:
-          - $ref: '#/components/schemas/CountryCode'
-          - type: 'null'
-        name:
-          oneOf:
-          - type: string
-          - type: 'null'
-    SubscriptionV2:
-      type: object
-      required:
-      - id
-      - callback_url
-      - auth_method
-      - events
-      - version
-      - created_at
-      - updated_at
-      properties:
-        id:
-          type: string
-          description: Unique identifier for the subscription
-        callback_url:
-          type: string
-          format: uri
-          description: The HTTPS URL where webhook events will be sent
-          maxLength: 2048
-          example: https://your-api.example.com/webhooks
-        auth_method:
-          type: string
-          enum:
-          - bearer
-          - basic
-          description: Authentication method for webhook delivery
-        username:
-          type: string
-          description: Username for Basic authentication (required when auth_method is 'basic')
-          maxLength: 255
-          example: api_user
-        events:
-          type: array
-          items:
-            $ref: '#/components/schemas/WebhookEventName'
-          description: List of subscribed event types.
-          example:
-          - invoice_posted
-          - invoice_approved
-        version:
-          type: string
-          enum:
-          - v0
-          - v1
-          description: Subscription version
-        company_id:
-          type: string
-          format: uuid
-          description: ID of the company this subscription belongs to
-        created_at:
+        externalUpdatedAt:
           type: string
           format: date-time
-          description: When the subscription was created
-        updated_at:
-          type: string
-          format: date-time
-          description: When the subscription was last updated
-    PurchaseOrderRequestor:
-      type: object
-      description: The person or entity who requested the purchase order. Resolved to a user by email first, then by full name. If the name matches more than one user in the company, the request is rejected with `422 Unprocessable Entity` — provide the email to disambiguate.
-      properties:
-        email:
-          oneOf:
-          - $ref: '#/components/schemas/Email'
-          - type: 'null'
-        name:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-    InvoiceMarkedAs:
-      type: string
-      enum:
-      - PAID
-      - UNPAID
-      - DELETED
-    CreditStatusUpdatedEvent:
-      type: object
-      required:
-      - id
-      - occurred_at
-      - event
-      - data
-      properties:
-        id:
-          type: string
-          description: The ID of the event. This is idempotent.
-          format: uuid
-        occurred_at:
-          type: string
-          description: The date and time the outcome occurred.
-          format: date-time
-        event:
-          type: string
-          enum:
-          - credit_status_updated
-        data:
-          allOf:
-          - $ref: '#/components/schemas/Credit'
-          - type: object
-            required:
-            - status
-            - batchId
-            properties:
-              status:
-                type: string
-                enum:
-                - failed
-                - returned
-                - voided
-                description: The terminal outcome that fired the event. Overrides the credit's own status.
-              batchId:
-                type: string
-                format: uuid
-                description: The id of the payment batch the credit belongs to.
-    PaymentStatus:
-      type: string
-      enum:
-      - pending_approval
-      - rejected
-      - approved
-      - acknowledged
-      - voided
-      - failed
-      description: "The status of the payment.\n- `pending_approval` - The payment is awaiting approval.\n- `approved` - The payment was approved for payment.\n- `rejected` - The payment was rejected and was excluded from being paid.\n- `acknowledged` - The `rejected` payment was acknowledged by the payee.\n- `voided` - The payment was voided for reason.\n- `failed` - The payment failed to be submitted to the payment provider.\n  See the failed reason for more information.\n"
-    PurchaseOrderLineItemMatchingType:
-      type: string
-      description: 'The type of matching that should be done on the line item. Determines which quantity fields are required.
-
-        `two_way` - Only the `quantityRequested` field is required.
-
-        `three_way` (default) - The `quantityRequested` and `quantityReceived` fields are required.
-
-        `four_way` - The `quantityRequested`, `quantityReceived`, and `quantityAccepted` fields are required.
-
-        '
-      enum:
-      - two_way
-      - three_way
-      - four_way
-      default: three_way
-    DimensionRef:
-      type: object
-      description: 'A reference to a dimension within Vic.
-
-        The `internalId` takes precedence over all fields specified. If a
-
-        dimension is not found matching the `internalId` an error will be
-
-        returned.
-
-        When `externalId` is provided, it takes precedence over `name` and can
-
-        be used in combination with `typeExternalId`.
-
-        If `name` is the only field specified and more than one dimension exists
-
-        with that `name`, then an error will be returned. It can be used in
-
-        combination with `typeExternalId`.
-
-        If `typeExternalId` is specified with `externalId` or `name` and more
-
-        than one dimension exists with those fields, then an error will be
-
-        returned.
-
-        '
-      properties:
-        internalId:
-          oneOf:
-          - type: string
-            maxLength: 255
-            description: 'Vic''s id of the dimension.
-
-              Takes precedence over all other fields. Other fields are ignored if
-
-              this is specified.
-
-              '
-          - type: 'null'
-        externalId:
-          description: 'The id of the dimension in the ERP.
-
-            Takes precedence over `name`. Can be used in combination with
-
-            `typeExternalId`.
-
-            If more than one dimension is found meeting the criteria specified,
-
-            an error will be returned.
-
-            '
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-        name:
-          oneOf:
-          - type: string
-            maxLength: 255
-            description: 'The name of the dimension.
-
-              Can be used in combination with `typeExternalId`.
-
-              If more than one dimension is found meeting the criteria specified,
-
-              an error will be returned.
-
-              '
-          - type: 'null'
-        typeExternalId:
-          description: 'The type id in the ERP.
-
-            This is a supplemental field to be used with `externalId` or `name`.
-
-            '
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-    TaxCode:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        code:
-          type: string
-          maxLength: 255
-        description:
-          type: string
-          maxLength: 255
-          example: Tax code description
-        rate:
-          type: string
-          format: decimal
-          example: '0.25'
-    CountryCode:
-      description: 'The ISO-3166 country code. The acceptable values are Alpha-2 codes.
-
-        '
-      type: string
-      format: ISO-3166
-      maxLength: 2
-      example: US
+          description: Does not have UTC normalization.
     PaymentStatusUpdatedEvent:
       type: object
       required:
@@ -2171,6 +2578,78 @@ components:
                 type: string
                 format: uuid
                 description: The id of the payment batch the payment belongs to.
+    Error:
+      description: 'generic error message in JSON format.  Note the ''code'' field should
+
+        match the HTTP status code of the wrapping HTTP request.
+
+        '
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          minimum: 100
+          maximum: 599
+        message:
+          $ref: '#/components/schemas/ErrorString'
+    Email:
+      type: string
+      format: email
+      maxLength: 255
+    InvoicePostEvent:
+      type: object
+      required:
+      - id
+      - occurred_at
+      - event
+      - data
+      properties:
+        id:
+          type: string
+          description: The ID of the event. This is idempotent.
+          format: uuid
+        occurred_at:
+          type: string
+          description: The date and time the event occurred.
+          format: date-time
+        event:
+          type: string
+          enum:
+          - invoice_post
+        data:
+          $ref: '#/components/schemas/Invoice'
+    PurchaseOrderLineField:
+      type: object
+      properties:
+        label:
+          type: string
+          maxLength: 255
+        title:
+          type: string
+          maxLength: 255
+        type:
+          type: string
+          maxLength: 255
+        value:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+    InvoiceItemLineType:
+      type: string
+      description: The type of invoice item line.
+      enum:
+      - item
+      - expense
+      default: expense
+    PaymentInfoTermUnit:
+      type: string
+      description: The payment term units supported.
+      enum:
+      - DAYS
     PurchaseOrderUpdatedEvent:
       type: object
       required:
@@ -2193,32 +2672,7 @@ components:
           - purchase_order_updated
         data:
           $ref: '#/components/schemas/PurchaseOrder'
-    InvoicePaymentTerm:
-      type: object
-      required:
-      - count
-      - unit
-      properties:
-        count:
-          type: integer
-          minimum: 0
-          description: The number of `unit` for the payment term.
-        unit:
-          $ref: '#/components/schemas/PaymentInfoTermUnit'
-    ExternalData:
-      description: A free form json object that is stored with the record.
-      type: object
-    Tag:
-      type: object
-      required:
-      - value
-      properties:
-        id:
-          type: string
-        value:
-          type: string
-          maxLength: 255
-    InvoicePostedEvent:
+    InvoiceApprovedEvent:
       type: object
       required:
       - id
@@ -2237,27 +2691,49 @@ components:
         event:
           type: string
           enum:
-          - invoice_posted
+          - invoice_approved
         data:
           $ref: '#/components/schemas/Invoice'
-    PaymentInfoTermUnit:
+    TransactionType:
       type: string
-      description: The payment term units supported.
+      description: The type of invoice transaction.
       enum:
-      - DAYS
-    PaymentInfoMethod:
+      - INVOICE
+      - CREDITNOTE
+      default: INVOICE
+    VendorInternalId:
       type: string
-      description: 'The payment method to be used.
-
-        Note: `BANKACCOUNT` is equivalent to `ACH` in the Web UI.
+      description: The id of the `Vendor` in Vic.
+      maxLength: 255
+    UnsubscribeResult:
+      type: string
+      enum:
+      - OK
+    InvoiceUiStatus:
+      type: string
+      description: 'The invoice''s processing status as shown in the Vic.ai interface.
 
         '
       enum:
-      - BANKACCOUNT
-      - BANKGIRO
-      - PLUSGIRO
-      - IBAN
-      - BBAN
+      - duplicate
+      - export_failed
+      - export_in_progress
+      - exported
+      - missing_fields
+      - missing_item_fields
+      - post_failed
+      - post_in_progress
+      - posted
+      - posted_partial
+      - predicted_total_error
+      - reviewed
+      - submit_failed
+      - submit_in_progress
+      - submitted
+      - transfer_failed
+      - transfer_in_progress
+      - transferred
+      - unreviewed
     InvoiceBillStatus:
       type: string
       enum:
@@ -2269,6 +2745,86 @@ components:
       - SCHEDULED
       - UNPAID
       - VOIDED
+    InternationalBankAccount:
+      type: object
+      properties:
+        iban:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        bic:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+    PurchaseOrder:
+      type: object
+      required:
+      - internalId
+      - internalUpdatedAt
+      - status
+      - lineItems
+      properties:
+        internalId:
+          type: string
+          maxLength: 255
+        externalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+        vendor:
+          $ref: '#/components/schemas/Vendor'
+        internalUpdatedAt:
+          type: string
+          format: date-time
+        issuedOn:
+          type: string
+          format: date
+        createdOn:
+          type: string
+          format: date
+        poNumber:
+          type: string
+          maxLength: 255
+        deliverOn:
+          type: string
+          format: date
+        amount:
+          oneOf:
+          - $ref: '#/components/schemas/MonetaryValue'
+          - type: 'null'
+        currencyId:
+          oneOf:
+          - $ref: '#/components/schemas/Currency'
+          - type: 'null'
+        status:
+          $ref: '#/components/schemas/PurchaseOrderStatus'
+        matchingType:
+          $ref: '#/components/schemas/PurchaseOrderMatchingType'
+        type:
+          $ref: '#/components/schemas/PurchaseOrderType'
+        description:
+          type: string
+          maxLength: 255
+        requestor:
+          oneOf:
+          - $ref: '#/components/schemas/PurchaseOrderRequestor'
+          - type: 'null'
+        siteOwner:
+          oneOf:
+          - $ref: '#/components/schemas/PurchaseOrderSiteOwner'
+          - type: 'null'
+        lineItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/PurchaseOrderLineItem'
+        paymentTermId:
+          oneOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: The id of the `PaymentTerm` a purchase order uses.
     Vendor:
       type: object
       required:
@@ -2387,424 +2943,62 @@ components:
           description: The errors that occurred in the external ERP system.
           items:
             $ref: '#/components/schemas/VendorRemoteError'
-    VendorError:
-      description: 'Data structure for describing errors when posting a vendor to an
-
-        ERP.  Use a string to describe a single error that applies to
-
-        the entire vendor object, or describes a general error when
-
-        attempting to post, e.g. a connection error.  Use an array of
-
-        strings if multiple errors apply to the entire vendor object.
-
-        If errors apply to specific fields in the ERP, in lieu of a string
-
-        return a FieldError object.
-
-        '
-      oneOf:
-      - $ref: '#/components/schemas/ErrorString'
-      - type: array
-        maxItems: 64
-        items:
+    InvoiceRef:
+      type: object
+      description: A reference to an `Invoice`.
+      properties:
+        internalId:
           oneOf:
-          - $ref: '#/components/schemas/ErrorString'
-          - $ref: '#/components/schemas/FieldError'
-    CostAccountInfo:
+          - $ref: '#/components/schemas/InvoiceInternalId'
+          - type: 'null'
+        externalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+        refNumber:
+          type:
+          - string
+          - 'null'
+    LineItemVat:
       type: object
       properties:
         internalId:
           oneOf:
           - type: string
             maxLength: 255
-            description: The cost account's internal id.
+            description: 'The internal id of the VAT code. If specified, it will take
+
+              precedence over the `externalId` and `code`.
+
+              '
           - type: 'null'
         externalId:
+          description: 'The external id of the VAT code. If specified, it will take
+
+            precedence over the `code`.
+
+            '
           oneOf:
           - $ref: '#/components/schemas/ExternalId'
           - type: 'null'
-        number:
-          oneOf:
-          - type: string
-            maxLength: 255
-            description: The cost account's number.
-          - type: 'null'
-    PaymentBatchStatus:
-      type: string
-      description: The status of the payment batch.
-      enum:
-      - pending_approval
-      - rejected
-      - approved
-      - voided
-    InvoiceExternalPaymentStatus:
-      type: string
-      enum:
-      - paid
-      - unpaid
-      - voided
-    PurchaseOrderType:
-      type: string
-      description: This has been deprecated. Please use the `matchingType` field.
-      enum:
-      - blanket
-      - normal
-      default: normal
-    Error:
-      description: 'generic error message in JSON format.  Note the ''code'' field should
-
-        match the HTTP status code of the wrapping HTTP request.
-
-        '
-      type: object
-      required:
-      - code
-      - message
-      properties:
         code:
-          type: integer
-          minimum: 100
-          maximum: 599
-        message:
-          $ref: '#/components/schemas/ErrorString'
-    PurchaseOrderLineItemStatus:
-      type: string
-      description: "The status of the purchase order line item.\n* When status field is set to `open`, then its value is derived from the\n  line item's remaining amount. If the line item's remaining amount is\n  above `0`, then it is considered `open`, otherwise it is considered\n`closed`.\n* When status is set to `closed` then the line item is considered\n  `closed`, no matter the remaining amount.\n* When status is set to `archived` then the line item becomes unavailable\n  for matching to invoices, and cannot be archived if already matched.\n  Once set to `archived` it can not be changed to `open` or `closed`.\n"
-      enum:
-      - open
-      - closed
-      - archived
-      default: open
-    NonNegativeMonetaryValue:
-      description: 'The monetary value as a string.
-
-        A float **should not** be used. The api will accept a float and it will be
-
-        transformed into a monetary value, but for best results please use a string
-
-        with the proper decimal precision. **Must be greater than or equal to zero.**
-
-        '
-      type: string
-      format: decimal
-      example: '1.00'
-    WebhookEventName:
-      type: string
-      description: A webhook event type, or `all` to select every type when subscribing.
-      enum:
-      - all
-      - invoicePost
-      - invoiceTransfer
-      - vendorNew
-      - syncRequest
-      - payment_batch_processed
-      - payment_status_updated
-      - credit_status_updated
-      - invoice_approved
-      - invoice_deleted
-      - invoice_post
-      - invoice_posted
-      - invoice_rejected
-      - invoice_submitted
-      - invoice_transfer
-      - invoice_updated
-      - purchase_order_created
-      - purchase_order_updated
-      - purchase_order_deleted
-      - vendor_created
-      - vendor_updated
-      - vendor_onboarding_form_completed
-      - ping
-    InvoiceRestoredEvent:
-      type: object
-      required:
-      - id
-      - occurred_at
-      - event
-      - data
-      properties:
-        id:
-          type: string
-          description: The ID of the event. This is idempotent.
-          format: uuid
-        occurred_at:
-          type: string
-          description: The date and time the event occurred.
-          format: date-time
-        event:
-          type: string
-          enum:
-          - invoice_restored
-        data:
-          type: object
-          required:
-          - internalId
-          properties:
-            internalId:
-              type: string
-              example: '123'
-            externalId:
-              oneOf:
-              - $ref: '#/components/schemas/ExternalId'
-              - type: 'null'
-    PaymentInfoTerm:
-      type: object
-      required:
-      - count
-      - unit
-      properties:
-        count:
-          type: integer
-          minimum: 1
-        unit:
-          $ref: '#/components/schemas/PaymentInfoTermUnit'
-    PurchaseOrderDeletedEvent:
-      type: object
-      required:
-      - id
-      - occurred_at
-      - event
-      - data
-      properties:
-        id:
-          type: string
-          description: The ID of the event. This is idempotent.
-          format: uuid
-        occurred_at:
-          type: string
-          description: The date and time the event occurred.
-          format: date-time
-        event:
-          type: string
-          enum:
-          - purchase_order_deleted
-        data:
-          type: object
-          required:
-          - internalId
-          properties:
-            internalId:
-              type: string
-              example: dbbfd5b7-8741-42c7-8f3e-39eaafbaf287
-            externalId:
-              oneOf:
-              - $ref: '#/components/schemas/ExternalId'
-              - type: 'null'
-    PurchaseOrderScheduleLine:
-      type: object
-      description: A schedule line associated with a purchase order line item.
-      required:
-      - internalId
-      properties:
-        internalId:
-          type: string
-          format: uuid
-          description: The internal ID of the schedule line.
-        poScheduleLineRemoteId:
-          type: string
-          maxLength: 255
-          description: The purchase order schedule line ID from the ERP system.
-        poScheduleLineNumber:
-          type: integer
-          description: The purchase order schedule line number.
-          minimum: 1
-        poLineNumber:
-          type: integer
-          description: The purchase order line number this schedule line is associated with.
-        itemId:
-          type: string
-          maxLength: 255
-          description: The item ID from the ERP system.
-        uomCode:
-          type: string
-          maxLength: 255
-          description: The unit of measure code.
-        plannedQuantity:
-          type: string
-          format: decimal
-          description: The planned quantity for this schedule line.
-          example: '1.0'
-        promisedDeliveryStartDate:
-          type: string
-          format: date
-          description: The promised delivery start date.
-        promisedDeliveryEndDate:
-          type: string
-          format: date
-          description: The promised delivery end date.
-        createdOn:
-          type: string
-          format: date
-          description: When the schedule line was created.
-        shipToLocation:
-          type: string
-          maxLength: 255
-          description: The location where items should be shipped.
-    VendorRef:
-      type: object
-      description: A reference to a `Vendor`.
-      properties:
-        internalId:
-          oneOf:
-          - $ref: '#/components/schemas/VendorInternalId'
-          - type: 'null'
-        externalId:
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-    PaymentBatch:
-      type: object
-      description: A batch of payments made with Vic.
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: The id of the payment batch in Vic.
-        name:
-          type: string
-          description: The name of the payment batch that the accountant has set.
-        companyId:
-          type: string
-          description: The id of the `Company` in Vic.
-        processedAt:
           oneOf:
           - type: string
-            format: date-time
-            description: 'The date time of when the payment was sent to the payment
-
-              processor.
-
-              '
+            maxLength: 255
+            description: The VAT code.
           - type: 'null'
-        completedAt:
+        amount:
           oneOf:
-          - type: string
-            format: date-time
-            description: 'The date time of when all of the payments have been submitted to
-
-              the bank accounts.
-
-              '
+          - $ref: '#/components/schemas/MonetaryValue'
           - type: 'null'
-        approvedAt:
-          oneOf:
-          - type: string
-            format: date-time
-            description: 'The payment approver has approved the batch of payments and will
+          description: 'The amount of VAT. This will be added to the line item''s total. If
 
-              be scheduled to be processed.
+            the VAT amount is unknown, this should be left `NULL` or
 
-              '
-          - type: 'null'
-        rejectedAt:
-          oneOf:
-          - type: string
-            format: date-time
-            description: 'This is set when the payment approver has rejected the entire
+            unspecified.
 
-              batch of payments. Each `Payment` and `Credit` will have their
-
-              `rejectedAt` fields also set.
-
-              '
-          - type: 'null'
-        voidedAt:
-          oneOf:
-          - type: string
-            format: date-time
-            description: 'This is set when an entire batch of payments was voided.
-
-              Generally this would happen due to a `Vendor` missing address
-
-              information or a malformed `Invoice` was trying to be paid. Other
-
-              cases could cause this to be voided due to insufficient funds.
-
-              '
-          - type: 'null'
-        status:
-          $ref: '#/components/schemas/PaymentBatchStatus'
-        payments:
-          type: array
-          minItems: 1
-          maxItems: 100
-          description: Array of payment confirmation items. Must contain at least one item and no more than 100 items.
-          items:
-            $ref: '#/components/schemas/Payment'
-        credits:
-          type: array
-          minItems: 1
-          maxItems: 100
-          description: Array of credit confirmation items. Must contain at least one item and no more than 100 items.
-          items:
-            $ref: '#/components/schemas/Credit'
-    InvoiceDeletedEvent:
-      type: object
-      required:
-      - id
-      - occurred_at
-      - event
-      - data
-      properties:
-        id:
-          type: string
-          description: The ID of the event. This is idempotent.
-          format: uuid
-        occurred_at:
-          type: string
-          description: The date and time the event occurred.
-          format: date-time
-        event:
-          type: string
-          enum:
-          - invoice_deleted
-        data:
-          type: object
-          required:
-          - internalId
-          properties:
-            internalId:
-              type: string
-              example: '123'
-            externalId:
-              oneOf:
-              - $ref: '#/components/schemas/ExternalId'
-              - type: 'null'
-    InvoiceApprovedEvent:
-      type: object
-      required:
-      - id
-      - occurred_at
-      - event
-      - data
-      properties:
-        id:
-          type: string
-          description: The ID of the event. This is idempotent.
-          format: uuid
-        occurred_at:
-          type: string
-          description: The date and time the event occurred.
-          format: date-time
-        event:
-          type: string
-          enum:
-          - invoice_approved
-        data:
-          $ref: '#/components/schemas/Invoice'
-    InvoiceLineItemInfo:
-      type: object
-      properties:
-        vatCode:
-          oneOf:
-          - type: string
-          - type: 'null'
-        vatAmount:
-          oneOf:
-          - type: number
-          - type: 'null'
-        vatRate:
+            '
+        rate:
           oneOf:
           - $ref: '#/components/schemas/MonetaryValue'
           - type: 'null'
@@ -2813,10 +3007,64 @@ components:
             should be left `NULL` or unspecified.
 
             '
-    InvoiceInternalId:
+    InvoiceMarkedAs:
       type: string
-      description: The id of the `Invoice` in Vic.
-      maxLength: 255
+      enum:
+      - PAID
+      - UNPAID
+      - DELETED
+    SubscriptionsListV2:
+      type: object
+      required:
+      - data
+      - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscriptionV2'
+          description: List of subscriptions
+        meta:
+          type: object
+          required:
+          - page
+          properties:
+            page:
+              $ref: '#/components/schemas/PaginationMetaV2'
+    PaymentInfoMethod:
+      type: string
+      description: 'The payment method to be used.
+
+        Note: `BANKACCOUNT` is equivalent to `ACH` in the Web UI.
+
+        '
+      enum:
+      - BANKACCOUNT
+      - BANKGIRO
+      - PLUSGIRO
+      - IBAN
+      - BBAN
+    PaymentMethod:
+      type: string
+      enum:
+      - ach
+      - card
+      - check
+      - wire
+    CostAccountRef:
+      type: object
+      description: A reference to a `Account`.
+      properties:
+        internalId:
+          oneOf:
+          - type: string
+            maxLength: 255
+            description: The id of the `Account` in Vic.
+          - type: 'null'
+        externalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
     InvoiceLineItem:
       type: object
       required:
@@ -3000,352 +3248,6 @@ components:
             Null when invoice is not document-level matched.
 
             '
-    Payment:
-      type: object
-      description: 'The payment made for an `Invoice`. The `Account` assigned to the
-
-        payment is where the funds are being debited from.
-
-        '
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: The id of the credit.
-        batchId:
-          type: string
-          format: uuid
-          description: The id of the payment batch the payment belongs to.
-        amount:
-          $ref: '#/components/schemas/MonetaryValue'
-        settlementAmount:
-          $ref: '#/components/schemas/MonetaryValue'
-        discountAmount:
-          description: 'The discount amount applied using the `PaymentTerm` on the vendor.
-
-            The `discountAmount + amount` should be equal to the `Invoice`
-
-            amount due in most cases. Accountants are allowed to make partial
-
-            payments. Typically when partial payments are made, `discountAmount`
-
-            will be `0.00`.
-
-            '
-          oneOf:
-          - $ref: '#/components/schemas/MonetaryValue'
-        currencyId:
-          $ref: '#/components/schemas/Currency'
-        settlementCurrencyId:
-          $ref: '#/components/schemas/Currency'
-        exchangeRate:
-          $ref: '#/components/schemas/MonetaryValue'
-        status:
-          $ref: '#/components/schemas/PaymentStatus'
-        paymentMethod:
-          oneOf:
-          - $ref: '#/components/schemas/PaymentMethod'
-          - type: 'null'
-        referenceId:
-          oneOf:
-          - $ref: '#/components/schemas/PaymentReferenceId'
-          - type: 'null'
-        approvedAt:
-          oneOf:
-          - type: string
-            format: date-time
-            description: The payment approver has approved the payment.
-          - type: 'null'
-        failedAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: When the payment was marked as failed.
-        failedReason:
-          type:
-          - string
-          - 'null'
-          description: The reason why the payment failed.
-        fundedAt:
-          oneOf:
-          - type: string
-            format: date-time
-            description: 'The date time the payment request began to be processed.
-
-
-              **Note**: This is not the actual date time that the funds were
-
-              withdrawn from the bank. The payment request can take 15
-
-              minutes to 4 hours or more to be processed. See the `acceptedAt`
-
-              field for the date time that the payment was submitted and
-
-              accepted.
-
-              '
-          - type: 'null'
-        acceptedAt:
-          oneOf:
-          - type: string
-            format: date-time
-            description: 'The date time the payment request was submitted and accepted
-
-              for processing.
-
-              '
-          - type: 'null'
-        rejectedAt:
-          oneOf:
-          - type: string
-            format: date-time
-            description: The payment approver has rejected the payment.
-          - type: 'null'
-        voidedAt:
-          oneOf:
-          - type: string
-            format: date-time
-            description: 'This is set when a credit has been voided by the payment processor.
-
-              Generally this would happen due to a `Vendor` missing address
-
-              information or a malformed `Invoice` was trying to be paid. Other
-
-              cases could cause this to be voided due to insufficient funds.
-
-              '
-          - type: 'null'
-        confirmedAt:
-          oneOf:
-          - type: string
-            format: date-time
-            description: The datetime when the payment was confirmed in an external system.
-          - type: 'null'
-        remoteId:
-          oneOf:
-          - type: string
-            maxLength: 255
-            description: An external identifier for the payment in the confirming system.
-          - type: 'null'
-        remoteError:
-          oneOf:
-          - type: string
-            description: An error message if the confirmation failed.
-          - type: 'null'
-        remoteErroredAt:
-          oneOf:
-          - type: string
-            format: date-time
-            description: When the remote error occurred.
-          - type: 'null'
-        invoice:
-          $ref: '#/components/schemas/InvoiceRef'
-        costAccount:
-          $ref: '#/components/schemas/CostAccountRef'
-        vendor:
-          $ref: '#/components/schemas/VendorRef'
-    SubscriptionUpsert:
-      type: object
-      required:
-      - callbackUrl
-      - accessToken
-      properties:
-        callbackUrl:
-          type: string
-          format: uri
-          example: https://my.erp.com/vic-callback/
-        accessToken:
-          type: string
-          maxLength: 1024
-        events:
-          oneOf:
-          - type: array
-            items:
-              $ref: '#/components/schemas/WebhookEventName'
-          - type: 'null'
-          description: 'The list of events to subscribe to. If you wish to subscribe to all
-
-            events simply pass `["all"]`. If you are updating the subscription
-
-            and wish to leave the events subscribed to alone, this field should
-
-            be left unspecified or null.
-
-            '
-    CostAccountRef:
-      type: object
-      description: A reference to a `Account`.
-      properties:
-        internalId:
-          oneOf:
-          - type: string
-            maxLength: 255
-            description: The id of the `Account` in Vic.
-          - type: 'null'
-        externalId:
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-    PaginationV2:
-      type: object
-      properties:
-        size:
-          type: integer
-          description: The page size.
-          maximum: 50
-          minimum: 1
-        cursor:
-          type: string
-          description: The cursor to use to get the next page of results.
-    PaginationMetaV2:
-      type: object
-      properties:
-        cursor:
-          description: 'The cursor to the next page of data. If it is null, that means there
-
-            is no more data to fetch.
-
-            '
-          oneOf:
-          - type: string
-          - type: 'null'
-    AccrualTermUnit:
-      type: string
-      description: The accrual term units supported.
-      enum:
-      - MONTHS
-    VendorConfirm:
-      type: object
-      required:
-      - externalId
-      - externalUpdatedAt
-      properties:
-        externalId:
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-        externalUpdatedAt:
-          type: string
-          format: date-time
-          description: Does not have UTC normalization.
-    CreateSubscriptionV2:
-      type: object
-      required:
-      - callback_url
-      - access_token
-      properties:
-        callback_url:
-          type: string
-          format: uri
-          description: The HTTPS URL where webhook events will be sent
-          maxLength: 2048
-          example: https://your-api.example.com/webhooks
-        access_token:
-          type: string
-          description: Access token for authenticating webhook deliveries
-          maxLength: 1024
-          example: your-access-token
-        username:
-          type: string
-          description: Username for Basic authentication (required when auth_method is 'basic')
-          maxLength: 255
-          example: api_user
-        auth_method:
-          type: string
-          enum:
-          - bearer
-          - basic
-          description: Authentication method for webhook delivery
-          default: bearer
-        events:
-          type: array
-          items:
-            $ref: '#/components/schemas/WebhookEventName'
-          description: List of event types to subscribe to.
-          default:
-          - all
-          example:
-          - invoice_posted
-          - invoice_approved
-    PurchaseOrderMatchingType:
-      type: string
-      description: The matching type of the purchase order.
-      enum:
-      - document
-      - line
-    SubscriptionsListV2:
-      type: object
-      required:
-      - data
-      - meta
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/SubscriptionV2'
-          description: List of subscriptions
-        meta:
-          type: object
-          required:
-          - page
-          properties:
-            page:
-              $ref: '#/components/schemas/PaginationMetaV2'
-    UpdateSubscriptionV2:
-      type: object
-      properties:
-        callback_url:
-          type: string
-          format: uri
-          description: The HTTPS URL where webhook events will be sent
-          maxLength: 2048
-          example: https://your-api.example.com/webhooks
-        access_token:
-          type: string
-          description: Access token for authenticating webhook deliveries
-          maxLength: 1024
-          example: your-access-token
-        username:
-          type: string
-          description: Username for Basic authentication (required when auth_method is 'basic')
-          maxLength: 255
-          example: api_user
-        auth_method:
-          type: string
-          enum:
-          - bearer
-          - basic
-          description: Authentication method for webhook delivery
-        events:
-          type: array
-          items:
-            $ref: '#/components/schemas/WebhookEventName'
-          description: List of event types to subscribe to. Use ["all"] to subscribe to all events.
-    AccrualInfo:
-      required:
-      - start
-      - count
-      - unit
-      properties:
-        start:
-          type: string
-          format: date
-        count:
-          oneOf:
-          - type: integer
-          - type: 'null'
-          description: 'The number of units from the `start`. The system _may_ have this field as
-
-            `null` due to incomplete information or a user has cleared the information.
-
-            However, when specifying the `count` to the api, it is required to be
-
-            greater than `1`.
-
-            '
-        unit:
-          $ref: '#/components/schemas/AccrualTermUnit'
     PurchaseOrderCreatedEvent:
       type: object
       required:
@@ -3368,200 +3270,315 @@ components:
           - purchase_order_created
         data:
           $ref: '#/components/schemas/PurchaseOrder'
-    PurchaseOrderReceiptLine:
+    WebhookEventName:
+      type: string
+      description: A webhook event type, or `all` to select every type when subscribing.
+      enum:
+      - all
+      - invoicePost
+      - invoiceTransfer
+      - vendorNew
+      - syncRequest
+      - payment_batch_processed
+      - payment_status_updated
+      - credit_status_updated
+      - invoice_approved
+      - invoice_deleted
+      - invoice_post
+      - invoice_posted
+      - invoice_rejected
+      - invoice_submitted
+      - invoice_transfer
+      - invoice_updated
+      - purchase_order_created
+      - purchase_order_updated
+      - purchase_order_deleted
+      - vendor_created
+      - vendor_updated
+      - vendor_onboarding_form_completed
+      - ping
+    SubscriptionV2:
       type: object
-      description: A receipt line associated with a purchase order line item.
       required:
-      - internalId
+      - id
+      - callback_url
+      - auth_method
+      - events
+      - version
+      - created_at
+      - updated_at
       properties:
-        internalId:
+        id:
           type: string
-          format: uuid
-          description: The internal ID of the receipt line.
-        receiptLineRemoteId:
+          description: Unique identifier for the subscription
+        callback_url:
           type: string
-          maxLength: 255
-          description: The receipt line ID from the ERP system.
-        receiptLineNumber:
-          type: integer
-          description: The receipt line number.
-          minimum: 1
-        poLineNumber:
-          type: integer
-          description: The purchase order line number this receipt line is associated with.
-        poScheduleLineRemoteId:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          description: The purchase order schedule line ID (from the ERP) this receipt line is associated with.
-        poScheduleLineNumber:
-          oneOf:
-          - type: integer
-          - type: 'null'
-          description: The purchase order schedule line number this receipt line is associated with.
-        itemId:
-          type: string
-          maxLength: 255
-          description: The item ID from the ERP system.
-        uomCode:
-          type: string
-          maxLength: 255
-          description: The unit of measure code.
-        receivedQuantity:
-          type: string
-          format: decimal
-          description: The quantity received.
-          example: '1.0'
-        acceptedQuantity:
-          oneOf:
-          - type: string
-            format: decimal
-          - type: 'null'
-          description: The quantity accepted.
-          example: '1.0'
-        receivedDate:
-          type: string
-          format: date
-          description: The date the items were received.
-        createdOn:
-          type: string
-          format: date
-          description: When the receipt line was created.
-        createdBy:
-          type: string
-          maxLength: 255
-          description: The user or system that created this receipt line.
-        warehouse:
-          type: string
-          maxLength: 255
-          description: The warehouse where the items were received.
-        billOfLading:
-          description: The bill of lading reference for the goods receipt.
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-        deliveryNote:
-          description: The delivery note reference for the goods receipt.
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-        status:
+          format: uri
+          description: The HTTPS URL where webhook events will be sent
+          maxLength: 2048
+          example: https://your-api.example.com/webhooks
+        auth_method:
           type: string
           enum:
-          - open
-          - closed
-          description: The status of the receipt line.
-    InvoiceRef:
-      type: object
-      description: A reference to an `Invoice`.
-      properties:
-        internalId:
-          oneOf:
-          - $ref: '#/components/schemas/InvoiceInternalId'
-          - type: 'null'
-        externalId:
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-        refNumber:
-          type:
-          - string
-          - 'null'
-    PurchaseOrderStatus:
+          - bearer
+          - basic
+          description: Authentication method for webhook delivery
+        username:
+          type: string
+          description: Username for Basic authentication (required when auth_method is 'basic')
+          maxLength: 255
+          example: api_user
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookEventName'
+          description: List of subscribed event types.
+          example:
+          - invoice_posted
+          - invoice_approved
+        version:
+          type: string
+          enum:
+          - v0
+          - v1
+          description: Subscription version
+        company_id:
+          type: string
+          format: uuid
+          description: ID of the company this subscription belongs to
+        created_at:
+          type: string
+          format: date-time
+          description: When the subscription was created
+        updated_at:
+          type: string
+          format: date-time
+          description: When the subscription was last updated
+    CountryCode:
+      description: 'The ISO-3166 country code. The acceptable values are Alpha-2 codes.
+
+        '
       type: string
-      description: The status of the purchase order.
+      format: ISO-3166
+      maxLength: 2
+      example: US
+    PurchaseOrderLineItemStatus:
+      type: string
+      description: "The status of the purchase order line item.\n* When status field is set to `open`, then its value is derived from the\n  line item's remaining amount. If the line item's remaining amount is\n  above `0`, then it is considered `open`, otherwise it is considered\n`closed`.\n* When status is set to `closed` then the line item is considered\n  `closed`, no matter the remaining amount.\n* When status is set to `archived` then the line item becomes unavailable\n  for matching to invoices, and cannot be archived if already matched.\n  Once set to `archived` it can not be changed to `open` or `closed`.\n"
       enum:
       - open
       - closed
+      - archived
       default: open
-    InternationalBankAccount:
+    VendorCallback:
       type: object
+      required:
+      - addressCity
+      - addressPostalCode
+      - addressState
+      - addressStreet
+      - countryCode
+      - email
+      - internalId
+      - name
+      - phone
       properties:
-        iban:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-        bic:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-    Dimension:
-      type: object
-      properties:
+        internalId:
+          $ref: '#/components/schemas/InternalId'
+        companyId:
+          type: string
+          description: The ID of the company that owns this vendor.
+          example: '12345'
         name:
           type: string
           maxLength: 255
-          description: The name of the dimension.
-        type:
-          type: string
-          maxLength: 255
-          description: The dimension type.
-        typeName:
-          type: string
-          maxLength: 255
-          description: The dimension type name. A human friendly type name.
-        typeExternalId:
-          type: string
-          maxLength: 255
-          description: The dimension type's external ID in the ERP system.
-        shortName:
-          type: string
-          maxLength: 255
+        email:
+          oneOf:
+          - $ref: '#/components/schemas/Email'
+          - type: 'null'
+        phone:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        addressStreet:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        addressCity:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        addressState:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        addressPostalCode:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        countryCode:
+          oneOf:
+          - $ref: '#/components/schemas/CountryCode'
+          - type: 'null'
+        currency:
+          oneOf:
+          - $ref: '#/components/schemas/Currency'
+          - type: 'null'
+        confirmedAt:
+          oneOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+        state:
+          $ref: '#/components/schemas/VendorState'
+        taxInfo:
+          $ref: '#/components/schemas/VendorTaxInfo'
+        defaultPaymentInfo:
+          $ref: '#/components/schemas/PaymentInfo'
+        paymentTermId:
+          oneOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: The id of the `PaymentTerm` a vendor uses.
+        vendorGroupId:
+          oneOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: The `VendorGroup` id the vendor is attached to.
         externalData:
           oneOf:
           - $ref: '#/components/schemas/ExternalData'
           - type: 'null'
-        displayName:
+        errors:
+          description: The errors that occurred in the external ERP system.
+          items:
+            $ref: '#/components/schemas/VendorRemoteError'
+    CreditStatus:
+      type: string
+      enum:
+      - pending_approval
+      - rejected
+      - approved
+      - acknowledged
+      - voided
+    RequestIdCallback:
+      type: object
+      required:
+      - requestId
+      properties:
+        requestId:
           type: string
+          format: uuid
+        companyId:
+          type: string
+          description: The ID of the company that is requesting the sync.
+          example: '12345'
+    CostAccountInfo:
+      type: object
+      properties:
         internalId:
-          $ref: '#/components/schemas/InternalId'
-        internalUpdatedAt:
-          type: string
-          description: Is in UTC.
-          format: date-time
+          oneOf:
+          - type: string
+            maxLength: 255
+            description: The cost account's internal id.
+          - type: 'null'
         externalId:
           oneOf:
           - $ref: '#/components/schemas/ExternalId'
           - type: 'null'
-        externalUpdatedAt:
-          type: string
-          format: date-time
-          description: Does not have UTC normalization.
-    VendorTaxInfo:
+        number:
+          oneOf:
+          - type: string
+            maxLength: 255
+            description: The cost account's number.
+          - type: 'null'
+    PaginationMetaV2:
       type: object
       properties:
-        taxId:
+        cursor:
+          description: 'The cursor to the next page of data. If it is null, that means there
+
+            is no more data to fetch.
+
+            '
           oneOf:
           - type: string
           - type: 'null'
-        taxIdType:
+    ErrorV2:
+      type: object
+      required:
+      - message
+      properties:
+        field:
+          description: 'The field that the error occurred on. This field may not always be
+
+            present.
+
+            '
           oneOf:
           - type: string
-            enum:
-            - ssn
-            - ein
-            - other
           - type: 'null'
-          description: The type of tax identifier (SSN, EIN, or other)
-        is1099vendor:
-          type: boolean
-        orgNumber:
-          oneOf:
-          - type: string
-          - type: 'null'
-    TransactionType:
-      type: string
-      description: The type of invoice transaction.
-      enum:
-      - INVOICE
-      - CREDITNOTE
-      default: INVOICE
+        message:
+          description: A description of the error.
+          type: string
+    PaginationV2:
+      type: object
+      properties:
+        size:
+          type: integer
+          description: The page size.
+          maximum: 50
+          minimum: 1
+        cursor:
+          type: string
+          description: The cursor to use to get the next page of results.
+    FieldError:
+      description: 'Data structure for describing an error associated with a specific
+
+        field in another datastructure.
+
+        - internalField represents the Vic.API field name
+
+        - externalField represents the associated field name in the ERP
+
+        '
+      type: object
+      required:
+      - internalField
+      - externalField
+      - message
+      properties:
+        internalField:
+          $ref: '#/components/schemas/ErrorString'
+        externalField:
+          $ref: '#/components/schemas/ErrorString'
+        message:
+          $ref: '#/components/schemas/ErrorString'
   responses:
+    ErrorResponseV2:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ErrorV2'
+    ErrorResponse:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
     TooManyRequestsResponse:
       description: HTTP call rate limit exceeded.
       headers:
@@ -3573,38 +3590,32 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    SubscriptionResponse:
-      description: The subscription information
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SubscriptionUpsert'
-    ListSubscriptionsResponseV2:
-      description: A paginated list of webhook subscriptions
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SubscriptionsListV2'
-    ErrorResponse:
-      description: An unexpected error has occurred. Check the body for more details.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     SubscriptionDeletedResponse:
       description: Subscription successfully deleted.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/UnsubscribeResult'
-    ResourceNotFoundResponse:
-      description: Resource was not found.
+    ListSubscriptionsResponseV2:
+      description: A paginated list of webhook subscriptions
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
-    UpdateSubscriptionResponseV2:
-      description: Subscription updated successfully
+            $ref: '#/components/schemas/SubscriptionsListV2'
+    SubscriptionUpsertedResponse:
+      description: Subscription successfully upserted.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SubscriptionUpsert'
+    SubscriptionResponse:
+      description: The subscription information
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SubscriptionUpsert'
+    CreateSubscriptionResponseV2:
+      description: Subscription created successfully
       content:
         application/json:
           schema:
@@ -3625,8 +3636,8 @@ components:
             properties:
               data:
                 $ref: '#/components/schemas/SubscriptionV2'
-    CreateSubscriptionResponseV2:
-      description: Subscription created successfully
+    UpdateSubscriptionResponseV2:
+      description: Subscription updated successfully
       content:
         application/json:
           schema:
@@ -3636,29 +3647,31 @@ components:
             properties:
               data:
                 $ref: '#/components/schemas/SubscriptionV2'
-    ErrorResponseV2:
-      description: An unexpected error has occurred. Check the body for more details.
+    ResourceNotFoundResponse:
+      description: Resource was not found.
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              errors:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ErrorV2'
-    SubscriptionUpsertedResponse:
-      description: Subscription successfully upserted.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SubscriptionUpsert'
+            $ref: '#/components/schemas/Error'
   parameters:
+    PaginationV2:
+      name: page
+      in: query
+      schema:
+        $ref: '#/components/schemas/PaginationV2'
     CompanyId:
       name: company_id
       in: path
       required: true
       description: The ID of the company
+      schema:
+        type: string
+        format: uuid
+    RequestId:
+      in: header
+      name: X-Request-Id
+      description: token to be able to correctly log associated requests
+      required: false
       schema:
         type: string
         format: uuid
@@ -3674,19 +3687,6 @@ components:
       required: false
       schema:
         type: string
-    PaginationV2:
-      name: page
-      in: query
-      schema:
-        $ref: '#/components/schemas/PaginationV2'
-    RequestId:
-      in: header
-      name: X-Request-Id
-      description: token to be able to correctly log associated requests
-      required: false
-      schema:
-        type: string
-        format: uuid
   securitySchemes:
     BearerAuth:
       type: http

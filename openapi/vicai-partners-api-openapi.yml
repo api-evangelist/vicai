@@ -340,21 +340,56 @@ paths:
           $ref: '#/components/responses/ErrorResponseV2'
 components:
   schemas:
-    OrganizationV2:
+    CreatedCompanyV2:
       type: object
+      description: 'Sparse company payload returned at company creation time (by
+
+        `POST /v2/companies` or `POST /v2/organizations/{organization_id}/companies`).
+
+        It carries the same identifier fields as `CompanyV2` plus a
+
+        company-scoped OAuth client; the `client_secret` is exposed only at
+
+        creation time and cannot be retrieved later.
+
+        '
       required:
       - id
+      - oauth_client
       properties:
         id:
           type: string
         name:
           type: string
-        created_at:
-          type: string
-          format: date-time
+        organization_id:
+          description: The organization (accounting firm) the company belongs to.
+          oneOf:
+          - type: 'null'
+          - type: string
+            format: uuid
+        remote_id:
+          description: The company's id in the ERP system if applicable.
+          oneOf:
+          - type: 'null'
+          - type: string
         updated_at:
           type: string
           format: date-time
+        oauth_client:
+          type: object
+          description: 'Company-scoped OAuth client generated alongside the company.
+
+            Returned only on creation.
+
+            '
+          required:
+          - client_id
+          - client_secret
+          properties:
+            client_id:
+              type: string
+            client_secret:
+              type: string
     CreateCompanyV2:
       type: object
       required:
@@ -397,23 +432,6 @@ components:
             Must be an organization the client already has access to.
 
             '
-    ErrorV2:
-      type: object
-      required:
-      - message
-      properties:
-        field:
-          description: 'The field that the error occurred on. This field may not always be
-
-            present.
-
-            '
-          oneOf:
-          - type: string
-          - type: 'null'
-        message:
-          description: A description of the error.
-          type: string
     CompanySettingsV2:
       type: object
       description: 'A company''s configuration options. Every available setting is
@@ -627,17 +645,21 @@ components:
             - expense_line
             - even_allocation
             - weighted_allocation
-    PaginationV2:
+    OrganizationV2:
       type: object
+      required:
+      - id
       properties:
-        size:
-          type: integer
-          description: The page size.
-          maximum: 50
-          minimum: 1
-        cursor:
+        id:
           type: string
-          description: The cursor to use to get the next page of results.
+        name:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
     PaginationMetaV2:
       type: object
       properties:
@@ -665,72 +687,6 @@ components:
 
             '
           example: group:acme
-    CreateOrganizationV2:
-      type: object
-      required:
-      - name
-      - billing_timezone
-      properties:
-        name:
-          type: string
-          description: Display name for the organization.
-        billing_timezone:
-          type: string
-          description: IANA timezone identifier.
-          example: America/New_York
-        remote_id:
-          type: string
-          description: External identifier from the partner's system.
-    CreatedCompanyV2:
-      type: object
-      description: 'Sparse company payload returned at company creation time (by
-
-        `POST /v2/companies` or `POST /v2/organizations/{organization_id}/companies`).
-
-        It carries the same identifier fields as `CompanyV2` plus a
-
-        company-scoped OAuth client; the `client_secret` is exposed only at
-
-        creation time and cannot be retrieved later.
-
-        '
-      required:
-      - id
-      - oauth_client
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        organization_id:
-          description: The organization (accounting firm) the company belongs to.
-          oneOf:
-          - type: 'null'
-          - type: string
-            format: uuid
-        remote_id:
-          description: The company's id in the ERP system if applicable.
-          oneOf:
-          - type: 'null'
-          - type: string
-        updated_at:
-          type: string
-          format: date-time
-        oauth_client:
-          type: object
-          description: 'Company-scoped OAuth client generated alongside the company.
-
-            Returned only on creation.
-
-            '
-          required:
-          - client_id
-          - client_secret
-          properties:
-            client_id:
-              type: string
-            client_secret:
-              type: string
     UpdateCompanySettingsV2:
       type: object
       description: 'Partial update for company settings. All fields are optional; only
@@ -823,6 +779,50 @@ components:
             - expense_line
             - even_allocation
             - weighted_allocation
+    CreateOrganizationV2:
+      type: object
+      required:
+      - name
+      - billing_timezone
+      properties:
+        name:
+          type: string
+          description: Display name for the organization.
+        billing_timezone:
+          type: string
+          description: IANA timezone identifier.
+          example: America/New_York
+        remote_id:
+          type: string
+          description: External identifier from the partner's system.
+    ErrorV2:
+      type: object
+      required:
+      - message
+      properties:
+        field:
+          description: 'The field that the error occurred on. This field may not always be
+
+            present.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
+        message:
+          description: A description of the error.
+          type: string
+    PaginationV2:
+      type: object
+      properties:
+        size:
+          type: integer
+          description: The page size.
+          maximum: 50
+          minimum: 1
+        cursor:
+          type: string
+          description: The cursor to use to get the next page of results.
     CompanyTagV2:
       type: object
       required:
@@ -833,6 +833,32 @@ components:
           description: The tag value assigned to the company.
           example: group:acme
   responses:
+    CreateCompanyResponseV2:
+      description: 'A single newly-created company including a company-scoped OAuth
+
+        client. The `client_secret` is exposed only at creation time and
+
+        cannot be retrieved later.
+
+        '
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/CreatedCompanyV2'
+    ErrorResponseV2:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ErrorV2'
     GetOrganizationResponseV2:
       description: A single organization.
       content:
@@ -866,32 +892,6 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/OrganizationV2'
-    ErrorResponseV2:
-      description: An unexpected error has occurred. Check the body for more details.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              errors:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ErrorV2'
-    CreateCompanyResponseV2:
-      description: 'A single newly-created company including a company-scoped OAuth
-
-        client. The `client_secret` is exposed only at creation time and
-
-        cannot be retrieved later.
-
-        '
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              data:
-                $ref: '#/components/schemas/CreatedCompanyV2'
   requestBodies:
     CreateCompanyRequestV2:
       description: Create a new company.

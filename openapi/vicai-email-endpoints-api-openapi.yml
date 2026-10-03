@@ -188,34 +188,43 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/EmailEndpointV2'
-    ErrorV2:
+    EmailEndpointWriteV2:
       type: object
-      required:
-      - message
-      properties:
-        field:
-          description: 'The field that the error occurred on. This field may not always be
+      description: 'Fields accepted on create and update. All fields are optional;
 
-            present.
+        omitted fields use defaults (on create) or retain their current
+
+        value (on update).
+
+        '
+      properties:
+        token:
+          type: string
+          description: 'The local-part of the endpoint address (the part before the
+
+            `@`). Must be unique across the endpoint''s domain.
 
             '
-          oneOf:
-          - type: string
-          - type: 'null'
-        message:
-          description: A description of the error.
+        domain:
           type: string
-    PaginationV2:
-      type: object
-      properties:
-        size:
-          type: integer
-          description: The page size.
-          maximum: 50
-          minimum: 1
-        cursor:
+          description: 'The domain of the endpoint address. Defaults to the
+
+            company''s primary inbound domain.
+
+            '
+        document_type:
           type: string
-          description: The cursor to use to get the next page of results.
+          enum:
+          - contract
+          - invoice
+          - receipt
+        gen_email_screenshot:
+          type: boolean
+          description: 'When `true`, Vic.ai captures a screenshot of the email body
+
+            and attaches it to the document for review.
+
+            '
     PaginationMetaV2:
       type: object
       properties:
@@ -280,43 +289,34 @@ components:
         updated_at:
           type: string
           format: date-time
-    EmailEndpointWriteV2:
+    ErrorV2:
       type: object
-      description: 'Fields accepted on create and update. All fields are optional;
-
-        omitted fields use defaults (on create) or retain their current
-
-        value (on update).
-
-        '
+      required:
+      - message
       properties:
-        token:
-          type: string
-          description: 'The local-part of the endpoint address (the part before the
+        field:
+          description: 'The field that the error occurred on. This field may not always be
 
-            `@`). Must be unique across the endpoint''s domain.
-
-            '
-        domain:
-          type: string
-          description: 'The domain of the endpoint address. Defaults to the
-
-            company''s primary inbound domain.
+            present.
 
             '
-        document_type:
+          oneOf:
+          - type: string
+          - type: 'null'
+        message:
+          description: A description of the error.
           type: string
-          enum:
-          - contract
-          - invoice
-          - receipt
-        gen_email_screenshot:
-          type: boolean
-          description: 'When `true`, Vic.ai captures a screenshot of the email body
-
-            and attaches it to the document for review.
-
-            '
+    PaginationV2:
+      type: object
+      properties:
+        size:
+          type: integer
+          description: The page size.
+          maximum: 50
+          minimum: 1
+        cursor:
+          type: string
+          description: The cursor to use to get the next page of results.
   responses:
     ErrorResponseV2:
       description: An unexpected error has occurred. Check the body for more details.

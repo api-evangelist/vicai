@@ -104,80 +104,20 @@ paths:
         4XX:
           $ref: '#/components/responses/ErrorResponse'
 components:
-  parameters:
-    PagingLimit:
-      name: limit
-      in: query
-      description: How many items to return at one time (max 100) (default 100)
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-    PagingCursor:
-      name: cursor
-      in: query
-      description: Which item to start from. See [Pagination](#section/Pagination) for more information.
-      required: false
-      schema:
-        type: string
-  responses:
-    VendorGroupResponse:
-      description: List of vendor groups.
-      headers:
-        x-next:
-          $ref: '#/components/headers/NextPageToken'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/VendorGroup'
-    VendorGroupDeletedResponse:
-      description: Vendor group was successfully deleted.
-    ErrorResponse:
-      description: An unexpected error has occurred. Check the body for more details.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    TooManyRequestsResponse:
-      description: HTTP call rate limit exceeded.
-      headers:
-        Retry-After:
-          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
-          schema:
-            type: integer
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    VendorGroupsResponse:
-      description: List of vendor groups.
-      headers:
-        x-next:
-          $ref: '#/components/headers/NextPageToken'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/VendorGroups'
-  requestBodies:
-    CreateVendorGroupRequest:
-      description: Create a vendor group.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CreateVendorGroup'
-    UpdateVendorGroupRequest:
-      description: Update a vendor group.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UpdateVendorGroup'
   schemas:
-    UpdateVendorGroup:
+    VendorGroups:
+      type: array
+      items:
+        $ref: '#/components/schemas/VendorGroup'
+    VendorGroup:
       type: object
       required:
+      - id
       - name
       properties:
+        id:
+          type: string
+          description: The id of the vendor group.
         name:
           type: string
           description: The name of the vendor group
@@ -198,22 +138,11 @@ components:
           maximum: 599
         message:
           $ref: '#/components/schemas/ErrorString'
-    ErrorString:
-      type: string
-      maxLength: 255
-    VendorGroups:
-      type: array
-      items:
-        $ref: '#/components/schemas/VendorGroup'
-    VendorGroup:
+    UpdateVendorGroup:
       type: object
       required:
-      - id
       - name
       properties:
-        id:
-          type: string
-          description: The id of the vendor group.
         name:
           type: string
           description: The name of the vendor group
@@ -225,6 +154,77 @@ components:
         name:
           type: string
           description: The name of the vendor group
+    ErrorString:
+      type: string
+      maxLength: 255
+  requestBodies:
+    UpdateVendorGroupRequest:
+      description: Update a vendor group.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateVendorGroup'
+    CreateVendorGroupRequest:
+      description: Create a vendor group.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateVendorGroup'
+  responses:
+    VendorGroupResponse:
+      description: List of vendor groups.
+      headers:
+        x-next:
+          $ref: '#/components/headers/NextPageToken'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VendorGroup'
+    TooManyRequestsResponse:
+      description: HTTP call rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ErrorResponse:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    VendorGroupDeletedResponse:
+      description: Vendor group was successfully deleted.
+    VendorGroupsResponse:
+      description: List of vendor groups.
+      headers:
+        x-next:
+          $ref: '#/components/headers/NextPageToken'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VendorGroups'
+  parameters:
+    PagingLimit:
+      name: limit
+      in: query
+      description: How many items to return at one time (max 100) (default 100)
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+    PagingCursor:
+      name: cursor
+      in: query
+      description: Which item to start from. See [Pagination](#section/Pagination) for more information.
+      required: false
+      schema:
+        type: string
   headers:
     NextPageToken:
       description: A link to the next page of responses

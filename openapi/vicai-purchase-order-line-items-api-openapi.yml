@@ -275,11 +275,41 @@ paths:
           $ref: '#/components/responses/UnprocessableEntityResponse'
 components:
   schemas:
-    MatchItem:
+    PurchaseOrderLineItemMatchingType:
+      type: string
+      description: 'The type of matching that should be done on the line item. Determines which quantity fields are required.
+
+        `two_way` - Only the `quantityRequested` field is required.
+
+        `three_way` (default) - The `quantityRequested` and `quantityReceived` fields are required.
+
+        `four_way` - The `quantityRequested`, `quantityReceived`, and `quantityAccepted` fields are required.
+
+        '
+      enum:
+      - two_way
+      - three_way
+      - four_way
+      default: three_way
+    MonetaryValue:
+      description: 'The monetary value as a string.
+
+        A float **should not** be used. The api will accept a float and it will be
+
+        transformed into a monetary value, but for best results please use a string
+
+        with the proper decimal precision.
+
+        '
+      type: string
+      format: decimal
+      example: '1.00'
+    PurchaseOrderReceiptMatch:
       type: object
       required:
       - invoiceItemId
       - purchaseOrderItemId
+      - purchaseOrderReceiptLineId
       - quantityMatched
       properties:
         invoiceItemId:
@@ -288,21 +318,9 @@ components:
         purchaseOrderItemId:
           type: string
           description: The purchase order item's internal id.
-        purchaseOrderItemLineNumber:
+        purchaseOrderReceiptLineId:
           type: string
-          description: The purchase order item's line number.
-        productNumber:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          description: The matched purchase order line product number (the human-readable item identifier, also shown as "Item ID" in the Vic.ai UI).
-        unitOfMeasure:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          description: The matched purchase order line unit of measure.
+          description: The purchase order receipt line's internal id.
         amountMatched:
           type: string
         quantityMatched:
@@ -403,92 +421,6 @@ components:
           - open
           - closed
           description: The status of the receipt line.
-    ExternalId:
-      description: 'The external id set by the ERP system. It does not have to be a UUID and
-
-        can be any non empty string desired.
-
-        '
-      type: string
-      example: 21b31bc7-1267-4335-893c-d7fe4706a238
-      maxLength: 255
-    Error:
-      description: 'generic error message in JSON format.  Note the ''code'' field should
-
-        match the HTTP status code of the wrapping HTTP request.
-
-        '
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-          minimum: 100
-          maximum: 599
-        message:
-          $ref: '#/components/schemas/ErrorString'
-    MonetaryValue:
-      description: 'The monetary value as a string.
-
-        A float **should not** be used. The api will accept a float and it will be
-
-        transformed into a monetary value, but for best results please use a string
-
-        with the proper decimal precision.
-
-        '
-      type: string
-      format: decimal
-      example: '1.00'
-    PurchaseOrderLineItemStatus:
-      type: string
-      description: "The status of the purchase order line item.\n* When status field is set to `open`, then its value is derived from the\n  line item's remaining amount. If the line item's remaining amount is\n  above `0`, then it is considered `open`, otherwise it is considered\n`closed`.\n* When status is set to `closed` then the line item is considered\n  `closed`, no matter the remaining amount.\n* When status is set to `archived` then the line item becomes unavailable\n  for matching to invoices, and cannot be archived if already matched.\n  Once set to `archived` it can not be changed to `open` or `closed`.\n"
-      enum:
-      - open
-      - closed
-      - archived
-      default: open
-    NonNegativeMonetaryValue:
-      description: 'The monetary value as a string.
-
-        A float **should not** be used. The api will accept a float and it will be
-
-        transformed into a monetary value, but for best results please use a string
-
-        with the proper decimal precision. **Must be greater than or equal to zero.**
-
-        '
-      type: string
-      format: decimal
-      example: '1.00'
-    UnitOfMeasure:
-      type: string
-      example: kg
-      maxLength: 255
-      description: The unit of measure used.
-    PurchaseOrderReceiptMatch:
-      type: object
-      required:
-      - invoiceItemId
-      - purchaseOrderItemId
-      - purchaseOrderReceiptLineId
-      - quantityMatched
-      properties:
-        invoiceItemId:
-          type: string
-          description: The invoice item's internal id.
-        purchaseOrderItemId:
-          type: string
-          description: The purchase order item's internal id.
-        purchaseOrderReceiptLineId:
-          type: string
-          description: The purchase order receipt line's internal id.
-        amountMatched:
-          type: string
-        quantityMatched:
-          type: string
     CreatePurchaseOrderLineItem:
       type: object
       required:
@@ -590,118 +522,20 @@ components:
             '
           items:
             $ref: '#/components/schemas/PurchaseOrderScheduleLineInput'
-    ErrorString:
-      type: string
-      maxLength: 255
-    PurchaseOrderScheduleLineInput:
+    PurchaseOrderLineFieldInput:
       type: object
-      description: Input schema for creating a schedule line on a purchase order line item.
       required:
-      - poScheduleLineRemoteId
-      - poLineNumber
-      - poScheduleLineNumber
-      - itemId
-      - uomCode
-      - plannedQuantity
-      - promisedDeliveryStartDate
-      - promisedDeliveryEndDate
-      - shipToLocation
-      - createdOn
+      - label
+      - value
       properties:
-        internalId:
-          type: string
-          format: uuid
-          description: The internal ID of the schedule line (for updates).
-        poScheduleLineRemoteId:
-          type: string
+        label:
           maxLength: 255
-          description: The purchase order schedule line ID from the ERP system.
-        poScheduleLineNumber:
-          type: integer
-          description: The purchase order schedule line number.
-          minimum: 1
-        poLineNumber:
-          type: integer
-          description: The purchase order line number this schedule line is associated with.
-        itemId:
           type: string
-          maxLength: 255
-          description: The item ID from the ERP system.
-        uomCode:
-          type: string
-          maxLength: 255
-          description: The unit of measure code.
-        plannedQuantity:
-          type: string
-          format: decimal
-          description: The planned quantity for this schedule line.
-          example: '1.0'
-        promisedDeliveryStartDate:
-          type: string
-          format: date
-          description: The promised delivery start date.
-        promisedDeliveryEndDate:
-          type: string
-          format: date
-          description: The promised delivery end date. Must be equal to or after the promised delivery start date.
-        shipToLocation:
-          type: string
-          maxLength: 255
-          description: The location where items should be shipped.
-        createdOn:
-          type: string
-          format: date
-          description: The date this schedule line was created.
-    PurchaseOrderScheduleLine:
-      type: object
-      description: A schedule line associated with a purchase order line item.
-      required:
-      - internalId
-      properties:
-        internalId:
-          type: string
-          format: uuid
-          description: The internal ID of the schedule line.
-        poScheduleLineRemoteId:
-          type: string
-          maxLength: 255
-          description: The purchase order schedule line ID from the ERP system.
-        poScheduleLineNumber:
-          type: integer
-          description: The purchase order schedule line number.
-          minimum: 1
-        poLineNumber:
-          type: integer
-          description: The purchase order line number this schedule line is associated with.
-        itemId:
-          type: string
-          maxLength: 255
-          description: The item ID from the ERP system.
-        uomCode:
-          type: string
-          maxLength: 255
-          description: The unit of measure code.
-        plannedQuantity:
-          type: string
-          format: decimal
-          description: The planned quantity for this schedule line.
-          example: '1.0'
-        promisedDeliveryStartDate:
-          type: string
-          format: date
-          description: The promised delivery start date.
-        promisedDeliveryEndDate:
-          type: string
-          format: date
-          description: The promised delivery end date.
-        createdOn:
-          type: string
-          format: date
-          description: When the schedule line was created.
-        shipToLocation:
-          type: string
-          maxLength: 255
-          description: The location where items should be shipped.
+        value:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
     PurchaseOrderLineItem:
       type: object
       required:
@@ -793,132 +627,27 @@ components:
           description: Schedule lines associated with this purchase order line item.
           items:
             $ref: '#/components/schemas/PurchaseOrderScheduleLine'
-    PurchaseOrderLineItemMatchingType:
-      type: string
-      description: 'The type of matching that should be done on the line item. Determines which quantity fields are required.
-
-        `two_way` - Only the `quantityRequested` field is required.
-
-        `three_way` (default) - The `quantityRequested` and `quantityReceived` fields are required.
-
-        `four_way` - The `quantityRequested`, `quantityReceived`, and `quantityAccepted` fields are required.
-
-        '
-      enum:
-      - two_way
-      - three_way
-      - four_way
-      default: three_way
-    DimensionRef:
+    PurchaseOrderScheduleLine:
       type: object
-      description: 'A reference to a dimension within Vic.
-
-        The `internalId` takes precedence over all fields specified. If a
-
-        dimension is not found matching the `internalId` an error will be
-
-        returned.
-
-        When `externalId` is provided, it takes precedence over `name` and can
-
-        be used in combination with `typeExternalId`.
-
-        If `name` is the only field specified and more than one dimension exists
-
-        with that `name`, then an error will be returned. It can be used in
-
-        combination with `typeExternalId`.
-
-        If `typeExternalId` is specified with `externalId` or `name` and more
-
-        than one dimension exists with those fields, then an error will be
-
-        returned.
-
-        '
-      properties:
-        internalId:
-          oneOf:
-          - type: string
-            maxLength: 255
-            description: 'Vic''s id of the dimension.
-
-              Takes precedence over all other fields. Other fields are ignored if
-
-              this is specified.
-
-              '
-          - type: 'null'
-        externalId:
-          description: 'The id of the dimension in the ERP.
-
-            Takes precedence over `name`. Can be used in combination with
-
-            `typeExternalId`.
-
-            If more than one dimension is found meeting the criteria specified,
-
-            an error will be returned.
-
-            '
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-        name:
-          oneOf:
-          - type: string
-            maxLength: 255
-            description: 'The name of the dimension.
-
-              Can be used in combination with `typeExternalId`.
-
-              If more than one dimension is found meeting the criteria specified,
-
-              an error will be returned.
-
-              '
-          - type: 'null'
-        typeExternalId:
-          description: 'The type id in the ERP.
-
-            This is a supplemental field to be used with `externalId` or `name`.
-
-            '
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-    PurchaseOrderReceiptLine:
-      type: object
-      description: A receipt line associated with a purchase order line item.
+      description: A schedule line associated with a purchase order line item.
       required:
       - internalId
       properties:
         internalId:
           type: string
           format: uuid
-          description: The internal ID of the receipt line.
-        receiptLineRemoteId:
+          description: The internal ID of the schedule line.
+        poScheduleLineRemoteId:
           type: string
           maxLength: 255
-          description: The receipt line ID from the ERP system.
-        receiptLineNumber:
+          description: The purchase order schedule line ID from the ERP system.
+        poScheduleLineNumber:
           type: integer
-          description: The receipt line number.
+          description: The purchase order schedule line number.
           minimum: 1
         poLineNumber:
           type: integer
-          description: The purchase order line number this receipt line is associated with.
-        poScheduleLineRemoteId:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          description: The purchase order schedule line ID (from the ERP) this receipt line is associated with.
-        poScheduleLineNumber:
-          oneOf:
-          - type: integer
-          - type: 'null'
-          description: The purchase order schedule line number this receipt line is associated with.
+          description: The purchase order line number this schedule line is associated with.
         itemId:
           type: string
           maxLength: 255
@@ -927,83 +656,76 @@ components:
           type: string
           maxLength: 255
           description: The unit of measure code.
-        receivedQuantity:
+        plannedQuantity:
           type: string
           format: decimal
-          description: The quantity received.
+          description: The planned quantity for this schedule line.
           example: '1.0'
-        acceptedQuantity:
-          oneOf:
-          - type: string
-            format: decimal
-          - type: 'null'
-          description: The quantity accepted.
-          example: '1.0'
-        receivedDate:
+        promisedDeliveryStartDate:
           type: string
           format: date
-          description: The date the items were received.
+          description: The promised delivery start date.
+        promisedDeliveryEndDate:
+          type: string
+          format: date
+          description: The promised delivery end date.
         createdOn:
           type: string
           format: date
-          description: When the receipt line was created.
-        createdBy:
+          description: When the schedule line was created.
+        shipToLocation:
           type: string
           maxLength: 255
-          description: The user or system that created this receipt line.
-        warehouse:
-          type: string
-          maxLength: 255
-          description: The warehouse where the items were received.
-        billOfLading:
-          description: The bill of lading reference for the goods receipt.
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-        deliveryNote:
-          description: The delivery note reference for the goods receipt.
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-        status:
-          type: string
-          enum:
-          - open
-          - closed
-          description: The status of the receipt line.
-    PurchaseOrderLineFieldInput:
+          description: The location where items should be shipped.
+    Error:
+      description: 'generic error message in JSON format.  Note the ''code'' field should
+
+        match the HTTP status code of the wrapping HTTP request.
+
+        '
       type: object
       required:
-      - label
-      - value
+      - code
+      - message
       properties:
-        label:
-          maxLength: 255
-          type: string
-        value:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-    PurchaseOrderLineField:
+        code:
+          type: integer
+          minimum: 100
+          maximum: 599
+        message:
+          $ref: '#/components/schemas/ErrorString'
+    MatchItem:
       type: object
+      required:
+      - invoiceItemId
+      - purchaseOrderItemId
+      - quantityMatched
       properties:
-        label:
+        invoiceItemId:
           type: string
-          maxLength: 255
-        title:
+          description: The invoice item's internal id.
+        purchaseOrderItemId:
           type: string
-          maxLength: 255
-        type:
+          description: The purchase order item's internal id.
+        purchaseOrderItemLineNumber:
           type: string
-          maxLength: 255
-        value:
+          description: The purchase order item's line number.
+        productNumber:
           oneOf:
           - type: string
             maxLength: 255
           - type: 'null'
+          description: The matched purchase order line product number (the human-readable item identifier, also shown as "Item ID" in the Vic.ai UI).
+        unitOfMeasure:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          description: The matched purchase order line unit of measure.
+        amountMatched:
+          type: string
+        quantityMatched:
+          type: string
     UpdatePurchaseOrderLineItem:
       type: object
       required:
@@ -1106,46 +828,284 @@ components:
             '
           items:
             $ref: '#/components/schemas/PurchaseOrderScheduleLineInput'
-  responses:
-    PurchaseOrderLineItemResponse:
-      description: The purchase order line item.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/PurchaseOrderLineItem'
-    PurchaseOrderLineItemDeletedResponse:
-      description: Purchase order line item was successfully deleted.
-    ResourceNotFoundResponse:
-      description: Resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    UnprocessableEntityResponse:
-      description: Errors with the input are present.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    ForbiddenResponse:
-      description: The request was forbidden.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-  requestBodies:
-    CreatePurchaseOrderLineItemRequest:
-      description: Create a purchase order line item.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CreatePurchaseOrderLineItem'
-    UpdatePurchaseOrderLineItemRequest:
-      description: Update a purchase order line item.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UpdatePurchaseOrderLineItem'
+    PurchaseOrderLineField:
+      type: object
+      properties:
+        label:
+          type: string
+          maxLength: 255
+        title:
+          type: string
+          maxLength: 255
+        type:
+          type: string
+          maxLength: 255
+        value:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+    PurchaseOrderLineItemStatus:
+      type: string
+      description: "The status of the purchase order line item.\n* When status field is set to `open`, then its value is derived from the\n  line item's remaining amount. If the line item's remaining amount is\n  above `0`, then it is considered `open`, otherwise it is considered\n`closed`.\n* When status is set to `closed` then the line item is considered\n  `closed`, no matter the remaining amount.\n* When status is set to `archived` then the line item becomes unavailable\n  for matching to invoices, and cannot be archived if already matched.\n  Once set to `archived` it can not be changed to `open` or `closed`.\n"
+      enum:
+      - open
+      - closed
+      - archived
+      default: open
+    ExternalId:
+      description: 'The external id set by the ERP system. It does not have to be a UUID and
+
+        can be any non empty string desired.
+
+        '
+      type: string
+      example: 21b31bc7-1267-4335-893c-d7fe4706a238
+      maxLength: 255
+    PurchaseOrderScheduleLineInput:
+      type: object
+      description: Input schema for creating a schedule line on a purchase order line item.
+      required:
+      - poScheduleLineRemoteId
+      - poLineNumber
+      - poScheduleLineNumber
+      - itemId
+      - uomCode
+      - plannedQuantity
+      - promisedDeliveryStartDate
+      - promisedDeliveryEndDate
+      - shipToLocation
+      - createdOn
+      properties:
+        internalId:
+          type: string
+          format: uuid
+          description: The internal ID of the schedule line (for updates).
+        poScheduleLineRemoteId:
+          type: string
+          maxLength: 255
+          description: The purchase order schedule line ID from the ERP system.
+        poScheduleLineNumber:
+          type: integer
+          description: The purchase order schedule line number.
+          minimum: 1
+        poLineNumber:
+          type: integer
+          description: The purchase order line number this schedule line is associated with.
+        itemId:
+          type: string
+          maxLength: 255
+          description: The item ID from the ERP system.
+        uomCode:
+          type: string
+          maxLength: 255
+          description: The unit of measure code.
+        plannedQuantity:
+          type: string
+          format: decimal
+          description: The planned quantity for this schedule line.
+          example: '1.0'
+        promisedDeliveryStartDate:
+          type: string
+          format: date
+          description: The promised delivery start date.
+        promisedDeliveryEndDate:
+          type: string
+          format: date
+          description: The promised delivery end date. Must be equal to or after the promised delivery start date.
+        shipToLocation:
+          type: string
+          maxLength: 255
+          description: The location where items should be shipped.
+        createdOn:
+          type: string
+          format: date
+          description: The date this schedule line was created.
+    NonNegativeMonetaryValue:
+      description: 'The monetary value as a string.
+
+        A float **should not** be used. The api will accept a float and it will be
+
+        transformed into a monetary value, but for best results please use a string
+
+        with the proper decimal precision. **Must be greater than or equal to zero.**
+
+        '
+      type: string
+      format: decimal
+      example: '1.00'
+    UnitOfMeasure:
+      type: string
+      example: kg
+      maxLength: 255
+      description: The unit of measure used.
+    PurchaseOrderReceiptLine:
+      type: object
+      description: A receipt line associated with a purchase order line item.
+      required:
+      - internalId
+      properties:
+        internalId:
+          type: string
+          format: uuid
+          description: The internal ID of the receipt line.
+        receiptLineRemoteId:
+          type: string
+          maxLength: 255
+          description: The receipt line ID from the ERP system.
+        receiptLineNumber:
+          type: integer
+          description: The receipt line number.
+          minimum: 1
+        poLineNumber:
+          type: integer
+          description: The purchase order line number this receipt line is associated with.
+        poScheduleLineRemoteId:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          description: The purchase order schedule line ID (from the ERP) this receipt line is associated with.
+        poScheduleLineNumber:
+          oneOf:
+          - type: integer
+          - type: 'null'
+          description: The purchase order schedule line number this receipt line is associated with.
+        itemId:
+          type: string
+          maxLength: 255
+          description: The item ID from the ERP system.
+        uomCode:
+          type: string
+          maxLength: 255
+          description: The unit of measure code.
+        receivedQuantity:
+          type: string
+          format: decimal
+          description: The quantity received.
+          example: '1.0'
+        acceptedQuantity:
+          oneOf:
+          - type: string
+            format: decimal
+          - type: 'null'
+          description: The quantity accepted.
+          example: '1.0'
+        receivedDate:
+          type: string
+          format: date
+          description: The date the items were received.
+        createdOn:
+          type: string
+          format: date
+          description: When the receipt line was created.
+        createdBy:
+          type: string
+          maxLength: 255
+          description: The user or system that created this receipt line.
+        warehouse:
+          type: string
+          maxLength: 255
+          description: The warehouse where the items were received.
+        billOfLading:
+          description: The bill of lading reference for the goods receipt.
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        deliveryNote:
+          description: The delivery note reference for the goods receipt.
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        status:
+          type: string
+          enum:
+          - open
+          - closed
+          description: The status of the receipt line.
+    DimensionRef:
+      type: object
+      description: 'A reference to a dimension within Vic.
+
+        The `internalId` takes precedence over all fields specified. If a
+
+        dimension is not found matching the `internalId` an error will be
+
+        returned.
+
+        When `externalId` is provided, it takes precedence over `name` and can
+
+        be used in combination with `typeExternalId`.
+
+        If `name` is the only field specified and more than one dimension exists
+
+        with that `name`, then an error will be returned. It can be used in
+
+        combination with `typeExternalId`.
+
+        If `typeExternalId` is specified with `externalId` or `name` and more
+
+        than one dimension exists with those fields, then an error will be
+
+        returned.
+
+        '
+      properties:
+        internalId:
+          oneOf:
+          - type: string
+            maxLength: 255
+            description: 'Vic''s id of the dimension.
+
+              Takes precedence over all other fields. Other fields are ignored if
+
+              this is specified.
+
+              '
+          - type: 'null'
+        externalId:
+          description: 'The id of the dimension in the ERP.
+
+            Takes precedence over `name`. Can be used in combination with
+
+            `typeExternalId`.
+
+            If more than one dimension is found meeting the criteria specified,
+
+            an error will be returned.
+
+            '
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+        name:
+          oneOf:
+          - type: string
+            maxLength: 255
+            description: 'The name of the dimension.
+
+              Can be used in combination with `typeExternalId`.
+
+              If more than one dimension is found meeting the criteria specified,
+
+              an error will be returned.
+
+              '
+          - type: 'null'
+        typeExternalId:
+          description: 'The type id in the ERP.
+
+            This is a supplemental field to be used with `externalId` or `name`.
+
+            '
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+    ErrorString:
+      type: string
+      maxLength: 255
   parameters:
     UseSystemDefaultInternal:
       name: useSystem
@@ -1162,6 +1122,46 @@ components:
         - internal
         - external
         default: INTERNAL
+  responses:
+    PurchaseOrderLineItemDeletedResponse:
+      description: Purchase order line item was successfully deleted.
+    ForbiddenResponse:
+      description: The request was forbidden.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    PurchaseOrderLineItemResponse:
+      description: The purchase order line item.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PurchaseOrderLineItem'
+    ResourceNotFoundResponse:
+      description: Resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    UnprocessableEntityResponse:
+      description: Errors with the input are present.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  requestBodies:
+    UpdatePurchaseOrderLineItemRequest:
+      description: Update a purchase order line item.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdatePurchaseOrderLineItem'
+    CreatePurchaseOrderLineItemRequest:
+      description: Create a purchase order line item.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreatePurchaseOrderLineItem'
   securitySchemes:
     BearerAuth:
       type: http

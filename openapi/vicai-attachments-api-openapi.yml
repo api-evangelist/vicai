@@ -110,11 +110,6 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   schemas:
-    InternalId:
-      description: The internal id Vic uses for the record.
-      type: string
-      example: '47'
-      readOnly: true
     Attachment:
       type: object
       required:
@@ -122,6 +117,11 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/InternalId'
+    InternalId:
+      description: The internal id Vic uses for the record.
+      type: string
+      example: '47'
+      readOnly: true
     Error:
       description: 'generic error message in JSON format.  Note the ''code'' field should
 
@@ -143,8 +143,13 @@ components:
       type: string
       maxLength: 255
   responses:
-    ErrorResponse:
-      description: An unexpected error has occurred. Check the body for more details.
+    TooManyRequestsResponse:
+      description: HTTP call rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
+          schema:
+            type: integer
       content:
         application/json:
           schema:
@@ -155,13 +160,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Attachment'
-    TooManyRequestsResponse:
-      description: HTTP call rate limit exceeded.
-      headers:
-        Retry-After:
-          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
-          schema:
-            type: integer
+    ErrorResponse:
+      description: An unexpected error has occurred. Check the body for more details.
       content:
         application/json:
           schema:

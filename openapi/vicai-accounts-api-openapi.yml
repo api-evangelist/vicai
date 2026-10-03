@@ -142,10 +142,40 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   schemas:
+    AccountUpsert:
+      type: object
+      required:
+      - number
+      - name
+      - externalUpdatedAt
+      properties:
+        externalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+        externalUpdatedAt:
+          type: string
+          format: date-time
+          description: Does not have UTC normalization.
+        number:
+          type: string
+          format: number
+        name:
+          type: string
+          maxLength: 255
+        externalData:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalData'
+          - type: 'null'
     Accounts:
       type: array
       items:
         $ref: '#/components/schemas/Account'
+    InternalId:
+      description: The internal id Vic uses for the record.
+      type: string
+      example: '47'
+      readOnly: true
     ExternalData:
       description: A free form json object that is stored with the record.
       type: object
@@ -181,40 +211,6 @@ components:
           oneOf:
           - $ref: '#/components/schemas/ExternalData'
           - type: 'null'
-    AccountUpsert:
-      type: object
-      required:
-      - number
-      - name
-      - externalUpdatedAt
-      properties:
-        externalId:
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-        externalUpdatedAt:
-          type: string
-          format: date-time
-          description: Does not have UTC normalization.
-        number:
-          type: string
-          format: number
-        name:
-          type: string
-          maxLength: 255
-        externalData:
-          oneOf:
-          - $ref: '#/components/schemas/ExternalData'
-          - type: 'null'
-    ExternalId:
-      description: 'The external id set by the ERP system. It does not have to be a UUID and
-
-        can be any non empty string desired.
-
-        '
-      type: string
-      example: 21b31bc7-1267-4335-893c-d7fe4706a238
-      maxLength: 255
     Error:
       description: 'generic error message in JSON format.  Note the ''code'' field should
 
@@ -232,75 +228,26 @@ components:
           maximum: 599
         message:
           $ref: '#/components/schemas/ErrorString'
-    InternalId:
-      description: The internal id Vic uses for the record.
+    ExternalId:
+      description: 'The external id set by the ERP system. It does not have to be a UUID and
+
+        can be any non empty string desired.
+
+        '
       type: string
-      example: '47'
-      readOnly: true
+      example: 21b31bc7-1267-4335-893c-d7fe4706a238
+      maxLength: 255
     ErrorString:
       type: string
       maxLength: 255
-  responses:
-    AccountUpsertedResponse:
-      description: Account was upserted successfully.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Account'
-    TooManyRequestsResponse:
-      description: HTTP call rate limit exceeded.
-      headers:
-        Retry-After:
-          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
-          schema:
-            type: integer
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    SynchronizeAccountsResponse:
-      description: 'A request to synchronize the GL Accounts was acknowledged and is in the
-
-        process of being ran.
-
-        '
-    AccountsResponse:
-      description: A paged array of accounts
-      headers:
-        x-next:
-          $ref: '#/components/headers/NextPageToken'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Accounts'
-    ErrorResponse:
-      description: An unexpected error has occurred. Check the body for more details.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    AccountDeletedResponse:
-      description: Information for deleted account
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Account'
-    AccountResponse:
-      description: Shows the account.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Account'
   parameters:
-    PagingLimit:
-      name: limit
+    PagingCursor:
+      name: cursor
       in: query
-      description: How many items to return at one time (max 100) (default 100)
+      description: Which item to start from. See [Pagination](#section/Pagination) for more information.
       required: false
       schema:
-        type: integer
-        minimum: 1
-        maximum: 100
+        type: string
     PathId:
       name: id
       in: path
@@ -308,20 +255,17 @@ components:
       description: The id of the database entry
       schema:
         type: string
-    SinceFilter:
-      name: since
+    SortOrder:
+      name: sortOrder
       in: query
-      description: 'Datetime value for incremental updates.
-
-        **NOTE**: For external datetimes, the expected format is not in UTC. for
-
-        vic-internal datetimes (see `SinceIsExternal`) the format is UTC.
-
-        '
+      description: what sort order should be used for queries
       required: false
       schema:
         type: string
-        format: date-time
+        enum:
+        - ASCENDING
+        - DESCENDING
+        default: ASCENDING
     UseSystemDefaultExternal:
       name: useSystem
       in: query
@@ -337,24 +281,20 @@ components:
         - internal
         - external
         default: EXTERNAL
-    PagingCursor:
-      name: cursor
+    SinceFilter:
+      name: since
       in: query
-      description: Which item to start from. See [Pagination](#section/Pagination) for more information.
+      description: 'Datetime value for incremental updates.
+
+        **NOTE**: For external datetimes, the expected format is not in UTC. for
+
+        vic-internal datetimes (see `SinceIsExternal`) the format is UTC.
+
+        '
       required: false
       schema:
         type: string
-    SortOrder:
-      name: sortOrder
-      in: query
-      description: what sort order should be used for queries
-      required: false
-      schema:
-        type: string
-        enum:
-        - ASCENDING
-        - DESCENDING
-        default: ASCENDING
+        format: date-time
     RequestId:
       in: header
       name: X-Request-Id
@@ -363,6 +303,66 @@ components:
       schema:
         type: string
         format: uuid
+    PagingLimit:
+      name: limit
+      in: query
+      description: How many items to return at one time (max 100) (default 100)
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+  responses:
+    ErrorResponse:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    AccountDeletedResponse:
+      description: Information for deleted account
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Account'
+    AccountsResponse:
+      description: A paged array of accounts
+      headers:
+        x-next:
+          $ref: '#/components/headers/NextPageToken'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Accounts'
+    TooManyRequestsResponse:
+      description: HTTP call rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    AccountUpsertedResponse:
+      description: Account was upserted successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Account'
+    AccountResponse:
+      description: Shows the account.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Account'
+    SynchronizeAccountsResponse:
+      description: 'A request to synchronize the GL Accounts was acknowledged and is in the
+
+        process of being ran.
+
+        '
   headers:
     NextPageToken:
       description: A link to the next page of responses

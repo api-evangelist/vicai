@@ -87,21 +87,6 @@ components:
           type: string
         client_secret:
           type: string
-    GetTokenResult:
-      type: object
-      required:
-      - access_token
-      - token_type
-      - expires_in
-      properties:
-        access_token:
-          type: string
-        token_type:
-          type: string
-          enum:
-          - Bearer
-        expires_in:
-          type: integer
     Error:
       description: 'generic error message in JSON format.  Note the ''code'' field should
 
@@ -122,6 +107,21 @@ components:
     ErrorString:
       type: string
       maxLength: 255
+    GetTokenResult:
+      type: object
+      required:
+      - access_token
+      - token_type
+      - expires_in
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+          enum:
+          - Bearer
+        expires_in:
+          type: integer
   responses:
     ErrorResponse:
       description: An unexpected error has occurred. Check the body for more details.

@@ -287,167 +287,6 @@ paths:
           $ref: '#/components/responses/ErrorResponseV2'
 components:
   schemas:
-    OrganizationV2:
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
-    UserManagerV2:
-      description: A user's manager.
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          type: string
-          description: The manager's user ID.
-        name:
-          type: string
-          description: The manager's full preferred name.
-        email:
-          type: string
-          description: The manager's email.
-    LanguageV2:
-      type: string
-      description: The two letter code for the language used.
-      example: en
-    ErrorV2:
-      type: object
-      required:
-      - message
-      properties:
-        field:
-          description: 'The field that the error occurred on. This field may not always be
-
-            present.
-
-            '
-          oneOf:
-          - type: string
-          - type: 'null'
-        message:
-          description: A description of the error.
-          type: string
-    UserStatusV2:
-      type: string
-      description: The type of invoice item line.
-      enum:
-      - active
-      - out_of_office
-      default: active
-    PaginationV2:
-      type: object
-      properties:
-        size:
-          type: integer
-          description: The page size.
-          maximum: 50
-          minimum: 1
-        cursor:
-          type: string
-          description: The cursor to use to get the next page of results.
-    UserMetadataEntryV2:
-      type: object
-      properties:
-        name:
-          type: string
-          description: 'The name of the metadata entry. The name **MUST** be only lower case
-
-            `a-z` and numbers `0-9`. The `_` character is allowed. The name
-
-            *MUST** be unique in the set.
-
-            '
-          pattern: ^[a-z0-9_]+$
-          example: job_title
-        type:
-          type: string
-          enum:
-          - string
-          - boolean
-          - integer
-          - date
-        value:
-          type: string
-          description: The value of the entry.
-          example: Senior Manager
-    PaginationMetaV2:
-      type: object
-      properties:
-        cursor:
-          description: 'The cursor to the next page of data. If it is null, that means there
-
-            is no more data to fetch.
-
-            '
-          oneOf:
-          - type: string
-          - type: 'null'
-    CreateUserV2:
-      type: object
-      required:
-      - name
-      - email
-      properties:
-        first_name:
-          type: string
-          description: The first name of the user.
-        last_name:
-          type: string
-          description: The last name of the user.
-        name:
-          type: string
-          description: The full preferred name of the user.
-        phone_number:
-          type: string
-          description: 'The phone number the user is connected with. This is not required to
-
-            be set. If provided, the phone number is validated.
-
-            '
-        email:
-          type: string
-          description: The User's email. Must be unique.
-        timezone:
-          $ref: '#/components/schemas/TimeZoneV2'
-        language:
-          $ref: '#/components/schemas/LanguageV2'
-        address:
-          $ref: '#/components/schemas/UserAddressV2'
-        metadata:
-          type: array
-          items:
-            $ref: '#/components/schemas/UserMetadataEntryV2'
-        date_of_birth:
-          type: string
-          format: date
-          description: When the user was born.
-    UserAddressV2:
-      type: object
-      properties:
-        street_1:
-          type: string
-        street_2:
-          type: string
-        city:
-          type: string
-        postal_code:
-          type: string
-        country:
-          $ref: '#/components/schemas/CountryCode'
-    TimeZoneV2:
-      type: string
-      example: Etc/UTC
     UserV2:
       description: A User attached to an organization.
       type: object
@@ -518,22 +357,124 @@ components:
           type: string
           format: date-time
           description: When the user was last updated in Vic.
-    CreateOrganizationV2:
+    UserMetadataEntryV2:
       type: object
-      required:
-      - name
-      - billing_timezone
       properties:
         name:
           type: string
-          description: Display name for the organization.
-        billing_timezone:
+          description: 'The name of the metadata entry. The name **MUST** be only lower case
+
+            `a-z` and numbers `0-9`. The `_` character is allowed. The name
+
+            *MUST** be unique in the set.
+
+            '
+          pattern: ^[a-z0-9_]+$
+          example: job_title
+        type:
           type: string
-          description: IANA timezone identifier.
-          example: America/New_York
-        remote_id:
+          enum:
+          - string
+          - boolean
+          - integer
+          - date
+        value:
           type: string
-          description: External identifier from the partner's system.
+          description: The value of the entry.
+          example: Senior Manager
+    UserManagerV2:
+      description: A user's manager.
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          description: The manager's user ID.
+        name:
+          type: string
+          description: The manager's full preferred name.
+        email:
+          type: string
+          description: The manager's email.
+    UserAddressV2:
+      type: object
+      properties:
+        street_1:
+          type: string
+        street_2:
+          type: string
+        city:
+          type: string
+        postal_code:
+          type: string
+        country:
+          $ref: '#/components/schemas/CountryCode'
+    OrganizationV2:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    TimeZoneV2:
+      type: string
+      example: Etc/UTC
+    CreateUserV2:
+      type: object
+      required:
+      - name
+      - email
+      properties:
+        first_name:
+          type: string
+          description: The first name of the user.
+        last_name:
+          type: string
+          description: The last name of the user.
+        name:
+          type: string
+          description: The full preferred name of the user.
+        phone_number:
+          type: string
+          description: 'The phone number the user is connected with. This is not required to
+
+            be set. If provided, the phone number is validated.
+
+            '
+        email:
+          type: string
+          description: The User's email. Must be unique.
+        timezone:
+          $ref: '#/components/schemas/TimeZoneV2'
+        language:
+          $ref: '#/components/schemas/LanguageV2'
+        address:
+          $ref: '#/components/schemas/UserAddressV2'
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserMetadataEntryV2'
+        date_of_birth:
+          type: string
+          format: date
+          description: When the user was born.
+    CountryCode:
+      description: 'The ISO-3166 country code. The acceptable values are Alpha-2 codes.
+
+        '
+      type: string
+      format: ISO-3166
+      maxLength: 2
+      example: US
     AttachUserToOrganizationV2:
       type: object
       properties:
@@ -569,6 +510,10 @@ components:
           - superadmin
           - manager
           default: user
+    LanguageV2:
+      type: string
+      description: The two letter code for the language used.
+      example: en
     OrganizationUserMetaV2:
       type: object
       properties:
@@ -588,34 +533,104 @@ components:
           description: When the user's role was modified.
           type: string
           format: date-time
-    CountryCode:
-      description: 'The ISO-3166 country code. The acceptable values are Alpha-2 codes.
+    PaginationMetaV2:
+      type: object
+      properties:
+        cursor:
+          description: 'The cursor to the next page of data. If it is null, that means there
 
-        '
+            is no more data to fetch.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
+    CreateOrganizationV2:
+      type: object
+      required:
+      - name
+      - billing_timezone
+      properties:
+        name:
+          type: string
+          description: Display name for the organization.
+        billing_timezone:
+          type: string
+          description: IANA timezone identifier.
+          example: America/New_York
+        remote_id:
+          type: string
+          description: External identifier from the partner's system.
+    ErrorV2:
+      type: object
+      required:
+      - message
+      properties:
+        field:
+          description: 'The field that the error occurred on. This field may not always be
+
+            present.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
+        message:
+          description: A description of the error.
+          type: string
+    PaginationV2:
+      type: object
+      properties:
+        size:
+          type: integer
+          description: The page size.
+          maximum: 50
+          minimum: 1
+        cursor:
+          type: string
+          description: The cursor to use to get the next page of results.
+    UserStatusV2:
       type: string
-      format: ISO-3166
-      maxLength: 2
-      example: US
-  responses:
-    RemoveUserFromOrganizationResponseV2:
-      description: 'The user was removed from the organization and companies successfully.
-
-        '
-    GetOrganizationResponseV2:
-      description: A single organization.
+      description: The type of invoice item line.
+      enum:
+      - active
+      - out_of_office
+      default: active
+  requestBodies:
+    CreateOrganizationUserRequestV2:
+      description: Create a user and attach it to an organization.
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              data:
-                $ref: '#/components/schemas/OrganizationV2'
+            $ref: '#/components/schemas/CreateUserV2'
+    AttachUserToOrganizationRequestV2:
+      description: Attach an existing user to an organization.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AttachUserToOrganizationV2'
+  responses:
     CreateOrganizationUserResponseV2:
       description: User was created and attached to the organization successfully.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/OrganizationUserMetaV2'
+    ErrorResponseV2:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ErrorV2'
+    RemoveUserFromOrganizationResponseV2:
+      description: 'The user was removed from the organization and companies successfully.
+
+        '
     ListOrganizationUsersResponseV2:
       description: A successful list of users attached to an organization.
       content:
@@ -642,30 +657,15 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/OrganizationV2'
-    ErrorResponseV2:
-      description: An unexpected error has occurred. Check the body for more details.
+    GetOrganizationResponseV2:
+      description: A single organization.
       content:
         application/json:
           schema:
             type: object
             properties:
-              errors:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ErrorV2'
-  requestBodies:
-    AttachUserToOrganizationRequestV2:
-      description: Attach an existing user to an organization.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/AttachUserToOrganizationV2'
-    CreateOrganizationUserRequestV2:
-      description: Create a user and attach it to an organization.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CreateUserV2'
+              data:
+                $ref: '#/components/schemas/OrganizationV2'
   parameters:
     PaginationV2:
       name: page

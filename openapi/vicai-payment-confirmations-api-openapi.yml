@@ -343,9 +343,262 @@ paths:
           $ref: '#/components/responses/ErrorResponseV2'
 components:
   schemas:
-    InvoiceInternalId:
+    MonetaryValue:
+      description: 'The monetary value as a string.
+
+        A float **should not** be used. The api will accept a float and it will be
+
+        transformed into a monetary value, but for best results please use a string
+
+        with the proper decimal precision.
+
+        '
       type: string
-      description: The id of the `Invoice` in Vic.
+      format: decimal
+      example: '1.00'
+    InvoiceRef:
+      type: object
+      description: A reference to an `Invoice`.
+      properties:
+        internalId:
+          oneOf:
+          - $ref: '#/components/schemas/InvoiceInternalId'
+          - type: 'null'
+        externalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+        refNumber:
+          type:
+          - string
+          - 'null'
+    PaymentMethod:
+      type: string
+      enum:
+      - ach
+      - card
+      - check
+      - wire
+    VendorRef:
+      type: object
+      description: A reference to a `Vendor`.
+      properties:
+        internalId:
+          oneOf:
+          - $ref: '#/components/schemas/VendorInternalId'
+          - type: 'null'
+        externalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+    PaymentV2:
+      type: object
+      description: A payment in the V2 API format with snake_case field names.
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier of the payment.
+        amount:
+          type: string
+          description: The payment amount as a decimal string.
+        approved_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The datetime when the payment was approved.
+        confirmed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The datetime when the payment was confirmed.
+        currency_id:
+          type: string
+          description: The ISO 4217 currency code.
+        discount_amount:
+          type:
+          - string
+          - 'null'
+          description: The discount amount applied as a decimal string.
+        exchange_rate:
+          type:
+          - string
+          - 'null'
+          description: The exchange rate used for the payment.
+        funded_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The datetime when funding began.
+        failed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The datetime when the payment failed
+        failed_reason:
+          type:
+          - string
+          - 'null'
+          description: The reason why the payment failed
+        accepted_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The datetime when the payment was accepted for processing.
+        payment_method:
+          type:
+          - string
+          - 'null'
+          description: The payment method used.
+        reference_id:
+          type:
+          - string
+          - 'null'
+          description: The reference identifier for the payment.
+        rejected_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The datetime when the payment was rejected.
+        remote_error:
+          type:
+          - string
+          - 'null'
+          description: Error message if confirmation failed.
+        remote_errored_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the remote error occurred.
+        remote_id:
+          type:
+          - string
+          - 'null'
+          description: External system identifier for the payment.
+        settlement_amount:
+          type:
+          - string
+          - 'null'
+          description: The settlement amount as a decimal string.
+        settlement_currency_id:
+          type:
+          - string
+          - 'null'
+          description: The settlement currency ISO code.
+        status:
+          $ref: '#/components/schemas/PaymentStatus'
+        voided_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The datetime when the payment was voided.
+        created_at:
+          type: string
+          format: date-time
+          description: The datetime when the payment was created.
+        updated_at:
+          type: string
+          format: date-time
+          description: The datetime when the payment was last updated.
+    BulkConfirmPaymentsInput:
+      type: object
+      description: Input schema for bulk confirming multiple payments.
+      required:
+      - payments
+      properties:
+        payments:
+          type: array
+          minItems: 1
+          description: Array of payment confirmation items. Must contain at least one item.
+          items:
+            type: object
+            required:
+            - id
+            - confirmedAt
+            properties:
+              id:
+                type: string
+                format: uuid
+                description: The UUID of the payment to confirm.
+              confirmedAt:
+                type: string
+                format: date-time
+                description: The datetime when the payment was confirmed in the external system.
+              remoteId:
+                type:
+                - string
+                - 'null'
+                maxLength: 255
+                description: An optional external identifier for the payment in the confirming system.
+    CostAccountRef:
+      type: object
+      description: A reference to a `Account`.
+      properties:
+        internalId:
+          oneOf:
+          - type: string
+            maxLength: 255
+            description: The id of the `Account` in Vic.
+          - type: 'null'
+        externalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+    ConfirmPaymentInputV2:
+      type: object
+      description: Input schema for confirming a payment (V2 API with snake_case fields).
+      required:
+      - confirmed_at
+      properties:
+        confirmed_at:
+          type: string
+          format: date-time
+          description: The datetime when the payment was confirmed in the external system.
+        remote_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+          description: An optional external identifier for the payment in the confirming system.
+    Error:
+      description: 'generic error message in JSON format.  Note the ''code'' field should
+
+        match the HTTP status code of the wrapping HTTP request.
+
+        '
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          minimum: 100
+          maximum: 599
+        message:
+          $ref: '#/components/schemas/ErrorString'
+    Currency:
+      description: The ISO-4217 currency code.
+      type: string
+      format: ISO-4217
+      maxLength: 3
+      example: USD
+    ExternalId:
+      description: 'The external id set by the ERP system. It does not have to be a UUID and
+
+        can be any non empty string desired.
+
+        '
+      type: string
+      example: 21b31bc7-1267-4335-893c-d7fe4706a238
       maxLength: 255
     FailPaymentInput:
       type: object
@@ -372,6 +625,58 @@ components:
           - 'null'
           maxLength: 255
           description: An optional external identifier for the failed payment.
+    PaymentStatus:
+      type: string
+      enum:
+      - pending_approval
+      - rejected
+      - approved
+      - acknowledged
+      - voided
+      - failed
+      description: "The status of the payment.\n- `pending_approval` - The payment is awaiting approval.\n- `approved` - The payment was approved for payment.\n- `rejected` - The payment was rejected and was excluded from being paid.\n- `acknowledged` - The `rejected` payment was acknowledged by the payee.\n- `voided` - The payment was voided for reason.\n- `failed` - The payment failed to be submitted to the payment provider.\n  See the failed reason for more information.\n"
+    BulkFailPaymentsInputV2:
+      type: object
+      description: Input schema for bulk failing multiple payments (V2 API with snake_case fields).
+      required:
+      - payments
+      properties:
+        payments:
+          type: array
+          minItems: 1
+          maxItems: 100
+          description: Array of payment failure items. Must contain at least one item.
+          items:
+            type: object
+            required:
+            - id
+            - remote_errored_at
+            - remote_error
+            properties:
+              id:
+                type: string
+                format: uuid
+                description: The UUID of the payment to mark as failed.
+              remote_errored_at:
+                type: string
+                format: date-time
+                description: The datetime when the payment failed in the external system.
+              remote_error:
+                type: string
+                maxLength: 255
+                description: 'The error message describing why the payment failed. This message will be
+
+                  displayed to the user. It should be clear as to what happened so that it can be
+
+                  rectified.
+
+                  '
+              remote_id:
+                type:
+                - string
+                - 'null'
+                maxLength: 255
+                description: An optional external identifier for the failed payment.
     Payment:
       type: object
       description: 'The payment made for an `Invoice`. The `Account` assigned to the
@@ -517,39 +822,35 @@ components:
           $ref: '#/components/schemas/CostAccountRef'
         vendor:
           $ref: '#/components/schemas/VendorRef'
-    ConfirmPaymentInput:
+    VendorInternalId:
+      type: string
+      description: The id of the `Vendor` in Vic.
+      maxLength: 255
+    FailPaymentInputV2:
       type: object
-      description: Input schema for confirming a payment.
+      description: Input schema for marking a payment as failed (V2 API with snake_case fields).
       required:
-      - confirmedAt
+      - remote_errored_at
+      - remote_error
       properties:
-        confirmedAt:
+        remote_errored_at:
           type: string
           format: date-time
-          description: The datetime when the payment was confirmed in the external system.
-        remoteId:
+          description: The datetime when the payment failed in the external system.
+        remote_error:
+          type: string
+          maxLength: 255
+          description: 'The error message describing why the payment failed. This message will be displayed
+
+            to the user. It should be clear as to what happened so that it can be rectified.
+
+            '
+        remote_id:
           type:
           - string
           - 'null'
           maxLength: 255
-          description: An optional external identifier for the payment in the confirming system.
-    ErrorV2:
-      type: object
-      required:
-      - message
-      properties:
-        field:
-          description: 'The field that the error occurred on. This field may not always be
-
-            present.
-
-            '
-          oneOf:
-          - type: string
-          - type: 'null'
-        message:
-          description: A description of the error.
-          type: string
+          description: An optional external identifier for the failed payment.
     BulkConfirmPaymentsInputV2:
       type: object
       description: Input schema for bulk confirming multiple payments (V2 API with snake_case fields).
@@ -581,66 +882,22 @@ components:
                 - 'null'
                 maxLength: 255
                 description: An optional external identifier for the payment in the confirming system.
-    ExternalId:
-      description: 'The external id set by the ERP system. It does not have to be a UUID and
-
-        can be any non empty string desired.
-
-        '
-      type: string
-      example: 21b31bc7-1267-4335-893c-d7fe4706a238
-      maxLength: 255
-    BulkConfirmPaymentsInput:
+    ConfirmPaymentInput:
       type: object
-      description: Input schema for bulk confirming multiple payments.
+      description: Input schema for confirming a payment.
       required:
-      - payments
+      - confirmedAt
       properties:
-        payments:
-          type: array
-          minItems: 1
-          description: Array of payment confirmation items. Must contain at least one item.
-          items:
-            type: object
-            required:
-            - id
-            - confirmedAt
-            properties:
-              id:
-                type: string
-                format: uuid
-                description: The UUID of the payment to confirm.
-              confirmedAt:
-                type: string
-                format: date-time
-                description: The datetime when the payment was confirmed in the external system.
-              remoteId:
-                type:
-                - string
-                - 'null'
-                maxLength: 255
-                description: An optional external identifier for the payment in the confirming system.
-    PaymentMethod:
-      type: string
-      enum:
-      - ach
-      - card
-      - check
-      - wire
-    CostAccountRef:
-      type: object
-      description: A reference to a `Account`.
-      properties:
-        internalId:
-          oneOf:
-          - type: string
-            maxLength: 255
-            description: The id of the `Account` in Vic.
-          - type: 'null'
-        externalId:
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
+        confirmedAt:
+          type: string
+          format: date-time
+          description: The datetime when the payment was confirmed in the external system.
+        remoteId:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+          description: An optional external identifier for the payment in the confirming system.
     PaymentReferenceId:
       type: string
       description: 'The reference id of the payment or credit is associated with. This will
@@ -650,170 +907,30 @@ components:
         Example: `P001234`, `A000134`, or `E123456`
 
         '
-    Error:
-      description: 'generic error message in JSON format.  Note the ''code'' field should
-
-        match the HTTP status code of the wrapping HTTP request.
-
-        '
+    ErrorV2:
       type: object
       required:
-      - code
       - message
       properties:
-        code:
-          type: integer
-          minimum: 100
-          maximum: 599
-        message:
-          $ref: '#/components/schemas/ErrorString'
-    MonetaryValue:
-      description: 'The monetary value as a string.
+        field:
+          description: 'The field that the error occurred on. This field may not always be
 
-        A float **should not** be used. The api will accept a float and it will be
-
-        transformed into a monetary value, but for best results please use a string
-
-        with the proper decimal precision.
-
-        '
-      type: string
-      format: decimal
-      example: '1.00'
-    FailPaymentInputV2:
-      type: object
-      description: Input schema for marking a payment as failed (V2 API with snake_case fields).
-      required:
-      - remote_errored_at
-      - remote_error
-      properties:
-        remote_errored_at:
-          type: string
-          format: date-time
-          description: The datetime when the payment failed in the external system.
-        remote_error:
-          type: string
-          maxLength: 255
-          description: 'The error message describing why the payment failed. This message will be displayed
-
-            to the user. It should be clear as to what happened so that it can be rectified.
+            present.
 
             '
-        remote_id:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-          description: An optional external identifier for the failed payment.
-    BulkFailPaymentsInputV2:
-      type: object
-      description: Input schema for bulk failing multiple payments (V2 API with snake_case fields).
-      required:
-      - payments
-      properties:
-        payments:
-          type: array
-          minItems: 1
-          maxItems: 100
-          description: Array of payment failure items. Must contain at least one item.
-          items:
-            type: object
-            required:
-            - id
-            - remote_errored_at
-            - remote_error
-            properties:
-              id:
-                type: string
-                format: uuid
-                description: The UUID of the payment to mark as failed.
-              remote_errored_at:
-                type: string
-                format: date-time
-                description: The datetime when the payment failed in the external system.
-              remote_error:
-                type: string
-                maxLength: 255
-                description: 'The error message describing why the payment failed. This message will be
-
-                  displayed to the user. It should be clear as to what happened so that it can be
-
-                  rectified.
-
-                  '
-              remote_id:
-                type:
-                - string
-                - 'null'
-                maxLength: 255
-                description: An optional external identifier for the failed payment.
+          oneOf:
+          - type: string
+          - type: 'null'
+        message:
+          description: A description of the error.
+          type: string
+    InvoiceInternalId:
+      type: string
+      description: The id of the `Invoice` in Vic.
+      maxLength: 255
     ErrorString:
       type: string
       maxLength: 255
-    PaymentStatus:
-      type: string
-      enum:
-      - pending_approval
-      - rejected
-      - approved
-      - acknowledged
-      - voided
-      - failed
-      description: "The status of the payment.\n- `pending_approval` - The payment is awaiting approval.\n- `approved` - The payment was approved for payment.\n- `rejected` - The payment was rejected and was excluded from being paid.\n- `acknowledged` - The `rejected` payment was acknowledged by the payee.\n- `voided` - The payment was voided for reason.\n- `failed` - The payment failed to be submitted to the payment provider.\n  See the failed reason for more information.\n"
-    VendorRef:
-      type: object
-      description: A reference to a `Vendor`.
-      properties:
-        internalId:
-          oneOf:
-          - $ref: '#/components/schemas/VendorInternalId'
-          - type: 'null'
-        externalId:
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-    Currency:
-      description: The ISO-4217 currency code.
-      type: string
-      format: ISO-4217
-      maxLength: 3
-      example: USD
-    VendorInternalId:
-      type: string
-      description: The id of the `Vendor` in Vic.
-      maxLength: 255
-    ConfirmPaymentInputV2:
-      type: object
-      description: Input schema for confirming a payment (V2 API with snake_case fields).
-      required:
-      - confirmed_at
-      properties:
-        confirmed_at:
-          type: string
-          format: date-time
-          description: The datetime when the payment was confirmed in the external system.
-        remote_id:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-          description: An optional external identifier for the payment in the confirming system.
-    InvoiceRef:
-      type: object
-      description: A reference to an `Invoice`.
-      properties:
-        internalId:
-          oneOf:
-          - $ref: '#/components/schemas/InvoiceInternalId'
-          - type: 'null'
-        externalId:
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-        refNumber:
-          type:
-          - string
-          - 'null'
     BulkFailPaymentsInput:
       type: object
       description: Input schema for bulk failing multiple payments.
@@ -856,124 +973,47 @@ components:
                 - 'null'
                 maxLength: 255
                 description: An optional external identifier for the failed payment.
-    PaymentV2:
-      type: object
-      description: A payment in the V2 API format with snake_case field names.
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: The unique identifier of the payment.
-        amount:
-          type: string
-          description: The payment amount as a decimal string.
-        approved_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: The datetime when the payment was approved.
-        confirmed_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: The datetime when the payment was confirmed.
-        currency_id:
-          type: string
-          description: The ISO 4217 currency code.
-        discount_amount:
-          type:
-          - string
-          - 'null'
-          description: The discount amount applied as a decimal string.
-        exchange_rate:
-          type:
-          - string
-          - 'null'
-          description: The exchange rate used for the payment.
-        funded_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: The datetime when funding began.
-        failed_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: The datetime when the payment failed
-        failed_reason:
-          type:
-          - string
-          - 'null'
-          description: The reason why the payment failed
-        accepted_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: The datetime when the payment was accepted for processing.
-        payment_method:
-          type:
-          - string
-          - 'null'
-          description: The payment method used.
-        reference_id:
-          type:
-          - string
-          - 'null'
-          description: The reference identifier for the payment.
-        rejected_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: The datetime when the payment was rejected.
-        remote_error:
-          type:
-          - string
-          - 'null'
-          description: Error message if confirmation failed.
-        remote_errored_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: When the remote error occurred.
-        remote_id:
-          type:
-          - string
-          - 'null'
-          description: External system identifier for the payment.
-        settlement_amount:
-          type:
-          - string
-          - 'null'
-          description: The settlement amount as a decimal string.
-        settlement_currency_id:
-          type:
-          - string
-          - 'null'
-          description: The settlement currency ISO code.
-        status:
-          $ref: '#/components/schemas/PaymentStatus'
-        voided_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: The datetime when the payment was voided.
-        created_at:
-          type: string
-          format: date-time
-          description: The datetime when the payment was created.
-        updated_at:
-          type: string
-          format: date-time
-          description: The datetime when the payment was last updated.
   responses:
+    ForbiddenResponse:
+      description: The request was forbidden.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ErrorResponseV2:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ErrorV2'
+    PaymentsBulkFailedResponseV2:
+      description: Payments bulk failed successfully.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PaymentV2'
+    ErrorResponse:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    PaymentFailedResponse:
+      description: Payment marked as failed successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Payment'
     PaymentConfirmedResponse:
       description: Payment confirmed successfully.
       content:
@@ -991,29 +1031,29 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    PaymentFailedResponse:
-      description: Payment marked as failed successfully.
+    PaymentsBulkConfirmedResponse:
+      description: Payments bulk confirmed successfully.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Payment'
-    ResourceNotFoundResponse:
-      description: Resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    PaymentsBulkFailedResponseV2:
-      description: Payments bulk failed successfully.
+            type: array
+            items:
+              $ref: '#/components/schemas/Payment'
+    PaymentConfirmedResponseV2:
+      description: Payment confirmed successfully.
       content:
         application/json:
           schema:
             type: object
             properties:
               data:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PaymentV2'
+                $ref: '#/components/schemas/PaymentV2'
+    ResourceNotFoundResponse:
+      description: Resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
     PaymentFailedResponseV2:
       description: Payment marked as failed successfully.
       content:
@@ -1023,8 +1063,8 @@ components:
             properties:
               data:
                 $ref: '#/components/schemas/PaymentV2'
-    PaymentsBulkConfirmedResponse:
-      description: Payments bulk confirmed successfully.
+    PaymentsBulkFailedResponse:
+      description: Payments bulk failed successfully.
       content:
         application/json:
           schema:
@@ -1042,48 +1082,8 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/PaymentV2'
-    ErrorResponseV2:
-      description: An unexpected error has occurred. Check the body for more details.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              errors:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ErrorV2'
-    PaymentConfirmedResponseV2:
-      description: Payment confirmed successfully.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              data:
-                $ref: '#/components/schemas/PaymentV2'
-    PaymentsBulkFailedResponse:
-      description: Payments bulk failed successfully.
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/Payment'
     UnprocessableEntityResponse:
       description: Errors with the input are present.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    ForbiddenResponse:
-      description: The request was forbidden.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    ErrorResponse:
-      description: An unexpected error has occurred. Check the body for more details.
       content:
         application/json:
           schema:

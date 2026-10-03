@@ -155,14 +155,14 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   responses:
-    SynchronizeVendorsResponse:
-      description: 'A request to synchronize the vendors was acknowledged and is in the
-
-        process of being ran.
-
-        '
     SynchronizePaymentTermsResponse:
       description: 'A request to synchronize the payment terms was acknowledged and is in
+
+        the process of being ran.
+
+        '
+    SynchronizePurchaseOrdersResponse:
+      description: 'A request to synchronize the purchase orders was acknowledged and is in
 
         the process of being ran.
 
@@ -174,12 +174,6 @@ components:
           description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
           schema:
             type: integer
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    ErrorResponse:
-      description: An unexpected error has occurred. Check the body for more details.
       content:
         application/json:
           schema:
@@ -196,14 +190,20 @@ components:
         process of being ran.
 
         '
-    SynchronizePurchaseOrdersResponse:
-      description: 'A request to synchronize the purchase orders was acknowledged and is in
-
-        the process of being ran.
-
-        '
+    ErrorResponse:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
     SynchronizeAccountsResponse:
       description: 'A request to synchronize the GL Accounts was acknowledged and is in the
+
+        process of being ran.
+
+        '
+    SynchronizeVendorsResponse:
+      description: 'A request to synchronize the vendors was acknowledged and is in the
 
         process of being ran.
 
