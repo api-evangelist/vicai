@@ -50,37 +50,20 @@ paths:
         4XX:
           $ref: '#/components/responses/ErrorResponse'
 components:
-  responses:
-    TooManyRequestsResponse:
-      description: HTTP call rate limit exceeded.
-      headers:
-        Retry-After:
-          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
-          schema:
-            type: integer
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    TaxCodeResponse:
-      description: A tax code.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/TaxCode'
-    ErrorResponse:
-      description: An unexpected error has occurred. Check the body for more details.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-  schemas:
+  requestBodies:
     CreateTaxCode:
-      required:
-      - code
-      - description
-      - rate
+      description: Create a tax code.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateTaxCode'
+  schemas:
+    TaxCode:
+      type: object
       properties:
+        id:
+          type: string
+          format: uuid
         code:
           type: string
           maxLength: 255
@@ -92,12 +75,15 @@ components:
           type: string
           format: decimal
           example: '0.25'
-    TaxCode:
-      type: object
+    ErrorString:
+      type: string
+      maxLength: 255
+    CreateTaxCode:
+      required:
+      - code
+      - description
+      - rate
       properties:
-        id:
-          type: string
-          format: uuid
         code:
           type: string
           maxLength: 255
@@ -126,16 +112,30 @@ components:
           maximum: 599
         message:
           $ref: '#/components/schemas/ErrorString'
-    ErrorString:
-      type: string
-      maxLength: 255
-  requestBodies:
-    CreateTaxCode:
-      description: Create a tax code.
+  responses:
+    TaxCodeResponse:
+      description: A tax code.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/CreateTaxCode'
+            $ref: '#/components/schemas/TaxCode'
+    ErrorResponse:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TooManyRequestsResponse:
+      description: HTTP call rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     BearerAuth:
       type: http

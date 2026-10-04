@@ -141,14 +141,84 @@ paths:
         4XX:
           $ref: '#/components/responses/ErrorResponse'
 components:
+  responses:
+    AccountResponse:
+      description: Shows the account.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Account'
+    SynchronizeAccountsResponse:
+      description: 'A request to synchronize the GL Accounts was acknowledged and is in the
+
+        process of being ran.
+
+        '
+    AccountUpsertedResponse:
+      description: Account was upserted successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Account'
+    AccountDeletedResponse:
+      description: Information for deleted account
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Account'
+    ErrorResponse:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    AccountsResponse:
+      description: A paged array of accounts
+      headers:
+        x-next:
+          $ref: '#/components/headers/NextPageToken'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Accounts'
+    TooManyRequestsResponse:
+      description: HTTP call rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    AccountUpsert:
+    ExternalId:
+      description: 'The external id set by the ERP system. It does not have to be a UUID and
+
+        can be any non empty string desired.
+
+        '
+      type: string
+      example: 21b31bc7-1267-4335-893c-d7fe4706a238
+      maxLength: 255
+    ErrorString:
+      type: string
+      maxLength: 255
+    Account:
       type: object
       required:
       - number
       - name
-      - externalUpdatedAt
+      - internalId
+      - internalUpdatedAt
       properties:
+        internalId:
+          $ref: '#/components/schemas/InternalId'
+        internalUpdatedAt:
+          type: string
+          description: Is in UTC.
+          format: date-time
         externalId:
           oneOf:
           - $ref: '#/components/schemas/ExternalId'
@@ -171,28 +241,21 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/Account'
+    ExternalData:
+      description: A free form json object that is stored with the record.
+      type: object
     InternalId:
       description: The internal id Vic uses for the record.
       type: string
       example: '47'
       readOnly: true
-    ExternalData:
-      description: A free form json object that is stored with the record.
-      type: object
-    Account:
+    AccountUpsert:
       type: object
       required:
       - number
       - name
-      - internalId
-      - internalUpdatedAt
+      - externalUpdatedAt
       properties:
-        internalId:
-          $ref: '#/components/schemas/InternalId'
-        internalUpdatedAt:
-          type: string
-          description: Is in UTC.
-          format: date-time
         externalId:
           oneOf:
           - $ref: '#/components/schemas/ExternalId'
@@ -228,31 +291,27 @@ components:
           maximum: 599
         message:
           $ref: '#/components/schemas/ErrorString'
-    ExternalId:
-      description: 'The external id set by the ERP system. It does not have to be a UUID and
-
-        can be any non empty string desired.
-
-        '
-      type: string
-      example: 21b31bc7-1267-4335-893c-d7fe4706a238
-      maxLength: 255
-    ErrorString:
-      type: string
-      maxLength: 255
   parameters:
-    PagingCursor:
-      name: cursor
-      in: query
-      description: Which item to start from. See [Pagination](#section/Pagination) for more information.
+    RequestId:
+      in: header
+      name: X-Request-Id
+      description: token to be able to correctly log associated requests
       required: false
       schema:
         type: string
+        format: uuid
     PathId:
       name: id
       in: path
       required: true
       description: The id of the database entry
+      schema:
+        type: string
+    PagingCursor:
+      name: cursor
+      in: query
+      description: Which item to start from. See [Pagination](#section/Pagination) for more information.
+      required: false
       schema:
         type: string
     SortOrder:
@@ -266,6 +325,29 @@ components:
         - ASCENDING
         - DESCENDING
         default: ASCENDING
+    SinceFilter:
+      name: since
+      in: query
+      description: 'Datetime value for incremental updates.
+
+        **NOTE**: For external datetimes, the expected format is not in UTC. for
+
+        vic-internal datetimes (see `SinceIsExternal`) the format is UTC.
+
+        '
+      required: false
+      schema:
+        type: string
+        format: date-time
+    PagingLimit:
+      name: limit
+      in: query
+      description: How many items to return at one time (max 100) (default 100)
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
     UseSystemDefaultExternal:
       name: useSystem
       in: query
@@ -281,88 +363,6 @@ components:
         - internal
         - external
         default: EXTERNAL
-    SinceFilter:
-      name: since
-      in: query
-      description: 'Datetime value for incremental updates.
-
-        **NOTE**: For external datetimes, the expected format is not in UTC. for
-
-        vic-internal datetimes (see `SinceIsExternal`) the format is UTC.
-
-        '
-      required: false
-      schema:
-        type: string
-        format: date-time
-    RequestId:
-      in: header
-      name: X-Request-Id
-      description: token to be able to correctly log associated requests
-      required: false
-      schema:
-        type: string
-        format: uuid
-    PagingLimit:
-      name: limit
-      in: query
-      description: How many items to return at one time (max 100) (default 100)
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-  responses:
-    ErrorResponse:
-      description: An unexpected error has occurred. Check the body for more details.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    AccountDeletedResponse:
-      description: Information for deleted account
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Account'
-    AccountsResponse:
-      description: A paged array of accounts
-      headers:
-        x-next:
-          $ref: '#/components/headers/NextPageToken'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Accounts'
-    TooManyRequestsResponse:
-      description: HTTP call rate limit exceeded.
-      headers:
-        Retry-After:
-          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
-          schema:
-            type: integer
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    AccountUpsertedResponse:
-      description: Account was upserted successfully.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Account'
-    AccountResponse:
-      description: Shows the account.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Account'
-    SynchronizeAccountsResponse:
-      description: 'A request to synchronize the GL Accounts was acknowledged and is in the
-
-        process of being ran.
-
-        '
   headers:
     NextPageToken:
       description: A link to the next page of responses

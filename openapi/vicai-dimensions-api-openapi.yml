@@ -429,186 +429,16 @@ paths:
           $ref: '#/components/responses/ErrorResponseV2'
 components:
   schemas:
-    DimensionDependencyUpsertV2:
+    DimensionDependencyUpsertSuccess:
       type: object
       required:
-      - dependent
+      - dimensionId
+      - dependentId
       - active
       properties:
-        dependent:
-          $ref: '#/components/schemas/DimensionDependencyReferenceV2'
-        active:
-          type: boolean
-    DimensionDependency:
-      type: object
-      description: 'A dimension that depends on another dimension.
-
-        '
-      properties:
-        internalId:
+        dimensionId:
           type: string
-          description: Internal id of the dependent dimension.
-        externalId:
-          type: string
-          description: External id of the dependent dimension.
-        type:
-          type: string
-          description: Type of the dependent dimension.
-        active:
-          type: boolean
-      anyOf:
-      - required:
-        - internalId
-      - required:
-        - externalId
-        - type
-    InternalId:
-      description: The internal id Vic uses for the record.
-      type: string
-      example: '47'
-      readOnly: true
-    BulkDimensionDependenciesRequestV2:
-      type: object
-      required:
-      - dependencies
-      properties:
-        dependencies:
-          type: array
-          maxItems: 20
-          items:
-            type: object
-            required:
-            - dimension
-            - dependent
-            - active
-            properties:
-              dimension:
-                $ref: '#/components/schemas/DimensionDependencyReferenceV2'
-              dependent:
-                $ref: '#/components/schemas/DimensionDependencyReferenceV2'
-              active:
-                type: boolean
-    ExternalData:
-      description: A free form json object that is stored with the record.
-      type: object
-    DimensionDependencyUpsertSuccessV2:
-      type: object
-      required:
-      - dimension_id
-      - dependent_id
-      - active
-      properties:
-        dimension_id:
-          type: string
-          format: uuid
-        dimension_legacy_id:
-          type: string
-        dependent_id:
-          type: string
-          format: uuid
-        dependent_legacy_id:
-          type: string
-        active:
-          type: boolean
-    DimensionDependencyUpsertResponseV2:
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          $ref: '#/components/schemas/DimensionDependencyUpsertSuccessV2'
-    DimensionDependencyUpsert:
-      type: object
-      required:
-      - active
-      properties:
-        internalId:
-          type: string
-          description: Internal id of the dependent dimension. Takes precedence over `externalId`.
-        externalId:
-          type: string
-          description: External id of the dependent dimension.
-        type:
-          type: string
-          description: Required when `externalId` is provided.
-        active:
-          type: boolean
-      anyOf:
-      - required:
-        - internalId
-      - required:
-        - externalId
-        - type
-    Error:
-      description: 'generic error message in JSON format.  Note the ''code'' field should
-
-        match the HTTP status code of the wrapping HTTP request.
-
-        '
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-          minimum: 100
-          maximum: 599
-        message:
-          $ref: '#/components/schemas/ErrorString'
-    BulkDimensionDependenciesResponseV2:
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/DimensionDependencyUpsertSuccessV2'
-    DimensionDependenciesResponseV2:
-      type: object
-      required:
-      - meta
-      - data
-      properties:
-        meta:
-          type: object
-          required:
-          - page
-          properties:
-            page:
-              $ref: '#/components/schemas/PaginationMetaV2'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/DimensionDependencyV2'
-    DimensionDependencyReference:
-      type: object
-      properties:
-        internalId:
-          type: string
-        externalId:
-          type: string
-        type:
-          type: string
-          description: Required when `externalId` is provided.
-      anyOf:
-      - required:
-        - internalId
-      - required:
-        - externalId
-        - type
-    DimensionDependencyV2:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        legacy_id:
-          type: string
-        remote_id:
-          type: string
-        type:
+        dependentId:
           type: string
         active:
           type: boolean
@@ -663,66 +493,9 @@ components:
       type: string
       example: 21b31bc7-1267-4335-893c-d7fe4706a238
       maxLength: 255
-    Dimensions:
-      type: array
-      items:
-        $ref: '#/components/schemas/Dimension'
-    DimensionUpsert:
-      type: object
-      required:
-      - externalUpdatedAt
-      - name
-      properties:
-        externalId:
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-        externalUpdatedAt:
-          type: string
-          format: date-time
-          description: Does not have UTC normalization.
-        name:
-          type: string
-          maxLength: 255
-          description: The name of the dimension.
-        type:
-          type: string
-          maxLength: 255
-          description: The dimension type.
-        typeName:
-          type: string
-          maxLength: 255
-          description: The dimension type name.
-        typeExternalId:
-          description: 'The type''s external ID in the ERP system. If left unspecified, it
-
-            will clear the existing value.
-
-            '
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-        shortName:
-          type: string
-          maxLength: 255
-        externalData:
-          oneOf:
-          - $ref: '#/components/schemas/ExternalData'
-          - type: 'null'
     ErrorString:
       type: string
       maxLength: 255
-    ValidationError:
-      allOf:
-      - $ref: '#/components/schemas/Error'
-      - type: object
-        properties:
-          code:
-            type: integer
-            example: 422
-          message:
-            type: string
-            example: Validation error occurred
     DimensionDependencyReferenceV2:
       type: object
       properties:
@@ -751,42 +524,6 @@ components:
         - remote_id
       - required:
         - name
-    DimensionDependencyUpsertSuccess:
-      type: object
-      required:
-      - dimensionId
-      - dependentId
-      - active
-      properties:
-        dimensionId:
-          type: string
-        dependentId:
-          type: string
-        active:
-          type: boolean
-    PaginationMetaV2:
-      type: object
-      properties:
-        cursor:
-          description: 'The cursor to the next page of data. If it is null, that means there
-
-            is no more data to fetch.
-
-            '
-          oneOf:
-          - type: string
-          - type: 'null'
-    NonUniqueDimensionExternalId:
-      allOf:
-      - $ref: '#/components/schemas/Error'
-      - type: object
-        properties:
-          code:
-            type: integer
-            example: 422
-          message:
-            type: string
-            example: Multiple dimensions exist with this external ID. Please use the internal ID with `useSystem=INTERNAL` to access the required dimension since external ID is not unique.
     CreateDimension:
       type: object
       required:
@@ -829,6 +566,97 @@ components:
           oneOf:
           - $ref: '#/components/schemas/ExternalData'
           - type: 'null'
+    DimensionDependencyUpsertV2:
+      type: object
+      required:
+      - dependent
+      - active
+      properties:
+        dependent:
+          $ref: '#/components/schemas/DimensionDependencyReferenceV2'
+        active:
+          type: boolean
+    DimensionDependencyV2:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        legacy_id:
+          type: string
+        remote_id:
+          type: string
+        type:
+          type: string
+        active:
+          type: boolean
+    DimensionDependenciesResponseV2:
+      type: object
+      required:
+      - meta
+      - data
+      properties:
+        meta:
+          type: object
+          required:
+          - page
+          properties:
+            page:
+              $ref: '#/components/schemas/PaginationMetaV2'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DimensionDependencyV2'
+    DimensionDependencyUpsertResponseV2:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          $ref: '#/components/schemas/DimensionDependencyUpsertSuccessV2'
+    DimensionDependencyReference:
+      type: object
+      properties:
+        internalId:
+          type: string
+        externalId:
+          type: string
+        type:
+          type: string
+          description: Required when `externalId` is provided.
+      anyOf:
+      - required:
+        - internalId
+      - required:
+        - externalId
+        - type
+    DimensionDependency:
+      type: object
+      description: 'A dimension that depends on another dimension.
+
+        '
+      properties:
+        internalId:
+          type: string
+          description: Internal id of the dependent dimension.
+        externalId:
+          type: string
+          description: External id of the dependent dimension.
+        type:
+          type: string
+          description: Type of the dependent dimension.
+        active:
+          type: boolean
+      anyOf:
+      - required:
+        - internalId
+      - required:
+        - externalId
+        - type
+    Dimensions:
+      type: array
+      items:
+        $ref: '#/components/schemas/Dimension'
     ErrorV2:
       type: object
       required:
@@ -846,6 +674,96 @@ components:
         message:
           description: A description of the error.
           type: string
+    DimensionDependencyUpsert:
+      type: object
+      required:
+      - active
+      properties:
+        internalId:
+          type: string
+          description: Internal id of the dependent dimension. Takes precedence over `externalId`.
+        externalId:
+          type: string
+          description: External id of the dependent dimension.
+        type:
+          type: string
+          description: Required when `externalId` is provided.
+        active:
+          type: boolean
+      anyOf:
+      - required:
+        - internalId
+      - required:
+        - externalId
+        - type
+    ExternalData:
+      description: A free form json object that is stored with the record.
+      type: object
+    InternalId:
+      description: The internal id Vic uses for the record.
+      type: string
+      example: '47'
+      readOnly: true
+    PaginationMetaV2:
+      type: object
+      properties:
+        cursor:
+          description: 'The cursor to the next page of data. If it is null, that means there
+
+            is no more data to fetch.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
+    NonUniqueDimensionExternalId:
+      allOf:
+      - $ref: '#/components/schemas/Error'
+      - type: object
+        properties:
+          code:
+            type: integer
+            example: 422
+          message:
+            type: string
+            example: Multiple dimensions exist with this external ID. Please use the internal ID with `useSystem=INTERNAL` to access the required dimension since external ID is not unique.
+    BulkDimensionDependenciesResponseV2:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DimensionDependencyUpsertSuccessV2'
+    Error:
+      description: 'generic error message in JSON format.  Note the ''code'' field should
+
+        match the HTTP status code of the wrapping HTTP request.
+
+        '
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          minimum: 100
+          maximum: 599
+        message:
+          $ref: '#/components/schemas/ErrorString'
+    ValidationError:
+      allOf:
+      - $ref: '#/components/schemas/Error'
+      - type: object
+        properties:
+          code:
+            type: integer
+            example: 422
+          message:
+            type: string
+            example: Validation error occurred
     PaginationV2:
       type: object
       properties:
@@ -878,21 +796,104 @@ components:
                 $ref: '#/components/schemas/DimensionDependencyReference'
               active:
                 type: boolean
+    BulkDimensionDependenciesRequestV2:
+      type: object
+      required:
+      - dependencies
+      properties:
+        dependencies:
+          type: array
+          maxItems: 20
+          items:
+            type: object
+            required:
+            - dimension
+            - dependent
+            - active
+            properties:
+              dimension:
+                $ref: '#/components/schemas/DimensionDependencyReferenceV2'
+              dependent:
+                $ref: '#/components/schemas/DimensionDependencyReferenceV2'
+              active:
+                type: boolean
+    DimensionUpsert:
+      type: object
+      required:
+      - externalUpdatedAt
+      - name
+      properties:
+        externalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+        externalUpdatedAt:
+          type: string
+          format: date-time
+          description: Does not have UTC normalization.
+        name:
+          type: string
+          maxLength: 255
+          description: The name of the dimension.
+        type:
+          type: string
+          maxLength: 255
+          description: The dimension type.
+        typeName:
+          type: string
+          maxLength: 255
+          description: The dimension type name.
+        typeExternalId:
+          description: 'The type''s external ID in the ERP system. If left unspecified, it
+
+            will clear the existing value.
+
+            '
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+        shortName:
+          type: string
+          maxLength: 255
+        externalData:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalData'
+          - type: 'null'
+    DimensionDependencyUpsertSuccessV2:
+      type: object
+      required:
+      - dimension_id
+      - dependent_id
+      - active
+      properties:
+        dimension_id:
+          type: string
+          format: uuid
+        dimension_legacy_id:
+          type: string
+        dependent_id:
+          type: string
+          format: uuid
+        dependent_legacy_id:
+          type: string
+        active:
+          type: boolean
   responses:
-    DimensionDeletedResponse:
-      description: Dimension was deleted successfully.
+    DimensionUpdatedResponse:
+      description: Dimension was updated successfully.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Dimension'
-    DimensionValidationResponse:
-      description: Validation errors that can occur when working with dimensions
+    DimensionsResponse:
+      description: A paged array of dimensions
+      headers:
+        x-next:
+          $ref: '#/components/headers/NextPageToken'
       content:
         application/json:
           schema:
-            oneOf:
-            - $ref: '#/components/schemas/ValidationError'
-            - $ref: '#/components/schemas/NonUniqueDimensionExternalId'
+            $ref: '#/components/schemas/Dimensions'
     ErrorResponseV2:
       description: An unexpected error has occurred. Check the body for more details.
       content:
@@ -904,20 +905,40 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/ErrorV2'
-    SynchronizeDimensionsResponse:
-      description: 'A request to synchronize the Dimensions was acknowledged and is in the
-
-        process of being ran.
-
-        '
+    DimensionCreatedResponse:
+      description: Dimension was created successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Dimension'
     ErrorResponse:
       description: An unexpected error has occurred. Check the body for more details.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    DimensionUpdatedResponse:
-      description: Dimension was updated successfully.
+    DimensionValidationResponse:
+      description: Validation errors that can occur when working with dimensions
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/ValidationError'
+            - $ref: '#/components/schemas/NonUniqueDimensionExternalId'
+    DimensionDeletedResponse:
+      description: Dimension was deleted successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Dimension'
+    SynchronizeDimensionsResponse:
+      description: 'A request to synchronize the Dimensions was acknowledged and is in the
+
+        process of being ran.
+
+        '
+    DimensionResponse:
+      description: A dimension.
       content:
         application/json:
           schema:
@@ -933,40 +954,32 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    DimensionsResponse:
-      description: A paged array of dimensions
-      headers:
-        x-next:
-          $ref: '#/components/headers/NextPageToken'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Dimensions'
-    DimensionCreatedResponse:
-      description: Dimension was created successfully.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Dimension'
-    DimensionResponse:
-      description: A dimension.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Dimension'
   parameters:
-    PagingCursor:
-      name: cursor
+    PaginationV2:
+      name: page
       in: query
-      description: Which item to start from. See [Pagination](#section/Pagination) for more information.
+      schema:
+        $ref: '#/components/schemas/PaginationV2'
+    RequestId:
+      in: header
+      name: X-Request-Id
+      description: token to be able to correctly log associated requests
       required: false
       schema:
         type: string
+        format: uuid
     PathId:
       name: id
       in: path
       required: true
       description: The id of the database entry
+      schema:
+        type: string
+    PagingCursor:
+      name: cursor
+      in: query
+      description: Which item to start from. See [Pagination](#section/Pagination) for more information.
+      required: false
       schema:
         type: string
     SortOrder:
@@ -980,6 +993,29 @@ components:
         - ASCENDING
         - DESCENDING
         default: ASCENDING
+    SinceFilter:
+      name: since
+      in: query
+      description: 'Datetime value for incremental updates.
+
+        **NOTE**: For external datetimes, the expected format is not in UTC. for
+
+        vic-internal datetimes (see `SinceIsExternal`) the format is UTC.
+
+        '
+      required: false
+      schema:
+        type: string
+        format: date-time
+    PagingLimit:
+      name: limit
+      in: query
+      description: How many items to return at one time (max 100) (default 100)
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
     UseSystemDefaultExternal:
       name: useSystem
       in: query
@@ -995,42 +1031,6 @@ components:
         - internal
         - external
         default: EXTERNAL
-    SinceFilter:
-      name: since
-      in: query
-      description: 'Datetime value for incremental updates.
-
-        **NOTE**: For external datetimes, the expected format is not in UTC. for
-
-        vic-internal datetimes (see `SinceIsExternal`) the format is UTC.
-
-        '
-      required: false
-      schema:
-        type: string
-        format: date-time
-    RequestId:
-      in: header
-      name: X-Request-Id
-      description: token to be able to correctly log associated requests
-      required: false
-      schema:
-        type: string
-        format: uuid
-    PagingLimit:
-      name: limit
-      in: query
-      description: How many items to return at one time (max 100) (default 100)
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-    PaginationV2:
-      name: page
-      in: query
-      schema:
-        $ref: '#/components/schemas/PaginationV2'
   requestBodies:
     CreateDimensionRequest:
       description: Create a dimension.

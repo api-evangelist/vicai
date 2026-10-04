@@ -106,17 +106,6 @@ paths:
           $ref: '#/components/responses/ErrorResponseV2'
 components:
   responses:
-    ErrorResponseV2:
-      description: An unexpected error has occurred. Check the body for more details.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              errors:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ErrorV2'
     CompanySettingsResponseV2:
       description: The effective settings map for the company.
       content:
@@ -128,19 +117,110 @@ components:
             properties:
               data:
                 $ref: '#/components/schemas/CompanySettingsV2'
-  requestBodies:
-    UpdateCompanySettingsRequestV2:
-      description: 'Partial update to the company settings map. Only fields
-
-        included in the body are modified.
-
-        '
-      required: true
+    ErrorResponseV2:
+      description: An unexpected error has occurred. Check the body for more details.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/UpdateCompanySettingsV2'
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ErrorV2'
   schemas:
+    UpdateCompanySettingsV2:
+      type: object
+      description: 'Partial update for company settings. All fields are optional; only
+
+        fields included in the body are modified. Shape and types mirror
+
+        `CompanySettingsV2`. Unknown fields and invalid values produce a
+
+        422 error listing every offending key.
+
+        '
+      properties:
+        backend_mode:
+          type: string
+          enum:
+          - default
+          - stub
+        approval_flow_engine_enabled:
+          type: boolean
+        approval_flow_engine_user_edits_allowed:
+          type: boolean
+        invoice_automation_enabled:
+          type: boolean
+        invoice_automated_next_step:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - start_approval
+            - post
+            - export
+            - submit
+        invoice_approval_next_step:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - post
+            - export
+            - submit
+        po_invoice_automation_enabled:
+          type: boolean
+        po_invoice_automated_next_step:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - start_approval
+            - post
+        po_invoice_approval_next_step:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - post
+            - export
+            - submit
+        purchase_order_matching:
+          type: string
+          enum:
+          - none
+          - standard
+          - implicit
+          - explicit
+        purchase_order_matching_level:
+          type: string
+          enum:
+          - document
+          - line
+        purchase_order_require_matching_to_post:
+          type: boolean
+        aaf_ignores_po_invoice_items:
+          type: boolean
+        enable_posting:
+          type: boolean
+        tax_handling:
+          type: string
+          enum:
+          - none
+          - tax_engine
+          - tax_codes
+          - tax_expense_line
+          - vat_for_po_invoices
+          - tax_allocation
+        freight_handling:
+          oneOf:
+          - type: 'null'
+          - type: string
+            enum:
+            - expense_line
+            - even_allocation
+            - weighted_allocation
     CompanySettingsV2:
       type: object
       description: 'A company''s configuration options. Every available setting is
@@ -354,98 +434,6 @@ components:
             - expense_line
             - even_allocation
             - weighted_allocation
-    UpdateCompanySettingsV2:
-      type: object
-      description: 'Partial update for company settings. All fields are optional; only
-
-        fields included in the body are modified. Shape and types mirror
-
-        `CompanySettingsV2`. Unknown fields and invalid values produce a
-
-        422 error listing every offending key.
-
-        '
-      properties:
-        backend_mode:
-          type: string
-          enum:
-          - default
-          - stub
-        approval_flow_engine_enabled:
-          type: boolean
-        approval_flow_engine_user_edits_allowed:
-          type: boolean
-        invoice_automation_enabled:
-          type: boolean
-        invoice_automated_next_step:
-          oneOf:
-          - type: 'null'
-          - type: string
-            enum:
-            - start_approval
-            - post
-            - export
-            - submit
-        invoice_approval_next_step:
-          oneOf:
-          - type: 'null'
-          - type: string
-            enum:
-            - post
-            - export
-            - submit
-        po_invoice_automation_enabled:
-          type: boolean
-        po_invoice_automated_next_step:
-          oneOf:
-          - type: 'null'
-          - type: string
-            enum:
-            - start_approval
-            - post
-        po_invoice_approval_next_step:
-          oneOf:
-          - type: 'null'
-          - type: string
-            enum:
-            - post
-            - export
-            - submit
-        purchase_order_matching:
-          type: string
-          enum:
-          - none
-          - standard
-          - implicit
-          - explicit
-        purchase_order_matching_level:
-          type: string
-          enum:
-          - document
-          - line
-        purchase_order_require_matching_to_post:
-          type: boolean
-        aaf_ignores_po_invoice_items:
-          type: boolean
-        enable_posting:
-          type: boolean
-        tax_handling:
-          type: string
-          enum:
-          - none
-          - tax_engine
-          - tax_codes
-          - tax_expense_line
-          - vat_for_po_invoices
-          - tax_allocation
-        freight_handling:
-          oneOf:
-          - type: 'null'
-          - type: string
-            enum:
-            - expense_line
-            - even_allocation
-            - weighted_allocation
     ErrorV2:
       type: object
       required:
@@ -472,6 +460,18 @@ components:
       schema:
         type: string
         format: uuid
+  requestBodies:
+    UpdateCompanySettingsRequestV2:
+      description: 'Partial update to the company settings map. Only fields
+
+        included in the body are modified.
+
+        '
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateCompanySettingsV2'
   securitySchemes:
     BearerAuth:
       type: http

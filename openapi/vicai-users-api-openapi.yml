@@ -592,51 +592,8 @@ paths:
           $ref: '#/components/responses/ErrorResponseV2'
 components:
   responses:
-    GetUserResponseV2:
-      description: A single user.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              data:
-                $ref: '#/components/schemas/UserV2'
-    ListUsersResponseV2:
-      description: A successful list of users
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              meta:
-                $ref: '#/components/schemas/PaginationMetaV2'
-              data:
-                type: array
-                items:
-                  $ref: '#/components/schemas/UserV2'
-    CreateCompanyUserResponseV2:
-      description: User was created and attached to the company successfully.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CompanyUserMetaV2'
-    UpdateCompanyUserManagerResponseV2:
-      description: The user's manager was updated.
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-            - data
-            properties:
-              data:
-                $ref: '#/components/schemas/UserV2'
-    CreateOrganizationUserResponseV2:
-      description: User was created and attached to the organization successfully.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/OrganizationUserMetaV2'
+    RemoveUserFromCompanyResponseV2:
+      description: The user was removed from the company successfully.
     UpdateUserResponseV2:
       description: User was updated successfully.
       content:
@@ -646,42 +603,12 @@ components:
             properties:
               data:
                 $ref: '#/components/schemas/UserV2'
-    ErrorResponseV2:
-      description: An unexpected error has occurred. Check the body for more details.
+    CreateCompanyUserResponseV2:
+      description: User was created and attached to the company successfully.
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              errors:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ErrorV2'
-    RemoveUserFromOrganizationResponseV2:
-      description: 'The user was removed from the organization and companies successfully.
-
-        '
-    RemoveUserFromCompanyResponseV2:
-      description: The user was removed from the company successfully.
-    CompanyUserRolesResponseV2:
-      description: The user's current roles within the company.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CompanyUserRolesV2'
-    ListCompanyUsersResponseV2:
-      description: A successful list of users
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              meta:
-                $ref: '#/components/schemas/PaginationMetaV2'
-              data:
-                type: array
-                items:
-                  $ref: '#/components/schemas/UserV2'
+            $ref: '#/components/schemas/CompanyUserMetaV2'
     ListOrganizationUsersResponseV2:
       description: A successful list of users attached to an organization.
       content:
@@ -695,7 +622,394 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/UserV2'
+    CreateOrganizationUserResponseV2:
+      description: User was created and attached to the organization successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OrganizationUserMetaV2'
+    ListCompanyUsersResponseV2:
+      description: A successful list of users
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginationMetaV2'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserV2'
+    ErrorResponseV2:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ErrorV2'
+    CompanyUserRolesResponseV2:
+      description: The user's current roles within the company.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CompanyUserRolesV2'
+    UpdateCompanyUserManagerResponseV2:
+      description: The user's manager was updated.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - data
+            properties:
+              data:
+                $ref: '#/components/schemas/UserV2'
+    RemoveUserFromOrganizationResponseV2:
+      description: 'The user was removed from the organization and companies successfully.
+
+        '
+    ListUsersResponseV2:
+      description: A successful list of users
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              meta:
+                $ref: '#/components/schemas/PaginationMetaV2'
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserV2'
+    GetUserResponseV2:
+      description: A single user.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/UserV2'
   schemas:
+    UserMetadataEntryV2:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'The name of the metadata entry. The name **MUST** be only lower case
+
+            `a-z` and numbers `0-9`. The `_` character is allowed. The name
+
+            *MUST** be unique in the set.
+
+            '
+          pattern: ^[a-z0-9_]+$
+          example: job_title
+        type:
+          type: string
+          enum:
+          - string
+          - boolean
+          - integer
+          - date
+        value:
+          type: string
+          description: The value of the entry.
+          example: Senior Manager
+    AttachUserToCompanyV2:
+      type: object
+      properties:
+        user_id:
+          description: 'The User''s id. Both can be provided. `user_id` takes higher
+
+            precedence than `email`.
+
+            '
+          type: string
+          format: uuid
+        email:
+          description: 'The existing User''s email. Both can be provided. `user_id` takes
+
+            higher precedence than `email`.
+
+            '
+          type: string
+    CompanyUserMetaV2:
+      type: object
+      properties:
+        user_id:
+          description: The user the company is attached to.
+          type: string
+          format: uuid
+        company_id:
+          description: The company the user is attached to.
+          type: string
+          format: :uuid
+        created_at:
+          description: When the user was added to the company.
+          type: string
+          format: date-time
+        updated_at:
+          description: When the user's role was modified.
+          type: string
+          format: date-time
+    UpdateCompanyUserRolesV2:
+      type: object
+      required:
+      - roles
+      properties:
+        roles:
+          description: 'The full list of roles to assign to the user. Roles included in this
+
+            list become active; all other roles become inactive. Use an empty
+
+            array to remove all roles.
+
+            '
+          type: array
+          items:
+            $ref: '#/components/schemas/CompanyUserRoleV2'
+    CreateUserV2:
+      type: object
+      required:
+      - name
+      - email
+      properties:
+        first_name:
+          type: string
+          description: The first name of the user.
+        last_name:
+          type: string
+          description: The last name of the user.
+        name:
+          type: string
+          description: The full preferred name of the user.
+        phone_number:
+          type: string
+          description: 'The phone number the user is connected with. This is not required to
+
+            be set. If provided, the phone number is validated.
+
+            '
+        email:
+          type: string
+          description: The User's email. Must be unique.
+        timezone:
+          $ref: '#/components/schemas/TimeZoneV2'
+        language:
+          $ref: '#/components/schemas/LanguageV2'
+        address:
+          $ref: '#/components/schemas/UserAddressV2'
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserMetadataEntryV2'
+        date_of_birth:
+          type: string
+          format: date
+          description: When the user was born.
+    UserStatusV2:
+      type: string
+      description: The type of invoice item line.
+      enum:
+      - active
+      - out_of_office
+      default: active
+    AttachUserToOrganizationV2:
+      type: object
+      properties:
+        user_id:
+          description: 'The User''s id. Both can be provided. `user_id` takes higher
+
+            precedence than `email`.
+
+            '
+          type: string
+          format: uuid
+        email:
+          description: 'The existing User''s email. Both can be provided. `user_id` takes
+
+            higher precedence than `email`.
+
+            '
+          type: string
+        role:
+          description: 'Optional organization-level role to grant the user when attaching.
+
+            One of `user`, `admin`, `superadmin`, or `manager`. Defaults to
+
+            `user`. Ignored when the user is already attached to the
+
+            organization; an existing member keeps their current role.
+
+            '
+          type: string
+          enum:
+          - user
+          - admin
+          - superadmin
+          - manager
+          default: user
+    UpdateUserV2:
+      type: object
+      required:
+      - name
+      properties:
+        first_name:
+          type: string
+          description: The first name of the user.
+        last_name:
+          type: string
+          description: The last name of the user.
+        name:
+          type: string
+          description: The full preferred name of the user.
+        phone_number:
+          type: string
+          description: 'The phone number the user is connected with. This is not required to
+
+            be set. If provided, the phone number is validated.
+
+            '
+        timezone:
+          $ref: '#/components/schemas/TimeZoneV2'
+        language:
+          $ref: '#/components/schemas/LanguageV2'
+        address:
+          $ref: '#/components/schemas/UserAddressV2'
+        metadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserMetadataEntryV2'
+        date_of_birth:
+          type: string
+          format: date
+          description: When the user was born.
+    ErrorV2:
+      type: object
+      required:
+      - message
+      properties:
+        field:
+          description: 'The field that the error occurred on. This field may not always be
+
+            present.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
+        message:
+          description: A description of the error.
+          type: string
+    OrganizationUserMetaV2:
+      type: object
+      properties:
+        user_id:
+          description: The user the organization is attached to.
+          type: string
+          format: uuid
+        organization_id:
+          description: The organization the user is attached to.
+          type: string
+          format: :uuid
+        created_at:
+          description: When the user was added to the organization.
+          type: string
+          format: date-time
+        updated_at:
+          description: When the user's role was modified.
+          type: string
+          format: date-time
+    LanguageV2:
+      type: string
+      description: The two letter code for the language used.
+      example: en
+    CompanyUserRolesV2:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: object
+          required:
+          - user_id
+          - company_id
+          - roles
+          properties:
+            user_id:
+              description: The ID of the user.
+              type: string
+              format: uuid
+            company_id:
+              description: The ID of the company.
+              type: string
+              format: uuid
+            roles:
+              description: The list of roles currently assigned to the user in this company.
+              type: array
+              items:
+                $ref: '#/components/schemas/CompanyUserRoleV2'
+    PaginationMetaV2:
+      type: object
+      properties:
+        cursor:
+          description: 'The cursor to the next page of data. If it is null, that means there
+
+            is no more data to fetch.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
+    CountryCode:
+      description: 'The ISO-3166 country code. The acceptable values are Alpha-2 codes.
+
+        '
+      type: string
+      format: ISO-3166
+      maxLength: 2
+      example: US
+    TimeZoneV2:
+      type: string
+      example: Etc/UTC
+    CreateCompanyUserV2:
+      allOf:
+      - $ref: '#/components/schemas/CreateUserV2'
+      - type: object
+        properties:
+          manager_id:
+            description: 'The ID of the user to set as this user''s manager. The manager
+
+              must be a user within the same company. Omit to create the user
+
+              without a manager.
+
+              '
+            type: string
+            format: uuid
+    CompanyUserRoleV2:
+      type: string
+      enum:
+      - admin
+      - approver
+      - accountant
+      - analytics_user
+      - ar_admin
+      - ar_specialist
+      - card_admin
+      - card_user
+      - client
+      - controller
+      - payer
+      - po_mismatch_approver
+      - vendor_manager
+      - view_only
     UserV2:
       description: A User attached to an organization.
       type: object
@@ -766,31 +1080,30 @@ components:
           type: string
           format: date-time
           description: When the user was last updated in Vic.
-    UserMetadataEntryV2:
+    PaginationV2:
       type: object
       properties:
-        name:
+        size:
+          type: integer
+          description: The page size.
+          maximum: 50
+          minimum: 1
+        cursor:
           type: string
-          description: 'The name of the metadata entry. The name **MUST** be only lower case
-
-            `a-z` and numbers `0-9`. The `_` character is allowed. The name
-
-            *MUST** be unique in the set.
-
-            '
-          pattern: ^[a-z0-9_]+$
-          example: job_title
-        type:
+          description: The cursor to use to get the next page of results.
+    UserAddressV2:
+      type: object
+      properties:
+        street_1:
           type: string
-          enum:
-          - string
-          - boolean
-          - integer
-          - date
-        value:
+        street_2:
           type: string
-          description: The value of the entry.
-          example: Senior Manager
+        city:
+          type: string
+        postal_code:
+          type: string
+        country:
+          $ref: '#/components/schemas/CountryCode'
     UserManagerV2:
       description: A user's manager.
       type: object
@@ -806,319 +1119,12 @@ components:
         email:
           type: string
           description: The manager's email.
-    UserAddressV2:
-      type: object
-      properties:
-        street_1:
-          type: string
-        street_2:
-          type: string
-        city:
-          type: string
-        postal_code:
-          type: string
-        country:
-          $ref: '#/components/schemas/CountryCode'
-    UpdateUserV2:
-      type: object
-      required:
-      - name
-      properties:
-        first_name:
-          type: string
-          description: The first name of the user.
-        last_name:
-          type: string
-          description: The last name of the user.
-        name:
-          type: string
-          description: The full preferred name of the user.
-        phone_number:
-          type: string
-          description: 'The phone number the user is connected with. This is not required to
-
-            be set. If provided, the phone number is validated.
-
-            '
-        timezone:
-          $ref: '#/components/schemas/TimeZoneV2'
-        language:
-          $ref: '#/components/schemas/LanguageV2'
-        address:
-          $ref: '#/components/schemas/UserAddressV2'
-        metadata:
-          type: array
-          items:
-            $ref: '#/components/schemas/UserMetadataEntryV2'
-        date_of_birth:
-          type: string
-          format: date
-          description: When the user was born.
-    CompanyUserRolesV2:
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: object
-          required:
-          - user_id
-          - company_id
-          - roles
-          properties:
-            user_id:
-              description: The ID of the user.
-              type: string
-              format: uuid
-            company_id:
-              description: The ID of the company.
-              type: string
-              format: uuid
-            roles:
-              description: The list of roles currently assigned to the user in this company.
-              type: array
-              items:
-                $ref: '#/components/schemas/CompanyUserRoleV2'
-    TimeZoneV2:
-      type: string
-      example: Etc/UTC
-    CreateUserV2:
-      type: object
-      required:
-      - name
-      - email
-      properties:
-        first_name:
-          type: string
-          description: The first name of the user.
-        last_name:
-          type: string
-          description: The last name of the user.
-        name:
-          type: string
-          description: The full preferred name of the user.
-        phone_number:
-          type: string
-          description: 'The phone number the user is connected with. This is not required to
-
-            be set. If provided, the phone number is validated.
-
-            '
-        email:
-          type: string
-          description: The User's email. Must be unique.
-        timezone:
-          $ref: '#/components/schemas/TimeZoneV2'
-        language:
-          $ref: '#/components/schemas/LanguageV2'
-        address:
-          $ref: '#/components/schemas/UserAddressV2'
-        metadata:
-          type: array
-          items:
-            $ref: '#/components/schemas/UserMetadataEntryV2'
-        date_of_birth:
-          type: string
-          format: date
-          description: When the user was born.
-    AttachUserToCompanyV2:
-      type: object
-      properties:
-        user_id:
-          description: 'The User''s id. Both can be provided. `user_id` takes higher
-
-            precedence than `email`.
-
-            '
-          type: string
-          format: uuid
-        email:
-          description: 'The existing User''s email. Both can be provided. `user_id` takes
-
-            higher precedence than `email`.
-
-            '
-          type: string
-    CompanyUserMetaV2:
-      type: object
-      properties:
-        user_id:
-          description: The user the company is attached to.
-          type: string
-          format: uuid
-        company_id:
-          description: The company the user is attached to.
-          type: string
-          format: :uuid
-        created_at:
-          description: When the user was added to the company.
-          type: string
-          format: date-time
-        updated_at:
-          description: When the user's role was modified.
-          type: string
-          format: date-time
-    CountryCode:
-      description: 'The ISO-3166 country code. The acceptable values are Alpha-2 codes.
-
-        '
-      type: string
-      format: ISO-3166
-      maxLength: 2
-      example: US
-    AttachUserToOrganizationV2:
-      type: object
-      properties:
-        user_id:
-          description: 'The User''s id. Both can be provided. `user_id` takes higher
-
-            precedence than `email`.
-
-            '
-          type: string
-          format: uuid
-        email:
-          description: 'The existing User''s email. Both can be provided. `user_id` takes
-
-            higher precedence than `email`.
-
-            '
-          type: string
-        role:
-          description: 'Optional organization-level role to grant the user when attaching.
-
-            One of `user`, `admin`, `superadmin`, or `manager`. Defaults to
-
-            `user`. Ignored when the user is already attached to the
-
-            organization; an existing member keeps their current role.
-
-            '
-          type: string
-          enum:
-          - user
-          - admin
-          - superadmin
-          - manager
-          default: user
-    CreateCompanyUserV2:
-      allOf:
-      - $ref: '#/components/schemas/CreateUserV2'
-      - type: object
-        properties:
-          manager_id:
-            description: 'The ID of the user to set as this user''s manager. The manager
-
-              must be a user within the same company. Omit to create the user
-
-              without a manager.
-
-              '
-            type: string
-            format: uuid
-    LanguageV2:
-      type: string
-      description: The two letter code for the language used.
-      example: en
-    PaginationMetaV2:
-      type: object
-      properties:
-        cursor:
-          description: 'The cursor to the next page of data. If it is null, that means there
-
-            is no more data to fetch.
-
-            '
-          oneOf:
-          - type: string
-          - type: 'null'
-    OrganizationUserMetaV2:
-      type: object
-      properties:
-        user_id:
-          description: The user the organization is attached to.
-          type: string
-          format: uuid
-        organization_id:
-          description: The organization the user is attached to.
-          type: string
-          format: :uuid
-        created_at:
-          description: When the user was added to the organization.
-          type: string
-          format: date-time
-        updated_at:
-          description: When the user's role was modified.
-          type: string
-          format: date-time
-    UpdateCompanyUserRolesV2:
-      type: object
-      required:
-      - roles
-      properties:
-        roles:
-          description: 'The full list of roles to assign to the user. Roles included in this
-
-            list become active; all other roles become inactive. Use an empty
-
-            array to remove all roles.
-
-            '
-          type: array
-          items:
-            $ref: '#/components/schemas/CompanyUserRoleV2'
+  parameters:
     PaginationV2:
-      type: object
-      properties:
-        size:
-          type: integer
-          description: The page size.
-          maximum: 50
-          minimum: 1
-        cursor:
-          type: string
-          description: The cursor to use to get the next page of results.
-    ErrorV2:
-      type: object
-      required:
-      - message
-      properties:
-        field:
-          description: 'The field that the error occurred on. This field may not always be
-
-            present.
-
-            '
-          oneOf:
-          - type: string
-          - type: 'null'
-        message:
-          description: A description of the error.
-          type: string
-    CompanyUserRoleV2:
-      type: string
-      enum:
-      - admin
-      - approver
-      - accountant
-      - analytics_user
-      - ar_admin
-      - ar_specialist
-      - card_admin
-      - card_user
-      - client
-      - controller
-      - payer
-      - po_mismatch_approver
-      - vendor_manager
-      - view_only
-    UserStatusV2:
-      type: string
-      description: The type of invoice item line.
-      enum:
-      - active
-      - out_of_office
-      default: active
+      name: page
+      in: query
+      schema:
+        $ref: '#/components/schemas/PaginationV2'
   requestBodies:
     CreateOrganizationUserRequestV2:
       description: Create a user and attach it to an organization.
@@ -1126,43 +1132,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/CreateUserV2'
-    UpdateUserRequestV2:
-      description: 'Updates a user.
-
-        <br />
-
-        <br />
-
-        This is a full replacement operation. All fields unspecified will be
-
-        treated as if they were `null` and will be cleared on the user. When
-
-        updating a user, please provide all fields and their values.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UpdateUserV2'
-    AttachUserToCompanyRequestV2:
-      description: Attach an existing user to a company.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/AttachUserToCompanyV2'
-    UpdateCompanyUserRolesRequestV2:
-      description: Set the roles for a user within a company.
-      required: true
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UpdateCompanyUserRolesV2'
-    AttachUserToOrganizationRequestV2:
-      description: Attach an existing user to an organization.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/AttachUserToOrganizationV2'
     CreateCompanyUserRequestV2:
       description: Create a user and attach it to a company.
       content:
@@ -1195,12 +1164,43 @@ components:
                 - type: string
                   format: uuid
                 - type: 'null'
-  parameters:
-    PaginationV2:
-      name: page
-      in: query
-      schema:
-        $ref: '#/components/schemas/PaginationV2'
+    AttachUserToOrganizationRequestV2:
+      description: Attach an existing user to an organization.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AttachUserToOrganizationV2'
+    AttachUserToCompanyRequestV2:
+      description: Attach an existing user to a company.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AttachUserToCompanyV2'
+    UpdateCompanyUserRolesRequestV2:
+      description: Set the roles for a user within a company.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateCompanyUserRolesV2'
+    UpdateUserRequestV2:
+      description: 'Updates a user.
+
+        <br />
+
+        <br />
+
+        This is a full replacement operation. All fields unspecified will be
+
+        treated as if they were `null` and will be cleared on the user. When
+
+        updating a user, please provide all fields and their values.
+
+        '
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateUserV2'
   securitySchemes:
     BearerAuth:
       type: http

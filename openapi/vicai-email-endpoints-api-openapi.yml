@@ -181,13 +181,81 @@ paths:
           $ref: '#/components/responses/ErrorResponseV2'
 components:
   schemas:
-    EmailEndpointResponseV2:
+    PaginationV2:
+      type: object
+      properties:
+        size:
+          type: integer
+          description: The page size.
+          maximum: 50
+          minimum: 1
+        cursor:
+          type: string
+          description: The cursor to use to get the next page of results.
+    EmailEndpointV2:
       type: object
       required:
+      - id
+      - address
+      - document_type
+      - gen_email_screenshot
+      - created_at
+      - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        address:
+          type: string
+          description: The full email address to send documents to.
+        document_type:
+          type: string
+          enum:
+          - contract
+          - invoice
+          - receipt
+        gen_email_screenshot:
+          type: boolean
+          description: 'When `true`, Vic.ai captures a screenshot of the email body
+
+            and attaches it to the document for review.
+
+            '
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    EmailEndpointsResponseV2:
+      type: object
+      required:
+      - meta
       - data
       properties:
+        meta:
+          type: object
+          required:
+          - page
+          properties:
+            page:
+              $ref: '#/components/schemas/PaginationMetaV2'
         data:
-          $ref: '#/components/schemas/EmailEndpointV2'
+          type: array
+          items:
+            $ref: '#/components/schemas/EmailEndpointV2'
+    PaginationMetaV2:
+      type: object
+      properties:
+        cursor:
+          description: 'The cursor to the next page of data. If it is null, that means there
+
+            is no more data to fetch.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
     EmailEndpointWriteV2:
       type: object
       description: 'Fields accepted on create and update. All fields are optional;
@@ -225,70 +293,6 @@ components:
             and attaches it to the document for review.
 
             '
-    PaginationMetaV2:
-      type: object
-      properties:
-        cursor:
-          description: 'The cursor to the next page of data. If it is null, that means there
-
-            is no more data to fetch.
-
-            '
-          oneOf:
-          - type: string
-          - type: 'null'
-    EmailEndpointsResponseV2:
-      type: object
-      required:
-      - meta
-      - data
-      properties:
-        meta:
-          type: object
-          required:
-          - page
-          properties:
-            page:
-              $ref: '#/components/schemas/PaginationMetaV2'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/EmailEndpointV2'
-    EmailEndpointV2:
-      type: object
-      required:
-      - id
-      - address
-      - document_type
-      - gen_email_screenshot
-      - created_at
-      - updated_at
-      properties:
-        id:
-          type: string
-          format: uuid
-        address:
-          type: string
-          description: The full email address to send documents to.
-        document_type:
-          type: string
-          enum:
-          - contract
-          - invoice
-          - receipt
-        gen_email_screenshot:
-          type: boolean
-          description: 'When `true`, Vic.ai captures a screenshot of the email body
-
-            and attaches it to the document for review.
-
-            '
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
     ErrorV2:
       type: object
       required:
@@ -306,17 +310,13 @@ components:
         message:
           description: A description of the error.
           type: string
-    PaginationV2:
+    EmailEndpointResponseV2:
       type: object
+      required:
+      - data
       properties:
-        size:
-          type: integer
-          description: The page size.
-          maximum: 50
-          minimum: 1
-        cursor:
-          type: string
-          description: The cursor to use to get the next page of results.
+        data:
+          $ref: '#/components/schemas/EmailEndpointV2'
   responses:
     ErrorResponseV2:
       description: An unexpected error has occurred. Check the body for more details.

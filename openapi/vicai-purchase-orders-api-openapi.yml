@@ -329,7 +329,259 @@ paths:
         '422':
           $ref: '#/components/responses/UnprocessableEntityResponse'
 components:
+  requestBodies:
+    UpdatePurchaseOrderRequest:
+      description: Create a purchase order.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdatePurchaseOrder'
+    CreatePurchaseOrderRequest:
+      description: Create a purchase order.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreatePurchaseOrder'
   schemas:
+    PurchaseOrderType:
+      type: string
+      description: This has been deprecated. Please use the `matchingType` field.
+      enum:
+      - blanket
+      - normal
+      default: normal
+    PurchaseOrderMatchingType:
+      type: string
+      description: The matching type of the purchase order.
+      enum:
+      - document
+      - line
+    Currency:
+      description: The ISO-4217 currency code.
+      type: string
+      format: ISO-4217
+      maxLength: 3
+      example: USD
+    VendorInternalId:
+      type: string
+      description: The id of the `Vendor` in Vic.
+      maxLength: 255
+    BankAccountType:
+      description: The type of bank account.
+      enum:
+      - ach
+      - iban
+      - bban
+      - plusgiro
+      - bankgiro
+    PurchaseOrderReceiptLineInput:
+      type: object
+      description: Input schema for creating a receipt line on a purchase order line item.
+      required:
+      - receiptLineRemoteId
+      - receiptLineNumber
+      - poLineNumber
+      - itemId
+      - uomCode
+      - receivedQuantity
+      - receivedDate
+      - createdBy
+      - warehouse
+      - createdOn
+      - status
+      properties:
+        internalId:
+          type: string
+          format: uuid
+          description: The internal ID of the receipt line (for updates).
+        receiptLineRemoteId:
+          type: string
+          maxLength: 255
+          description: The receipt line ID from the ERP system.
+        receiptLineNumber:
+          type: integer
+          description: The receipt line number.
+          minimum: 1
+        poLineNumber:
+          type: integer
+          description: The purchase order line number this receipt line is associated with.
+        poScheduleLineRemoteId:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          description: The purchase order schedule line ID (from the ERP) this receipt line is associated with.
+        poScheduleLineNumber:
+          oneOf:
+          - type: integer
+          - type: 'null'
+          description: The purchase order schedule line number this receipt line is associated with.
+        itemId:
+          type: string
+          maxLength: 255
+          description: The item ID from the ERP system.
+        uomCode:
+          type: string
+          maxLength: 255
+          description: The unit of measure code.
+        receivedQuantity:
+          type: string
+          format: decimal
+          description: The quantity received.
+          example: '1.0'
+        acceptedQuantity:
+          oneOf:
+          - type: string
+            format: decimal
+          - type: 'null'
+          description: The quantity accepted.
+          example: '1.0'
+        receivedDate:
+          type: string
+          format: date
+          description: The date the items were received.
+        createdBy:
+          type: string
+          maxLength: 255
+          description: The user or system that created this receipt line.
+        warehouse:
+          type: string
+          maxLength: 255
+          description: The warehouse where the items were received.
+        createdOn:
+          type: string
+          format: date
+          description: The date this receipt line was created.
+        billOfLading:
+          description: The bill of lading reference for the goods receipt.
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        deliveryNote:
+          description: The delivery note reference for the goods receipt.
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        status:
+          type: string
+          enum:
+          - open
+          - closed
+          description: The status of the receipt line.
+    ExternalId:
+      description: 'The external id set by the ERP system. It does not have to be a UUID and
+
+        can be any non empty string desired.
+
+        '
+      type: string
+      example: 21b31bc7-1267-4335-893c-d7fe4706a238
+      maxLength: 255
+    ErrorString:
+      type: string
+      maxLength: 255
+    PurchaseOrders:
+      type: array
+      items:
+        $ref: '#/components/schemas/PurchaseOrder'
+    VendorRemoteError:
+      description: 'The remote error on a Vendor.
+
+        This is to describe any errors that have happened in the ERP system. If
+
+        the error that occurred does not pertain to a specific field, then the
+
+        `field` can be left null, or missing all together.
+
+        '
+      type: object
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          maxLength: 1024
+        field:
+          description: 'The field on the Vic.ai vendor that has the error.
+
+            If the error does not pertain to a specific field, then this will be
+
+            null.
+
+            Example: `{"field": "name"}` or `{"field": "externalUpdatedAt"}`
+
+            '
+          type: string
+          maxLength: 255
+    PurchaseOrderLineField:
+      type: object
+      properties:
+        label:
+          type: string
+          maxLength: 255
+        title:
+          type: string
+          maxLength: 255
+        type:
+          type: string
+          maxLength: 255
+        value:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+    PurchaseOrderStatus:
+      type: string
+      description: The status of the purchase order.
+      enum:
+      - open
+      - closed
+      default: open
+    PaymentInfo:
+      type: object
+      properties:
+        bankAccountNum:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        bankCode:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        paymentTerm:
+          oneOf:
+          - $ref: '#/components/schemas/PaymentInfoTerm'
+          - type: 'null'
+        bankGiro:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        plusGiro:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        bban:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        internationalBankAccount:
+          oneOf:
+          - $ref: '#/components/schemas/InternationalBankAccount'
+          - type: 'null'
+        defaultMethod:
+          $ref: '#/components/schemas/PaymentInfoMethod'
+    PaymentInfoTermUnit:
+      type: string
+      description: The payment term units supported.
+      enum:
+      - DAYS
     CreatePurchaseOrderItem:
       type: object
       required:
@@ -443,6 +695,212 @@ components:
       - three_way
       - four_way
       default: three_way
+    MatchItem:
+      type: object
+      required:
+      - invoiceItemId
+      - purchaseOrderItemId
+      - quantityMatched
+      properties:
+        invoiceItemId:
+          type: string
+          description: The invoice item's internal id.
+        purchaseOrderItemId:
+          type: string
+          description: The purchase order item's internal id.
+        purchaseOrderItemLineNumber:
+          type: string
+          description: The purchase order item's line number.
+        productNumber:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          description: The matched purchase order line product number (the human-readable item identifier, also shown as "Item ID" in the Vic.ai UI).
+        unitOfMeasure:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          description: The matched purchase order line unit of measure.
+        amountMatched:
+          type: string
+        quantityMatched:
+          type: string
+    Email:
+      type: string
+      format: email
+      maxLength: 255
+    UnitOfMeasure:
+      type: string
+      example: kg
+      maxLength: 255
+      description: The unit of measure used.
+    PurchaseOrderLineItemStatus:
+      type: string
+      description: "The status of the purchase order line item.\n* When status field is set to `open`, then its value is derived from the\n  line item's remaining amount. If the line item's remaining amount is\n  above `0`, then it is considered `open`, otherwise it is considered\n`closed`.\n* When status is set to `closed` then the line item is considered\n  `closed`, no matter the remaining amount.\n* When status is set to `archived` then the line item becomes unavailable\n  for matching to invoices, and cannot be archived if already matched.\n  Once set to `archived` it can not be changed to `open` or `closed`.\n"
+      enum:
+      - open
+      - closed
+      - archived
+      default: open
+    VendorState:
+      type: string
+      enum:
+      - CONFIRMED
+      - UNCONFIRMED
+    UpdatePurchaseOrder:
+      type: object
+      required:
+      - poNumber
+      - amount
+      - vendor
+      properties:
+        externalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+        issuedOn:
+          oneOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: When the purchase order was issued.
+        poNumber:
+          type: string
+          maxLength: 255
+          example: '12003400'
+          description: The purchase order number. This is used to match against invoices.
+        deliverOn:
+          oneOf:
+          - type: string
+            format: date
+          - type: 'null'
+        amount:
+          $ref: '#/components/schemas/MonetaryValue'
+        currencyId:
+          oneOf:
+          - $ref: '#/components/schemas/Currency'
+          description: The currency that the purchase order uses.
+        description:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          description: The description of the purchase order.
+        requestor:
+          oneOf:
+          - $ref: '#/components/schemas/PurchaseOrderRequestor'
+          - type: 'null'
+        siteOwner:
+          oneOf:
+          - $ref: '#/components/schemas/PurchaseOrderSiteOwner'
+          - type: 'null'
+        createdOn:
+          oneOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: When the purchase order was created.
+        vendor:
+          oneOf:
+          - $ref: '#/components/schemas/VendorLookup'
+          description: The vendor of the purchase order.
+        matchingType:
+          oneOf:
+          - $ref: '#/components/schemas/PurchaseOrderMatchingType'
+          description: The matching type of the purchase order. When provided, it takes precedence over the deprecated `type` field. If omitted, the existing matching type is left unchanged.
+        type:
+          oneOf:
+          - $ref: '#/components/schemas/PurchaseOrderType'
+          description: This has been deprecated. Please use the `matchingType` field, which takes precedence over this field when both are provided.
+          deprecated: true
+        paymentTermId:
+          oneOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: The id of the `PaymentTerm` a purchase order uses.
+    PurchaseOrder:
+      type: object
+      required:
+      - internalId
+      - internalUpdatedAt
+      - status
+      - lineItems
+      properties:
+        internalId:
+          type: string
+          maxLength: 255
+        externalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+        vendor:
+          $ref: '#/components/schemas/Vendor'
+        internalUpdatedAt:
+          type: string
+          format: date-time
+        issuedOn:
+          type: string
+          format: date
+        createdOn:
+          type: string
+          format: date
+        poNumber:
+          type: string
+          maxLength: 255
+        deliverOn:
+          type: string
+          format: date
+        amount:
+          oneOf:
+          - $ref: '#/components/schemas/MonetaryValue'
+          - type: 'null'
+        currencyId:
+          oneOf:
+          - $ref: '#/components/schemas/Currency'
+          - type: 'null'
+        status:
+          $ref: '#/components/schemas/PurchaseOrderStatus'
+        matchingType:
+          $ref: '#/components/schemas/PurchaseOrderMatchingType'
+        type:
+          $ref: '#/components/schemas/PurchaseOrderType'
+        description:
+          type: string
+          maxLength: 255
+        requestor:
+          oneOf:
+          - $ref: '#/components/schemas/PurchaseOrderRequestor'
+          - type: 'null'
+        siteOwner:
+          oneOf:
+          - $ref: '#/components/schemas/PurchaseOrderSiteOwner'
+          - type: 'null'
+        lineItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/PurchaseOrderLineItem'
+        paymentTermId:
+          oneOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          description: The id of the `PaymentTerm` a purchase order uses.
+    NonNegativeMonetaryValue:
+      description: 'The monetary value as a string.
+
+        A float **should not** be used. The api will accept a float and it will be
+
+        transformed into a monetary value, but for best results please use a string
+
+        with the proper decimal precision. **Must be greater than or equal to zero.**
+
+        '
+      type: string
+      format: decimal
+      example: '1.00'
     Vendor:
       type: object
       required:
@@ -561,231 +1019,16 @@ components:
           description: The errors that occurred in the external ERP system.
           items:
             $ref: '#/components/schemas/VendorRemoteError'
-    MonetaryValue:
-      description: 'The monetary value as a string.
-
-        A float **should not** be used. The api will accept a float and it will be
-
-        transformed into a monetary value, but for best results please use a string
-
-        with the proper decimal precision.
-
-        '
-      type: string
-      format: decimal
-      example: '1.00'
-    VendorTaxInfo:
+    PurchaseOrderReceiptLine:
       type: object
-      properties:
-        taxId:
-          oneOf:
-          - type: string
-          - type: 'null'
-        taxIdType:
-          oneOf:
-          - type: string
-            enum:
-            - ssn
-            - ein
-            - other
-          - type: 'null'
-          description: The type of tax identifier (SSN, EIN, or other)
-        is1099vendor:
-          type: boolean
-        orgNumber:
-          oneOf:
-          - type: string
-          - type: 'null'
-    InternalId:
-      description: The internal id Vic uses for the record.
-      type: string
-      example: '47'
-      readOnly: true
-    Tag:
-      type: object
+      description: A receipt line associated with a purchase order line item.
       required:
-      - value
-      properties:
-        id:
-          type: string
-        value:
-          type: string
-          maxLength: 255
-    UpdatePurchaseOrder:
-      type: object
-      required:
-      - poNumber
-      - amount
-      - vendor
-      properties:
-        externalId:
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-        issuedOn:
-          oneOf:
-          - type: string
-            format: date
-          - type: 'null'
-          description: When the purchase order was issued.
-        poNumber:
-          type: string
-          maxLength: 255
-          example: '12003400'
-          description: The purchase order number. This is used to match against invoices.
-        deliverOn:
-          oneOf:
-          - type: string
-            format: date
-          - type: 'null'
-        amount:
-          $ref: '#/components/schemas/MonetaryValue'
-        currencyId:
-          oneOf:
-          - $ref: '#/components/schemas/Currency'
-          description: The currency that the purchase order uses.
-        description:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          description: The description of the purchase order.
-        requestor:
-          oneOf:
-          - $ref: '#/components/schemas/PurchaseOrderRequestor'
-          - type: 'null'
-        siteOwner:
-          oneOf:
-          - $ref: '#/components/schemas/PurchaseOrderSiteOwner'
-          - type: 'null'
-        createdOn:
-          oneOf:
-          - type: string
-            format: date
-          - type: 'null'
-          description: When the purchase order was created.
-        vendor:
-          oneOf:
-          - $ref: '#/components/schemas/VendorLookup'
-          description: The vendor of the purchase order.
-        matchingType:
-          oneOf:
-          - $ref: '#/components/schemas/PurchaseOrderMatchingType'
-          description: The matching type of the purchase order. When provided, it takes precedence over the deprecated `type` field. If omitted, the existing matching type is left unchanged.
-        type:
-          oneOf:
-          - $ref: '#/components/schemas/PurchaseOrderType'
-          description: This has been deprecated. Please use the `matchingType` field, which takes precedence over this field when both are provided.
-          deprecated: true
-        paymentTermId:
-          oneOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          description: The id of the `PaymentTerm` a purchase order uses.
-    ExternalData:
-      description: A free form json object that is stored with the record.
-      type: object
-    PurchaseOrderReceiptMatch:
-      type: object
-      required:
-      - invoiceItemId
-      - purchaseOrderItemId
-      - purchaseOrderReceiptLineId
-      - quantityMatched
-      properties:
-        invoiceItemId:
-          type: string
-          description: The invoice item's internal id.
-        purchaseOrderItemId:
-          type: string
-          description: The purchase order item's internal id.
-        purchaseOrderReceiptLineId:
-          type: string
-          description: The purchase order receipt line's internal id.
-        amountMatched:
-          type: string
-        quantityMatched:
-          type: string
-    PaymentInfo:
-      type: object
-      properties:
-        bankAccountNum:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-        bankCode:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-        paymentTerm:
-          oneOf:
-          - $ref: '#/components/schemas/PaymentInfoTerm'
-          - type: 'null'
-        bankGiro:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-        plusGiro:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-        bban:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-        internationalBankAccount:
-          oneOf:
-          - $ref: '#/components/schemas/InternationalBankAccount'
-          - type: 'null'
-        defaultMethod:
-          $ref: '#/components/schemas/PaymentInfoMethod'
-    BankAccountType:
-      description: The type of bank account.
-      enum:
-      - ach
-      - iban
-      - bban
-      - plusgiro
-      - bankgiro
-    PurchaseOrderSiteOwner:
-      type: object
-      description: The person or entity who is in charge of the purchase order site. Resolved to a user by email first, then by full name. If the name matches more than one user in the company, the request is rejected with `422 Unprocessable Entity` — provide the email to disambiguate.
-      properties:
-        email:
-          oneOf:
-          - $ref: '#/components/schemas/Email'
-          - type: 'null'
-        name:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-    PurchaseOrderReceiptLineInput:
-      type: object
-      description: Input schema for creating a receipt line on a purchase order line item.
-      required:
-      - receiptLineRemoteId
-      - receiptLineNumber
-      - poLineNumber
-      - itemId
-      - uomCode
-      - receivedQuantity
-      - receivedDate
-      - createdBy
-      - warehouse
-      - createdOn
-      - status
+      - internalId
       properties:
         internalId:
           type: string
           format: uuid
-          description: The internal ID of the receipt line (for updates).
+          description: The internal ID of the receipt line.
         receiptLineRemoteId:
           type: string
           maxLength: 255
@@ -832,6 +1075,10 @@ components:
           type: string
           format: date
           description: The date the items were received.
+        createdOn:
+          type: string
+          format: date
+          description: When the receipt line was created.
         createdBy:
           type: string
           maxLength: 255
@@ -840,10 +1087,6 @@ components:
           type: string
           maxLength: 255
           description: The warehouse where the items were received.
-        createdOn:
-          type: string
-          format: date
-          description: The date this receipt line was created.
         billOfLading:
           description: The bill of lading reference for the goods receipt.
           oneOf:
@@ -862,68 +1105,60 @@ components:
           - open
           - closed
           description: The status of the receipt line.
-    PaymentInfoMethod:
-      type: string
-      description: 'The payment method to be used.
-
-        Note: `BANKACCOUNT` is equivalent to `ACH` in the Web UI.
-
-        '
-      enum:
-      - BANKACCOUNT
-      - BANKGIRO
-      - PLUSGIRO
-      - IBAN
-      - BBAN
-    PurchaseOrder:
+    VendorLookupByOrgNumber:
       type: object
       required:
-      - internalId
-      - internalUpdatedAt
-      - status
-      - lineItems
+      - orgNumber
       properties:
-        internalId:
+        orgNumber:
           type: string
           maxLength: 255
+          description: The org number of the vendor to aid in the predictions.
+        countryCode:
+          oneOf:
+          - $ref: '#/components/schemas/CountryCode'
+          - type: 'null'
+          description: The country code of the vendor.
+    CreatePurchaseOrder:
+      required:
+      - poNumber
+      - amount
+      - vendor
+      - lineItems
+      - issuedOn
+      properties:
         externalId:
           oneOf:
           - $ref: '#/components/schemas/ExternalId'
           - type: 'null'
-        vendor:
-          $ref: '#/components/schemas/Vendor'
-        internalUpdatedAt:
-          type: string
-          format: date-time
         issuedOn:
-          type: string
-          format: date
-        createdOn:
-          type: string
-          format: date
+          oneOf:
+          - type: string
+            format: date
+            description: When the purchase order was issued.
+          - type: 'null'
         poNumber:
           type: string
           maxLength: 255
+          example: '12003400'
+          description: The purchase order number. This is used to match against invoices.
         deliverOn:
-          type: string
-          format: date
-        amount:
           oneOf:
-          - $ref: '#/components/schemas/MonetaryValue'
+          - type: string
+            format: date
           - type: 'null'
+        amount:
+          $ref: '#/components/schemas/MonetaryValue'
         currencyId:
           oneOf:
           - $ref: '#/components/schemas/Currency'
-          - type: 'null'
-        status:
-          $ref: '#/components/schemas/PurchaseOrderStatus'
-        matchingType:
-          $ref: '#/components/schemas/PurchaseOrderMatchingType'
-        type:
-          $ref: '#/components/schemas/PurchaseOrderType'
+          description: The currency that the purchase order uses.
         description:
-          type: string
-          maxLength: 255
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          description: The description of the purchase order.
         requestor:
           oneOf:
           - $ref: '#/components/schemas/PurchaseOrderRequestor'
@@ -932,37 +1167,157 @@ components:
           oneOf:
           - $ref: '#/components/schemas/PurchaseOrderSiteOwner'
           - type: 'null'
+        createdOn:
+          oneOf:
+          - type: string
+            format: date
+          - type: 'null'
+          description: When the purchase order was created.
+        vendor:
+          oneOf:
+          - $ref: '#/components/schemas/VendorLookup'
+          description: The vendor of the purchase order.
         lineItems:
           type: array
           items:
-            $ref: '#/components/schemas/PurchaseOrderLineItem'
+            $ref: '#/components/schemas/CreatePurchaseOrderItem'
+        matchingType:
+          oneOf:
+          - $ref: '#/components/schemas/PurchaseOrderMatchingType'
+          description: The matching type of the purchase order. When provided, it takes precedence over the deprecated `type` field. If neither field is provided, the matching type defaults to `line`.
+        type:
+          oneOf:
+          - $ref: '#/components/schemas/PurchaseOrderType'
+          description: This has been deprecated. Please use the `matchingType` field, which takes precedence over this field when both are provided.
+          deprecated: true
         paymentTermId:
           oneOf:
           - type: string
             format: uuid
           - type: 'null'
           description: The id of the `PaymentTerm` a purchase order uses.
-    PurchaseOrderStatus:
-      type: string
-      description: The status of the purchase order.
-      enum:
-      - open
-      - closed
-      default: open
-    PurchaseOrderLineFieldInput:
+    ExternalData:
+      description: A free form json object that is stored with the record.
       type: object
-      required:
-      - label
-      - value
+    InternationalBankAccount:
+      type: object
       properties:
-        label:
-          maxLength: 255
-          type: string
-        value:
+        iban:
           oneOf:
           - type: string
             maxLength: 255
           - type: 'null'
+        bic:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+    InternalId:
+      description: The internal id Vic uses for the record.
+      type: string
+      example: '47'
+      readOnly: true
+    VendorLookupByOrgNumberAndBankAccount:
+      type: object
+      required:
+      - orgNumber
+      - countryCode
+      - bankAccount
+      - bankAccountType
+      properties:
+        orgNumber:
+          type: string
+          maxLength: 255
+          description: The org number of the vendor to aid in the predictions.
+        countryCode:
+          $ref: '#/components/schemas/CountryCode'
+        bankAccount:
+          type: string
+          maxLength: 255
+          description: The bank account number that is attached to the vendor.
+        bankAccountType:
+          $ref: '#/components/schemas/BankAccountType'
+          description: The type of bank account the bank account number is.
+    PurchaseOrderScheduleLineInput:
+      type: object
+      description: Input schema for creating a schedule line on a purchase order line item.
+      required:
+      - poScheduleLineRemoteId
+      - poLineNumber
+      - poScheduleLineNumber
+      - itemId
+      - uomCode
+      - plannedQuantity
+      - promisedDeliveryStartDate
+      - promisedDeliveryEndDate
+      - shipToLocation
+      - createdOn
+      properties:
+        internalId:
+          type: string
+          format: uuid
+          description: The internal ID of the schedule line (for updates).
+        poScheduleLineRemoteId:
+          type: string
+          maxLength: 255
+          description: The purchase order schedule line ID from the ERP system.
+        poScheduleLineNumber:
+          type: integer
+          description: The purchase order schedule line number.
+          minimum: 1
+        poLineNumber:
+          type: integer
+          description: The purchase order line number this schedule line is associated with.
+        itemId:
+          type: string
+          maxLength: 255
+          description: The item ID from the ERP system.
+        uomCode:
+          type: string
+          maxLength: 255
+          description: The unit of measure code.
+        plannedQuantity:
+          type: string
+          format: decimal
+          description: The planned quantity for this schedule line.
+          example: '1.0'
+        promisedDeliveryStartDate:
+          type: string
+          format: date
+          description: The promised delivery start date.
+        promisedDeliveryEndDate:
+          type: string
+          format: date
+          description: The promised delivery end date. Must be equal to or after the promised delivery start date.
+        shipToLocation:
+          type: string
+          maxLength: 255
+          description: The location where items should be shipped.
+        createdOn:
+          type: string
+          format: date
+          description: The date this schedule line was created.
+    PurchaseOrderReceiptMatch:
+      type: object
+      required:
+      - invoiceItemId
+      - purchaseOrderItemId
+      - purchaseOrderReceiptLineId
+      - quantityMatched
+      properties:
+        invoiceItemId:
+          type: string
+          description: The invoice item's internal id.
+        purchaseOrderItemId:
+          type: string
+          description: The purchase order item's internal id.
+        purchaseOrderReceiptLineId:
+          type: string
+          description: The purchase order receipt line's internal id.
+        amountMatched:
+          type: string
+        quantityMatched:
+          type: string
     PurchaseOrderLineItem:
       type: object
       required:
@@ -1054,204 +1409,14 @@ components:
           description: Schedule lines associated with this purchase order line item.
           items:
             $ref: '#/components/schemas/PurchaseOrderScheduleLine'
-    PurchaseOrderMatchingType:
+    CountryCode:
+      description: 'The ISO-3166 country code. The acceptable values are Alpha-2 codes.
+
+        '
       type: string
-      description: The matching type of the purchase order.
-      enum:
-      - document
-      - line
-    PaymentInfoTerm:
-      type: object
-      required:
-      - count
-      - unit
-      properties:
-        count:
-          type: integer
-          minimum: 1
-        unit:
-          $ref: '#/components/schemas/PaymentInfoTermUnit'
-    VendorLookupByOrgNumber:
-      type: object
-      required:
-      - orgNumber
-      properties:
-        orgNumber:
-          type: string
-          maxLength: 255
-          description: The org number of the vendor to aid in the predictions.
-        countryCode:
-          oneOf:
-          - $ref: '#/components/schemas/CountryCode'
-          - type: 'null'
-          description: The country code of the vendor.
-    VendorLookup:
-      type: object
-      oneOf:
-      - $ref: '#/components/schemas/VendorLookupByInternalId'
-      - $ref: '#/components/schemas/VendorLookupByExternalId'
-      - $ref: '#/components/schemas/VendorLookupByName'
-      - $ref: '#/components/schemas/VendorLookupByOrgNumberAndBankAccount'
-      - $ref: '#/components/schemas/VendorLookupByOrgNumber'
-    PurchaseOrderScheduleLine:
-      type: object
-      description: A schedule line associated with a purchase order line item.
-      required:
-      - internalId
-      properties:
-        internalId:
-          type: string
-          format: uuid
-          description: The internal ID of the schedule line.
-        poScheduleLineRemoteId:
-          type: string
-          maxLength: 255
-          description: The purchase order schedule line ID from the ERP system.
-        poScheduleLineNumber:
-          type: integer
-          description: The purchase order schedule line number.
-          minimum: 1
-        poLineNumber:
-          type: integer
-          description: The purchase order line number this schedule line is associated with.
-        itemId:
-          type: string
-          maxLength: 255
-          description: The item ID from the ERP system.
-        uomCode:
-          type: string
-          maxLength: 255
-          description: The unit of measure code.
-        plannedQuantity:
-          type: string
-          format: decimal
-          description: The planned quantity for this schedule line.
-          example: '1.0'
-        promisedDeliveryStartDate:
-          type: string
-          format: date
-          description: The promised delivery start date.
-        promisedDeliveryEndDate:
-          type: string
-          format: date
-          description: The promised delivery end date.
-        createdOn:
-          type: string
-          format: date
-          description: When the schedule line was created.
-        shipToLocation:
-          type: string
-          maxLength: 255
-          description: The location where items should be shipped.
-    MatchItem:
-      type: object
-      required:
-      - invoiceItemId
-      - purchaseOrderItemId
-      - quantityMatched
-      properties:
-        invoiceItemId:
-          type: string
-          description: The invoice item's internal id.
-        purchaseOrderItemId:
-          type: string
-          description: The purchase order item's internal id.
-        purchaseOrderItemLineNumber:
-          type: string
-          description: The purchase order item's line number.
-        productNumber:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          description: The matched purchase order line product number (the human-readable item identifier, also shown as "Item ID" in the Vic.ai UI).
-        unitOfMeasure:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          description: The matched purchase order line unit of measure.
-        amountMatched:
-          type: string
-        quantityMatched:
-          type: string
-    CreatePurchaseOrder:
-      required:
-      - poNumber
-      - amount
-      - vendor
-      - lineItems
-      - issuedOn
-      properties:
-        externalId:
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-        issuedOn:
-          oneOf:
-          - type: string
-            format: date
-            description: When the purchase order was issued.
-          - type: 'null'
-        poNumber:
-          type: string
-          maxLength: 255
-          example: '12003400'
-          description: The purchase order number. This is used to match against invoices.
-        deliverOn:
-          oneOf:
-          - type: string
-            format: date
-          - type: 'null'
-        amount:
-          $ref: '#/components/schemas/MonetaryValue'
-        currencyId:
-          oneOf:
-          - $ref: '#/components/schemas/Currency'
-          description: The currency that the purchase order uses.
-        description:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          description: The description of the purchase order.
-        requestor:
-          oneOf:
-          - $ref: '#/components/schemas/PurchaseOrderRequestor'
-          - type: 'null'
-        siteOwner:
-          oneOf:
-          - $ref: '#/components/schemas/PurchaseOrderSiteOwner'
-          - type: 'null'
-        createdOn:
-          oneOf:
-          - type: string
-            format: date
-          - type: 'null'
-          description: When the purchase order was created.
-        vendor:
-          oneOf:
-          - $ref: '#/components/schemas/VendorLookup'
-          description: The vendor of the purchase order.
-        lineItems:
-          type: array
-          items:
-            $ref: '#/components/schemas/CreatePurchaseOrderItem'
-        matchingType:
-          oneOf:
-          - $ref: '#/components/schemas/PurchaseOrderMatchingType'
-          description: The matching type of the purchase order. When provided, it takes precedence over the deprecated `type` field. If neither field is provided, the matching type defaults to `line`.
-        type:
-          oneOf:
-          - $ref: '#/components/schemas/PurchaseOrderType'
-          description: This has been deprecated. Please use the `matchingType` field, which takes precedence over this field when both are provided.
-          deprecated: true
-        paymentTermId:
-          oneOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          description: The id of the `PaymentTerm` a purchase order uses.
+      format: ISO-3166
+      maxLength: 2
+      example: US
     Error:
       description: 'generic error message in JSON format.  Note the ''code'' field should
 
@@ -1269,15 +1434,6 @@ components:
           maximum: 599
         message:
           $ref: '#/components/schemas/ErrorString'
-    VendorState:
-      type: string
-      enum:
-      - CONFIRMED
-      - UNCONFIRMED
-    Email:
-      type: string
-      format: email
-      maxLength: 255
     VendorLookupByName:
       type: object
       required:
@@ -1289,316 +1445,55 @@ components:
           description: 'The exact name of the vendor. This is a case sensitive match.
 
             '
-    CountryCode:
-      description: 'The ISO-3166 country code. The acceptable values are Alpha-2 codes.
-
-        '
-      type: string
-      format: ISO-3166
-      maxLength: 2
-      example: US
-    Currency:
-      description: The ISO-4217 currency code.
-      type: string
-      format: ISO-4217
-      maxLength: 3
-      example: USD
-    PurchaseOrderLineField:
+    VendorTaxInfo:
       type: object
       properties:
-        label:
-          type: string
-          maxLength: 255
-        title:
-          type: string
-          maxLength: 255
-        type:
-          type: string
-          maxLength: 255
-        value:
+        taxId:
           oneOf:
           - type: string
-            maxLength: 255
           - type: 'null'
-    PurchaseOrderLineItemStatus:
-      type: string
-      description: "The status of the purchase order line item.\n* When status field is set to `open`, then its value is derived from the\n  line item's remaining amount. If the line item's remaining amount is\n  above `0`, then it is considered `open`, otherwise it is considered\n`closed`.\n* When status is set to `closed` then the line item is considered\n  `closed`, no matter the remaining amount.\n* When status is set to `archived` then the line item becomes unavailable\n  for matching to invoices, and cannot be archived if already matched.\n  Once set to `archived` it can not be changed to `open` or `closed`.\n"
-      enum:
-      - open
-      - closed
-      - archived
-      default: open
-    ExternalId:
-      description: 'The external id set by the ERP system. It does not have to be a UUID and
-
-        can be any non empty string desired.
-
-        '
-      type: string
-      example: 21b31bc7-1267-4335-893c-d7fe4706a238
-      maxLength: 255
-    ErrorString:
-      type: string
-      maxLength: 255
-    PurchaseOrderScheduleLineInput:
-      type: object
-      description: Input schema for creating a schedule line on a purchase order line item.
-      required:
-      - poScheduleLineRemoteId
-      - poLineNumber
-      - poScheduleLineNumber
-      - itemId
-      - uomCode
-      - plannedQuantity
-      - promisedDeliveryStartDate
-      - promisedDeliveryEndDate
-      - shipToLocation
-      - createdOn
-      properties:
-        internalId:
-          type: string
-          format: uuid
-          description: The internal ID of the schedule line (for updates).
-        poScheduleLineRemoteId:
-          type: string
-          maxLength: 255
-          description: The purchase order schedule line ID from the ERP system.
-        poScheduleLineNumber:
-          type: integer
-          description: The purchase order schedule line number.
-          minimum: 1
-        poLineNumber:
-          type: integer
-          description: The purchase order line number this schedule line is associated with.
-        itemId:
-          type: string
-          maxLength: 255
-          description: The item ID from the ERP system.
-        uomCode:
-          type: string
-          maxLength: 255
-          description: The unit of measure code.
-        plannedQuantity:
-          type: string
-          format: decimal
-          description: The planned quantity for this schedule line.
-          example: '1.0'
-        promisedDeliveryStartDate:
-          type: string
-          format: date
-          description: The promised delivery start date.
-        promisedDeliveryEndDate:
-          type: string
-          format: date
-          description: The promised delivery end date. Must be equal to or after the promised delivery start date.
-        shipToLocation:
-          type: string
-          maxLength: 255
-          description: The location where items should be shipped.
-        createdOn:
-          type: string
-          format: date
-          description: The date this schedule line was created.
-    PaymentInfoTermUnit:
-      type: string
-      description: The payment term units supported.
-      enum:
-      - DAYS
-    NonNegativeMonetaryValue:
-      description: 'The monetary value as a string.
-
-        A float **should not** be used. The api will accept a float and it will be
-
-        transformed into a monetary value, but for best results please use a string
-
-        with the proper decimal precision. **Must be greater than or equal to zero.**
-
-        '
-      type: string
-      format: decimal
-      example: '1.00'
-    VendorInternalId:
-      type: string
-      description: The id of the `Vendor` in Vic.
-      maxLength: 255
-    PurchaseOrders:
-      type: array
-      items:
-        $ref: '#/components/schemas/PurchaseOrder'
-    UnitOfMeasure:
-      type: string
-      example: kg
-      maxLength: 255
-      description: The unit of measure used.
-    VendorRemoteError:
-      description: 'The remote error on a Vendor.
-
-        This is to describe any errors that have happened in the ERP system. If
-
-        the error that occurred does not pertain to a specific field, then the
-
-        `field` can be left null, or missing all together.
-
-        '
+        taxIdType:
+          oneOf:
+          - type: string
+            enum:
+            - ssn
+            - ein
+            - other
+          - type: 'null'
+          description: The type of tax identifier (SSN, EIN, or other)
+        is1099vendor:
+          type: boolean
+        orgNumber:
+          oneOf:
+          - type: string
+          - type: 'null'
+    VendorLookupByExternalId:
       type: object
       required:
-      - message
+      - externalId
       properties:
-        message:
-          type: string
-          maxLength: 1024
-        field:
-          description: 'The field on the Vic.ai vendor that has the error.
-
-            If the error does not pertain to a specific field, then this will be
-
-            null.
-
-            Example: `{"field": "name"}` or `{"field": "externalUpdatedAt"}`
-
-            '
-          type: string
-          maxLength: 255
-    InternationalBankAccount:
-      type: object
-      properties:
-        iban:
+        externalId:
           oneOf:
-          - type: string
-            maxLength: 255
+          - $ref: '#/components/schemas/ExternalId'
           - type: 'null'
-        bic:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-    PurchaseOrderReceiptLine:
+    VendorLookupByInternalId:
       type: object
-      description: A receipt line associated with a purchase order line item.
       required:
       - internalId
       properties:
         internalId:
-          type: string
-          format: uuid
-          description: The internal ID of the receipt line.
-        receiptLineRemoteId:
-          type: string
-          maxLength: 255
-          description: The receipt line ID from the ERP system.
-        receiptLineNumber:
-          type: integer
-          description: The receipt line number.
-          minimum: 1
-        poLineNumber:
-          type: integer
-          description: The purchase order line number this receipt line is associated with.
-        poScheduleLineRemoteId:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          description: The purchase order schedule line ID (from the ERP) this receipt line is associated with.
-        poScheduleLineNumber:
-          oneOf:
-          - type: integer
-          - type: 'null'
-          description: The purchase order schedule line number this receipt line is associated with.
-        itemId:
-          type: string
-          maxLength: 255
-          description: The item ID from the ERP system.
-        uomCode:
-          type: string
-          maxLength: 255
-          description: The unit of measure code.
-        receivedQuantity:
-          type: string
-          format: decimal
-          description: The quantity received.
-          example: '1.0'
-        acceptedQuantity:
-          oneOf:
-          - type: string
-            format: decimal
-          - type: 'null'
-          description: The quantity accepted.
-          example: '1.0'
-        receivedDate:
-          type: string
-          format: date
-          description: The date the items were received.
-        createdOn:
-          type: string
-          format: date
-          description: When the receipt line was created.
-        createdBy:
-          type: string
-          maxLength: 255
-          description: The user or system that created this receipt line.
-        warehouse:
-          type: string
-          maxLength: 255
-          description: The warehouse where the items were received.
-        billOfLading:
-          description: The bill of lading reference for the goods receipt.
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-        deliveryNote:
-          description: The delivery note reference for the goods receipt.
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-        status:
-          type: string
-          enum:
-          - open
-          - closed
-          description: The status of the receipt line.
-    PurchaseOrderRequestor:
-      type: object
-      description: The person or entity who requested the purchase order. Resolved to a user by email first, then by full name. If the name matches more than one user in the company, the request is rejected with `422 Unprocessable Entity` — provide the email to disambiguate.
-      properties:
-        email:
-          oneOf:
-          - $ref: '#/components/schemas/Email'
-          - type: 'null'
-        name:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-    VendorLookupByOrgNumberAndBankAccount:
+          $ref: '#/components/schemas/VendorInternalId'
+    PaymentInfoTerm:
       type: object
       required:
-      - orgNumber
-      - countryCode
-      - bankAccount
-      - bankAccountType
+      - count
+      - unit
       properties:
-        orgNumber:
-          type: string
-          maxLength: 255
-          description: The org number of the vendor to aid in the predictions.
-        countryCode:
-          $ref: '#/components/schemas/CountryCode'
-        bankAccount:
-          type: string
-          maxLength: 255
-          description: The bank account number that is attached to the vendor.
-        bankAccountType:
-          $ref: '#/components/schemas/BankAccountType'
-          description: The type of bank account the bank account number is.
-    PurchaseOrderType:
-      type: string
-      description: This has been deprecated. Please use the `matchingType` field.
-      enum:
-      - blanket
-      - normal
-      default: normal
+        count:
+          type: integer
+          minimum: 1
+        unit:
+          $ref: '#/components/schemas/PaymentInfoTermUnit'
     DimensionRef:
       type: object
       description: 'A reference to a dimension within Vic.
@@ -1677,56 +1572,151 @@ components:
           oneOf:
           - $ref: '#/components/schemas/ExternalId'
           - type: 'null'
-    VendorLookupByInternalId:
+    PurchaseOrderRequestor:
       type: object
+      description: The person or entity who requested the purchase order. Resolved to a user by email first, then by full name. If the name matches more than one user in the company, the request is rejected with `422 Unprocessable Entity` — provide the email to disambiguate.
+      properties:
+        email:
+          oneOf:
+          - $ref: '#/components/schemas/Email'
+          - type: 'null'
+        name:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+    Tag:
+      type: object
+      required:
+      - value
+      properties:
+        id:
+          type: string
+        value:
+          type: string
+          maxLength: 255
+    PurchaseOrderSiteOwner:
+      type: object
+      description: The person or entity who is in charge of the purchase order site. Resolved to a user by email first, then by full name. If the name matches more than one user in the company, the request is rejected with `422 Unprocessable Entity` — provide the email to disambiguate.
+      properties:
+        email:
+          oneOf:
+          - $ref: '#/components/schemas/Email'
+          - type: 'null'
+        name:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+    MonetaryValue:
+      description: 'The monetary value as a string.
+
+        A float **should not** be used. The api will accept a float and it will be
+
+        transformed into a monetary value, but for best results please use a string
+
+        with the proper decimal precision.
+
+        '
+      type: string
+      format: decimal
+      example: '1.00'
+    PaymentInfoMethod:
+      type: string
+      description: 'The payment method to be used.
+
+        Note: `BANKACCOUNT` is equivalent to `ACH` in the Web UI.
+
+        '
+      enum:
+      - BANKACCOUNT
+      - BANKGIRO
+      - PLUSGIRO
+      - IBAN
+      - BBAN
+    VendorLookup:
+      type: object
+      oneOf:
+      - $ref: '#/components/schemas/VendorLookupByInternalId'
+      - $ref: '#/components/schemas/VendorLookupByExternalId'
+      - $ref: '#/components/schemas/VendorLookupByName'
+      - $ref: '#/components/schemas/VendorLookupByOrgNumberAndBankAccount'
+      - $ref: '#/components/schemas/VendorLookupByOrgNumber'
+    PurchaseOrderLineFieldInput:
+      type: object
+      required:
+      - label
+      - value
+      properties:
+        label:
+          maxLength: 255
+          type: string
+        value:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+    PurchaseOrderScheduleLine:
+      type: object
+      description: A schedule line associated with a purchase order line item.
       required:
       - internalId
       properties:
         internalId:
-          $ref: '#/components/schemas/VendorInternalId'
-    VendorLookupByExternalId:
-      type: object
-      required:
-      - externalId
-      properties:
-        externalId:
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
+          type: string
+          format: uuid
+          description: The internal ID of the schedule line.
+        poScheduleLineRemoteId:
+          type: string
+          maxLength: 255
+          description: The purchase order schedule line ID from the ERP system.
+        poScheduleLineNumber:
+          type: integer
+          description: The purchase order schedule line number.
+          minimum: 1
+        poLineNumber:
+          type: integer
+          description: The purchase order line number this schedule line is associated with.
+        itemId:
+          type: string
+          maxLength: 255
+          description: The item ID from the ERP system.
+        uomCode:
+          type: string
+          maxLength: 255
+          description: The unit of measure code.
+        plannedQuantity:
+          type: string
+          format: decimal
+          description: The planned quantity for this schedule line.
+          example: '1.0'
+        promisedDeliveryStartDate:
+          type: string
+          format: date
+          description: The promised delivery start date.
+        promisedDeliveryEndDate:
+          type: string
+          format: date
+          description: The promised delivery end date.
+        createdOn:
+          type: string
+          format: date
+          description: When the schedule line was created.
+        shipToLocation:
+          type: string
+          maxLength: 255
+          description: The location where items should be shipped.
   responses:
+    ResourceNotFoundResponse:
+      description: Resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
     PurchaseOrderDeletedResponse:
       description: Purchase order was successfully deleted.
     ForbiddenResponse:
       description: The request was forbidden.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    ErrorResponse:
-      description: An unexpected error has occurred. Check the body for more details.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    PurchaseOrderResponse:
-      description: The purchase order.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/PurchaseOrder'
-    SynchronizePurchaseOrdersResponse:
-      description: 'A request to synchronize the purchase orders was acknowledged and is in
-
-        the process of being ran.
-
-        '
-    TooManyRequestsResponse:
-      description: HTTP call rate limit exceeded.
-      headers:
-        Retry-After:
-          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
-          schema:
-            type: integer
       content:
         application/json:
           schema:
@@ -1740,19 +1730,73 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/PurchaseOrders'
-    ResourceNotFoundResponse:
-      description: Resource was not found.
+    PurchaseOrderResponse:
+      description: The purchase order.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PurchaseOrder'
+    ErrorResponse:
+      description: An unexpected error has occurred. Check the body for more details.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    SynchronizePurchaseOrdersResponse:
+      description: 'A request to synchronize the purchase orders was acknowledged and is in
+
+        the process of being ran.
+
+        '
     UnprocessableEntityResponse:
       description: Errors with the input are present.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    TooManyRequestsResponse:
+      description: HTTP call rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   parameters:
+    UptoFilter:
+      name: upto
+      in: query
+      description: 'Datetime value for decremental updates.
+
+        '
+      required: false
+      schema:
+        type: string
+        format: date-time
+    PagingCursor:
+      name: cursor
+      in: query
+      description: Which item to start from. See [Pagination](#section/Pagination) for more information.
+      required: false
+      schema:
+        type: string
+    SinceFilter:
+      name: since
+      in: query
+      description: 'Datetime value for incremental updates.
+
+        **NOTE**: For external datetimes, the expected format is not in UTC. for
+
+        vic-internal datetimes (see `SinceIsExternal`) the format is UTC.
+
+        '
+      required: false
+      schema:
+        type: string
+        format: date-time
     UseSystemDefaultInternal:
       name: useSystem
       in: query
@@ -1768,44 +1812,6 @@ components:
         - internal
         - external
         default: INTERNAL
-    PagingCursor:
-      name: cursor
-      in: query
-      description: Which item to start from. See [Pagination](#section/Pagination) for more information.
-      required: false
-      schema:
-        type: string
-    UptoFilter:
-      name: upto
-      in: query
-      description: 'Datetime value for decremental updates.
-
-        '
-      required: false
-      schema:
-        type: string
-        format: date-time
-    SinceFilter:
-      name: since
-      in: query
-      description: 'Datetime value for incremental updates.
-
-        **NOTE**: For external datetimes, the expected format is not in UTC. for
-
-        vic-internal datetimes (see `SinceIsExternal`) the format is UTC.
-
-        '
-      required: false
-      schema:
-        type: string
-        format: date-time
-    PurchaseOrderStatusFilter:
-      name: status
-      in: query
-      description: selects the status of purchase orders which are to be searched
-      required: false
-      schema:
-        $ref: '#/components/schemas/PurchaseOrderStatus'
     PagingLimit:
       name: limit
       in: query
@@ -1815,19 +1821,13 @@ components:
         type: integer
         minimum: 1
         maximum: 100
-  requestBodies:
-    UpdatePurchaseOrderRequest:
-      description: Create a purchase order.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UpdatePurchaseOrder'
-    CreatePurchaseOrderRequest:
-      description: Create a purchase order.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CreatePurchaseOrder'
+    PurchaseOrderStatusFilter:
+      name: status
+      in: query
+      description: selects the status of purchase orders which are to be searched
+      required: false
+      schema:
+        $ref: '#/components/schemas/PurchaseOrderStatus'
   headers:
     NextPageToken:
       description: A link to the next page of responses

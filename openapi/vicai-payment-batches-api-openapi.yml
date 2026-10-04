@@ -98,61 +98,66 @@ paths:
         4XX:
           $ref: '#/components/responses/ErrorResponse'
 components:
-  responses:
-    PaymentBatchListResponse:
-      description: A paged array of Payment batches
-      headers:
-        x-next:
-          $ref: '#/components/headers/NextPageToken'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/PaymentBatches'
-    PaymentBatchResponse:
-      description: A single Payment Batch.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/PaymentBatch'
-    ErrorResponse:
-      description: An unexpected error has occurred. Check the body for more details.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    TooManyRequestsResponse:
-      description: HTTP call rate limit exceeded.
-      headers:
-        Retry-After:
-          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
-          schema:
-            type: integer
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
-    PaymentBatchStatus:
+    Currency:
+      description: The ISO-4217 currency code.
       type: string
-      description: The status of the payment batch.
-      enum:
-      - pending_approval
-      - rejected
-      - approved
-      - voided
-    MonetaryValue:
-      description: 'The monetary value as a string.
+      format: ISO-4217
+      maxLength: 3
+      example: USD
+    VendorInternalId:
+      type: string
+      description: The id of the `Vendor` in Vic.
+      maxLength: 255
+    ExternalId:
+      description: 'The external id set by the ERP system. It does not have to be a UUID and
 
-        A float **should not** be used. The api will accept a float and it will be
-
-        transformed into a monetary value, but for best results please use a string
-
-        with the proper decimal precision.
+        can be any non empty string desired.
 
         '
       type: string
-      format: decimal
-      example: '1.00'
+      example: 21b31bc7-1267-4335-893c-d7fe4706a238
+      maxLength: 255
+    ErrorString:
+      type: string
+      maxLength: 255
+    CostAccountRef:
+      type: object
+      description: A reference to a `Account`.
+      properties:
+        internalId:
+          oneOf:
+          - type: string
+            maxLength: 255
+            description: The id of the `Account` in Vic.
+          - type: 'null'
+        externalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+    InvoiceRef:
+      type: object
+      description: A reference to an `Invoice`.
+      properties:
+        internalId:
+          oneOf:
+          - $ref: '#/components/schemas/InvoiceInternalId'
+          - type: 'null'
+        externalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+        refNumber:
+          type:
+          - string
+          - 'null'
+    PaymentMethod:
+      type: string
+      enum:
+      - ach
+      - card
+      - check
+      - wire
     PaymentBatch:
       type: object
       description: A batch of payments made with Vic.
@@ -239,155 +244,25 @@ components:
           description: Array of credit confirmation items. Must contain at least one item and no more than 100 items.
           items:
             $ref: '#/components/schemas/Credit'
-    InvoiceRef:
-      type: object
-      description: A reference to an `Invoice`.
-      properties:
-        internalId:
-          oneOf:
-          - $ref: '#/components/schemas/InvoiceInternalId'
-          - type: 'null'
-        externalId:
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-        refNumber:
-          type:
-          - string
-          - 'null'
-    Credit:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: The id of the credit.
-        batchId:
-          type: string
-          format: uuid
-          description: The id of the payment batch the credit belongs to.
-        amount:
-          $ref: '#/components/schemas/MonetaryValue'
-        settlementAmount:
-          $ref: '#/components/schemas/MonetaryValue'
-        currencyId:
-          $ref: '#/components/schemas/Currency'
-        settlementCurrencyId:
-          $ref: '#/components/schemas/Currency'
-        exchangeRate:
-          $ref: '#/components/schemas/MonetaryValue'
-        status:
-          $ref: '#/components/schemas/CreditStatus'
-        paymentMethod:
-          oneOf:
-          - $ref: '#/components/schemas/PaymentMethod'
-          - type: 'null'
-        referenceId:
-          oneOf:
-          - $ref: '#/components/schemas/PaymentReferenceId'
-          - type: 'null'
-        approvedAt:
-          oneOf:
-          - type: string
-            format: date-time
-            description: The payment approver has approved the credit.
-          - type: 'null'
-        fundedAt:
-          oneOf:
-          - type: string
-            format: date-time
-            description: 'The date time the payment request began to be processed.
+    PaymentReferenceId:
+      type: string
+      description: 'The reference id of the payment or credit is associated with. This will
 
+        be the identifier is on the remittance advice sent to the Vendor.
 
-              **Note**: This is not the actual date time that the funds were
+        Example: `P001234`, `A000134`, or `E123456`
 
-              withdrawn from the bank. The payment request can take 15
-
-              minutes to 4 hours or more to be processed. See the `acceptedAt`
-
-              field for the date time that the payment was submitted and
-
-              accepted.
-
-              '
-          - type: 'null'
-        failedAt:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: When the credit was marked as failed.
-        failedReason:
-          type:
-          - string
-          - 'null'
-          description: The reason why the credit failed.
-        acceptedAt:
-          oneOf:
-          - type: string
-            format: date-time
-            description: 'The date time the payment request was submitted and accepted
-
-              for processing.
-
-              '
-          - type: 'null'
-        rejectedAt:
-          oneOf:
-          - type: string
-            format: date-time
-            description: The payment approver has rejected the credit payment.
-          - type: 'null'
-        voidedAt:
-          oneOf:
-          - type: string
-            format: date-time
-            description: 'This is set when a credit has been voided by the payment processor.
-
-              Generally this would happen due to a `Vendor` missing address
-
-              information or a malformed `Invoice` was trying to be paid. Other
-
-              cases could cause this to be voided due to insufficient funds.
-
-              '
-          - type: 'null'
-        confirmedAt:
-          oneOf:
-          - type: string
-            format: date-time
-            description: The datetime when the credit was confirmed in an external system.
-          - type: 'null'
-        remoteId:
-          oneOf:
-          - type: string
-            maxLength: 255
-            description: An external identifier for the credit in the confirming system.
-          - type: 'null'
-        remoteError:
-          oneOf:
-          - type: string
-            description: An error message if the confirmation failed.
-          - type: 'null'
-        remoteErroredAt:
-          oneOf:
-          - type: string
-            format: date-time
-            description: When the remote error occurred.
-          - type: 'null'
-        invoice:
-          $ref: '#/components/schemas/InvoiceRef'
-        costAccount:
-          $ref: '#/components/schemas/CostAccountRef'
-        vendor:
-          $ref: '#/components/schemas/VendorRef'
-    PaymentMethod:
+        '
+    PaymentStatus:
       type: string
       enum:
-      - ach
-      - card
-      - check
-      - wire
+      - pending_approval
+      - rejected
+      - approved
+      - acknowledged
+      - voided
+      - failed
+      description: "The status of the payment.\n- `pending_approval` - The payment is awaiting approval.\n- `approved` - The payment was approved for payment.\n- `rejected` - The payment was rejected and was excluded from being paid.\n- `acknowledged` - The `rejected` payment was acknowledged by the payee.\n- `voided` - The payment was voided for reason.\n- `failed` - The payment failed to be submitted to the payment provider.\n  See the failed reason for more information.\n"
     VendorRef:
       type: object
       description: A reference to a `Vendor`.
@@ -400,70 +275,10 @@ components:
           oneOf:
           - $ref: '#/components/schemas/ExternalId'
           - type: 'null'
-    CostAccountRef:
-      type: object
-      description: A reference to a `Account`.
-      properties:
-        internalId:
-          oneOf:
-          - type: string
-            maxLength: 255
-            description: The id of the `Account` in Vic.
-          - type: 'null'
-        externalId:
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-    Error:
-      description: 'generic error message in JSON format.  Note the ''code'' field should
-
-        match the HTTP status code of the wrapping HTTP request.
-
-        '
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-          minimum: 100
-          maximum: 599
-        message:
-          $ref: '#/components/schemas/ErrorString'
-    Currency:
-      description: The ISO-4217 currency code.
-      type: string
-      format: ISO-4217
-      maxLength: 3
-      example: USD
-    ExternalId:
-      description: 'The external id set by the ERP system. It does not have to be a UUID and
-
-        can be any non empty string desired.
-
-        '
-      type: string
-      example: 21b31bc7-1267-4335-893c-d7fe4706a238
-      maxLength: 255
-    PaymentStatus:
-      type: string
-      enum:
-      - pending_approval
-      - rejected
-      - approved
-      - acknowledged
-      - voided
-      - failed
-      description: "The status of the payment.\n- `pending_approval` - The payment is awaiting approval.\n- `approved` - The payment was approved for payment.\n- `rejected` - The payment was rejected and was excluded from being paid.\n- `acknowledged` - The `rejected` payment was acknowledged by the payee.\n- `voided` - The payment was voided for reason.\n- `failed` - The payment failed to be submitted to the payment provider.\n  See the failed reason for more information.\n"
-    CreditStatus:
-      type: string
-      enum:
-      - pending_approval
-      - rejected
-      - approved
-      - acknowledged
-      - voided
+    PaymentBatches:
+      type: array
+      items:
+        $ref: '#/components/schemas/PaymentBatch'
     Payment:
       type: object
       description: 'The payment made for an `Invoice`. The `Account` assigned to the
@@ -609,43 +424,221 @@ components:
           $ref: '#/components/schemas/CostAccountRef'
         vendor:
           $ref: '#/components/schemas/VendorRef'
-    VendorInternalId:
-      type: string
-      description: The id of the `Vendor` in Vic.
-      maxLength: 255
-    PaymentBatches:
-      type: array
-      items:
-        $ref: '#/components/schemas/PaymentBatch'
-    PaymentReferenceId:
-      type: string
-      description: 'The reference id of the payment or credit is associated with. This will
+    Error:
+      description: 'generic error message in JSON format.  Note the ''code'' field should
 
-        be the identifier is on the remittance advice sent to the Vendor.
-
-        Example: `P001234`, `A000134`, or `E123456`
+        match the HTTP status code of the wrapping HTTP request.
 
         '
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          minimum: 100
+          maximum: 599
+        message:
+          $ref: '#/components/schemas/ErrorString'
+    Credit:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The id of the credit.
+        batchId:
+          type: string
+          format: uuid
+          description: The id of the payment batch the credit belongs to.
+        amount:
+          $ref: '#/components/schemas/MonetaryValue'
+        settlementAmount:
+          $ref: '#/components/schemas/MonetaryValue'
+        currencyId:
+          $ref: '#/components/schemas/Currency'
+        settlementCurrencyId:
+          $ref: '#/components/schemas/Currency'
+        exchangeRate:
+          $ref: '#/components/schemas/MonetaryValue'
+        status:
+          $ref: '#/components/schemas/CreditStatus'
+        paymentMethod:
+          oneOf:
+          - $ref: '#/components/schemas/PaymentMethod'
+          - type: 'null'
+        referenceId:
+          oneOf:
+          - $ref: '#/components/schemas/PaymentReferenceId'
+          - type: 'null'
+        approvedAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: The payment approver has approved the credit.
+          - type: 'null'
+        fundedAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: 'The date time the payment request began to be processed.
+
+
+              **Note**: This is not the actual date time that the funds were
+
+              withdrawn from the bank. The payment request can take 15
+
+              minutes to 4 hours or more to be processed. See the `acceptedAt`
+
+              field for the date time that the payment was submitted and
+
+              accepted.
+
+              '
+          - type: 'null'
+        failedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the credit was marked as failed.
+        failedReason:
+          type:
+          - string
+          - 'null'
+          description: The reason why the credit failed.
+        acceptedAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: 'The date time the payment request was submitted and accepted
+
+              for processing.
+
+              '
+          - type: 'null'
+        rejectedAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: The payment approver has rejected the credit payment.
+          - type: 'null'
+        voidedAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: 'This is set when a credit has been voided by the payment processor.
+
+              Generally this would happen due to a `Vendor` missing address
+
+              information or a malformed `Invoice` was trying to be paid. Other
+
+              cases could cause this to be voided due to insufficient funds.
+
+              '
+          - type: 'null'
+        confirmedAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: The datetime when the credit was confirmed in an external system.
+          - type: 'null'
+        remoteId:
+          oneOf:
+          - type: string
+            maxLength: 255
+            description: An external identifier for the credit in the confirming system.
+          - type: 'null'
+        remoteError:
+          oneOf:
+          - type: string
+            description: An error message if the confirmation failed.
+          - type: 'null'
+        remoteErroredAt:
+          oneOf:
+          - type: string
+            format: date-time
+            description: When the remote error occurred.
+          - type: 'null'
+        invoice:
+          $ref: '#/components/schemas/InvoiceRef'
+        costAccount:
+          $ref: '#/components/schemas/CostAccountRef'
+        vendor:
+          $ref: '#/components/schemas/VendorRef'
+    PaymentBatchStatus:
+      type: string
+      description: The status of the payment batch.
+      enum:
+      - pending_approval
+      - rejected
+      - approved
+      - voided
+    MonetaryValue:
+      description: 'The monetary value as a string.
+
+        A float **should not** be used. The api will accept a float and it will be
+
+        transformed into a monetary value, but for best results please use a string
+
+        with the proper decimal precision.
+
+        '
+      type: string
+      format: decimal
+      example: '1.00'
+    CreditStatus:
+      type: string
+      enum:
+      - pending_approval
+      - rejected
+      - approved
+      - acknowledged
+      - voided
     InvoiceInternalId:
       type: string
       description: The id of the `Invoice` in Vic.
       maxLength: 255
-    ErrorString:
-      type: string
-      maxLength: 255
+  responses:
+    PaymentBatchResponse:
+      description: A single Payment Batch.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PaymentBatch'
+    TooManyRequestsResponse:
+      description: HTTP call rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ErrorResponse:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    PaymentBatchListResponse:
+      description: A paged array of Payment batches
+      headers:
+        x-next:
+          $ref: '#/components/headers/NextPageToken'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PaymentBatches'
   parameters:
     PagingCursor:
       name: cursor
       in: query
       description: Which item to start from. See [Pagination](#section/Pagination) for more information.
       required: false
-      schema:
-        type: string
-    PaymentBatchId:
-      name: id
-      in: path
-      description: The ID of the payment batch.
-      required: true
       schema:
         type: string
     PaymentBatchStatusFilter:
@@ -661,6 +654,13 @@ components:
         - $ref: '#/components/schemas/PaymentBatchStatus'
         - enum:
           - all
+    PaymentBatchId:
+      name: id
+      in: path
+      description: The ID of the payment batch.
+      required: true
+      schema:
+        type: string
     PagingLimit:
       name: limit
       in: query

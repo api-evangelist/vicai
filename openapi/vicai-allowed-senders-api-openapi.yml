@@ -124,19 +124,44 @@ paths:
         4XX:
           $ref: '#/components/responses/ErrorResponseV2'
 components:
-  responses:
-    ErrorResponseV2:
-      description: An unexpected error has occurred. Check the body for more details.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              errors:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ErrorV2'
   schemas:
+    PaginationV2:
+      type: object
+      properties:
+        size:
+          type: integer
+          description: The page size.
+          maximum: 50
+          minimum: 1
+        cursor:
+          type: string
+          description: The cursor to use to get the next page of results.
+    AllowedSendersResponseV2:
+      type: object
+      required:
+      - meta
+      - data
+      properties:
+        meta:
+          type: object
+          required:
+          - page
+          properties:
+            page:
+              $ref: '#/components/schemas/PaginationMetaV2'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AllowedSenderV2'
+    AllowedSendersCreateResponseV2:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AllowedSenderV2'
     PaginationMetaV2:
       type: object
       properties:
@@ -149,6 +174,28 @@ components:
           oneOf:
           - type: string
           - type: 'null'
+    AllowedSendersCreateRequestV2:
+      type: object
+      required:
+      - allowed_senders
+      properties:
+        allowed_senders:
+          type: array
+          minItems: 1
+          maxItems: 20
+          items:
+            type: object
+            required:
+            - match_type
+            - sender_pattern
+            properties:
+              match_type:
+                type: string
+                enum:
+                - exact
+                - domain
+              sender_pattern:
+                type: string
     AllowedSenderV2:
       type: object
       required:
@@ -182,23 +229,6 @@ components:
         created_at:
           type: string
           format: date-time
-    AllowedSendersResponseV2:
-      type: object
-      required:
-      - meta
-      - data
-      properties:
-        meta:
-          type: object
-          required:
-          - page
-          properties:
-            page:
-              $ref: '#/components/schemas/PaginationMetaV2'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/AllowedSenderV2'
     ErrorV2:
       type: object
       required:
@@ -216,48 +246,18 @@ components:
         message:
           description: A description of the error.
           type: string
-    PaginationV2:
-      type: object
-      properties:
-        size:
-          type: integer
-          description: The page size.
-          maximum: 50
-          minimum: 1
-        cursor:
-          type: string
-          description: The cursor to use to get the next page of results.
-    AllowedSendersCreateResponseV2:
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/AllowedSenderV2'
-    AllowedSendersCreateRequestV2:
-      type: object
-      required:
-      - allowed_senders
-      properties:
-        allowed_senders:
-          type: array
-          minItems: 1
-          maxItems: 20
-          items:
+  responses:
+    ErrorResponseV2:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
             type: object
-            required:
-            - match_type
-            - sender_pattern
             properties:
-              match_type:
-                type: string
-                enum:
-                - exact
-                - domain
-              sender_pattern:
-                type: string
+              errors:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ErrorV2'
   parameters:
     PaginationV2:
       name: page

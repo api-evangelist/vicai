@@ -168,98 +168,78 @@ paths:
         4XX:
           $ref: '#/components/responses/ErrorResponseV2'
 components:
-  parameters:
-    PagingCursor:
-      name: cursor
-      in: query
-      description: Which item to start from. See [Pagination](#section/Pagination) for more information.
-      required: false
-      schema:
-        type: string
-    OccurredAfter:
-      name: occurred_after
-      in: query
-      description: Filter events that occurred on or after this date. Required parameter. The date range between occurred_after and occurred_before cannot exceed 30 days.
-      required: true
-      schema:
-        type: string
-        format: date-time
-    WebhookEventType:
-      name: event_type
-      in: query
-      description: 'Filter events by a single type. Omit the parameter to return events of
-
-        every type. To filter by several types at once, use `event_types`
-
-        instead.
-
-        '
-      required: false
-      schema:
-        $ref: '#/components/schemas/WebhookEventTypeName'
-    WebhookUndeliveredFilter:
-      name: undelivered
-      in: query
-      description: Filter to show only events that have not been delivered
-      required: false
-      schema:
-        type: boolean
-    OccurredBefore:
-      name: occurred_before
-      in: query
-      description: Filter events that occurred on or before this date. Required parameter. The date range between occurred_after and occurred_before cannot exceed 30 days.
-      required: true
-      schema:
-        type: string
-        format: date-time
-    CompanyId:
-      name: company_id
-      in: path
-      required: true
-      description: The ID of the company
-      schema:
-        type: string
-        format: uuid
-    WebhookEventId:
-      name: event_id
-      in: path
-      required: true
-      description: The ID of the webhook event
-      schema:
-        type: string
-        format: uuid
-    PagingLimit:
-      name: limit
-      in: query
-      description: How many items to return at one time (max 100) (default 100)
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-    WebhookEventTypes:
-      name: event_types
-      in: query
-      description: 'Filter events by one or more types, given as a comma-separated list
-
-        (for example `invoice_posted,invoice_approved`). Omit to return events
-
-        of every type.
-
-        '
-      required: false
-      style: form
-      explode: false
-      schema:
-        type: array
-        items:
-          $ref: '#/components/schemas/WebhookEventTypeName'
-    PaginationV2:
-      name: page
-      in: query
-      schema:
-        $ref: '#/components/schemas/PaginationV2'
+  responses:
+    WebhookEventsResponse:
+      description: A paged array of webhook events
+      headers:
+        x-next:
+          $ref: '#/components/headers/NextPageToken'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WebhookEventsList'
+    ResourceNotFoundResponse:
+      description: Resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ErrorResponseV2:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ErrorV2'
+    WebhookEventTypesResponseV2:
+      description: A list of available webhook event types
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WebhookEventTypesList'
+    WebhookEventResponseV2:
+      description: A single webhook event with delivery information (V2 format)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WebhookEventV2'
+    WebhookEventResponse:
+      description: A single webhook event.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WebhookEvent'
+    ErrorResponse:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    WebhookEventsResponseV2:
+      description: A paged list of webhook events (V2 format)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WebhookEventsListV2'
+    TooManyRequestsResponse:
+      description: HTTP call rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
+    ErrorString:
+      type: string
+      maxLength: 255
     WebhookEvent:
       type: object
       required:
@@ -288,24 +268,77 @@ components:
         body:
           type: object
           description: Event-specific payload data
-    WebhookEventsListV2:
+    WebhookEventTypesList:
       type: object
       required:
       - data
-      - meta
       properties:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/WebhookEvent'
-          description: List of webhook events
-        meta:
-          type: object
-          required:
-          - page
-          properties:
-            page:
-              $ref: '#/components/schemas/PaginationMetaV2'
+            type: string
+          description: List of available webhook event type names
+          example:
+          - invoice_approved
+          - invoice_posted
+          - invoice_rejected
+          - invoice_updated
+          - payment_batch_processed
+          - payment_status_updated
+          - credit_status_updated
+          - purchase_order_created
+          - purchase_order_deleted
+          - purchase_order_updated
+          - vendor_created
+          - vendor_onboarding_form_completed
+          - vendor_updated
+          - ping
+    ErrorV2:
+      type: object
+      required:
+      - message
+      properties:
+        field:
+          description: 'The field that the error occurred on. This field may not always be
+
+            present.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
+        message:
+          description: A description of the error.
+          type: string
+    PaginationMetaV2:
+      type: object
+      properties:
+        cursor:
+          description: 'The cursor to the next page of data. If it is null, that means there
+
+            is no more data to fetch.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
+    Error:
+      description: 'generic error message in JSON format.  Note the ''code'' field should
+
+        match the HTTP status code of the wrapping HTTP request.
+
+        '
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          minimum: 100
+          maximum: 599
+        message:
+          $ref: '#/components/schemas/ErrorString'
     WebhookEventTypeName:
       type: string
       description: A webhook event type.
@@ -337,51 +370,24 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/WebhookEvent'
-    WebhookEventTypesList:
+    WebhookEventsListV2:
       type: object
       required:
       - data
+      - meta
       properties:
         data:
           type: array
           items:
-            type: string
-          description: List of available webhook event type names
-          example:
-          - invoice_approved
-          - invoice_posted
-          - invoice_rejected
-          - invoice_updated
-          - payment_batch_processed
-          - payment_status_updated
-          - credit_status_updated
-          - purchase_order_created
-          - purchase_order_deleted
-          - purchase_order_updated
-          - vendor_created
-          - vendor_onboarding_form_completed
-          - vendor_updated
-          - ping
-    Error:
-      description: 'generic error message in JSON format.  Note the ''code'' field should
-
-        match the HTTP status code of the wrapping HTTP request.
-
-        '
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-          minimum: 100
-          maximum: 599
-        message:
-          $ref: '#/components/schemas/ErrorString'
-    ErrorString:
-      type: string
-      maxLength: 255
+            $ref: '#/components/schemas/WebhookEvent'
+          description: List of webhook events
+        meta:
+          type: object
+          required:
+          - page
+          properties:
+            page:
+              $ref: '#/components/schemas/PaginationMetaV2'
     WebhookEventV2:
       type: object
       required:
@@ -389,35 +395,6 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/WebhookEvent'
-    PaginationMetaV2:
-      type: object
-      properties:
-        cursor:
-          description: 'The cursor to the next page of data. If it is null, that means there
-
-            is no more data to fetch.
-
-            '
-          oneOf:
-          - type: string
-          - type: 'null'
-    ErrorV2:
-      type: object
-      required:
-      - message
-      properties:
-        field:
-          description: 'The field that the error occurred on. This field may not always be
-
-            present.
-
-            '
-          oneOf:
-          - type: string
-          - type: 'null'
-        message:
-          description: A description of the error.
-          type: string
     PaginationV2:
       type: object
       properties:
@@ -429,74 +406,97 @@ components:
         cursor:
           type: string
           description: The cursor to use to get the next page of results.
-  responses:
-    WebhookEventsResponseV2:
-      description: A paged list of webhook events (V2 format)
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/WebhookEventsListV2'
-    WebhookEventResponseV2:
-      description: A single webhook event with delivery information (V2 format)
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/WebhookEventV2'
-    ErrorResponseV2:
-      description: An unexpected error has occurred. Check the body for more details.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              errors:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ErrorV2'
-    ErrorResponse:
-      description: An unexpected error has occurred. Check the body for more details.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    WebhookEventsResponse:
-      description: A paged array of webhook events
-      headers:
-        x-next:
-          $ref: '#/components/headers/NextPageToken'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/WebhookEventsList'
-    TooManyRequestsResponse:
-      description: HTTP call rate limit exceeded.
-      headers:
-        Retry-After:
-          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
-          schema:
-            type: integer
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    WebhookEventResponse:
-      description: A single webhook event.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/WebhookEvent'
-    WebhookEventTypesResponseV2:
-      description: A list of available webhook event types
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/WebhookEventTypesList'
-    ResourceNotFoundResponse:
-      description: Resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+  parameters:
+    PaginationV2:
+      name: page
+      in: query
+      schema:
+        $ref: '#/components/schemas/PaginationV2'
+    PagingCursor:
+      name: cursor
+      in: query
+      description: Which item to start from. See [Pagination](#section/Pagination) for more information.
+      required: false
+      schema:
+        type: string
+    WebhookEventTypes:
+      name: event_types
+      in: query
+      description: 'Filter events by one or more types, given as a comma-separated list
+
+        (for example `invoice_posted,invoice_approved`). Omit to return events
+
+        of every type.
+
+        '
+      required: false
+      style: form
+      explode: false
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/WebhookEventTypeName'
+    WebhookEventType:
+      name: event_type
+      in: query
+      description: 'Filter events by a single type. Omit the parameter to return events of
+
+        every type. To filter by several types at once, use `event_types`
+
+        instead.
+
+        '
+      required: false
+      schema:
+        $ref: '#/components/schemas/WebhookEventTypeName'
+    WebhookUndeliveredFilter:
+      name: undelivered
+      in: query
+      description: Filter to show only events that have not been delivered
+      required: false
+      schema:
+        type: boolean
+    OccurredAfter:
+      name: occurred_after
+      in: query
+      description: Filter events that occurred on or after this date. Required parameter. The date range between occurred_after and occurred_before cannot exceed 30 days.
+      required: true
+      schema:
+        type: string
+        format: date-time
+    OccurredBefore:
+      name: occurred_before
+      in: query
+      description: Filter events that occurred on or before this date. Required parameter. The date range between occurred_after and occurred_before cannot exceed 30 days.
+      required: true
+      schema:
+        type: string
+        format: date-time
+    CompanyId:
+      name: company_id
+      in: path
+      required: true
+      description: The ID of the company
+      schema:
+        type: string
+        format: uuid
+    PagingLimit:
+      name: limit
+      in: query
+      description: How many items to return at one time (max 100) (default 100)
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+    WebhookEventId:
+      name: event_id
+      in: path
+      required: true
+      description: The ID of the webhook event
+      schema:
+        type: string
+        format: uuid
   headers:
     NextPageToken:
       description: A link to the next page of responses

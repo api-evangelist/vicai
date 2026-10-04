@@ -240,13 +240,187 @@ paths:
           $ref: '#/components/responses/ErrorResponseV2'
 components:
   schemas:
-    ReceiptMatchV2:
+    Currency:
+      description: The ISO-4217 currency code.
+      type: string
+      format: ISO-4217
+      maxLength: 3
+      example: USD
+    BillInputV2:
       type: object
-      description: Represents a match between an invoice item and a purchase order receipt line.
+      description: Base schema for bill input data containing common properties for both create and update operations.
+      required:
+      - ref_number
+      - vendor_remote_id
+      - transaction_type
+      - remote_updated_at
+      - remote_id
+      properties:
+        account_number:
+          type:
+          - string
+          - 'null'
+          description: Vendor account number used on the bill.
+          maxLength: 255
+          example: ACC-1001
+        ref_number:
+          type: string
+          description: The reference number that appears on the bill.
+          maxLength: 255
+          example: INV-2024-001
+        vendor_remote_id:
+          type: string
+          description: The external ID of the vendor in your system.
+          maxLength: 255
+          example: vendor-123
+        transaction_type:
+          type: string
+          description: The type of transaction.
+          enum:
+          - invoice
+          - credit_note
+          example: invoice
+        remote_updated_at:
+          type: string
+          format: date-time
+          description: When the bill was last updated in your system.
+        remote_id:
+          type: string
+          description: The external ID of the bill in your system.
+          maxLength: 255
+          example: remote-123
+        issue_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: The date the bill was issued.
+          example: '2024-01-15'
+        due_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: The date the bill is due.
+          example: '2024-02-15'
+        currency:
+          type:
+          - string
+          - 'null'
+          description: The currency code the bill is in.
+          format: ISO-4217
+          maxLength: 3
+          example: USD
+        description:
+          type:
+          - string
+          - 'null'
+          description: Description of the bill.
+          maxLength: 255
+          example: Monthly service fee
+        gl_date:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: The general ledger date.
+          example: '2024-01-15'
+        language:
+          type:
+          - string
+          - 'null'
+          description: The language of the bill.
+          maxLength: 2
+          example: en
+        po_number:
+          type:
+          - string
+          - 'null'
+          deprecated: true
+          description: 'Deprecated. On `POST /v2/bills`, when
+
+            `purchase_order_numbers` is also provided, this field is
+
+            ignored at request time and the array supersedes it. New
+
+            integrations should use `purchase_order_numbers` (only
+
+            accepted on create — see `CreateBillV2`). On read, this
+
+            field continues to echo the first element of the array for
+
+            backward compatibility.
+
+            '
+          maxLength: 255
+          example: PO-2024-001
+        service_period_start:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: Start of the service period for the bill.
+          example: '2024-01-01'
+        service_period_end:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: End of the service period for the bill.
+          example: '2024-01-31'
+        total_amount:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          description: The total amount of the bill including taxes.
+          example: '120.00'
+        total_vat_amount:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          description: The total VAT amount of the bill.
+          example: '20.00'
+        payment_term_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          description: The id of the Payment Term to use.
+          example: 550e8400-e29b-41d4-a716-446655440000
+        payment_info:
+          oneOf:
+          - $ref: '#/components/schemas/InvoicePaymentInputV2'
+          - type: 'null'
+        credit_account:
+          oneOf:
+          - $ref: '#/components/schemas/CreditAccountInputV2'
+          - type: 'null'
+        line_items:
+          type: array
+          description: Line items for the bill.
+          items:
+            $ref: '#/components/schemas/BillLineItemInputV2'
+          default: []
+        bol_numbers:
+          type: array
+          description: Bill of Lading (BOL) numbers associated with the bill.
+          items:
+            $ref: '#/components/schemas/BillOfLadingNumberV2'
+          default: []
+        fields:
+          type: array
+          description: Custom invoice fields configured on the company.
+          items:
+            $ref: '#/components/schemas/InvoiceFieldInput'
+    MatchItemV2:
+      type: object
+      description: Represents a match between an invoice item and a purchase order item.
       properties:
         invoice_item:
           type: object
-          description: The invoice item in this receipt match.
+          description: The invoice item in this match.
           properties:
             id:
               type: string
@@ -259,59 +433,219 @@ components:
               example: '12345'
         purchase_order_item:
           type: object
-          description: The purchase order item in this receipt match.
+          description: The purchase order item in this match.
           properties:
             id:
               type: string
               format: uuid
               description: The UUID of the purchase order item.
               example: 550e8400-e29b-41d4-a716-446655440001
-        receipt_line:
-          type: object
-          description: The receipt line in this receipt match.
-          properties:
-            id:
+            line_number:
               type: string
-              format: uuid
-              description: The UUID of the receipt line.
-              example: 550e8400-e29b-41d4-a716-446655440002
+              format: integer
+              description: The line nubmer of the purchase order item.
+              example: '1'
+            product_number:
+              type:
+              - string
+              - 'null'
+              description: The matched purchase order line product number (the human-readable item identifier, also shown as "Item ID" in the Vic.ai UI).
+              example: 6512-41473
         quantity_matched:
           type:
           - string
           - 'null'
           format: decimal
-          description: The quantity matched between the invoice and receipt line.
+          description: The quantity matched between the invoice and purchase order items.
           example: '10.50'
         amount_matched:
           type:
           - string
           - 'null'
           format: decimal
-          description: The amount matched between the invoice and receipt line.
+          description: The amount matched between the invoice and purchase order items.
           example: '105.00'
-    MonetaryValue:
-      description: 'The monetary value as a string.
+    ErrorString:
+      type: string
+      maxLength: 255
+    BillLineItemChildV2:
+      type: object
+      description: 'A child line item within a grouped bill line item. Contains a subset
 
-        A float **should not** be used. The api will accept a float and it will be
-
-        transformed into a monetary value, but for best results please use a string
-
-        with the proper decimal precision.
+        of fields from the original line item before merging.
 
         '
-      type: string
-      format: decimal
-      example: '1.00'
-    CsvReportDownload:
-      type: object
-      required:
-      - signedUrl
       properties:
-        signedUrl:
-          type: string
-          format: uri
-          description: A URL for downloading the CSV file
-          example: https://example.com/report.csv
+        id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          description: The UUID of the line item.
+        index:
+          type:
+          - integer
+          - 'null'
+          description: The original index of this line item in the bill.
+        description:
+          type:
+          - string
+          - 'null'
+          description: The line item description.
+        number:
+          type:
+          - string
+          - 'null'
+          description: The item number.
+        quantity_invoiced:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          description: The quantity invoiced for this line item.
+        unit_price:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          description: The unit price.
+        amount_tax:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          description: The tax amount.
+        amount_net:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          description: The net amount.
+        amount_sum:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          description: The total sum amount.
+        amount_vat:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          description: The VAT amount.
+        amount_freight:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          description: The freight amount.
+        tax_code:
+          type: object
+          description: 'Tax code information for this child line item. Each grouped child
+
+            retains its own tax code, which may differ from the merged parent
+
+            line item.
+
+            '
+          properties:
+            id:
+              type:
+              - string
+              - 'null'
+              format: uuid
+              description: The tax code's internal ID.
+            code:
+              type:
+              - string
+              - 'null'
+              description: The tax code.
+            description:
+              type:
+              - string
+              - 'null'
+              description: The tax code description.
+            rate:
+              type:
+              - string
+              - 'null'
+              format: decimal
+              description: The tax rate.
+        vat_code:
+          type: object
+          description: 'VAT code information for this child line item, retained from the
+
+            original line item before merging.
+
+            '
+          properties:
+            id:
+              type:
+              - string
+              - 'null'
+              format: uuid
+              description: The VAT code's internal ID.
+            remote_id:
+              type:
+              - string
+              - 'null'
+              description: The VAT code's external ID.
+            code:
+              type:
+              - string
+              - 'null'
+              description: The VAT code.
+              example: '25'
+            rate:
+              type:
+              - string
+              - 'null'
+              format: decimal
+              description: The VAT rate as a percentage.
+              example: '0.25'
+            description:
+              type:
+              - string
+              - 'null'
+              description: The VAT code description.
+    InvoicePaymentInputV2:
+      type: object
+      description: Payment information for the bill.
+      properties:
+        bank_account_number:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        bankgiro:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        plusgiro:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        bban:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        default_method:
+          type:
+          - string
+          - 'null'
+          enum:
+          - bank_account
+          - bankgiro
+          - plusgiro
+          - iban
+          - bban
+        international_bank_account:
+          oneOf:
+          - $ref: '#/components/schemas/InternationalBankAccountInputV2'
+          - type: 'null'
     CsvReport:
       type: object
       required:
@@ -335,6 +669,191 @@ components:
 
             '
           example: READY
+    CreditAccountInputV2:
+      type: object
+      description: Credit account lookup information.
+      properties:
+        kid:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+          description: Payment reference (KID).
+        credit_account_remote_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        credit_account_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+    CsvReportsList:
+      type: object
+      required:
+      - reports
+      properties:
+        reports:
+          type: array
+          items:
+            $ref: '#/components/schemas/CsvReport'
+          description: List of all available CSV reports with their current status
+    PaymentMethod:
+      type: string
+      enum:
+      - ach
+      - card
+      - check
+      - wire
+    BillLineItemInputV2:
+      type: object
+      description: Input schema for a bill line item.
+      required:
+      - amount
+      properties:
+        index:
+          type:
+          - integer
+          - 'null'
+          description: The line item index/position.
+          example: 1
+        amount:
+          type: string
+          format: decimal
+          description: The amount for this line item.
+          example: '100.00'
+        amount_tax:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          description: The VAT or tax amount for this line item.
+          example: '20.00'
+        unit_price:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          description: Price per unit for this line item.
+          example: '20.00'
+        tax_code_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          description: The tax code identifier for this line item.
+          example: 550e8400-e29b-41d4-a716-446655440000
+        comment:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+          description: An internal comment for this line item.
+          example: Some internal note
+        description:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+          description: A description of the line item.
+          example: Office supplies
+        billable:
+          type:
+          - boolean
+          - 'null'
+          description: Whether this line item is billable.
+          default: false
+        cost_account_remote_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+          description: The external id of the cost account associated with this line item.
+          example: EXT-4000
+        quantity_invoiced:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          description: The quantity invoiced for this line item.
+          example: '5.0'
+        line_item_is_vat_only:
+          type:
+          - boolean
+          - 'null'
+          description: Whether this line item is a VAT-only line.
+          default: false
+        number:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+          description: Line item number or SKU.
+          example: ITEM-001
+        line_type:
+          type:
+          - string
+          - 'null'
+          description: The type of line item.
+          enum:
+          - item
+          - expense
+          example: expense
+        accrual:
+          oneOf:
+          - $ref: '#/components/schemas/AccrualV2'
+          - type: 'null'
+        vat_info:
+          oneOf:
+          - $ref: '#/components/schemas/InvoiceLineItemVatInfoV2'
+          - type: 'null'
+        dimensions:
+          type: array
+          description: Dimensions to attach to this line item.
+          items:
+            $ref: '#/components/schemas/ReferenceDimensionV2'
+          default: []
+    CreateBillV2:
+      description: Schema for creating a new imported bill.
+      allOf:
+      - $ref: '#/components/schemas/BillInputV2'
+      - type: object
+        properties:
+          purchase_order_numbers:
+            type: array
+            items:
+              type: string
+              maxLength: 255
+            maxItems: 50
+            description: 'List of purchase order numbers associated with the bill.
+
+              Only accepted on create — sending this field on
+
+              `PUT /v2/bills/{id}` is silently ignored (multi-PO
+
+              update support is tracked separately). When supplied
+
+              (including as an empty array `[]`), this field supersedes
+
+              `po_number`. An empty array means "no PO association".
+
+              Duplicates are silently deduplicated. Per-element length
+
+              cannot exceed 255 characters; the array cannot exceed
+
+              50 items.
+
+              '
+            example:
+            - PO-1001
+            - PO-1002
+    InvoiceExternalPaymentStatus:
+      type: string
+      enum:
+      - paid
+      - unpaid
+      - voided
     BillV2:
       type: object
       description: Schema for a bill response containing complete bill information including line items and payment details.
@@ -818,16 +1337,251 @@ components:
           format: date-time
           description: When the bill was last updated in Vic.ai.
           example: '2024-01-15T10:30:00Z'
-    CsvReportsList:
+    InternationalBankAccountInputV2:
+      type: object
+      description: International bank account information.
+      properties:
+        iban:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        bic:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+    InvoiceUiStatus:
+      type: string
+      description: 'The invoice''s processing status as shown in the Vic.ai interface.
+
+        '
+      enum:
+      - duplicate
+      - export_failed
+      - export_in_progress
+      - exported
+      - missing_fields
+      - missing_item_fields
+      - post_failed
+      - post_in_progress
+      - posted
+      - posted_partial
+      - predicted_total_error
+      - reviewed
+      - submit_failed
+      - submit_in_progress
+      - submitted
+      - transfer_failed
+      - transfer_in_progress
+      - transferred
+      - unreviewed
+    ErrorV2:
       type: object
       required:
-      - reports
+      - message
       properties:
-        reports:
-          type: array
-          items:
-            $ref: '#/components/schemas/CsvReport'
-          description: List of all available CSV reports with their current status
+        field:
+          description: 'The field that the error occurred on. This field may not always be
+
+            present.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
+        message:
+          description: A description of the error.
+          type: string
+    UpdateBillV2:
+      description: Schema for updating an existing imported bill.
+      allOf:
+      - $ref: '#/components/schemas/BillInputV2'
+    ReceiptMatchV2:
+      type: object
+      description: Represents a match between an invoice item and a purchase order receipt line.
+      properties:
+        invoice_item:
+          type: object
+          description: The invoice item in this receipt match.
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: The UUID of the invoice item.
+              example: 550e8400-e29b-41d4-a716-446655440000
+            legacy_id:
+              type: string
+              description: The legacy ID of the invoice item.
+              example: '12345'
+        purchase_order_item:
+          type: object
+          description: The purchase order item in this receipt match.
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: The UUID of the purchase order item.
+              example: 550e8400-e29b-41d4-a716-446655440001
+        receipt_line:
+          type: object
+          description: The receipt line in this receipt match.
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: The UUID of the receipt line.
+              example: 550e8400-e29b-41d4-a716-446655440002
+        quantity_matched:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          description: The quantity matched between the invoice and receipt line.
+          example: '10.50'
+        amount_matched:
+          type:
+          - string
+          - 'null'
+          format: decimal
+          description: The amount matched between the invoice and receipt line.
+          example: '105.00'
+    InvoiceLineItemVatInfoV2:
+      type: object
+      description: VAT/tax details for a line item.
+      properties:
+        vat_code:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        vat_code_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        vat_amount:
+          type:
+          - string
+          - 'null'
+          format: decimal
+        vat_rate:
+          type:
+          - string
+          - 'null'
+          format: decimal
+    AccrualV2:
+      type: object
+      description: Accrual period configuration.
+      required:
+      - start
+      - count
+      - unit
+      properties:
+        start:
+          type: string
+          format: date
+          description: Accrual start date.
+          example: '2024-01-01'
+        count:
+          type: integer
+          description: Number of periods to spread over.
+          example: 12
+        unit:
+          type: string
+          enum:
+          - MONTHS
+          description: Time unit for accrual periods.
+          example: MONTHS
+    CostAccountV2:
+      type: object
+      description: Cost account information including identification, naming, and external system references.
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          description: The UUID of the cost account.
+          example: 550e8400-e29b-41d4-a716-446655440000
+        legacy_id:
+          type:
+          - string
+          - 'null'
+          description: The cost account's internal ID. This is a legacy field and will be removed in the future.
+          example: '12345'
+        name:
+          type:
+          - string
+          - 'null'
+          description: The cost account's name.
+          example: Office Expenses
+        number:
+          type:
+          - string
+          - 'null'
+          description: The cost account's number.
+          example: '6100'
+        remote_id:
+          type:
+          - string
+          - 'null'
+          description: The cost account's external ID.
+          example: ext-cost-123
+        sub_type:
+          type:
+          - string
+          - 'null'
+          description: The cost account's subtype.
+          example: expense
+        remote_updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When the cost account was last updated in the external system.
+          example: '2024-01-15T10:30:00Z'
+    Error:
+      description: 'generic error message in JSON format.  Note the ''code'' field should
+
+        match the HTTP status code of the wrapping HTTP request.
+
+        '
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          minimum: 100
+          maximum: 599
+        message:
+          $ref: '#/components/schemas/ErrorString'
+    ReferenceDimensionV2:
+      type: object
+      description: Reference to an existing dimension using various lookup methods.
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          description: Internal dimension id.
+        remote_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        type_remote_id:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        name:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
     BillLineItemV2:
       type: object
       description: Schema for a bill line item containing item details, cost accounting, and tax information.
@@ -1094,816 +1848,19 @@ components:
             Null when bill is not document-level matched.
 
             '
-    PaymentMethod:
-      type: string
-      enum:
-      - ach
-      - card
-      - check
-      - wire
-    BillLineItemInputV2:
-      type: object
-      description: Input schema for a bill line item.
-      required:
-      - amount
-      properties:
-        index:
-          type:
-          - integer
-          - 'null'
-          description: The line item index/position.
-          example: 1
-        amount:
-          type: string
-          format: decimal
-          description: The amount for this line item.
-          example: '100.00'
-        amount_tax:
-          type:
-          - string
-          - 'null'
-          format: decimal
-          description: The VAT or tax amount for this line item.
-          example: '20.00'
-        unit_price:
-          type:
-          - string
-          - 'null'
-          format: decimal
-          description: Price per unit for this line item.
-          example: '20.00'
-        tax_code_id:
-          type:
-          - string
-          - 'null'
-          format: uuid
-          description: The tax code identifier for this line item.
-          example: 550e8400-e29b-41d4-a716-446655440000
-        comment:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-          description: An internal comment for this line item.
-          example: Some internal note
-        description:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-          description: A description of the line item.
-          example: Office supplies
-        billable:
-          type:
-          - boolean
-          - 'null'
-          description: Whether this line item is billable.
-          default: false
-        cost_account_remote_id:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-          description: The external id of the cost account associated with this line item.
-          example: EXT-4000
-        quantity_invoiced:
-          type:
-          - string
-          - 'null'
-          format: decimal
-          description: The quantity invoiced for this line item.
-          example: '5.0'
-        line_item_is_vat_only:
-          type:
-          - boolean
-          - 'null'
-          description: Whether this line item is a VAT-only line.
-          default: false
-        number:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-          description: Line item number or SKU.
-          example: ITEM-001
-        line_type:
-          type:
-          - string
-          - 'null'
-          description: The type of line item.
-          enum:
-          - item
-          - expense
-          example: expense
-        accrual:
-          oneOf:
-          - $ref: '#/components/schemas/AccrualV2'
-          - type: 'null'
-        vat_info:
-          oneOf:
-          - $ref: '#/components/schemas/InvoiceLineItemVatInfoV2'
-          - type: 'null'
-        dimensions:
-          type: array
-          description: Dimensions to attach to this line item.
-          items:
-            $ref: '#/components/schemas/ReferenceDimensionV2'
-          default: []
-    CreditAccountInputV2:
-      type: object
-      description: Credit account lookup information.
-      properties:
-        kid:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-          description: Payment reference (KID).
-        credit_account_remote_id:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-        credit_account_id:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-    Error:
-      description: 'generic error message in JSON format.  Note the ''code'' field should
+    MonetaryValue:
+      description: 'The monetary value as a string.
 
-        match the HTTP status code of the wrapping HTTP request.
+        A float **should not** be used. The api will accept a float and it will be
+
+        transformed into a monetary value, but for best results please use a string
+
+        with the proper decimal precision.
 
         '
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-          minimum: 100
-          maximum: 599
-        message:
-          $ref: '#/components/schemas/ErrorString'
-    BillLineItemChildV2:
-      type: object
-      description: 'A child line item within a grouped bill line item. Contains a subset
-
-        of fields from the original line item before merging.
-
-        '
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-          format: uuid
-          description: The UUID of the line item.
-        index:
-          type:
-          - integer
-          - 'null'
-          description: The original index of this line item in the bill.
-        description:
-          type:
-          - string
-          - 'null'
-          description: The line item description.
-        number:
-          type:
-          - string
-          - 'null'
-          description: The item number.
-        quantity_invoiced:
-          type:
-          - string
-          - 'null'
-          format: decimal
-          description: The quantity invoiced for this line item.
-        unit_price:
-          type:
-          - string
-          - 'null'
-          format: decimal
-          description: The unit price.
-        amount_tax:
-          type:
-          - string
-          - 'null'
-          format: decimal
-          description: The tax amount.
-        amount_net:
-          type:
-          - string
-          - 'null'
-          format: decimal
-          description: The net amount.
-        amount_sum:
-          type:
-          - string
-          - 'null'
-          format: decimal
-          description: The total sum amount.
-        amount_vat:
-          type:
-          - string
-          - 'null'
-          format: decimal
-          description: The VAT amount.
-        amount_freight:
-          type:
-          - string
-          - 'null'
-          format: decimal
-          description: The freight amount.
-        tax_code:
-          type: object
-          description: 'Tax code information for this child line item. Each grouped child
-
-            retains its own tax code, which may differ from the merged parent
-
-            line item.
-
-            '
-          properties:
-            id:
-              type:
-              - string
-              - 'null'
-              format: uuid
-              description: The tax code's internal ID.
-            code:
-              type:
-              - string
-              - 'null'
-              description: The tax code.
-            description:
-              type:
-              - string
-              - 'null'
-              description: The tax code description.
-            rate:
-              type:
-              - string
-              - 'null'
-              format: decimal
-              description: The tax rate.
-        vat_code:
-          type: object
-          description: 'VAT code information for this child line item, retained from the
-
-            original line item before merging.
-
-            '
-          properties:
-            id:
-              type:
-              - string
-              - 'null'
-              format: uuid
-              description: The VAT code's internal ID.
-            remote_id:
-              type:
-              - string
-              - 'null'
-              description: The VAT code's external ID.
-            code:
-              type:
-              - string
-              - 'null'
-              description: The VAT code.
-              example: '25'
-            rate:
-              type:
-              - string
-              - 'null'
-              format: decimal
-              description: The VAT rate as a percentage.
-              example: '0.25'
-            description:
-              type:
-              - string
-              - 'null'
-              description: The VAT code description.
-    CreateCsvReports:
-      type: object
-      properties:
-        reportStartAt:
-          type: string
-          format: date-time
-          description: 'Optional filter for the report data (ISO 8601 format).
-
-            If not provided (default 60 days ago at the start of the day).
-
-            '
-          example: '2024-01-01T00:00:00Z'
-        reportEndAt:
-          type: string
-          format: date-time
-          description: 'Optional end date for the report data (ISO 8601 format).
-
-            If not provided, all data up to the current date will be included.
-
-            '
-          example: '2026-12-31T23:59:59Z'
-    Currency:
-      description: The ISO-4217 currency code.
       type: string
-      format: ISO-4217
-      maxLength: 3
-      example: USD
-    InvoicePaymentInputV2:
-      type: object
-      description: Payment information for the bill.
-      properties:
-        bank_account_number:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-        bankgiro:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-        plusgiro:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-        bban:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-        default_method:
-          type:
-          - string
-          - 'null'
-          enum:
-          - bank_account
-          - bankgiro
-          - plusgiro
-          - iban
-          - bban
-        international_bank_account:
-          oneOf:
-          - $ref: '#/components/schemas/InternationalBankAccountInputV2'
-          - type: 'null'
-    InvoiceLineItemVatInfoV2:
-      type: object
-      description: VAT/tax details for a line item.
-      properties:
-        vat_code:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-        vat_code_id:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-        vat_amount:
-          type:
-          - string
-          - 'null'
-          format: decimal
-        vat_rate:
-          type:
-          - string
-          - 'null'
-          format: decimal
-    ErrorString:
-      type: string
-      maxLength: 255
-    CreateBillV2:
-      description: Schema for creating a new imported bill.
-      allOf:
-      - $ref: '#/components/schemas/BillInputV2'
-      - type: object
-        properties:
-          purchase_order_numbers:
-            type: array
-            items:
-              type: string
-              maxLength: 255
-            maxItems: 50
-            description: 'List of purchase order numbers associated with the bill.
-
-              Only accepted on create — sending this field on
-
-              `PUT /v2/bills/{id}` is silently ignored (multi-PO
-
-              update support is tracked separately). When supplied
-
-              (including as an empty array `[]`), this field supersedes
-
-              `po_number`. An empty array means "no PO association".
-
-              Duplicates are silently deduplicated. Per-element length
-
-              cannot exceed 255 characters; the array cannot exceed
-
-              50 items.
-
-              '
-            example:
-            - PO-1001
-            - PO-1002
-    BillInputV2:
-      type: object
-      description: Base schema for bill input data containing common properties for both create and update operations.
-      required:
-      - ref_number
-      - vendor_remote_id
-      - transaction_type
-      - remote_updated_at
-      - remote_id
-      properties:
-        account_number:
-          type:
-          - string
-          - 'null'
-          description: Vendor account number used on the bill.
-          maxLength: 255
-          example: ACC-1001
-        ref_number:
-          type: string
-          description: The reference number that appears on the bill.
-          maxLength: 255
-          example: INV-2024-001
-        vendor_remote_id:
-          type: string
-          description: The external ID of the vendor in your system.
-          maxLength: 255
-          example: vendor-123
-        transaction_type:
-          type: string
-          description: The type of transaction.
-          enum:
-          - invoice
-          - credit_note
-          example: invoice
-        remote_updated_at:
-          type: string
-          format: date-time
-          description: When the bill was last updated in your system.
-        remote_id:
-          type: string
-          description: The external ID of the bill in your system.
-          maxLength: 255
-          example: remote-123
-        issue_date:
-          type:
-          - string
-          - 'null'
-          format: date
-          description: The date the bill was issued.
-          example: '2024-01-15'
-        due_date:
-          type:
-          - string
-          - 'null'
-          format: date
-          description: The date the bill is due.
-          example: '2024-02-15'
-        currency:
-          type:
-          - string
-          - 'null'
-          description: The currency code the bill is in.
-          format: ISO-4217
-          maxLength: 3
-          example: USD
-        description:
-          type:
-          - string
-          - 'null'
-          description: Description of the bill.
-          maxLength: 255
-          example: Monthly service fee
-        gl_date:
-          type:
-          - string
-          - 'null'
-          format: date
-          description: The general ledger date.
-          example: '2024-01-15'
-        language:
-          type:
-          - string
-          - 'null'
-          description: The language of the bill.
-          maxLength: 2
-          example: en
-        po_number:
-          type:
-          - string
-          - 'null'
-          deprecated: true
-          description: 'Deprecated. On `POST /v2/bills`, when
-
-            `purchase_order_numbers` is also provided, this field is
-
-            ignored at request time and the array supersedes it. New
-
-            integrations should use `purchase_order_numbers` (only
-
-            accepted on create — see `CreateBillV2`). On read, this
-
-            field continues to echo the first element of the array for
-
-            backward compatibility.
-
-            '
-          maxLength: 255
-          example: PO-2024-001
-        service_period_start:
-          type:
-          - string
-          - 'null'
-          format: date
-          description: Start of the service period for the bill.
-          example: '2024-01-01'
-        service_period_end:
-          type:
-          - string
-          - 'null'
-          format: date
-          description: End of the service period for the bill.
-          example: '2024-01-31'
-        total_amount:
-          type:
-          - string
-          - 'null'
-          format: decimal
-          description: The total amount of the bill including taxes.
-          example: '120.00'
-        total_vat_amount:
-          type:
-          - string
-          - 'null'
-          format: decimal
-          description: The total VAT amount of the bill.
-          example: '20.00'
-        payment_term_id:
-          type:
-          - string
-          - 'null'
-          format: uuid
-          description: The id of the Payment Term to use.
-          example: 550e8400-e29b-41d4-a716-446655440000
-        payment_info:
-          oneOf:
-          - $ref: '#/components/schemas/InvoicePaymentInputV2'
-          - type: 'null'
-        credit_account:
-          oneOf:
-          - $ref: '#/components/schemas/CreditAccountInputV2'
-          - type: 'null'
-        line_items:
-          type: array
-          description: Line items for the bill.
-          items:
-            $ref: '#/components/schemas/BillLineItemInputV2'
-          default: []
-        bol_numbers:
-          type: array
-          description: Bill of Lading (BOL) numbers associated with the bill.
-          items:
-            $ref: '#/components/schemas/BillOfLadingNumberV2'
-          default: []
-        fields:
-          type: array
-          description: Custom invoice fields configured on the company.
-          items:
-            $ref: '#/components/schemas/InvoiceFieldInput'
-    InternationalBankAccountInputV2:
-      type: object
-      description: International bank account information.
-      properties:
-        iban:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-        bic:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-    InvoiceUiStatus:
-      type: string
-      description: 'The invoice''s processing status as shown in the Vic.ai interface.
-
-        '
-      enum:
-      - duplicate
-      - export_failed
-      - export_in_progress
-      - exported
-      - missing_fields
-      - missing_item_fields
-      - post_failed
-      - post_in_progress
-      - posted
-      - posted_partial
-      - predicted_total_error
-      - reviewed
-      - submit_failed
-      - submit_in_progress
-      - submitted
-      - transfer_failed
-      - transfer_in_progress
-      - transferred
-      - unreviewed
-    UpdateBillV2:
-      description: Schema for updating an existing imported bill.
-      allOf:
-      - $ref: '#/components/schemas/BillInputV2'
-    BillOfLadingNumberV2:
-      description: The bill of lading number.
-      type: object
-      required:
-      - bol_number
-      properties:
-        bol_number:
-          type: string
-          description: Bill of Lading number.
-          minLength: 1
-          maxLength: 255
-          example: BOL-123456
-    ReferenceDimensionV2:
-      type: object
-      description: Reference to an existing dimension using various lookup methods.
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-          description: Internal dimension id.
-        remote_id:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-        type_remote_id:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-        name:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-    AccrualV2:
-      type: object
-      description: Accrual period configuration.
-      required:
-      - start
-      - count
-      - unit
-      properties:
-        start:
-          type: string
-          format: date
-          description: Accrual start date.
-          example: '2024-01-01'
-        count:
-          type: integer
-          description: Number of periods to spread over.
-          example: 12
-        unit:
-          type: string
-          enum:
-          - MONTHS
-          description: Time unit for accrual periods.
-          example: MONTHS
-    MatchItemV2:
-      type: object
-      description: Represents a match between an invoice item and a purchase order item.
-      properties:
-        invoice_item:
-          type: object
-          description: The invoice item in this match.
-          properties:
-            id:
-              type: string
-              format: uuid
-              description: The UUID of the invoice item.
-              example: 550e8400-e29b-41d4-a716-446655440000
-            legacy_id:
-              type: string
-              description: The legacy ID of the invoice item.
-              example: '12345'
-        purchase_order_item:
-          type: object
-          description: The purchase order item in this match.
-          properties:
-            id:
-              type: string
-              format: uuid
-              description: The UUID of the purchase order item.
-              example: 550e8400-e29b-41d4-a716-446655440001
-            line_number:
-              type: string
-              format: integer
-              description: The line nubmer of the purchase order item.
-              example: '1'
-            product_number:
-              type:
-              - string
-              - 'null'
-              description: The matched purchase order line product number (the human-readable item identifier, also shown as "Item ID" in the Vic.ai UI).
-              example: 6512-41473
-        quantity_matched:
-          type:
-          - string
-          - 'null'
-          format: decimal
-          description: The quantity matched between the invoice and purchase order items.
-          example: '10.50'
-        amount_matched:
-          type:
-          - string
-          - 'null'
-          format: decimal
-          description: The amount matched between the invoice and purchase order items.
-          example: '105.00'
-    CostAccountV2:
-      type: object
-      description: Cost account information including identification, naming, and external system references.
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-          format: uuid
-          description: The UUID of the cost account.
-          example: 550e8400-e29b-41d4-a716-446655440000
-        legacy_id:
-          type:
-          - string
-          - 'null'
-          description: The cost account's internal ID. This is a legacy field and will be removed in the future.
-          example: '12345'
-        name:
-          type:
-          - string
-          - 'null'
-          description: The cost account's name.
-          example: Office Expenses
-        number:
-          type:
-          - string
-          - 'null'
-          description: The cost account's number.
-          example: '6100'
-        remote_id:
-          type:
-          - string
-          - 'null'
-          description: The cost account's external ID.
-          example: ext-cost-123
-        sub_type:
-          type:
-          - string
-          - 'null'
-          description: The cost account's subtype.
-          example: expense
-        remote_updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: When the cost account was last updated in the external system.
-          example: '2024-01-15T10:30:00Z'
-    ErrorV2:
-      type: object
-      required:
-      - message
-      properties:
-        field:
-          description: 'The field that the error occurred on. This field may not always be
-
-            present.
-
-            '
-          oneOf:
-          - type: string
-          - type: 'null'
-        message:
-          description: A description of the error.
-          type: string
-    InvoiceExternalPaymentStatus:
-      type: string
-      enum:
-      - paid
-      - unpaid
-      - voided
+      format: decimal
+      example: '1.00'
     InvoiceFieldInput:
       type: object
       required:
@@ -1931,6 +1888,39 @@ components:
 
             '
           example: PRJ-2024-001
+    BillOfLadingNumberV2:
+      description: The bill of lading number.
+      type: object
+      required:
+      - bol_number
+      properties:
+        bol_number:
+          type: string
+          description: Bill of Lading number.
+          minLength: 1
+          maxLength: 255
+          example: BOL-123456
+    CreateCsvReports:
+      type: object
+      properties:
+        reportStartAt:
+          type: string
+          format: date-time
+          description: 'Optional filter for the report data (ISO 8601 format).
+
+            If not provided (default 60 days ago at the start of the day).
+
+            '
+          example: '2024-01-01T00:00:00Z'
+        reportEndAt:
+          type: string
+          format: date-time
+          description: 'Optional end date for the report data (ISO 8601 format).
+
+            If not provided, all data up to the current date will be included.
+
+            '
+          example: '2026-12-31T23:59:59Z'
     SparseVendorV2:
       type: object
       description: A minimal vendor representation containing basic identification and contact information.
@@ -1962,6 +1952,16 @@ components:
           - 'null'
           description: The vendor's organization number.
           example: '987654321'
+    CsvReportDownload:
+      type: object
+      required:
+      - signedUrl
+      properties:
+        signedUrl:
+          type: string
+          format: uri
+          description: A URL for downloading the CSV file
+          example: https://example.com/report.csv
   responses:
     BadRequestResponse:
       description: The request was malformed or invalid.
@@ -1969,6 +1969,19 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    ResourceNotFoundResponse:
+      description: Resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    CsvReportDownloadResponse:
+      description: Redirect to the CSV file download URL.
+      headers:
+        location:
+          description: The signed URL for downloading the CSV file
+          schema:
+            $ref: '#/components/schemas/CsvReportDownload'
     ForbiddenResponse:
       description: The request was forbidden.
       content:
@@ -1986,6 +1999,12 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/ErrorV2'
+    CsvReportsListResponse:
+      description: List of all CSV reports with their current status.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CsvReportsList'
     ErrorResponse:
       description: An unexpected error has occurred. Check the body for more details.
       content:
@@ -2001,12 +2020,15 @@ components:
             properties:
               data:
                 $ref: '#/components/schemas/BillV2'
-    CsvReportsListResponse:
-      description: List of all CSV reports with their current status.
+    CreateBillResponseV2:
+      description: Bill was created successfully.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/CsvReportsList'
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/BillV2'
     TooManyRequestsResponse:
       description: HTTP call rate limit exceeded.
       headers:
@@ -2018,46 +2040,7 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    CsvReportDownloadResponse:
-      description: Redirect to the CSV file download URL.
-      headers:
-        location:
-          description: The signed URL for downloading the CSV file
-          schema:
-            $ref: '#/components/schemas/CsvReportDownload'
-    CreateBillResponseV2:
-      description: Bill was created successfully.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              data:
-                $ref: '#/components/schemas/BillV2'
-    ResourceNotFoundResponse:
-      description: Resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   requestBodies:
-    UpdateBillRequestV2:
-      description: Update an existing imported bill.
-      required: true
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UpdateBillV2'
-        multipart/form-data:
-          schema:
-            type: object
-            allOf:
-            - $ref: '#/components/schemas/UpdateBillV2'
-            properties:
-              document:
-                type: string
-                format: binary
-                description: The bill document file (PDF, image, etc.).
     CreateBillRequestV2:
       description: Create a new imported bill.
       required: true
@@ -2070,6 +2053,23 @@ components:
             type: object
             allOf:
             - $ref: '#/components/schemas/CreateBillV2'
+            properties:
+              document:
+                type: string
+                format: binary
+                description: The bill document file (PDF, image, etc.).
+    UpdateBillRequestV2:
+      description: Update an existing imported bill.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateBillV2'
+        multipart/form-data:
+          schema:
+            type: object
+            allOf:
+            - $ref: '#/components/schemas/UpdateBillV2'
             properties:
               document:
                 type: string

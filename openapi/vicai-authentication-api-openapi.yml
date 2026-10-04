@@ -76,34 +76,20 @@ paths:
         4XX:
           $ref: '#/components/responses/ErrorResponse'
 components:
+  responses:
+    TokenCreatedResponse:
+      description: Successful access token request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetTokenResult'
+    ErrorResponse:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    GetTokenInput:
-      type: object
-      required:
-      - client_id
-      - client_secret
-      properties:
-        client_id:
-          type: string
-        client_secret:
-          type: string
-    Error:
-      description: 'generic error message in JSON format.  Note the ''code'' field should
-
-        match the HTTP status code of the wrapping HTTP request.
-
-        '
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-          minimum: 100
-          maximum: 599
-        message:
-          $ref: '#/components/schemas/ErrorString'
     ErrorString:
       type: string
       maxLength: 255
@@ -122,19 +108,33 @@ components:
           - Bearer
         expires_in:
           type: integer
-  responses:
-    ErrorResponse:
-      description: An unexpected error has occurred. Check the body for more details.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    TokenCreatedResponse:
-      description: Successful access token request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/GetTokenResult'
+    Error:
+      description: 'generic error message in JSON format.  Note the ''code'' field should
+
+        match the HTTP status code of the wrapping HTTP request.
+
+        '
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          minimum: 100
+          maximum: 599
+        message:
+          $ref: '#/components/schemas/ErrorString'
+    GetTokenInput:
+      type: object
+      required:
+      - client_id
+      - client_secret
+      properties:
+        client_id:
+          type: string
+        client_secret:
+          type: string
   securitySchemes:
     BearerAuth:
       type: http

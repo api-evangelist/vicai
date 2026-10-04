@@ -164,86 +164,19 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/CreatePaymentTerm'
-  responses:
-    SynchronizePaymentTermsResponse:
-      description: 'A request to synchronize the payment terms was acknowledged and is in
-
-        the process of being ran.
-
-        '
-    PaymentTermDeletedResponse:
-      description: Payment term was successfully deleted.
-    ForbiddenResponse:
-      description: The request was forbidden.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    ErrorResponse:
-      description: An unexpected error has occurred. Check the body for more details.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    TooManyRequestsResponse:
-      description: HTTP call rate limit exceeded.
-      headers:
-        Retry-After:
-          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
-          schema:
-            type: integer
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    PaymentTermListResponse:
-      description: A list of payment terms.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/PaymentTerm'
-    PaymentTermResponse:
-      description: A single payment term.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/PaymentTerm'
-    ResourceNotFoundResponse:
-      description: Resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    UnprocessableEntityResponse:
-      description: Errors with the input are present.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-  parameters:
-    UseSystemDefaultInternal:
-      name: useSystem
-      in: query
-      description: 'Which system to use for id or updatedAt filters.
-
-        '
-      required: false
-      schema:
-        type: string
-        enum:
-        - INTERNAL
-        - EXTERNAL
-        - internal
-        - external
-        default: INTERNAL
-    PathId:
-      name: id
-      in: path
-      required: true
-      description: The id of the database entry
-      schema:
-        type: string
   schemas:
+    ExternalId:
+      description: 'The external id set by the ERP system. It does not have to be a UUID and
+
+        can be any non empty string desired.
+
+        '
+      type: string
+      example: 21b31bc7-1267-4335-893c-d7fe4706a238
+      maxLength: 255
+    ErrorString:
+      type: string
+      maxLength: 255
     UpdatePaymentTerm:
       type: object
       required:
@@ -340,94 +273,6 @@ components:
         * `from_issue_date_extending_to_end_of_month` - The due or discount date is set to the end of the month after adding `daysToPay` or `discountDays` to the invoice issue date.
 
         '
-    CreatePaymentTerm:
-      type: object
-      required:
-      - name
-      - daysToPay
-      properties:
-        name:
-          oneOf:
-          - type: string
-            maxLength: 255
-            description: The name of the payment term
-          - type: 'null'
-        daysToPay:
-          type: integer
-          minimum: 0
-          description: The number of days the invoice should be paid in.
-        daysToPayCondition:
-          oneOf:
-          - $ref: '#/components/schemas/PaymentTermCondition'
-          - type: 'null'
-          description: These options are used in conjunction with `daysToPay` to calculate the due date.
-          default: issue_date
-        description:
-          oneOf:
-          - type: string
-            maxLength: 255
-            description: A description of the payment term.
-          - type: 'null'
-        discountDays:
-          oneOf:
-          - type: integer
-            minimum: 0
-            description: 'The number of days the invoice should be paid in to get a
-
-              discount.
-
-              '
-          - type: 'null'
-        discountDaysCondition:
-          oneOf:
-          - $ref: '#/components/schemas/PaymentTermCondition'
-          - type: 'null'
-          description: 'These options are used in conjunction with `discountDays` to calculate the discount date.
-
-            '
-          default: issue_date
-        discountPercentage:
-          oneOf:
-          - type: string
-            format: decimal
-            description: 'The discount percentage if paid within the number of discount
-
-              days.
-
-              '
-            minimum: 0
-          - type: 'null'
-        externalId:
-          description: The ID of the payment term in the ERP if it has one.
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-    Error:
-      description: 'generic error message in JSON format.  Note the ''code'' field should
-
-        match the HTTP status code of the wrapping HTTP request.
-
-        '
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-          minimum: 100
-          maximum: 599
-        message:
-          $ref: '#/components/schemas/ErrorString'
-    ExternalId:
-      description: 'The external id set by the ERP system. It does not have to be a UUID and
-
-        can be any non empty string desired.
-
-        '
-      type: string
-      example: 21b31bc7-1267-4335-893c-d7fe4706a238
-      maxLength: 255
     PaymentTerm:
       type: object
       required:
@@ -491,9 +336,164 @@ components:
           oneOf:
           - $ref: '#/components/schemas/ExternalId'
           - type: 'null'
-    ErrorString:
-      type: string
-      maxLength: 255
+    Error:
+      description: 'generic error message in JSON format.  Note the ''code'' field should
+
+        match the HTTP status code of the wrapping HTTP request.
+
+        '
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          minimum: 100
+          maximum: 599
+        message:
+          $ref: '#/components/schemas/ErrorString'
+    CreatePaymentTerm:
+      type: object
+      required:
+      - name
+      - daysToPay
+      properties:
+        name:
+          oneOf:
+          - type: string
+            maxLength: 255
+            description: The name of the payment term
+          - type: 'null'
+        daysToPay:
+          type: integer
+          minimum: 0
+          description: The number of days the invoice should be paid in.
+        daysToPayCondition:
+          oneOf:
+          - $ref: '#/components/schemas/PaymentTermCondition'
+          - type: 'null'
+          description: These options are used in conjunction with `daysToPay` to calculate the due date.
+          default: issue_date
+        description:
+          oneOf:
+          - type: string
+            maxLength: 255
+            description: A description of the payment term.
+          - type: 'null'
+        discountDays:
+          oneOf:
+          - type: integer
+            minimum: 0
+            description: 'The number of days the invoice should be paid in to get a
+
+              discount.
+
+              '
+          - type: 'null'
+        discountDaysCondition:
+          oneOf:
+          - $ref: '#/components/schemas/PaymentTermCondition'
+          - type: 'null'
+          description: 'These options are used in conjunction with `discountDays` to calculate the discount date.
+
+            '
+          default: issue_date
+        discountPercentage:
+          oneOf:
+          - type: string
+            format: decimal
+            description: 'The discount percentage if paid within the number of discount
+
+              days.
+
+              '
+            minimum: 0
+          - type: 'null'
+        externalId:
+          description: The ID of the payment term in the ERP if it has one.
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+  responses:
+    ResourceNotFoundResponse:
+      description: Resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ForbiddenResponse:
+      description: The request was forbidden.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TooManyRequestsResponse:
+      description: HTTP call rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ErrorResponse:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    PaymentTermDeletedResponse:
+      description: Payment term was successfully deleted.
+    UnprocessableEntityResponse:
+      description: Errors with the input are present.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    SynchronizePaymentTermsResponse:
+      description: 'A request to synchronize the payment terms was acknowledged and is in
+
+        the process of being ran.
+
+        '
+    PaymentTermResponse:
+      description: A single payment term.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PaymentTerm'
+    PaymentTermListResponse:
+      description: A list of payment terms.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PaymentTerm'
+  parameters:
+    PathId:
+      name: id
+      in: path
+      required: true
+      description: The id of the database entry
+      schema:
+        type: string
+    UseSystemDefaultInternal:
+      name: useSystem
+      in: query
+      description: 'Which system to use for id or updatedAt filters.
+
+        '
+      required: false
+      schema:
+        type: string
+        enum:
+        - INTERNAL
+        - EXTERNAL
+        - internal
+        - external
+        default: INTERNAL
   securitySchemes:
     BearerAuth:
       type: http

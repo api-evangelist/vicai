@@ -155,29 +155,12 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   responses:
-    SynchronizePaymentTermsResponse:
-      description: 'A request to synchronize the payment terms was acknowledged and is in
+    SynchronizeVendorsResponse:
+      description: 'A request to synchronize the vendors was acknowledged and is in the
 
-        the process of being ran.
-
-        '
-    SynchronizePurchaseOrdersResponse:
-      description: 'A request to synchronize the purchase orders was acknowledged and is in
-
-        the process of being ran.
+        process of being ran.
 
         '
-    TooManyRequestsResponse:
-      description: HTTP call rate limit exceeded.
-      headers:
-        Retry-After:
-          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
-          schema:
-            type: integer
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     SynchronizeDimensionsResponse:
       description: 'A request to synchronize the Dimensions was acknowledged and is in the
 
@@ -190,25 +173,45 @@ components:
         process of being ran.
 
         '
-    ErrorResponse:
-      description: An unexpected error has occurred. Check the body for more details.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+    SynchronizePurchaseOrdersResponse:
+      description: 'A request to synchronize the purchase orders was acknowledged and is in
+
+        the process of being ran.
+
+        '
+    SynchronizePaymentTermsResponse:
+      description: 'A request to synchronize the payment terms was acknowledged and is in
+
+        the process of being ran.
+
+        '
     SynchronizeAccountsResponse:
       description: 'A request to synchronize the GL Accounts was acknowledged and is in the
 
         process of being ran.
 
         '
-    SynchronizeVendorsResponse:
-      description: 'A request to synchronize the vendors was acknowledged and is in the
-
-        process of being ran.
-
-        '
+    ErrorResponse:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TooManyRequestsResponse:
+      description: HTTP call rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
+    ErrorString:
+      type: string
+      maxLength: 255
     Error:
       description: 'generic error message in JSON format.  Note the ''code'' field should
 
@@ -226,9 +229,6 @@ components:
           maximum: 599
         message:
           $ref: '#/components/schemas/ErrorString'
-    ErrorString:
-      type: string
-      maxLength: 255
   securitySchemes:
     BearerAuth:
       type: http

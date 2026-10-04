@@ -138,15 +138,18 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   schemas:
-    VatCodes:
-      type: array
-      items:
-        $ref: '#/components/schemas/VatCode'
-    InternalId:
-      description: The internal id Vic uses for the record.
+    ExternalId:
+      description: 'The external id set by the ERP system. It does not have to be a UUID and
+
+        can be any non empty string desired.
+
+        '
       type: string
-      example: '47'
-      readOnly: true
+      example: 21b31bc7-1267-4335-893c-d7fe4706a238
+      maxLength: 255
+    ErrorString:
+      type: string
+      maxLength: 255
     VatCodeUpsert:
       type: object
       required:
@@ -189,32 +192,6 @@ components:
         vatDebitAccount:
           type: string
           maxLength: 255
-    Error:
-      description: 'generic error message in JSON format.  Note the ''code'' field should
-
-        match the HTTP status code of the wrapping HTTP request.
-
-        '
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-          minimum: 100
-          maximum: 599
-        message:
-          $ref: '#/components/schemas/ErrorString'
-    ExternalId:
-      description: 'The external id set by the ERP system. It does not have to be a UUID and
-
-        can be any non empty string desired.
-
-        '
-      type: string
-      example: 21b31bc7-1267-4335-893c-d7fe4706a238
-      maxLength: 255
     VatCode:
       type: object
       required:
@@ -266,10 +243,45 @@ components:
         vatDebitAccount:
           type: string
           maxLength: 255
-    ErrorString:
+    InternalId:
+      description: The internal id Vic uses for the record.
       type: string
-      maxLength: 255
+      example: '47'
+      readOnly: true
+    VatCodes:
+      type: array
+      items:
+        $ref: '#/components/schemas/VatCode'
+    Error:
+      description: 'generic error message in JSON format.  Note the ''code'' field should
+
+        match the HTTP status code of the wrapping HTTP request.
+
+        '
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          minimum: 100
+          maximum: 599
+        message:
+          $ref: '#/components/schemas/ErrorString'
   responses:
+    VatCodeUpsertedResponse:
+      description: Vat code upserted successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VatCode'
+    VatCodeDeletedResponse:
+      description: Vat code deleted successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VatCode'
     VatCodeResponse:
       description: A single VAT code.
       content:
@@ -282,6 +294,18 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    VatCodesResponse:
+      description: An array of VAT codes
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VatCodes'
+    SynchronizeVatCodesResponse:
+      description: 'A request to synchronize the vat codes was acknowledged and is in the
+
+        process of being ran.
+
+        '
     TooManyRequestsResponse:
       description: HTTP call rate limit exceeded.
       headers:
@@ -293,43 +317,19 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    VatCodeUpsertedResponse:
-      description: Vat code upserted successfully.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/VatCode'
-    SynchronizeVatCodesResponse:
-      description: 'A request to synchronize the vat codes was acknowledged and is in the
-
-        process of being ran.
-
-        '
-    VatCodesResponse:
-      description: An array of VAT codes
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/VatCodes'
-    VatCodeDeletedResponse:
-      description: Vat code deleted successfully.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/VatCode'
   parameters:
-    PagingCursor:
-      name: cursor
-      in: query
-      description: Which item to start from. See [Pagination](#section/Pagination) for more information.
-      required: false
-      schema:
-        type: string
     PathId:
       name: id
       in: path
       required: true
       description: The id of the database entry
+      schema:
+        type: string
+    PagingCursor:
+      name: cursor
+      in: query
+      description: Which item to start from. See [Pagination](#section/Pagination) for more information.
+      required: false
       schema:
         type: string
     SortOrder:
@@ -343,21 +343,13 @@ components:
         - ASCENDING
         - DESCENDING
         default: ASCENDING
-    UseSystemDefaultExternal:
-      name: useSystem
+    VatCodeFilter:
+      name: vatCode
       in: query
-      description: 'Which system to use for id or updatedAt filters.
-
-        '
+      description: selects the VAT code which is to be displayed
       required: false
       schema:
         type: string
-        enum:
-        - INTERNAL
-        - EXTERNAL
-        - internal
-        - external
-        default: EXTERNAL
     SinceFilter:
       name: since
       in: query
@@ -381,13 +373,21 @@ components:
         type: integer
         minimum: 1
         maximum: 100
-    VatCodeFilter:
-      name: vatCode
+    UseSystemDefaultExternal:
+      name: useSystem
       in: query
-      description: selects the VAT code which is to be displayed
+      description: 'Which system to use for id or updatedAt filters.
+
+        '
       required: false
       schema:
         type: string
+        enum:
+        - INTERNAL
+        - EXTERNAL
+        - internal
+        - external
+        default: EXTERNAL
   securitySchemes:
     BearerAuth:
       type: http
