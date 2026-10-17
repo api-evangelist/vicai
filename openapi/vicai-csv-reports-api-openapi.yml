@@ -137,18 +137,17 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   responses:
-    ForbiddenResponse:
-      description: The request was forbidden.
+    TooManyRequestsResponse:
+      description: HTTP call rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
+          schema:
+            type: integer
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    CsvReportsListResponse:
-      description: List of all CSV reports with their current status.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CsvReportsList'
     BadRequestResponse:
       description: The request was malformed or invalid.
       content:
@@ -161,6 +160,18 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    CsvReportsListResponse:
+      description: List of all CSV reports with their current status.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CsvReportsList'
+    ErrorResponse:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
     CsvReportDownloadResponse:
       description: Redirect to the CSV file download URL.
       headers:
@@ -168,24 +179,63 @@ components:
           description: The signed URL for downloading the CSV file
           schema:
             $ref: '#/components/schemas/CsvReportDownload'
-    ErrorResponse:
-      description: An unexpected error has occurred. Check the body for more details.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    TooManyRequestsResponse:
-      description: HTTP call rate limit exceeded.
-      headers:
-        Retry-After:
-          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
-          schema:
-            type: integer
+    ForbiddenResponse:
+      description: The request was forbidden.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
   schemas:
+    CsvReportsList:
+      type: object
+      required:
+      - reports
+      properties:
+        reports:
+          type: array
+          items:
+            $ref: '#/components/schemas/CsvReport'
+          description: List of all available CSV reports with their current status
+    Error:
+      description: 'generic error message in JSON format.  Note the ''code'' field should
+
+        match the HTTP status code of the wrapping HTTP request.
+
+        '
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          minimum: 100
+          maximum: 599
+        message:
+          $ref: '#/components/schemas/ErrorString'
+    CsvReport:
+      type: object
+      required:
+      - name
+      - status
+      properties:
+        name:
+          type: string
+          description: The name/identifier of the CSV report
+          example: companyUsers
+        status:
+          type: string
+          enum:
+          - READY
+          - NOT_READY
+          description: 'The current status of the report:
+
+            - `READY`: Report is available for download
+
+            - `NOT_READY`: Report is being created or creation was never initiated
+
+            '
+          example: READY
     CreateCsvReports:
       type: object
       properties:
@@ -220,56 +270,6 @@ components:
           format: uri
           description: A URL for downloading the CSV file
           example: https://example.com/report.csv
-    CsvReport:
-      type: object
-      required:
-      - name
-      - status
-      properties:
-        name:
-          type: string
-          description: The name/identifier of the CSV report
-          example: companyUsers
-        status:
-          type: string
-          enum:
-          - READY
-          - NOT_READY
-          description: 'The current status of the report:
-
-            - `READY`: Report is available for download
-
-            - `NOT_READY`: Report is being created or creation was never initiated
-
-            '
-          example: READY
-    Error:
-      description: 'generic error message in JSON format.  Note the ''code'' field should
-
-        match the HTTP status code of the wrapping HTTP request.
-
-        '
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-          minimum: 100
-          maximum: 599
-        message:
-          $ref: '#/components/schemas/ErrorString'
-    CsvReportsList:
-      type: object
-      required:
-      - reports
-      properties:
-        reports:
-          type: array
-          items:
-            $ref: '#/components/schemas/CsvReport'
-          description: List of all available CSV reports with their current status
   requestBodies:
     CreateCsvReportsRequest:
       description: Generate CSV reports with optional date filtering.

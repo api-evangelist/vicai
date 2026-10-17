@@ -204,29 +204,56 @@ paths:
         4XX:
           $ref: '#/components/responses/ErrorResponse'
 components:
+  parameters:
+    SinceFilter:
+      name: since
+      in: query
+      description: 'Datetime value for incremental updates.
+
+        **NOTE**: For external datetimes, the expected format is not in UTC. for
+
+        vic-internal datetimes (see `SinceIsExternal`) the format is UTC.
+
+        '
+      required: false
+      schema:
+        type: string
+        format: date-time
+    PagingCursor:
+      name: cursor
+      in: query
+      description: Which item to start from. See [Pagination](#section/Pagination) for more information.
+      required: false
+      schema:
+        type: string
+    PathId:
+      name: id
+      in: path
+      required: true
+      description: The id of the database entry
+      schema:
+        type: string
+    SortOrder:
+      name: sortOrder
+      in: query
+      description: what sort order should be used for queries
+      required: false
+      schema:
+        type: string
+        enum:
+        - ASCENDING
+        - DESCENDING
+        default: ASCENDING
+    PagingLimit:
+      name: limit
+      in: query
+      description: How many items to return at one time (max 100) (default 100)
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
   schemas:
-    Currency:
-      description: The ISO-4217 currency code.
-      type: string
-      format: ISO-4217
-      maxLength: 3
-      example: USD
-    Language:
-      type: string
-      maxLength: 2
-      example: en
-    BillOfLadingNumber:
-      description: The bill of lading number.
-      type: object
-      required:
-      - bolNumber
-      properties:
-        bolNumber:
-          type: string
-          description: Bill of Lading number.
-          minLength: 1
-          maxLength: 255
-          example: BOL-123456
     Dimension:
       type: object
       properties:
@@ -269,18 +296,15 @@ components:
           type: string
           format: date-time
           description: Does not have UTC normalization.
-    ExternalId:
-      description: 'The external id set by the ERP system. It does not have to be a UUID and
-
-        can be any non empty string desired.
-
-        '
+    PaymentInfoTermUnit:
       type: string
-      example: 21b31bc7-1267-4335-893c-d7fe4706a238
-      maxLength: 255
-    ErrorString:
+      description: The payment term units supported.
+      enum:
+      - DAYS
+    Language:
       type: string
-      maxLength: 255
+      maxLength: 2
+      example: en
     PaymentInfo:
       type: object
       properties:
@@ -319,259 +343,36 @@ components:
           - type: 'null'
         defaultMethod:
           $ref: '#/components/schemas/PaymentInfoMethod'
-    PaymentInfoTermUnit:
+    MonetaryValue:
+      description: 'The monetary value as a string.
+
+        A float **should not** be used. The api will accept a float and it will be
+
+        transformed into a monetary value, but for best results please use a string
+
+        with the proper decimal precision.
+
+        '
       type: string
-      description: The payment term units supported.
-      enum:
-      - DAYS
-    AccrualInfo:
-      required:
-      - start
-      - count
-      - unit
-      properties:
-        start:
-          type: string
-          format: date
-        count:
-          oneOf:
-          - type: integer
-          - type: 'null'
-          description: 'The number of units from the `start`. The system _may_ have this field as
-
-            `null` due to incomplete information or a user has cleared the information.
-
-            However, when specifying the `count` to the api, it is required to be
-
-            greater than `1`.
-
-            '
-        unit:
-          $ref: '#/components/schemas/AccrualTermUnit'
-    TrainingInvoiceLineItemUpsert:
+      format: decimal
+      example: '1.00'
+    TaxCode:
       type: object
-      required:
-      - amount
       properties:
-        index:
-          description: 'A non-negative integer indicating where the line item is in the
-
-            document. No two line items shall be allowed to have the same index.
-
-            If unspecified, it will be inferred based on its position. If
-
-            another line item has an index set, and the current line item is
-
-            left null, it will take the next highest value.
-
-            '
-          type: integer
-          minimum: 0
-        amount:
-          type: number
-          description: 'The line item total amount including all tax amounts. This is used
-
-            to calculate the predicted total amount on the invoice.
-
-            '
-        amountTax:
-          description: The line item amount tax.
-          oneOf:
-          - $ref: '#/components/schemas/MonetaryValue'
-          - type: 'null'
-        amountFreight:
-          description: The line item freight amount.
-          oneOf:
-          - $ref: '#/components/schemas/MonetaryValue'
-          - type: 'null'
+        id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          maxLength: 255
         description:
           type: string
-          description: The line item comment.
-        comment:
-          type: string
-          description: The description of the line item.
-        billable:
-          type: boolean
-          default: false
-        accrual:
-          $ref: '#/components/schemas/AccrualInfo'
-        invoiceLineItemInfo:
-          oneOf:
-          - $ref: '#/components/schemas/InvoiceLineItemInfo'
-          - type: 'null'
-        costAccountExternalId:
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-        dimensionsExternalIds:
-          description: 'This has been deprecated. Please use the `dimensions` field to
-
-            specify the dimensions to set for this line item.
-
-            '
-          deprecated: true
-          type: array
-          items:
-            $ref: '#/components/schemas/ExternalId'
-        dimensions:
-          oneOf:
-          - type: array
-            items:
-              $ref: '#/components/schemas/DimensionRef'
-          - type: 'null'
-        lineItemIsVatOnly:
-          type: boolean
-          default: false
-        lineType:
-          $ref: '#/components/schemas/InvoiceItemLineType'
-        quantityInvoiced:
-          oneOf:
-          - type: string
-            format: decimal
-          - type: 'null'
-          description: The quantity of things that were invoiced.
-        unitPrice:
-          description: The price per unit of the item.
-          oneOf:
-          - $ref: '#/components/schemas/MonetaryValue'
-          - type: 'null'
-        number:
-          description: The item number
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-        taxCodeId:
-          oneOf:
-          - type: string
-            format: uuid
-            description: ID of Tax Code to use for the line item.
-          - type: 'null'
-    MatchItem:
-      type: object
-      required:
-      - invoiceItemId
-      - purchaseOrderItemId
-      - quantityMatched
-      properties:
-        invoiceItemId:
-          type: string
-          description: The invoice item's internal id.
-        purchaseOrderItemId:
-          type: string
-          description: The purchase order item's internal id.
-        purchaseOrderItemLineNumber:
-          type: string
-          description: The purchase order item's line number.
-        productNumber:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          description: The matched purchase order line product number (the human-readable item identifier, also shown as "Item ID" in the Vic.ai UI).
-        unitOfMeasure:
-          oneOf:
-          - type: string
-            maxLength: 255
-          - type: 'null'
-          description: The matched purchase order line unit of measure.
-        amountMatched:
-          type: string
-        quantityMatched:
-          type: string
-    LineItemVat:
-      type: object
-      properties:
-        internalId:
-          oneOf:
-          - type: string
-            maxLength: 255
-            description: 'The internal id of the VAT code. If specified, it will take
-
-              precedence over the `externalId` and `code`.
-
-              '
-          - type: 'null'
-        externalId:
-          description: 'The external id of the VAT code. If specified, it will take
-
-            precedence over the `code`.
-
-            '
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-        code:
-          oneOf:
-          - type: string
-            maxLength: 255
-            description: The VAT code.
-          - type: 'null'
-        amount:
-          oneOf:
-          - $ref: '#/components/schemas/MonetaryValue'
-          - type: 'null'
-          description: 'The amount of VAT. This will be added to the line item''s total. If
-
-            the VAT amount is unknown, this should be left `NULL` or
-
-            unspecified.
-
-            '
+          maxLength: 255
+          example: Tax code description
         rate:
-          oneOf:
-          - $ref: '#/components/schemas/MonetaryValue'
-          - type: 'null'
-          description: 'The amount of VAT percentage. If the VAT percentage is unknown, this
-
-            should be left `NULL` or unspecified.
-
-            '
-    InvoiceInfoNO:
-      type: object
-      required:
-      - kid
-      properties:
-        kid:
-          deprecated: true
-          description: '**Deprecated**: The `paymentRef` on the `Invoice` should be used
-
-            instead.
-
-            The KID is a customer identification number that is mandatory for
-
-            invoices in Norway.
-
-            '
           type: string
-        creditAccountExternalId:
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-        creditAccountInternalId:
-          type: string
-    CostAccountInfo:
-      type: object
-      properties:
-        internalId:
-          oneOf:
-          - type: string
-            maxLength: 255
-            description: The cost account's internal id.
-          - type: 'null'
-        externalId:
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-        number:
-          oneOf:
-          - type: string
-            maxLength: 255
-            description: The cost account's number.
-          - type: 'null'
-    ExternalData:
-      description: A free form json object that is stored with the record.
-      type: object
+          format: decimal
+          example: '0.25'
     InternationalBankAccount:
       type: object
       properties:
@@ -585,11 +386,13 @@ components:
           - type: string
             maxLength: 255
           - type: 'null'
-    InternalId:
-      description: The internal id Vic uses for the record.
+    TrainingInvoices:
+      type: array
+      items:
+        $ref: '#/components/schemas/TrainingInvoice'
+    ErrorString:
       type: string
-      example: '47'
-      readOnly: true
+      maxLength: 255
     TrainingInvoice:
       type: object
       required:
@@ -704,297 +507,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/InvoiceField'
-    PurchaseOrderReceiptMatch:
-      type: object
-      required:
-      - invoiceItemId
-      - purchaseOrderItemId
-      - purchaseOrderReceiptLineId
-      - quantityMatched
-      properties:
-        invoiceItemId:
-          type: string
-          description: The invoice item's internal id.
-        purchaseOrderItemId:
-          type: string
-          description: The purchase order item's internal id.
-        purchaseOrderReceiptLineId:
-          type: string
-          description: The purchase order receipt line's internal id.
-        amountMatched:
-          type: string
-        quantityMatched:
-          type: string
-    TrainingInvoices:
-      type: array
-      items:
-        $ref: '#/components/schemas/TrainingInvoice'
-    TransactionType:
-      type: string
-      description: The type of invoice transaction.
-      enum:
-      - INVOICE
-      - CREDITNOTE
-      default: INVOICE
-    Error:
-      description: 'generic error message in JSON format.  Note the ''code'' field should
-
-        match the HTTP status code of the wrapping HTTP request.
-
-        '
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-          minimum: 100
-          maximum: 599
-        message:
-          $ref: '#/components/schemas/ErrorString'
-    PaymentInfoTerm:
-      type: object
-      required:
-      - count
-      - unit
-      properties:
-        count:
-          type: integer
-          minimum: 1
-        unit:
-          $ref: '#/components/schemas/PaymentInfoTermUnit'
-    DimensionRef:
-      type: object
-      description: 'A reference to a dimension within Vic.
-
-        The `internalId` takes precedence over all fields specified. If a
-
-        dimension is not found matching the `internalId` an error will be
-
-        returned.
-
-        When `externalId` is provided, it takes precedence over `name` and can
-
-        be used in combination with `typeExternalId`.
-
-        If `name` is the only field specified and more than one dimension exists
-
-        with that `name`, then an error will be returned. It can be used in
-
-        combination with `typeExternalId`.
-
-        If `typeExternalId` is specified with `externalId` or `name` and more
-
-        than one dimension exists with those fields, then an error will be
-
-        returned.
-
-        '
-      properties:
-        internalId:
-          oneOf:
-          - type: string
-            maxLength: 255
-            description: 'Vic''s id of the dimension.
-
-              Takes precedence over all other fields. Other fields are ignored if
-
-              this is specified.
-
-              '
-          - type: 'null'
-        externalId:
-          description: 'The id of the dimension in the ERP.
-
-            Takes precedence over `name`. Can be used in combination with
-
-            `typeExternalId`.
-
-            If more than one dimension is found meeting the criteria specified,
-
-            an error will be returned.
-
-            '
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-        name:
-          oneOf:
-          - type: string
-            maxLength: 255
-            description: 'The name of the dimension.
-
-              Can be used in combination with `typeExternalId`.
-
-              If more than one dimension is found meeting the criteria specified,
-
-              an error will be returned.
-
-              '
-          - type: 'null'
-        typeExternalId:
-          description: 'The type id in the ERP.
-
-            This is a supplemental field to be used with `externalId` or `name`.
-
-            '
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-    InvoiceLineItemChild:
-      type: object
-      description: 'A child line item within a grouped invoice line item. Contains a subset
-
-        of fields from the original line item before merging.
-
-        '
-      properties:
-        index:
-          type: integer
-          description: The original index of this line item in the invoice.
-        description:
-          type: string
-          description: The line item description.
-        number:
-          oneOf:
-          - type: string
-          - type: 'null'
-          description: The item number.
-        quantityInvoiced:
-          type: string
-          format: decimal
-          description: The quantity invoiced for this line item.
-        unitPrice:
-          oneOf:
-          - $ref: '#/components/schemas/MonetaryValue'
-          - type: 'null'
-          description: The unit price.
-        amountTax:
-          oneOf:
-          - $ref: '#/components/schemas/MonetaryValue'
-          - type: 'null'
-          description: The tax amount.
-        amountNet:
-          oneOf:
-          - $ref: '#/components/schemas/MonetaryValue'
-          - type: 'null'
-          description: The net amount.
-        amountSum:
-          oneOf:
-          - $ref: '#/components/schemas/MonetaryValue'
-          - type: 'null'
-          description: The total sum amount.
-        amountFreight:
-          oneOf:
-          - $ref: '#/components/schemas/MonetaryValue'
-          - type: 'null'
-          description: The freight amount.
-        internalId:
-          oneOf:
-          - $ref: '#/components/schemas/InternalId'
-          - type: 'null'
-          description: The internal ID of the line item.
-        taxCode:
-          oneOf:
-          - $ref: '#/components/schemas/TaxCode'
-          - type: 'null'
-          description: 'The tax code for this child line item. Each grouped child retains
-
-            its own tax code, which may differ from the merged parent line item.
-
-            '
-        vat:
-          oneOf:
-          - $ref: '#/components/schemas/LineItemVat'
-          - type: 'null'
-          description: 'The VAT details for this child line item, retained from the original
-
-            line item before merging.
-
-            '
-    MonetaryValue:
-      description: 'The monetary value as a string.
-
-        A float **should not** be used. The api will accept a float and it will be
-
-        transformed into a monetary value, but for best results please use a string
-
-        with the proper decimal precision.
-
-        '
-      type: string
-      format: decimal
-      example: '1.00'
-    TaxCode:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        code:
-          type: string
-          maxLength: 255
-        description:
-          type: string
-          maxLength: 255
-          example: Tax code description
-        rate:
-          type: string
-          format: decimal
-          example: '0.25'
-    PaymentInfoMethod:
-      type: string
-      description: 'The payment method to be used.
-
-        Note: `BANKACCOUNT` is equivalent to `ACH` in the Web UI.
-
-        '
-      enum:
-      - BANKACCOUNT
-      - BANKGIRO
-      - PLUSGIRO
-      - IBAN
-      - BBAN
-    AccrualTermUnit:
-      type: string
-      description: The accrual term units supported.
-      enum:
-      - MONTHS
-    InvoiceFieldInput:
-      type: object
-      required:
-      - label
-      properties:
-        label:
-          type: string
-          maxLength: 255
-          description: Field label/name.
-          example: Project Code
-        value:
-          type:
-          - string
-          - 'null'
-          maxLength: 255
-          description: 'Field value. For `text` fields any printable string is accepted.
-
-            For `select` fields the value must match one of the field''s
-
-            configured options. For `date` fields the value must be an
-
-            ISO 8601 calendar date (`YYYY-MM-DD`); empty strings clear the
-
-            stored value.
-
-            '
-          example: PRJ-2024-001
-    InvoiceItemLineType:
-      type: string
-      description: The type of invoice item line.
-      enum:
-      - item
-      - expense
-      default: expense
     TrainingInvoiceUpsert:
       type: object
       required:
@@ -1111,6 +623,224 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/InvoiceFieldInput'
+    InvoiceLineItemInfo:
+      type: object
+      properties:
+        vatCode:
+          oneOf:
+          - type: string
+          - type: 'null'
+        vatAmount:
+          oneOf:
+          - type: number
+          - type: 'null'
+        vatRate:
+          oneOf:
+          - $ref: '#/components/schemas/MonetaryValue'
+          - type: 'null'
+          description: 'The amount of VAT percentage. If the VAT percentage is unknown, this
+
+            should be left `NULL` or unspecified.
+
+            '
+    ExternalData:
+      description: A free form json object that is stored with the record.
+      type: object
+    InvoiceLineItemChild:
+      type: object
+      description: 'A child line item within a grouped invoice line item. Contains a subset
+
+        of fields from the original line item before merging.
+
+        '
+      properties:
+        index:
+          type: integer
+          description: The original index of this line item in the invoice.
+        description:
+          type: string
+          description: The line item description.
+        number:
+          oneOf:
+          - type: string
+          - type: 'null'
+          description: The item number.
+        quantityInvoiced:
+          type: string
+          format: decimal
+          description: The quantity invoiced for this line item.
+        unitPrice:
+          oneOf:
+          - $ref: '#/components/schemas/MonetaryValue'
+          - type: 'null'
+          description: The unit price.
+        amountTax:
+          oneOf:
+          - $ref: '#/components/schemas/MonetaryValue'
+          - type: 'null'
+          description: The tax amount.
+        amountNet:
+          oneOf:
+          - $ref: '#/components/schemas/MonetaryValue'
+          - type: 'null'
+          description: The net amount.
+        amountSum:
+          oneOf:
+          - $ref: '#/components/schemas/MonetaryValue'
+          - type: 'null'
+          description: The total sum amount.
+        amountFreight:
+          oneOf:
+          - $ref: '#/components/schemas/MonetaryValue'
+          - type: 'null'
+          description: The freight amount.
+        internalId:
+          oneOf:
+          - $ref: '#/components/schemas/InternalId'
+          - type: 'null'
+          description: The internal ID of the line item.
+        taxCode:
+          oneOf:
+          - $ref: '#/components/schemas/TaxCode'
+          - type: 'null'
+          description: 'The tax code for this child line item. Each grouped child retains
+
+            its own tax code, which may differ from the merged parent line item.
+
+            '
+        vat:
+          oneOf:
+          - $ref: '#/components/schemas/LineItemVat'
+          - type: 'null'
+          description: 'The VAT details for this child line item, retained from the original
+
+            line item before merging.
+
+            '
+    InternalId:
+      description: The internal id Vic uses for the record.
+      type: string
+      example: '47'
+      readOnly: true
+    MatchItem:
+      type: object
+      required:
+      - invoiceItemId
+      - purchaseOrderItemId
+      - quantityMatched
+      properties:
+        invoiceItemId:
+          type: string
+          description: The invoice item's internal id.
+        purchaseOrderItemId:
+          type: string
+          description: The purchase order item's internal id.
+        purchaseOrderItemLineNumber:
+          type: string
+          description: The purchase order item's line number.
+        productNumber:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          description: The matched purchase order line product number (the human-readable item identifier, also shown as "Item ID" in the Vic.ai UI).
+        unitOfMeasure:
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+          description: The matched purchase order line unit of measure.
+        amountMatched:
+          type: string
+        quantityMatched:
+          type: string
+    ExternalId:
+      description: 'The external id set by the ERP system. It does not have to be a UUID and
+
+        can be any non empty string desired.
+
+        '
+      type: string
+      example: 21b31bc7-1267-4335-893c-d7fe4706a238
+      maxLength: 255
+    CostAccountInfo:
+      type: object
+      properties:
+        internalId:
+          oneOf:
+          - type: string
+            maxLength: 255
+            description: The cost account's internal id.
+          - type: 'null'
+        externalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+        number:
+          oneOf:
+          - type: string
+            maxLength: 255
+            description: The cost account's number.
+          - type: 'null'
+    LineItemVat:
+      type: object
+      properties:
+        internalId:
+          oneOf:
+          - type: string
+            maxLength: 255
+            description: 'The internal id of the VAT code. If specified, it will take
+
+              precedence over the `externalId` and `code`.
+
+              '
+          - type: 'null'
+        externalId:
+          description: 'The external id of the VAT code. If specified, it will take
+
+            precedence over the `code`.
+
+            '
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+        code:
+          oneOf:
+          - type: string
+            maxLength: 255
+            description: The VAT code.
+          - type: 'null'
+        amount:
+          oneOf:
+          - $ref: '#/components/schemas/MonetaryValue'
+          - type: 'null'
+          description: 'The amount of VAT. This will be added to the line item''s total. If
+
+            the VAT amount is unknown, this should be left `NULL` or
+
+            unspecified.
+
+            '
+        rate:
+          oneOf:
+          - $ref: '#/components/schemas/MonetaryValue'
+          - type: 'null'
+          description: 'The amount of VAT percentage. If the VAT percentage is unknown, this
+
+            should be left `NULL` or unspecified.
+
+            '
+    PaymentInfoTerm:
+      type: object
+      required:
+      - count
+      - unit
+      properties:
+        count:
+          type: integer
+          minimum: 1
+        unit:
+          $ref: '#/components/schemas/PaymentInfoTermUnit'
     InvoiceLineItem:
       type: object
       required:
@@ -1294,6 +1024,305 @@ components:
             Null when invoice is not document-level matched.
 
             '
+    InvoiceFieldInput:
+      type: object
+      required:
+      - label
+      properties:
+        label:
+          type: string
+          maxLength: 255
+          description: Field label/name.
+          example: Project Code
+        value:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+          description: 'Field value. For `text` fields any printable string is accepted.
+
+            For `select` fields the value must match one of the field''s
+
+            configured options. For `date` fields the value must be an
+
+            ISO 8601 calendar date (`YYYY-MM-DD`); empty strings clear the
+
+            stored value.
+
+            '
+          example: PRJ-2024-001
+    BillOfLadingNumber:
+      description: The bill of lading number.
+      type: object
+      required:
+      - bolNumber
+      properties:
+        bolNumber:
+          type: string
+          description: Bill of Lading number.
+          minLength: 1
+          maxLength: 255
+          example: BOL-123456
+    AccrualInfo:
+      required:
+      - start
+      - count
+      - unit
+      properties:
+        start:
+          type: string
+          format: date
+        count:
+          oneOf:
+          - type: integer
+          - type: 'null'
+          description: 'The number of units from the `start`. The system _may_ have this field as
+
+            `null` due to incomplete information or a user has cleared the information.
+
+            However, when specifying the `count` to the api, it is required to be
+
+            greater than `1`.
+
+            '
+        unit:
+          $ref: '#/components/schemas/AccrualTermUnit'
+    TrainingInvoiceLineItemUpsert:
+      type: object
+      required:
+      - amount
+      properties:
+        index:
+          description: 'A non-negative integer indicating where the line item is in the
+
+            document. No two line items shall be allowed to have the same index.
+
+            If unspecified, it will be inferred based on its position. If
+
+            another line item has an index set, and the current line item is
+
+            left null, it will take the next highest value.
+
+            '
+          type: integer
+          minimum: 0
+        amount:
+          type: number
+          description: 'The line item total amount including all tax amounts. This is used
+
+            to calculate the predicted total amount on the invoice.
+
+            '
+        amountTax:
+          description: The line item amount tax.
+          oneOf:
+          - $ref: '#/components/schemas/MonetaryValue'
+          - type: 'null'
+        amountFreight:
+          description: The line item freight amount.
+          oneOf:
+          - $ref: '#/components/schemas/MonetaryValue'
+          - type: 'null'
+        description:
+          type: string
+          description: The line item comment.
+        comment:
+          type: string
+          description: The description of the line item.
+        billable:
+          type: boolean
+          default: false
+        accrual:
+          $ref: '#/components/schemas/AccrualInfo'
+        invoiceLineItemInfo:
+          oneOf:
+          - $ref: '#/components/schemas/InvoiceLineItemInfo'
+          - type: 'null'
+        costAccountExternalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+        dimensionsExternalIds:
+          description: 'This has been deprecated. Please use the `dimensions` field to
+
+            specify the dimensions to set for this line item.
+
+            '
+          deprecated: true
+          type: array
+          items:
+            $ref: '#/components/schemas/ExternalId'
+        dimensions:
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/DimensionRef'
+          - type: 'null'
+        lineItemIsVatOnly:
+          type: boolean
+          default: false
+        lineType:
+          $ref: '#/components/schemas/InvoiceItemLineType'
+        quantityInvoiced:
+          oneOf:
+          - type: string
+            format: decimal
+          - type: 'null'
+          description: The quantity of things that were invoiced.
+        unitPrice:
+          description: The price per unit of the item.
+          oneOf:
+          - $ref: '#/components/schemas/MonetaryValue'
+          - type: 'null'
+        number:
+          description: The item number
+          oneOf:
+          - type: string
+            maxLength: 255
+          - type: 'null'
+        taxCodeId:
+          oneOf:
+          - type: string
+            format: uuid
+            description: ID of Tax Code to use for the line item.
+          - type: 'null'
+    InvoiceInfoNO:
+      type: object
+      required:
+      - kid
+      properties:
+        kid:
+          deprecated: true
+          description: '**Deprecated**: The `paymentRef` on the `Invoice` should be used
+
+            instead.
+
+            The KID is a customer identification number that is mandatory for
+
+            invoices in Norway.
+
+            '
+          type: string
+        creditAccountExternalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+        creditAccountInternalId:
+          type: string
+    AccrualTermUnit:
+      type: string
+      description: The accrual term units supported.
+      enum:
+      - MONTHS
+    InvoiceItemLineType:
+      type: string
+      description: The type of invoice item line.
+      enum:
+      - item
+      - expense
+      default: expense
+    Error:
+      description: 'generic error message in JSON format.  Note the ''code'' field should
+
+        match the HTTP status code of the wrapping HTTP request.
+
+        '
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          minimum: 100
+          maximum: 599
+        message:
+          $ref: '#/components/schemas/ErrorString'
+    TransactionType:
+      type: string
+      description: The type of invoice transaction.
+      enum:
+      - INVOICE
+      - CREDITNOTE
+      default: INVOICE
+    DimensionRef:
+      type: object
+      description: 'A reference to a dimension within Vic.
+
+        The `internalId` takes precedence over all fields specified. If a
+
+        dimension is not found matching the `internalId` an error will be
+
+        returned.
+
+        When `externalId` is provided, it takes precedence over `name` and can
+
+        be used in combination with `typeExternalId`.
+
+        If `name` is the only field specified and more than one dimension exists
+
+        with that `name`, then an error will be returned. It can be used in
+
+        combination with `typeExternalId`.
+
+        If `typeExternalId` is specified with `externalId` or `name` and more
+
+        than one dimension exists with those fields, then an error will be
+
+        returned.
+
+        '
+      properties:
+        internalId:
+          oneOf:
+          - type: string
+            maxLength: 255
+            description: 'Vic''s id of the dimension.
+
+              Takes precedence over all other fields. Other fields are ignored if
+
+              this is specified.
+
+              '
+          - type: 'null'
+        externalId:
+          description: 'The id of the dimension in the ERP.
+
+            Takes precedence over `name`. Can be used in combination with
+
+            `typeExternalId`.
+
+            If more than one dimension is found meeting the criteria specified,
+
+            an error will be returned.
+
+            '
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+        name:
+          oneOf:
+          - type: string
+            maxLength: 255
+            description: 'The name of the dimension.
+
+              Can be used in combination with `typeExternalId`.
+
+              If more than one dimension is found meeting the criteria specified,
+
+              an error will be returned.
+
+              '
+          - type: 'null'
+        typeExternalId:
+          description: 'The type id in the ERP.
+
+            This is a supplemental field to be used with `externalId` or `name`.
+
+            '
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
     InvoiceField:
       type: object
       properties:
@@ -1324,26 +1353,46 @@ components:
           - type: string
             maxLength: 255
           - type: 'null'
-    InvoiceLineItemInfo:
+    PaymentInfoMethod:
+      type: string
+      description: 'The payment method to be used.
+
+        Note: `BANKACCOUNT` is equivalent to `ACH` in the Web UI.
+
+        '
+      enum:
+      - BANKACCOUNT
+      - BANKGIRO
+      - PLUSGIRO
+      - IBAN
+      - BBAN
+    Currency:
+      description: The ISO-4217 currency code.
+      type: string
+      format: ISO-4217
+      maxLength: 3
+      example: USD
+    PurchaseOrderReceiptMatch:
       type: object
+      required:
+      - invoiceItemId
+      - purchaseOrderItemId
+      - purchaseOrderReceiptLineId
+      - quantityMatched
       properties:
-        vatCode:
-          oneOf:
-          - type: string
-          - type: 'null'
-        vatAmount:
-          oneOf:
-          - type: number
-          - type: 'null'
-        vatRate:
-          oneOf:
-          - $ref: '#/components/schemas/MonetaryValue'
-          - type: 'null'
-          description: 'The amount of VAT percentage. If the VAT percentage is unknown, this
-
-            should be left `NULL` or unspecified.
-
-            '
+        invoiceItemId:
+          type: string
+          description: The invoice item's internal id.
+        purchaseOrderItemId:
+          type: string
+          description: The purchase order item's internal id.
+        purchaseOrderReceiptLineId:
+          type: string
+          description: The purchase order receipt line's internal id.
+        amountMatched:
+          type: string
+        quantityMatched:
+          type: string
   responses:
     TrainingInvoicesResponse:
       description: A paged array of training invoices.
@@ -1360,24 +1409,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    TrainingInvoiceDeletedResponse:
-      description: Training invoice was successfully deleted.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/TrainingInvoice'
-    TrainingInvoiceResponse:
-      description: A single training invoice.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/TrainingInvoice'
-    TrainingInvoiceUpsertedResponse:
-      description: Training invoice was successfully upserted.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/TrainingInvoice'
     TrainingInvoiceDocumentResponse:
       description: The document attached to the training invoice.
       content:
@@ -1393,55 +1424,24 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-  parameters:
-    PathId:
-      name: id
-      in: path
-      required: true
-      description: The id of the database entry
-      schema:
-        type: string
-    PagingCursor:
-      name: cursor
-      in: query
-      description: Which item to start from. See [Pagination](#section/Pagination) for more information.
-      required: false
-      schema:
-        type: string
-    SortOrder:
-      name: sortOrder
-      in: query
-      description: what sort order should be used for queries
-      required: false
-      schema:
-        type: string
-        enum:
-        - ASCENDING
-        - DESCENDING
-        default: ASCENDING
-    SinceFilter:
-      name: since
-      in: query
-      description: 'Datetime value for incremental updates.
-
-        **NOTE**: For external datetimes, the expected format is not in UTC. for
-
-        vic-internal datetimes (see `SinceIsExternal`) the format is UTC.
-
-        '
-      required: false
-      schema:
-        type: string
-        format: date-time
-    PagingLimit:
-      name: limit
-      in: query
-      description: How many items to return at one time (max 100) (default 100)
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
+    TrainingInvoiceResponse:
+      description: A single training invoice.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TrainingInvoice'
+    TrainingInvoiceDeletedResponse:
+      description: Training invoice was successfully deleted.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TrainingInvoice'
+    TrainingInvoiceUpsertedResponse:
+      description: Training invoice was successfully upserted.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TrainingInvoice'
   headers:
     NextPageToken:
       description: A link to the next page of responses

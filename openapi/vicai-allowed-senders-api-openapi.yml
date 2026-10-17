@@ -125,6 +125,37 @@ paths:
           $ref: '#/components/responses/ErrorResponseV2'
 components:
   schemas:
+    AllowedSendersCreateResponseV2:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AllowedSenderV2'
+    AllowedSendersCreateRequestV2:
+      type: object
+      required:
+      - allowed_senders
+      properties:
+        allowed_senders:
+          type: array
+          minItems: 1
+          maxItems: 20
+          items:
+            type: object
+            required:
+            - match_type
+            - sender_pattern
+            properties:
+              match_type:
+                type: string
+                enum:
+                - exact
+                - domain
+              sender_pattern:
+                type: string
     PaginationV2:
       type: object
       properties:
@@ -153,15 +184,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AllowedSenderV2'
-    AllowedSendersCreateResponseV2:
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/AllowedSenderV2'
     PaginationMetaV2:
       type: object
       properties:
@@ -174,28 +196,23 @@ components:
           oneOf:
           - type: string
           - type: 'null'
-    AllowedSendersCreateRequestV2:
+    ErrorV2:
       type: object
       required:
-      - allowed_senders
+      - message
       properties:
-        allowed_senders:
-          type: array
-          minItems: 1
-          maxItems: 20
-          items:
-            type: object
-            required:
-            - match_type
-            - sender_pattern
-            properties:
-              match_type:
-                type: string
-                enum:
-                - exact
-                - domain
-              sender_pattern:
-                type: string
+        field:
+          description: 'The field that the error occurred on. This field may not always be
+
+            present.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
+        message:
+          description: A description of the error.
+          type: string
     AllowedSenderV2:
       type: object
       required:
@@ -229,23 +246,12 @@ components:
         created_at:
           type: string
           format: date-time
-    ErrorV2:
-      type: object
-      required:
-      - message
-      properties:
-        field:
-          description: 'The field that the error occurred on. This field may not always be
-
-            present.
-
-            '
-          oneOf:
-          - type: string
-          - type: 'null'
-        message:
-          description: A description of the error.
-          type: string
+  parameters:
+    PaginationV2:
+      name: page
+      in: query
+      schema:
+        $ref: '#/components/schemas/PaginationV2'
   responses:
     ErrorResponseV2:
       description: An unexpected error has occurred. Check the body for more details.
@@ -258,12 +264,6 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/ErrorV2'
-  parameters:
-    PaginationV2:
-      name: page
-      in: query
-      schema:
-        $ref: '#/components/schemas/PaginationV2'
   securitySchemes:
     BearerAuth:
       type: http

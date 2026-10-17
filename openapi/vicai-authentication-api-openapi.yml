@@ -76,23 +76,7 @@ paths:
         4XX:
           $ref: '#/components/responses/ErrorResponse'
 components:
-  responses:
-    TokenCreatedResponse:
-      description: Successful access token request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/GetTokenResult'
-    ErrorResponse:
-      description: An unexpected error has occurred. Check the body for more details.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
-    ErrorString:
-      type: string
-      maxLength: 255
     GetTokenResult:
       type: object
       required:
@@ -135,6 +119,22 @@ components:
           type: string
         client_secret:
           type: string
+    ErrorString:
+      type: string
+      maxLength: 255
+  responses:
+    ErrorResponse:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TokenCreatedResponse:
+      description: Successful access token request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetTokenResult'
   securitySchemes:
     BearerAuth:
       type: http

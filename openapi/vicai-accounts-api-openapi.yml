@@ -142,24 +142,6 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   responses:
-    AccountResponse:
-      description: Shows the account.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Account'
-    SynchronizeAccountsResponse:
-      description: 'A request to synchronize the GL Accounts was acknowledged and is in the
-
-        process of being ran.
-
-        '
-    AccountUpsertedResponse:
-      description: Account was upserted successfully.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Account'
     AccountDeletedResponse:
       description: Information for deleted account
       content:
@@ -172,15 +154,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    AccountsResponse:
-      description: A paged array of accounts
-      headers:
-        x-next:
-          $ref: '#/components/headers/NextPageToken'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Accounts'
     TooManyRequestsResponse:
       description: HTTP call rate limit exceeded.
       headers:
@@ -192,7 +165,117 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+    SynchronizeAccountsResponse:
+      description: 'A request to synchronize the GL Accounts was acknowledged and is in the
+
+        process of being ran.
+
+        '
+    AccountResponse:
+      description: Shows the account.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Account'
+    AccountsResponse:
+      description: A paged array of accounts
+      headers:
+        x-next:
+          $ref: '#/components/headers/NextPageToken'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Accounts'
+    AccountUpsertedResponse:
+      description: Account was upserted successfully.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Account'
+  parameters:
+    PagingCursor:
+      name: cursor
+      in: query
+      description: Which item to start from. See [Pagination](#section/Pagination) for more information.
+      required: false
+      schema:
+        type: string
+    PathId:
+      name: id
+      in: path
+      required: true
+      description: The id of the database entry
+      schema:
+        type: string
+    RequestId:
+      in: header
+      name: X-Request-Id
+      description: token to be able to correctly log associated requests
+      required: false
+      schema:
+        type: string
+        format: uuid
+    UseSystemDefaultExternal:
+      name: useSystem
+      in: query
+      description: 'Which system to use for id or updatedAt filters.
+
+        '
+      required: false
+      schema:
+        type: string
+        enum:
+        - INTERNAL
+        - EXTERNAL
+        - internal
+        - external
+        default: EXTERNAL
+    SortOrder:
+      name: sortOrder
+      in: query
+      description: what sort order should be used for queries
+      required: false
+      schema:
+        type: string
+        enum:
+        - ASCENDING
+        - DESCENDING
+        default: ASCENDING
+    PagingLimit:
+      name: limit
+      in: query
+      description: How many items to return at one time (max 100) (default 100)
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+    SinceFilter:
+      name: since
+      in: query
+      description: 'Datetime value for incremental updates.
+
+        **NOTE**: For external datetimes, the expected format is not in UTC. for
+
+        vic-internal datetimes (see `SinceIsExternal`) the format is UTC.
+
+        '
+      required: false
+      schema:
+        type: string
+        format: date-time
   schemas:
+    ErrorString:
+      type: string
+      maxLength: 255
+    ExternalData:
+      description: A free form json object that is stored with the record.
+      type: object
+    InternalId:
+      description: The internal id Vic uses for the record.
+      type: string
+      example: '47'
+      readOnly: true
     ExternalId:
       description: 'The external id set by the ERP system. It does not have to be a UUID and
 
@@ -201,9 +284,6 @@ components:
         '
       type: string
       example: 21b31bc7-1267-4335-893c-d7fe4706a238
-      maxLength: 255
-    ErrorString:
-      type: string
       maxLength: 255
     Account:
       type: object
@@ -219,43 +299,6 @@ components:
           type: string
           description: Is in UTC.
           format: date-time
-        externalId:
-          oneOf:
-          - $ref: '#/components/schemas/ExternalId'
-          - type: 'null'
-        externalUpdatedAt:
-          type: string
-          format: date-time
-          description: Does not have UTC normalization.
-        number:
-          type: string
-          format: number
-        name:
-          type: string
-          maxLength: 255
-        externalData:
-          oneOf:
-          - $ref: '#/components/schemas/ExternalData'
-          - type: 'null'
-    Accounts:
-      type: array
-      items:
-        $ref: '#/components/schemas/Account'
-    ExternalData:
-      description: A free form json object that is stored with the record.
-      type: object
-    InternalId:
-      description: The internal id Vic uses for the record.
-      type: string
-      example: '47'
-      readOnly: true
-    AccountUpsert:
-      type: object
-      required:
-      - number
-      - name
-      - externalUpdatedAt
-      properties:
         externalId:
           oneOf:
           - $ref: '#/components/schemas/ExternalId'
@@ -291,78 +334,35 @@ components:
           maximum: 599
         message:
           $ref: '#/components/schemas/ErrorString'
-  parameters:
-    RequestId:
-      in: header
-      name: X-Request-Id
-      description: token to be able to correctly log associated requests
-      required: false
-      schema:
-        type: string
-        format: uuid
-    PathId:
-      name: id
-      in: path
-      required: true
-      description: The id of the database entry
-      schema:
-        type: string
-    PagingCursor:
-      name: cursor
-      in: query
-      description: Which item to start from. See [Pagination](#section/Pagination) for more information.
-      required: false
-      schema:
-        type: string
-    SortOrder:
-      name: sortOrder
-      in: query
-      description: what sort order should be used for queries
-      required: false
-      schema:
-        type: string
-        enum:
-        - ASCENDING
-        - DESCENDING
-        default: ASCENDING
-    SinceFilter:
-      name: since
-      in: query
-      description: 'Datetime value for incremental updates.
-
-        **NOTE**: For external datetimes, the expected format is not in UTC. for
-
-        vic-internal datetimes (see `SinceIsExternal`) the format is UTC.
-
-        '
-      required: false
-      schema:
-        type: string
-        format: date-time
-    PagingLimit:
-      name: limit
-      in: query
-      description: How many items to return at one time (max 100) (default 100)
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-    UseSystemDefaultExternal:
-      name: useSystem
-      in: query
-      description: 'Which system to use for id or updatedAt filters.
-
-        '
-      required: false
-      schema:
-        type: string
-        enum:
-        - INTERNAL
-        - EXTERNAL
-        - internal
-        - external
-        default: EXTERNAL
+    Accounts:
+      type: array
+      items:
+        $ref: '#/components/schemas/Account'
+    AccountUpsert:
+      type: object
+      required:
+      - number
+      - name
+      - externalUpdatedAt
+      properties:
+        externalId:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalId'
+          - type: 'null'
+        externalUpdatedAt:
+          type: string
+          format: date-time
+          description: Does not have UTC normalization.
+        number:
+          type: string
+          format: number
+        name:
+          type: string
+          maxLength: 255
+        externalData:
+          oneOf:
+          - $ref: '#/components/schemas/ExternalData'
+          - type: 'null'
   headers:
     NextPageToken:
       description: A link to the next page of responses

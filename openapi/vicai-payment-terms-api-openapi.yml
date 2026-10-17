@@ -149,35 +149,8 @@ paths:
         4XX:
           $ref: '#/components/responses/ErrorResponse'
 components:
-  requestBodies:
-    UpdatePaymentTermRequest:
-      description: Update a payment term.
-      required: true
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UpdatePaymentTerm'
-    CreatePaymentTermRequest:
-      description: Create a payment term.
-      required: true
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CreatePaymentTerm'
   schemas:
-    ExternalId:
-      description: 'The external id set by the ERP system. It does not have to be a UUID and
-
-        can be any non empty string desired.
-
-        '
-      type: string
-      example: 21b31bc7-1267-4335-893c-d7fe4706a238
-      maxLength: 255
-    ErrorString:
-      type: string
-      maxLength: 255
-    UpdatePaymentTerm:
+    CreatePaymentTerm:
       type: object
       required:
       - name
@@ -227,18 +200,30 @@ components:
           oneOf:
           - type: string
             format: decimal
-            minimum: 0
             description: 'The discount percentage if paid within the number of discount
 
               days.
 
               '
+            minimum: 0
           - type: 'null'
         externalId:
           description: The ID of the payment term in the ERP if it has one.
           oneOf:
           - $ref: '#/components/schemas/ExternalId'
           - type: 'null'
+    ErrorString:
+      type: string
+      maxLength: 255
+    ExternalId:
+      description: 'The external id set by the ERP system. It does not have to be a UUID and
+
+        can be any non empty string desired.
+
+        '
+      type: string
+      example: 21b31bc7-1267-4335-893c-d7fe4706a238
+      maxLength: 255
     PaymentTermCondition:
       type: string
       enum:
@@ -273,6 +258,23 @@ components:
         * `from_issue_date_extending_to_end_of_month` - The due or discount date is set to the end of the month after adding `daysToPay` or `discountDays` to the invoice issue date.
 
         '
+    Error:
+      description: 'generic error message in JSON format.  Note the ''code'' field should
+
+        match the HTTP status code of the wrapping HTTP request.
+
+        '
+      type: object
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          minimum: 100
+          maximum: 599
+        message:
+          $ref: '#/components/schemas/ErrorString'
     PaymentTerm:
       type: object
       required:
@@ -336,24 +338,7 @@ components:
           oneOf:
           - $ref: '#/components/schemas/ExternalId'
           - type: 'null'
-    Error:
-      description: 'generic error message in JSON format.  Note the ''code'' field should
-
-        match the HTTP status code of the wrapping HTTP request.
-
-        '
-      type: object
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-          minimum: 100
-          maximum: 599
-        message:
-          $ref: '#/components/schemas/ErrorString'
-    CreatePaymentTerm:
+    UpdatePaymentTerm:
       type: object
       required:
       - name
@@ -403,74 +388,33 @@ components:
           oneOf:
           - type: string
             format: decimal
+            minimum: 0
             description: 'The discount percentage if paid within the number of discount
 
               days.
 
               '
-            minimum: 0
           - type: 'null'
         externalId:
           description: The ID of the payment term in the ERP if it has one.
           oneOf:
           - $ref: '#/components/schemas/ExternalId'
           - type: 'null'
-  responses:
-    ResourceNotFoundResponse:
-      description: Resource was not found.
+  requestBodies:
+    CreatePaymentTermRequest:
+      description: Create a payment term.
+      required: true
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
-    ForbiddenResponse:
-      description: The request was forbidden.
+            $ref: '#/components/schemas/CreatePaymentTerm'
+    UpdatePaymentTermRequest:
+      description: Update a payment term.
+      required: true
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'
-    TooManyRequestsResponse:
-      description: HTTP call rate limit exceeded.
-      headers:
-        Retry-After:
-          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
-          schema:
-            type: integer
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    ErrorResponse:
-      description: An unexpected error has occurred. Check the body for more details.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    PaymentTermDeletedResponse:
-      description: Payment term was successfully deleted.
-    UnprocessableEntityResponse:
-      description: Errors with the input are present.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    SynchronizePaymentTermsResponse:
-      description: 'A request to synchronize the payment terms was acknowledged and is in
-
-        the process of being ran.
-
-        '
-    PaymentTermResponse:
-      description: A single payment term.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/PaymentTerm'
-    PaymentTermListResponse:
-      description: A list of payment terms.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/PaymentTerm'
+            $ref: '#/components/schemas/UpdatePaymentTerm'
   parameters:
     PathId:
       name: id
@@ -494,6 +438,62 @@ components:
         - internal
         - external
         default: INTERNAL
+  responses:
+    UnprocessableEntityResponse:
+      description: Errors with the input are present.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    PaymentTermDeletedResponse:
+      description: Payment term was successfully deleted.
+    ErrorResponse:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    SynchronizePaymentTermsResponse:
+      description: 'A request to synchronize the payment terms was acknowledged and is in
+
+        the process of being ran.
+
+        '
+    TooManyRequestsResponse:
+      description: HTTP call rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    PaymentTermListResponse:
+      description: A list of payment terms.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PaymentTerm'
+    PaymentTermResponse:
+      description: A single payment term.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PaymentTerm'
+    ResourceNotFoundResponse:
+      description: Resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ForbiddenResponse:
+      description: The request was forbidden.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     BearerAuth:
       type: http

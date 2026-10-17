@@ -108,11 +108,18 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   parameters:
-    VendorId:
-      name: vendor_id
+    VendorTagId:
+      name: id
       in: path
       required: true
-      description: The id of the vendor
+      description: The id of the vendor tag
+      schema:
+        type: string
+    PagingCursor:
+      name: cursor
+      in: query
+      description: Which item to start from. See [Pagination](#section/Pagination) for more information.
+      required: false
       schema:
         type: string
     TagId:
@@ -123,29 +130,6 @@ components:
       schema:
         type: string
         format: uuid
-    PagingCursor:
-      name: cursor
-      in: query
-      description: Which item to start from. See [Pagination](#section/Pagination) for more information.
-      required: false
-      schema:
-        type: string
-    PagingLimit:
-      name: limit
-      in: query
-      description: How many items to return at one time (max 100) (default 100)
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-    VendorTagId:
-      name: id
-      in: path
-      required: true
-      description: The id of the vendor tag
-      schema:
-        type: string
     UseSystemDefaultExternal:
       name: useSystem
       in: query
@@ -161,63 +145,38 @@ components:
         - internal
         - external
         default: EXTERNAL
-  responses:
-    ResourceNotFoundResponse:
-      description: Resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    VendorTagListResponse:
-      description: A list of vendor tags.
-      headers:
-        x-next:
-          $ref: '#/components/headers/NextPageToken'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/VendorTags'
-    ForbiddenResponse:
-      description: The request was forbidden.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    ErrorResponse:
-      description: An unexpected error has occurred. Check the body for more details.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    UnprocessableEntityResponse:
-      description: Errors with the input are present.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    VendorTagDeletedResponse:
-      description: Vendor tag was successfully deleted.
-    VendorTagResponse:
-      description: A single vendor tag.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/VendorTag'
-    TooManyRequestsResponse:
-      description: HTTP call rate limit exceeded.
-      headers:
-        Retry-After:
-          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
-          schema:
-            type: integer
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+    PagingLimit:
+      name: limit
+      in: query
+      description: How many items to return at one time (max 100) (default 100)
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+    VendorId:
+      name: vendor_id
+      in: path
+      required: true
+      description: The id of the vendor
+      schema:
+        type: string
   schemas:
     ErrorString:
       type: string
       maxLength: 255
+    VendorTag:
+      type: object
+      required:
+      - vendorId
+      - tagId
+      properties:
+        id:
+          type: string
+        vendorId:
+          type: string
+        tagId:
+          type: string
     CreateVendorTag:
       type: object
       required:
@@ -249,18 +208,64 @@ components:
           maximum: 599
         message:
           $ref: '#/components/schemas/ErrorString'
-    VendorTag:
-      type: object
-      required:
-      - vendorId
-      - tagId
-      properties:
-        id:
-          type: string
-        vendorId:
-          type: string
-        tagId:
-          type: string
+  responses:
+    UnprocessableEntityResponse:
+      description: Errors with the input are present.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    VendorTagDeletedResponse:
+      description: Vendor tag was successfully deleted.
+    ErrorResponse:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TooManyRequestsResponse:
+      description: HTTP call rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    VendorTagListResponse:
+      description: A list of vendor tags.
+      headers:
+        x-next:
+          $ref: '#/components/headers/NextPageToken'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VendorTags'
+    ResourceNotFoundResponse:
+      description: Resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    VendorTagResponse:
+      description: A single vendor tag.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/VendorTag'
+    ForbiddenResponse:
+      description: The request was forbidden.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  headers:
+    NextPageToken:
+      description: A link to the next page of responses
+      schema:
+        type: string
   requestBodies:
     CreateVendorTagRequest:
       description: Create a vendor tag.
@@ -269,11 +274,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/CreateVendorTag'
-  headers:
-    NextPageToken:
-      description: A link to the next page of responses
-      schema:
-        type: string
   securitySchemes:
     BearerAuth:
       type: http

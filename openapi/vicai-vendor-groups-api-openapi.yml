@@ -105,8 +105,6 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 components:
   responses:
-    VendorGroupDeletedResponse:
-      description: Vendor group was successfully deleted.
     TooManyRequestsResponse:
       description: HTTP call rate limit exceeded.
       headers:
@@ -142,6 +140,21 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/VendorGroups'
+    VendorGroupDeletedResponse:
+      description: Vendor group was successfully deleted.
+  requestBodies:
+    UpdateVendorGroupRequest:
+      description: Update a vendor group.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateVendorGroup'
+    CreateVendorGroupRequest:
+      description: Create a vendor group.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateVendorGroup'
   schemas:
     Error:
       description: 'generic error message in JSON format.  Note the ''code'' field should
@@ -172,9 +185,6 @@ components:
         name:
           type: string
           description: The name of the vendor group
-    ErrorString:
-      type: string
-      maxLength: 255
     UpdateVendorGroup:
       type: object
       required:
@@ -195,6 +205,14 @@ components:
         name:
           type: string
           description: The name of the vendor group
+    ErrorString:
+      type: string
+      maxLength: 255
+  headers:
+    NextPageToken:
+      description: A link to the next page of responses
+      schema:
+        type: string
   parameters:
     PagingLimit:
       name: limit
@@ -210,24 +228,6 @@ components:
       in: query
       description: Which item to start from. See [Pagination](#section/Pagination) for more information.
       required: false
-      schema:
-        type: string
-  requestBodies:
-    CreateVendorGroupRequest:
-      description: Create a vendor group.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CreateVendorGroup'
-    UpdateVendorGroupRequest:
-      description: Update a vendor group.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UpdateVendorGroup'
-  headers:
-    NextPageToken:
-      description: A link to the next page of responses
       schema:
         type: string
   securitySchemes:

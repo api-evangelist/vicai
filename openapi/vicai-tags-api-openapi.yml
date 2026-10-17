@@ -102,6 +102,18 @@ components:
     ErrorString:
       type: string
       maxLength: 255
+    Tags:
+      type: array
+      items:
+        $ref: '#/components/schemas/Tag'
+    CreateTag:
+      type: object
+      required:
+      - value
+      properties:
+        value:
+          type: string
+          maxLength: 255
     UpdateTag:
       type: object
       required:
@@ -137,18 +149,31 @@ components:
         value:
           type: string
           maxLength: 255
-    Tags:
-      type: array
-      items:
-        $ref: '#/components/schemas/Tag'
-    CreateTag:
-      type: object
-      required:
-      - value
-      properties:
-        value:
-          type: string
-          maxLength: 255
+  parameters:
+    PagingCursor:
+      name: cursor
+      in: query
+      description: Which item to start from. See [Pagination](#section/Pagination) for more information.
+      required: false
+      schema:
+        type: string
+    TagId:
+      name: tag_id
+      in: path
+      required: true
+      description: The id of the tag
+      schema:
+        type: string
+        format: uuid
+    PagingLimit:
+      name: limit
+      in: query
+      description: How many items to return at one time (max 100) (default 100)
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
   responses:
     TagListResponse:
       description: A list of tags.
@@ -159,8 +184,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Tags'
-    ForbiddenResponse:
-      description: The request was forbidden.
+    UnprocessableEntityResponse:
+      description: Errors with the input are present.
       content:
         application/json:
           schema:
@@ -171,14 +196,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    UnprocessableEntityResponse:
-      description: Errors with the input are present.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    TagDeletedResponse:
-      description: Tag was successfully deleted.
     TagResponse:
       description: A single tag.
       content:
@@ -196,39 +213,15 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-  parameters:
-    TagId:
-      name: tag_id
-      in: path
-      required: true
-      description: The id of the tag
-      schema:
-        type: string
-        format: uuid
-    PagingCursor:
-      name: cursor
-      in: query
-      description: Which item to start from. See [Pagination](#section/Pagination) for more information.
-      required: false
-      schema:
-        type: string
-    PagingLimit:
-      name: limit
-      in: query
-      description: How many items to return at one time (max 100) (default 100)
-      required: false
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-  requestBodies:
-    CreateTagRequest:
-      description: Create a tag.
-      required: true
+    TagDeletedResponse:
+      description: Tag was successfully deleted.
+    ForbiddenResponse:
+      description: The request was forbidden.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/CreateTag'
+            $ref: '#/components/schemas/Error'
+  requestBodies:
     UpdateTagRequest:
       description: Update a tag.
       required: true
@@ -236,6 +229,13 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/UpdateTag'
+    CreateTagRequest:
+      description: Create a tag.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateTag'
   headers:
     NextPageToken:
       description: A link to the next page of responses

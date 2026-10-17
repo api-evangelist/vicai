@@ -340,21 +340,57 @@ paths:
           $ref: '#/components/responses/ErrorResponseV2'
 components:
   schemas:
-    OrganizationV2:
+    CreateCompanyV2:
       type: object
       required:
-      - id
+      - name
+      - country_code
+      - billing_timezone
       properties:
-        id:
-          type: string
         name:
           type: string
-        created_at:
+          description: The display name for the company.
+        country_code:
           type: string
-          format: date-time
-        updated_at:
+          description: Two-letter ISO 3166-1 alpha-2 country code.
+          minLength: 2
+          maxLength: 2
+          example: US
+        billing_timezone:
           type: string
-          format: date-time
+          description: IANA timezone identifier used for billing dates.
+          example: America/New_York
+        legal_name:
+          type: string
+          description: The legal entity name, if different from the display name.
+        doing_business_as:
+          type: string
+          description: Trade name or DBA.
+        remote_id:
+          type: string
+          description: An external identifier from the integration partner's system.
+        org_number:
+          type: string
+          description: Organization/registration number.
+        organization_id:
+          type: string
+          format: uuid
+          description: 'The organization (accounting firm) to place the company under.
+
+            Defaults to the OAuth client''s primary company organization.
+
+            Must be an organization the client already has access to.
+
+            '
+    CompanyTagV2:
+      type: object
+      required:
+      - tag
+      properties:
+        tag:
+          type: string
+          description: The tag value assigned to the company.
+          example: group:acme
     UpdateCompanySettingsV2:
       type: object
       description: 'Partial update for company settings. All fields are optional; only
@@ -447,6 +483,61 @@ components:
             - expense_line
             - even_allocation
             - weighted_allocation
+    PaginationV2:
+      type: object
+      properties:
+        size:
+          type: integer
+          description: The page size.
+          maximum: 50
+          minimum: 1
+        cursor:
+          type: string
+          description: The cursor to use to get the next page of results.
+    PaginationMetaV2:
+      type: object
+      properties:
+        cursor:
+          description: 'The cursor to the next page of data. If it is null, that means there
+
+            is no more data to fetch.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
+    ErrorV2:
+      type: object
+      required:
+      - message
+      properties:
+        field:
+          description: 'The field that the error occurred on. This field may not always be
+
+            present.
+
+            '
+          oneOf:
+          - type: string
+          - type: 'null'
+        message:
+          description: A description of the error.
+          type: string
+    OrganizationV2:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
     CreatedCompanyV2:
       type: object
       description: 'Sparse company payload returned at company creation time (by
@@ -497,6 +588,21 @@ components:
               type: string
             client_secret:
               type: string
+    CreateCompanyTagV2:
+      type: object
+      required:
+      - tag
+      properties:
+        tag:
+          type: string
+          description: 'The tag to assign. For grouping, use `group-leader` on the parent
+
+            company and a shared `group:<key>` tag on the parent and every
+
+            member.
+
+            '
+          example: group:acme
     CompanySettingsV2:
       type: object
       description: 'A company''s configuration options. Every available setting is
@@ -710,101 +816,6 @@ components:
             - expense_line
             - even_allocation
             - weighted_allocation
-    CreateCompanyTagV2:
-      type: object
-      required:
-      - tag
-      properties:
-        tag:
-          type: string
-          description: 'The tag to assign. For grouping, use `group-leader` on the parent
-
-            company and a shared `group:<key>` tag on the parent and every
-
-            member.
-
-            '
-          example: group:acme
-    ErrorV2:
-      type: object
-      required:
-      - message
-      properties:
-        field:
-          description: 'The field that the error occurred on. This field may not always be
-
-            present.
-
-            '
-          oneOf:
-          - type: string
-          - type: 'null'
-        message:
-          description: A description of the error.
-          type: string
-    CreateCompanyV2:
-      type: object
-      required:
-      - name
-      - country_code
-      - billing_timezone
-      properties:
-        name:
-          type: string
-          description: The display name for the company.
-        country_code:
-          type: string
-          description: Two-letter ISO 3166-1 alpha-2 country code.
-          minLength: 2
-          maxLength: 2
-          example: US
-        billing_timezone:
-          type: string
-          description: IANA timezone identifier used for billing dates.
-          example: America/New_York
-        legal_name:
-          type: string
-          description: The legal entity name, if different from the display name.
-        doing_business_as:
-          type: string
-          description: Trade name or DBA.
-        remote_id:
-          type: string
-          description: An external identifier from the integration partner's system.
-        org_number:
-          type: string
-          description: Organization/registration number.
-        organization_id:
-          type: string
-          format: uuid
-          description: 'The organization (accounting firm) to place the company under.
-
-            Defaults to the OAuth client''s primary company organization.
-
-            Must be an organization the client already has access to.
-
-            '
-    CompanyTagV2:
-      type: object
-      required:
-      - tag
-      properties:
-        tag:
-          type: string
-          description: The tag value assigned to the company.
-          example: group:acme
-    PaginationMetaV2:
-      type: object
-      properties:
-        cursor:
-          description: 'The cursor to the next page of data. If it is null, that means there
-
-            is no more data to fetch.
-
-            '
-          oneOf:
-          - type: string
-          - type: 'null'
     CreateOrganizationV2:
       type: object
       required:
@@ -821,31 +832,6 @@ components:
         remote_id:
           type: string
           description: External identifier from the partner's system.
-    PaginationV2:
-      type: object
-      properties:
-        size:
-          type: integer
-          description: The page size.
-          maximum: 50
-          minimum: 1
-        cursor:
-          type: string
-          description: The cursor to use to get the next page of results.
-  parameters:
-    PaginationV2:
-      name: page
-      in: query
-      schema:
-        $ref: '#/components/schemas/PaginationV2'
-    CompanyId:
-      name: company_id
-      in: path
-      required: true
-      description: The ID of the company
-      schema:
-        type: string
-        format: uuid
   responses:
     CompanySettingsResponseV2:
       description: The effective settings map for the company.
@@ -858,17 +844,19 @@ components:
             properties:
               data:
                 $ref: '#/components/schemas/CompanySettingsV2'
-    ErrorResponseV2:
-      description: An unexpected error has occurred. Check the body for more details.
+    ListOrganizationsResponseV2:
+      description: A successful list of organizations
       content:
         application/json:
           schema:
             type: object
             properties:
-              errors:
+              meta:
+                $ref: '#/components/schemas/PaginationMetaV2'
+              data:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ErrorV2'
+                  $ref: '#/components/schemas/OrganizationV2'
     CreateCompanyResponseV2:
       description: 'A single newly-created company including a company-scoped OAuth
 
@@ -884,19 +872,17 @@ components:
             properties:
               data:
                 $ref: '#/components/schemas/CreatedCompanyV2'
-    ListOrganizationsResponseV2:
-      description: A successful list of organizations
+    ErrorResponseV2:
+      description: An unexpected error has occurred. Check the body for more details.
       content:
         application/json:
           schema:
             type: object
             properties:
-              meta:
-                $ref: '#/components/schemas/PaginationMetaV2'
-              data:
+              errors:
                 type: array
                 items:
-                  $ref: '#/components/schemas/OrganizationV2'
+                  $ref: '#/components/schemas/ErrorV2'
     GetOrganizationResponseV2:
       description: A single organization.
       content:
@@ -925,6 +911,20 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/CreateCompanyV2'
+  parameters:
+    PaginationV2:
+      name: page
+      in: query
+      schema:
+        $ref: '#/components/schemas/PaginationV2'
+    CompanyId:
+      name: company_id
+      in: path
+      required: true
+      description: The ID of the company
+      schema:
+        type: string
+        format: uuid
   securitySchemes:
     BearerAuth:
       type: http

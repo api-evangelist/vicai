@@ -105,29 +105,6 @@ paths:
         4XX:
           $ref: '#/components/responses/ErrorResponseV2'
 components:
-  responses:
-    CompanySettingsResponseV2:
-      description: The effective settings map for the company.
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-            - data
-            properties:
-              data:
-                $ref: '#/components/schemas/CompanySettingsV2'
-    ErrorResponseV2:
-      description: An unexpected error has occurred. Check the body for more details.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              errors:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ErrorV2'
   schemas:
     UpdateCompanySettingsV2:
       type: object
@@ -451,15 +428,29 @@ components:
         message:
           description: A description of the error.
           type: string
-  parameters:
-    CompanyId:
-      name: company_id
-      in: path
-      required: true
-      description: The ID of the company
-      schema:
-        type: string
-        format: uuid
+  responses:
+    CompanySettingsResponseV2:
+      description: The effective settings map for the company.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+            - data
+            properties:
+              data:
+                $ref: '#/components/schemas/CompanySettingsV2'
+    ErrorResponseV2:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ErrorV2'
   requestBodies:
     UpdateCompanySettingsRequestV2:
       description: 'Partial update to the company settings map. Only fields
@@ -472,6 +463,15 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/UpdateCompanySettingsV2'
+  parameters:
+    CompanyId:
+      name: company_id
+      in: path
+      required: true
+      description: The ID of the company
+      schema:
+        type: string
+        format: uuid
   securitySchemes:
     BearerAuth:
       type: http

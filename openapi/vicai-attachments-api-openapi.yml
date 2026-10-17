@@ -109,22 +109,36 @@ paths:
         4XX:
           $ref: '#/components/responses/ErrorResponse'
 components:
+  responses:
+    TooManyRequestsResponse:
+      description: HTTP call rate limit exceeded.
+      headers:
+        Retry-After:
+          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    AttachmentCreatedResponse:
+      description: The shape of the response when an attachment is created.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Attachment'
+    ErrorResponse:
+      description: An unexpected error has occurred. Check the body for more details.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
-    Attachment:
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          $ref: '#/components/schemas/InternalId'
     InternalId:
       description: The internal id Vic uses for the record.
       type: string
       example: '47'
       readOnly: true
-    ErrorString:
-      type: string
-      maxLength: 255
     Error:
       description: 'generic error message in JSON format.  Note the ''code'' field should
 
@@ -142,30 +156,16 @@ components:
           maximum: 599
         message:
           $ref: '#/components/schemas/ErrorString'
-  responses:
-    AttachmentCreatedResponse:
-      description: The shape of the response when an attachment is created.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Attachment'
-    ErrorResponse:
-      description: An unexpected error has occurred. Check the body for more details.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    TooManyRequestsResponse:
-      description: HTTP call rate limit exceeded.
-      headers:
-        Retry-After:
-          description: Number of seconds to wait before retrying the request. Waiting this long guarantees the rate-limit window has reset.
-          schema:
-            type: integer
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+    Attachment:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          $ref: '#/components/schemas/InternalId'
+    ErrorString:
+      type: string
+      maxLength: 255
   securitySchemes:
     BearerAuth:
       type: http
